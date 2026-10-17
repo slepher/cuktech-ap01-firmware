@@ -1,0 +1,40 @@
+# 大文件与生成物不入库：保留在本地归档，按 checksums/SHA256SUMS.txt 对账
+# 全部 ROM 镜像（原件与模拟候选）
+roms/**/*.bin
+roms/**/*.json
+# 逆向运行证据（REA Evidence、QEMU 运行、Ghidra 安装、私有 profile）
+evidence/
+# 可再生成的构建产物与第三方依赖
+reverse/rehost/
+reverse/app-0031/deps/
+# 二进制与打包物
+*.bin
+*.elf
+*.tgz
+*.tar
+*.gz
+*.zip
+*.7z
+*.png
+*.jpg
+*.ppm
+*.gif
+*.lib
+*.o
+*.obj
+*.jar
+*.whl
+*.pyc
+*.class
+*.db
+*.gbf
+*.fidbf
+*.sla
+*.pypredef
+*.gpr
+*.rep
+# Ghidra 13 位十六进制资源头（每份 15–17 MB，由 rehost-assets.py 生成）
+reverse/**/ap01-assets.h
+reverse/**/round*-ap01-assets.h
+# 本地缓存
+__pycache__/

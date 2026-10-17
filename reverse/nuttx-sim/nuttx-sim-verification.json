@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "display": [
+    320,
+    240
+  ],
+  "input": "real X11 events",
+  "steps": [
+    {
+      "key": "Right",
+      "observed": "FOCUS Power"
+    },
+    {
+      "key": "Right",
+      "observed": "FOCUS Settings"
+    },
+    {
+      "key": "Right",
+      "observed": "FOCUS Clock"
+    },
+    {
+      "key": "Left",
+      "observed": "FOCUS Settings"
+    },
+    {
+      "key": "Up",
+      "observed": "FOCUS Power"
+    },
+    {
+      "key": "Down",
+      "observed": "FOCUS Settings"
+    },
+    {
+      "key": "Return",
+      "observed": "CONFIRM Settings count=1"
+    },
+    {
+      "key": "space",
+      "observed": "CONFIRM Settings count=2"
+    }
+  ],
+  "escape_exit": 0,
+  "binary_sha256": "b4594a36ac3d3d2206f987b6b1411af390fe92c8e7c213bd7c992d561051799d",
+  "binary_bytes": 5516640
+}

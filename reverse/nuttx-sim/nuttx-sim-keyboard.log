@@ -1,0 +1,39 @@
+[LVGL] [User]	(0.001, +1)	 check_stack_size: tid: 4, Stack size : 98240 lv_nuttx_entry.c:297
+[LVGL] [User]	(0.005, +4)	 lv_nuttx_fbdev_set_file: The framebuffer device was opened successfully lv_nuttx_fbdev.c:108
+[LVGL] [User]	(0.009, +4)	 lv_nuttx_fbdev_set_file: VideoInfo: lv_nuttx_fbdev.c:116
+[LVGL] [User]	(0.012, +3)	 lv_nuttx_fbdev_set_file:       fmt: 13 lv_nuttx_fbdev.c:117
+[LVGL] [User]	(0.016, +4)	 lv_nuttx_fbdev_set_file:      xres: 320 lv_nuttx_fbdev.c:118
+[LVGL] [User]	(0.019, +3)	 lv_nuttx_fbdev_set_file:      yres: 240 lv_nuttx_fbdev.c:119
+[LVGL] [User]	(0.023, +4)	 lv_nuttx_fbdev_set_file:   nplanes: 1 lv_nuttx_fbdev.c:120
+[LVGL] [User]	(0.027, +4)	 fbdev_get_pinfo: PlaneInfo (plane 0): lv_nuttx_fbdev.c:319
+[LVGL] [User]	(0.030, +3)	 fbdev_get_pinfo:     mem: 0x71e49b63e010 lv_nuttx_fbdev.c:320
+[LVGL] [User]	(0.034, +4)	 fbdev_get_pinfo:     fblen: 614400 lv_nuttx_fbdev.c:321
+[LVGL] [User]	(0.038, +4)	 fbdev_get_pinfo:    stride: 1280 lv_nuttx_fbdev.c:322
+[LVGL] [User]	(0.042, +4)	 fbdev_get_pinfo:   display: 0 lv_nuttx_fbdev.c:323
+[LVGL] [User]	(0.045, +3)	 fbdev_get_pinfo:       bpp: 32 lv_nuttx_fbdev.c:324
+[LVGL] [User]	(0.049, +4)	 fbdev_get_pinfo: PlaneInfo (plane 0): lv_nuttx_fbdev.c:319
+[LVGL] [User]	(0.053, +4)	 fbdev_get_pinfo:     mem: 0x71e49b63e010 lv_nuttx_fbdev.c:320
+[LVGL] [User]	(0.056, +3)	 fbdev_get_pinfo:     fblen: 614400 lv_nuttx_fbdev.c:321
+[LVGL] [User]	(0.060, +4)	 fbdev_get_pinfo:    stride: 1280 lv_nuttx_fbdev.c:322
+[LVGL] [User]	(0.064, +4)	 fbdev_get_pinfo:   display: 0 lv_nuttx_fbdev.c:323
+[LVGL] [User]	(0.067, +3)	 fbdev_get_pinfo:       bpp: 32 lv_nuttx_fbdev.c:324
+[LVGL] [User]	(0.071, +4)	 fbdev_init_mem2: Use consecutive mem2 = 0x71e49b689010, yoffset = 240 lv_nuttx_fbdev.c:370
+[LVGL] [User]	(0.074, +3)	 lv_nuttx_fbdev_set_file: Resolution is set to 320x240 at 130dpi lv_nuttx_fbdev.c:174
+FOCUS Clock
+READY NuttX SIM display=320x240 input=/dev/kbd encoder
+INPUT rotate=1
+FOCUS Power
+INPUT rotate=1
+FOCUS Settings
+INPUT rotate=1
+FOCUS Clock
+INPUT rotate=-1
+FOCUS Settings
+INPUT rotate=-1
+FOCUS Power
+INPUT rotate=1
+FOCUS Settings
+CONFIRM Settings count=1
+CONFIRM Settings count=2
+[LVGL] [User]	(0.760, +686)	 display_release_cb: Done lv_nuttx_fbdev.c:404
+STOP keyboard-exit
