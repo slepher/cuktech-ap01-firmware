@@ -49,8 +49,9 @@ def select(flash):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    for name in ('before', 'after', 'image', 'manifest', 'output'):
+    for name in ('before', 'after', 'image', 'output'):
         p.add_argument('--' + name, type=Path, required=True)
+    p.add_argument('--manifest',type=Path)
     a = p.parse_args()
     if a.output.exists() or not a.output.parent.is_dir():
         p.error('output must be new in an existing directory')

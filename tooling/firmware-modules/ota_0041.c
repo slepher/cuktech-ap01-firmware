@@ -195,7 +195,7 @@ static void *serve(void *opaque)
            FN(0xa010e532,int(*)(int,int,int,const void*,unsigned))(fd,1,14,tv,8)){
             close_fd(fd);FN(0xa002e14e,void(*)(void*))(c);continue;
         }
-        ota_channel_io io={c,receive,transmit,now,begin,chunk,commit,abort_store};
+        ota_channel_io io={c,receive,transmit,now,begin,chunk,commit,abort_store,NULL,NULL};
         ota_channel_result result=ota_channel_handle(&io,(const char*)ota_0041_manifest+64,now(c)+LIMIT_MS);
         close_fd(fd);
         if(c->flash.fd>0)abort_store(c);

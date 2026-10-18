@@ -3,7 +3,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #define OTA_CHANNEL_MAX_ROM (7u * 1024u * 1024u)
+#ifndef OTA_CHANNEL_VERSION
 #define OTA_CHANNEL_VERSION "ap01-ota/1"
+#endif
 /* Standalone protocol component, NOT a bootable/flashing ROM. Caller owns ctx,
  * inactive-slot selection, exclusive transaction/busy control and durable commit.
  * Callbacks must obey timeout_ms; now_ms is monotonic. No callback may block
@@ -24,6 +26,11 @@ typedef struct {
     int (*chunk)(void *, const void *, size_t, uint32_t timeout_ms);
     int (*commit)(void *, uint32_t timeout_ms);
     void (*abort)(void *);
+    /* Optional bounded JSONL snapshot, available only with valid Bearer auth. */
+    const char *(*logs)(void *);
+    /* Authenticated HTTP Upgrade on /diagnostic; owns the byte stream after
+     * the 101 response. Caller still closes this connection on return. */
+    int (*diagnostic)(void *);
 } ota_channel_io;
 typedef struct {
     enum ota_stage stage;
@@ -31,6 +38,7 @@ typedef struct {
     uint32_t bytes;
     int store_status;
     int committed;
+    int authenticated_update;
 } ota_channel_result;
 /* One HTTP/1.1 request; caller closes connection on return. Absolute deadline
  * applies to headers, body, storage and reply, never renewed by progress.

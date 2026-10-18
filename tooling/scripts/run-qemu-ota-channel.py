@@ -39,6 +39,11 @@ scan_mock = module('ap01_scan_mock', 'qemu_scan_mock.py')
 BUILDERS = {
     'ap01-ota-channel-0041-v1': 'build-ota-channel-0041.py',
     'ap01-ota-channel-0031-v1': 'build-ota-channel-0031.py',
+    'ap01-ota-channel-0031-v2': 'build-ota-expanded-0031.py',
+    'ap01-diagnostics-0031-v1': 'build-ota-expanded-0031.py',
+    'ap01-http-0031-v1': 'build-ota-expanded-0031.py',
+    'ap01-http-ram-0031-v1': 'build-ram-diagnostics-0031.py',
+    'ap01-http-gif-0031-v1': 'build-ota-expanded-0031.py',
 }
 PROFILES = {
     'ap01-ota-channel-0041-v1': dict(
@@ -54,8 +59,15 @@ PROFILES = {
               0xa0026788: 'close', 0xa003f498: 'poll', 0xa010b966: 'setsockopt'},
         bt_enable=0xa00e0da0, device_lookup=0xa0025d1e, boardctl=0xa005576c,
         thread_create=0xa0195d30, scan_apis=None, scan_step=0xa0069dd6,
-        tick=None),
+        tick=None, flash_close=0xa01ab044),
 }
+
+
+PROFILES['ap01-ota-channel-0031-v2'] = PROFILES['ap01-ota-channel-0031-v1']
+PROFILES['ap01-http-0031-v1'] = PROFILES['ap01-ota-channel-0031-v1']
+PROFILES['ap01-http-ram-0031-v1'] = PROFILES['ap01-ota-channel-0031-v1']
+PROFILES['ap01-http-gif-0031-v1'] = PROFILES['ap01-ota-channel-0031-v1']
+PROFILES['ap01-diagnostics-0031-v1'] = PROFILES['ap01-ota-channel-0031-v1']
 
 
 def builder_for(manifest_path):
@@ -287,17 +299,33 @@ def main():
     parser.add_argument('--timeout', type=float, default=60)
     parser.add_argument('--upload-image', type=Path)
     parser.add_argument('--upload-manifest', type=Path)
+    parser.add_argument('--restore-stock-0031', action='store_true',
+                        help='upload only the SHA256-pinned unmodified 0031 ROM; no module manifest')
     parser.add_argument('--auth-key-file', type=Path)
     parser.add_argument('--active-slot', type=int, choices=(0, 1), default=0)
     parser.add_argument('--gpio3-input-high', action='store_true', help='explicit virtual normal-mode strap')
     parser.add_argument('--suppress-scan', action='store_true',
                         help='explicitly answer the 0031 scan request without starting a radio scan')
+    parser.add_argument('--poison-runtime-header',action='store_true',
+                        help='after boot, replace analysis-only header mapping to detect invalid runtime dependencies')
     parser.add_argument('--safety-seconds', type=int,
                         help='observe a no-HTTP safety-role image for N host seconds, then snapshot NOR')
+    parser.add_argument('--observe-pc',type=lambda v:int(v,0),action='append',default=[],
+                        help='record registers at at most eight explicitly selected probe instructions')
+    parser.add_argument('--require-diagnostic-probe',action='store_true',help='fail unless the complete guest diagnostic marker is present')
+    parser.add_argument('--native-loopback',action='store_true',
+                        help='no host socket API replacement; requires an offline guest-driven safety probe')
+    parser.add_argument('--mask-tail-xip',action='store_true',help='RAM-loader regression: erase appended module only in the direct XIP view, preserving physical Flash')
     args = parser.parse_args()
+    if len(args.observe_pc)>8 or any(a&1 or not 0xa0000000<=a<0xa0700000 for a in args.observe_pc):
+        parser.error('at most eight aligned application probe PCs required')
+    if args.native_loopback and args.safety_seconds is None:
+        parser.error('native loopback requires a guest-driven safety probe')
     if not 1 <= args.timeout <= 240 or not 1024 <= args.port <= 65535:
         parser.error('host debugging timeout1..240 and unprivileged port required')
-    if any((args.upload_image, args.upload_manifest, args.auth_key_file)) and not all((args.upload_image, args.upload_manifest, args.auth_key_file)):
+    if args.restore_stock_0031 and (not args.upload_image or not args.auth_key_file or args.upload_manifest):
+        parser.error('stock restoration requires upload-image/key and no upload-manifest')
+    if not args.restore_stock_0031 and any((args.upload_image, args.upload_manifest, args.auth_key_file)) and not all((args.upload_image, args.upload_manifest, args.auth_key_file)):
         parser.error('upload-image, upload-manifest and auth-key-file must be supplied together')
     if args.safety_seconds is not None:
         if not 1 <= args.safety_seconds <= 240 or args.safety_seconds >= args.timeout:
@@ -311,6 +339,8 @@ def main():
         parser.error('new output/log names in an existing directory required')
     data = args.image.read_bytes()
     builder, format_id, profile_spec = builder_for(args.manifest)
+    ram_module=format_id=='ap01-http-ram-0031-v1'
+    if args.mask_tail_xip and not ram_module:parser.error('tail masking requires a physical-Flash/RAM loader image')
     if profile_spec['scan_apis'] is None and not args.suppress_scan:
         parser.error('0031 scan API addresses are not derived; pass --suppress-scan for the explicit 0031 scan-request model')
     if profile_spec['scan_apis'] is not None and args.suppress_scan:
@@ -319,13 +349,19 @@ def main():
     upload = auth_key = upload_manifest = None
     if args.upload_image:
         upload = args.upload_image.read_bytes()
-        upload_manifest = builder.validate_candidate(upload, args.upload_manifest)
         auth_key = args.auth_key_file.read_text(encoding='ascii').strip()
         if len(auth_key) != 64 or any(c not in '0123456789abcdefABCDEF' for c in auth_key):
             parser.error('auth key must contain exactly64 hexadecimal characters')
-        if upload_manifest.get('format') != format_id:
-            parser.error('running and upload manifests must use the same OTA format')
         digest = hashlib.sha256(auth_key.encode('ascii')).hexdigest()
+        if args.restore_stock_0031:
+            if format_id != 'ap01-ota-channel-0031-v2' or len(upload) != 6804520 or hashlib.sha256(upload).hexdigest() != '8a721fc8ef25458d415b2460e4a251e0503a82f7743fdff85b12612190e5c1cb':
+                parser.error('stock restoration requires a generalized 0031 receiver and the exact original ROM')
+            upload_manifest = dict(build_id='unmodified-original-0031', auth_key_sha256=digest)
+        else:
+            upload_builder, upload_format, upload_profile = builder_for(args.upload_manifest)
+            upload_manifest = upload_builder.validate_candidate(upload, args.upload_manifest)
+            if upload_profile != profile_spec:
+                parser.error('running and upload images must use the same device profile')
         if any(m['auth_key_sha256'] != digest for m in (manifest, upload_manifest)):
             parser.error('auth key does not match running/upload build identities')
     flash = args.flash_fixture.read_bytes()
@@ -375,6 +411,8 @@ def main():
         report.update(upload_sha256=hashlib.sha256(upload).hexdigest(),
                       upload_build_id=upload_manifest['build_id'], upload_bytes=len(upload), upload_body_sent=0)
     report['ota_format'] = format_id
+    report['native_loopback']=args.native_loopback
+    if args.native_loopback:report['transport']='guest native NuttX TCP loopback; no host socket replacement'
     report['scan_mode'] = 'suppressed-scan-request' if profile_spec['scan_apis'] is None else 'empty-scan-api-transaction'
     report['assumptions'] = [
         'Payload-only host loopback socket API provider; no radio or physical Wi-Fi equivalence',
@@ -398,6 +436,28 @@ def main():
             rsp = BufferedRSP(sockets[0], deadline)
             qmp = runner.QMP(sockets[1], deadline)
             provider = Provider(rsp, args.port, ready, report)
+            if args.mask_tail_xip:
+                for off in range(0,manifest['payload']['bytes'],256):
+                    count=min(256,manifest['payload']['bytes']-off)
+                    if rsp.request(f'M{payload_start+off:x},{count:x}:'+('ff'*count))!='OK':
+                        raise RuntimeError('cannot mask tail XIP')
+                report['tail_xip_masked']=True
+            if manifest.get('cloud_ota_dispatch_modified') and format_id == 'ap01-ota-channel-0031-v2':
+                # Execute the actual patched dispatcher entry before normal boot.
+                # c.li a0,-16; c.jr ra must change no stack or other registers.
+                saved = struct.unpack_from('<33I', bytes.fromhex(rsp.request('g')))
+                provider.reg(1, saved[32])
+                provider.reg(32, 0xa01125b2)
+                rsp.request('s')
+                rsp.request('s')
+                checked = struct.unpack_from('<33I', bytes.fromhex(rsp.request('g')))
+                if checked[10] != 0xfffffff0 or checked[32] != saved[32] or any(
+                        checked[i] != saved[i] for i in range(32) if i not in (1,10)):
+                    raise RuntimeError('cloud dispatcher exclusion probe failed')
+                for number in (1,10,32):
+                    provider.reg(number,saved[number])
+                report['cloud_dispatch_probe'] = dict(return_value=-16, stack_unchanged=True,
+                                                     original_call_executed=False)
             def scan_read(address, count):
                 if not (0 <= count <= 64 and (ram(address, count) or
                         0x9ffff000 <= address and address + count <= 0xa0fff000)):
@@ -408,10 +468,14 @@ def main():
                 breakpoints = [0, profile_spec['bt_enable'], profile_spec['scan_step'],
                                profile_spec['device_lookup'], profile_spec['boardctl'],
                                profile_spec['thread_create'], *profile_spec['apis']]
+            if profile_spec.get('flash_close'):
+                breakpoints.append(profile_spec['flash_close'])
             else:
                 breakpoints = [0, profile_spec['bt_enable'], *profile_spec['scan_apis'],
                                profile_spec['device_lookup'], profile_spec['boardctl'],
                                profile_spec['thread_create'], *profile_spec['apis']]
+            breakpoints.extend(a for a in args.observe_pc if a not in breakpoints)
+            if ram_module:breakpoints.append(0xa002dd70)
             for address in breakpoints:
                 if rsp.request(f'Z0,{address:x},2') != 'OK':
                     raise RuntimeError('cannot install API breakpoint')
@@ -454,6 +518,27 @@ def main():
                 regs = struct.unpack_from('<33I', raw)
                 pc, ra = regs[32], regs[1]
                 args6 = regs[10:16]
+                if ram_module and pc==0xa002dd70 and 0xa0000060<=ra<0xa0000400:
+                    expected=b'AP01_RAM_READY '
+                    fmt=bytes.fromhex(rsp.request(f'm{args6[1]:x},{len(expected):x}'))
+                    if fmt==expected:
+                        base,size,entry=args6[2:5]
+                        if size!=manifest['payload']['bytes'] or not ram(base,size) or entry!=int(manifest['payload']['entry'],0):
+                            raise RuntimeError('RAM-loader bounds/identity mismatch')
+                        loaded=b''.join(provider.read(base+off,min(256,size-off)) for off in range(0,size,256))
+                        if hashlib.sha256(loaded).hexdigest()!=manifest['payload']['sha256']:
+                            raise RuntimeError('loaded RAM module differs from physical Flash payload')
+                        code_start,code_end=base+256,base+size
+                        report['ram_module_loaded']=dict(base=hex(base),size=size,entry=hex(base+entry),sha256=hashlib.sha256(loaded).hexdigest())
+                        report['provider_code_range']=[hex(code_start),hex(code_end)]
+                        if rsp.request(f'Z0,{base+entry:x},2')!='OK':raise RuntimeError('cannot observe RAM entry')
+                        breakpoints.append(base+entry)
+                        rsp.request('z0,a002dd70,2');breakpoints.remove(0xa002dd70)
+                if ram_module and report.get('ram_module_loaded') and pc==int(report['ram_module_loaded']['entry'],0):
+                    report['ram_module_entry_executed']=True
+                if pc == profile_spec.get('flash_close'):
+                    report.setdefault('native_flash_closes',[]).append(
+                        dict(caller=hex(ra),payload_caller=code_start <= ra < code_end))
                 report['pc'], report['sp'] = hex(pc), hex(regs[2])
                 if report.get('deadline_stop_requested'):
                     raise TimeoutError('total execution deadline')
@@ -474,6 +559,11 @@ def main():
                     rsp.request(f'z0,{pc:x},2')
                     continue
                 if pc in serve_entries:
+                    if args.poison_runtime_header and not report.get('runtime_header_poisoned'):
+                        poison=b'\xa5'*256
+                        if rsp.request('M9ffff000,100:'+poison.hex())!='OK' or bytes.fromhex(rsp.request('m9ffff000,100'))!=poison:
+                            raise RuntimeError('cannot install runtime-header regression fixture')
+                        report['runtime_header_poisoned']=True
                     report['serve_entry_calls'] = report.get('serve_entry_calls', 0) + 1
                     report['serve_argument'] = hex(regs[10])
                     report['serve_entry_sp'] = hex(regs[2])
@@ -555,6 +645,10 @@ def main():
                             provider.reg(10, 0)
                             provider.reg(32, ra)
                             continue
+                if pc in args.observe_pc:
+                    observations=report.setdefault('probe_observations',[])
+                    if len(observations)>=64:raise RuntimeError('probe observation budget exceeded')
+                    observations.append(dict(pc=hex(pc),ra=hex(ra),sp=hex(regs[2]),args=[hex(v) for v in args6]))
                 name = profile_spec['apis'].get(pc)
                 eligible = code_start <= ra < code_end
                 if name and eligible and 'serve_entry_sp' in report:
@@ -563,7 +657,7 @@ def main():
                         minimum = min(int(report['payload_api_min_sp'], 16), regs[2])
                         report['payload_api_min_sp'] = hex(minimum)
                         report['observed_payload_stack_descent_bytes'] = entry_sp - minimum
-                if name and eligible and (name == 'socket' or args6[0] in provider.sockets or
+                if not args.native_loopback and name and eligible and (name == 'socket' or args6[0] in provider.sockets or
                         name == 'poll' and args6[1] and struct.unpack('<I', provider.read(args6[0], 4))[0] in provider.sockets):
                     report['provider_calls'][name] = report['provider_calls'].get(name, 0) + 1
                     result = provider.handle(name, args6)
@@ -609,6 +703,9 @@ def main():
                     report.get('reset_payload_caller', False) and bool(report.get('flash_snapshot')) and
                     report['upload_body_sent'] == len(upload) and
                     any(call.get('result') == 0 and call['payload_caller'] for call in report['native_ff13_calls']))
+                if format_id == 'ap01-ota-channel-0031-v2':
+                    report['passed'] = report['passed'] and sum(
+                        call['payload_caller'] for call in report.get('native_flash_closes',[])) == 1
     except Exception as exc:
         report['error'] = f'{type(exc).__name__}: {exc}'
         if qmp and time.monotonic() < deadline:
@@ -646,6 +743,21 @@ def main():
         report['uart_paths'] = [str(p) for p in paths[2:]]
         uart = paths[2].read_bytes() if paths[2].exists() else b''
         report['native_ui_started'] = b'lv_ap01_display_process, start' in uart
+        if args.native_loopback:
+            # A clean safety window alone does not demonstrate that the guest
+            # client reached the diagnostic operations successfully.
+            match = re.search(rb'DIAG_NETWORK (\{[^\r\n]+\})', uart)
+            report['diagnostic_probe'] = None
+            if match:
+                try:
+                    report['diagnostic_probe'] = json.loads(match.group(1))
+                except (ValueError, UnicodeDecodeError):
+                    pass
+            report['diagnostic_probe_verified'] = bool(report['diagnostic_probe'] and
+                report['diagnostic_probe'].get('passed') == 1 and
+                report['diagnostic_probe'].get('stage') == 13)
+            if (args.require_diagnostic_probe or b'DIAG_NETWORK' in uart) and not report['diagnostic_probe_verified']:
+                report['passed'] = False
         fatal = re.search(rb'EXCEPTION: [^\r\n]+', uart)
         if fatal:
             report['first_guest_exception'] = fatal.group().decode('ascii', 'replace')

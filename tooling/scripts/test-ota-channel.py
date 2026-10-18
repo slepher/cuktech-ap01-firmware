@@ -18,7 +18,7 @@ def main():
     binary = output.with_suffix('.host')
     if output.exists() or binary.exists() or not output.parent.is_dir():
         parser.error('new report/binary names in an existing directory required')
-    root = Path(__file__).resolve().parents[2] / 'firmware' / 'ap01'
+    root = Path(__file__).resolve().parents[2] / 'tooling' / 'firmware-modules'
     sources = [root / 'ota_channel.c', root / 'test_ota_channel.c']
     flags = ['-std=c11', '-Wall', '-Wextra', '-Werror', '-Wpedantic', '-O1', '-g',
              '-fsanitize=address,undefined', '-fno-omit-frame-pointer', '-fno-pie', '-no-pie']

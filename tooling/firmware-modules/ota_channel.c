@@ -46,39 +46,50 @@ static uint32_t crc_update(uint32_t crc, const unsigned char *data, size_t n)
 }
 static const char *stage_name(enum ota_stage stage)
 {
-    static const char *const names[] = {"header","begin","body","crc","commit","send","done"};
+    static const char names[][7] = {"header","begin","body","crc","commit","send","done"};
     return names[stage];
 }
 static const char *error_name(enum ota_error error)
 {
-    static const char *const names[] = {"ok","bad_config","timeout","eof","io",
+    static const char names[][15] = {"ok","bad_config","timeout","eof","io",
         "bad_header","unauthorized","too_large","crc_mismatch","busy","writer","result_unknown"};
     return names[error];
 }
 static enum ota_error reply(const ota_channel_io *io, uint64_t deadline,
-                            const ota_channel_result *r, int health)
+                            const ota_channel_result *r, int health, int logs)
 {
     char body[160], response[320];
+    const char *content = body;
     int status = r->error == OTA_OK ? 200 : r->error == OTA_UNAUTHORIZED ? 401 :
                  r->error == OTA_TOO_LARGE ? 413 : r->error == OTA_BUSY ? 409 :
                  r->error == OTA_BAD_HEADER || r->error == OTA_BAD_CRC ? 400 : 500;
-    if (health && r->error == OTA_OK)
+    if (logs && r->error == OTA_OK)
+        content = io->logs(io->ctx);
+    else if (health && r->error == OTA_OK)
         snprintf(body, sizeof(body), "{\"version\":\"%s\"}\n", OTA_CHANNEL_VERSION);
     else
         snprintf(body, sizeof(body), "{\"stage\":\"%s\",\"error\":\"%s\",\"bytes\":%u}\n",
                  stage_name(r->stage), error_name(r->error), r->bytes);
+    if (!content || strlen(content) > 8192) return OTA_IO;
     int count = snprintf(response, sizeof(response),
-        "HTTP/1.1 %d %s\r\nConnection: close\r\nContent-Type: application/json\r\nContent-Length: %u\r\n\r\n%s",
-        status, status == 200 ? "OK" : "Error", (unsigned)strlen(body), body);
+        "HTTP/1.1 %d %s\r\nConnection: close\r\nContent-Type: %s\r\nContent-Length: %u\r\n\r\n",
+        status, status == 200 ? "OK" : "Error",
+        logs && r->error == OTA_OK ? "application/x-ndjson" : "application/json",
+        (unsigned)strlen(content));
     if (count < 0 || (size_t)count >= sizeof(response)) return OTA_IO;
-    size_t sent = 0;
-    while (sent < (size_t)count) {
-        uint32_t timeout = remaining(io, deadline);
-        if (!timeout) return OTA_TIMEOUT;
-        int n = io->write(io->ctx, response + sent, (size_t)count - sent, timeout);
-        if (!remaining(io, deadline)) return OTA_TIMEOUT;
-        if (n <= 0 || (size_t)n > (size_t)count - sent) return OTA_IO;
-        sent += (size_t)n;
+    /* Send headers and the bounded snapshot separately; no 8 KiB stack copy. */
+    for (unsigned part = 0; part < 2; ++part) {
+        const char *data = part ? content : response;
+        size_t total = part ? strlen(content) : (size_t)count;
+        size_t sent = 0;
+        while (sent < total) {
+            uint32_t timeout = remaining(io, deadline);
+            if (!timeout) return OTA_TIMEOUT;
+            int n = io->write(io->ctx, data + sent, total - sent, timeout);
+            if (!remaining(io, deadline)) return OTA_TIMEOUT;
+            if (n <= 0 || (size_t)n > total - sent) return OTA_IO;
+            sent += (size_t)n;
+        }
     }
     return OTA_OK;
 }
@@ -88,11 +99,11 @@ static enum ota_error reply(const ota_channel_io *io, uint64_t deadline,
 ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
                                       uint64_t deadline)
 {
-    ota_channel_result r = { OTA_STAGE_HEADER, OTA_OK, OTA_OK, 0, 0, 0 };
+    ota_channel_result r = { OTA_STAGE_HEADER, OTA_OK, OTA_OK, 0, 0, 0, 0 };
     char header[1025];
     unsigned char body[1024];
     size_t used = 0;
-    int begun = 0, health = 0;
+    int begun = 0, health = 0, logs = 0, diagnostic = 0;
     uint32_t length = 0, expected_crc = 0;
     if (!io || !key || !io->read || !io->write || !io->now_ms ||
         !io->begin || !io->chunk || !io->commit || !io->abort) {
@@ -117,8 +128,10 @@ ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
     char *line_end = strstr(header, "\r\n");
     *line_end = 0;
     health = !strcmp(header, "GET /health HTTP/1.1");
-    if (!health && strcmp(header, "POST /firmware HTTP/1.1")) { r.error = OTA_BAD_HEADER; goto done; }
-    unsigned have_length = 0, have_auth = 0, have_crc = 0;
+    logs = !strcmp(header, "GET /logs HTTP/1.1");
+    diagnostic = !strcmp(header, "GET /diagnostic HTTP/1.1");
+    if (!health && !logs && !diagnostic && strcmp(header, "POST /firmware HTTP/1.1")) { r.error = OTA_BAD_HEADER; goto done; }
+    unsigned have_length = 0, have_auth = 0, have_crc = 0, have_upgrade = 0, connection_upgrade = 0;
     char *line = line_end + 2;
     while (*line) {
         if (!strcmp(line, "\r\n")) break;
@@ -156,6 +169,10 @@ ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
                 if (digit < 0) { r.error = OTA_BAD_HEADER; goto done; }
                 expected_crc = (expected_crc << 4) | (unsigned)digit;
             }
+        } else if (equal(line, "Upgrade")) {
+            if (!diagnostic || have_upgrade++ || !equal(value,"ap01-diag/1")) { r.error = OTA_BAD_HEADER; goto done; }
+        } else if (equal(line, "Connection") && diagnostic && equal(value,"upgrade")) {
+            if (connection_upgrade++) { r.error = OTA_BAD_HEADER; goto done; }
         } else if (equal(line, "Transfer-Encoding") ||
                    (equal(line, "Connection") && !equal(value, "close"))) {
             r.error = OTA_BAD_HEADER; goto done;
@@ -167,7 +184,28 @@ ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
         r.stage = OTA_STAGE_DONE; goto done;
     }
     if (!have_auth) { r.error = OTA_UNAUTHORIZED; goto done; }
+    if (diagnostic) {
+        if (length || !io->diagnostic || !have_upgrade || !connection_upgrade) { r.error = OTA_BAD_HEADER; goto done; }
+        const char *upgrade = "HTTP/1.1 101 Switching Protocols\r\nConnection: Upgrade\r\nUpgrade: ap01-diag/1\r\n\r\n";
+        size_t sent = 0, total = strlen(upgrade);
+        while (sent < total) {
+            uint32_t timeout = remaining(io,deadline);
+            if (!timeout) { r.error = OTA_TIMEOUT; return r; }
+            int n = io->write(io->ctx,upgrade+sent,total-sent,timeout);
+            if (n <= 0 || (size_t)n > total-sent) { r.error = OTA_IO; return r; }
+            if (!remaining(io,deadline)) { r.error = OTA_TIMEOUT; return r; }
+            sent += (size_t)n;
+        }
+        r.stage = OTA_STAGE_DONE;
+        if (io->diagnostic(io->ctx)) r.error = OTA_IO;
+        return r;
+    }
+    if (logs) {
+        if (length || !io->logs) { r.error = OTA_BAD_HEADER; goto done; }
+        r.stage = OTA_STAGE_DONE; goto done;
+    }
     if (!have_length || !length || !have_crc) { r.error = OTA_BAD_HEADER; goto done; }
+    r.authenticated_update = 1;
     r.stage = OTA_STAGE_BEGIN;
     uint32_t timeout = remaining(io, deadline);
     if (!timeout) { r.error = OTA_TIMEOUT; goto done; }
@@ -207,7 +245,7 @@ ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
     r.stage = OTA_STAGE_DONE;
 done:
     if (begun) io->abort(io->ctx);
-    r.response_error = reply(io, deadline, &r, health);
+    r.response_error = reply(io, deadline, &r, health, logs);
     if (r.error == OTA_OK && r.response_error != OTA_OK) { r.stage = OTA_STAGE_SEND; r.error = r.response_error; }
     return r;
 }

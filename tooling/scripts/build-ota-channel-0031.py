@@ -68,8 +68,8 @@ def read_base(original):
         ValueError('requires the exact original 0031 image'))
 
 
-def assemble(base, payload, gif):
-    if len(payload) <= 256 or OFFSET + len(payload) > LIMIT:
+def assemble(base, payload, gif, payload_limit=LIMIT):
+    if payload_limit>GIF_START+385834 or len(payload) <= 256 or OFFSET + len(payload) > payload_limit:
         raise ValueError('payload exceeds the bounded first OTA code extent')
     if len(gif) > OFFSET - GIF_START or gif[:6] not in (b'GIF87a', b'GIF89a') or gif[-1:] != b';':
         raise ValueError('invalid bounded placeholder GIF')

@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-typedef struct {char h[1800],o[512];size_t hn,p,n,a,on,rc,wc;uint64_t t;unsigned reads,begins,chunks,commits,aborts,tick,at;int rf,wf,bs,cs,fs,mutate,late_commit,write_tick;} F;
+typedef struct {char h[1800],o[8704];size_t hn,p,n,a,on,rc,wc;uint64_t t;unsigned reads,begins,chunks,commits,aborts,tick,at;int rf,wf,bs,cs,fs,mutate,late_commit,write_tick;} F;
 static const char key[]="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 static unsigned char val(size_t i,size_t n){return n==9?(unsigned char)"123456789"[i]:(unsigned char)(i*17+3);}
 static uint32_t crc(size_t n){uint32_t c=~0u;for(size_t i=0;i<n;i++){c^=val(i,n);for(unsigned j=0;j<8;j++)c=(c>>1)^((c&1)?0xedb88320u:0);}return ~c;}
@@ -14,13 +14,26 @@ static int begin(void*x,uint32_t n,uint32_t t){F*f=x;assert(t&&n==f->n);f->begin
 static int chunk(void*x,const void*d,size_t n,uint32_t t){F*f=x;assert(t&&n<=1024);f->chunks++;for(size_t i=0;i<n;i++)assert(((const unsigned char*)d)[i]==val(f->a+i,f->n));if(!f->cs)f->a+=n;if(f->mutate&&n)((unsigned char*)d)[0]^=255;return f->cs;}
 static int commit(void*x,uint32_t t){F*f=x;assert(t&&f->a==f->n);f->commits++;if(f->late_commit)f->t=1001;return f->fs;}
 static void abort_tx(void*x){((F*)x)->aborts++;}
-static ota_channel_result run(F*f){ota_channel_io io={f,rd,wr,now,begin,chunk,commit,abort_tx};return ota_channel_handle(&io,key,1000);}
+static char snapshot[8194];
+static unsigned diagnostics;
+static int diagnostic(void*x){F*f=x;diagnostics++;assert(strstr(f->o,"101 Switching Protocols")&&!f->begins);return 0;}
+static const char *logs(void*x){(void)x;return *snapshot?snapshot:"{\"stage\":\"boot\"}\n";}
+static ota_channel_result run(F*f){ota_channel_io io={f,rd,wr,now,begin,chunk,commit,abort_tx,logs,diagnostic};return ota_channel_handle(&io,key,1000);}
 static void bad(F*f,enum ota_error e){ota_channel_result r=run(f);assert(r.error==e&&!f->begins&&!f->chunks&&!f->commits&&!f->aborts);assert(strstr(f->o,"\"stage\":\"header\"")&&!strstr(f->o,key));}
 int main(void){F f;ota_channel_result r;unsigned k=0;assert(crc(9)==0xcbf43926u);
+ init(&f,0,"");snprintf(f.h,sizeof(f.h),"GET /diagnostic HTTP/1.1\r\nAuthorization: Bearer %s\r\nConnection: Upgrade\r\nUpgrade: ap01-diag/1\r\n\r\n",key);f.hn=strlen(f.h);f.wc=1;r=run(&f);assert(r.error==OTA_OK&&diagnostics==1&&!f.begins&&!r.authenticated_update&&!strstr(f.o,"Content-Length"));k++;
+ const char*upgrade_bad[]={"","Authorization: Bearer wrong\r\n","Connection: Upgrade\r\nUpgrade: ap01-diag/1\r\n"};
+ for(unsigned i=0;i<3;i++){init(&f,0,"");snprintf(f.h,sizeof(f.h),"GET /diagnostic HTTP/1.1\r\n%s\r\n",upgrade_bad[i]);f.hn=strlen(f.h);r=run(&f);assert(r.error!=OTA_OK&&diagnostics==1&&!f.begins&&!strstr(f.o,"101 Switching Protocols"));k++;}
+ init(&f,0,"");snprintf(f.h,sizeof(f.h),"GET /diagnostic HTTP/1.1\r\nAuthorization: Bearer %s\r\n\r\n",key);f.hn=strlen(f.h);r=run(&f);assert(r.error==OTA_BAD_HEADER&&diagnostics==1);k++;
  const size_t sizes[]={1,9,4097,OTA_CHANNEL_MAX_ROM};for(unsigned i=0;i<4;i++){init(&f,sizes[i],"");r=run(&f);assert(r.error==OTA_OK&&r.committed&&r.bytes==sizes[i]&&f.commits==1&&!f.aborts);assert(strstr(f.o,"200 OK")&&strstr(f.o,"Connection: close"));k++;}
  const size_t caps[]={1,2,3,7,1024};for(unsigned i=0;i<5;i++){init(&f,2051,"");f.rc=caps[i];f.wc=caps[i];r=run(&f);assert(r.error==OTA_OK&&f.a==2051&&!f.aborts);k++;}
  init(&f,2051,"");f.mutate=1;r=run(&f);assert(r.error==OTA_OK&&r.committed);k++;
  init(&f,0,"");strcpy(f.h,"GET /health HTTP/1.1\r\n\r\n");f.hn=strlen(f.h);r=run(&f);assert(r.error==OTA_OK&&!f.begins&&strstr(f.o,OTA_CHANNEL_VERSION));k++;
+ init(&f,0,"");snprintf(f.h,sizeof(f.h),"GET /logs HTTP/1.1\r\nAuthorization: Bearer %s\r\n\r\n",key);f.hn=strlen(f.h);r=run(&f);assert(r.error==OTA_OK&&!f.begins&&!r.authenticated_update&&strstr(f.o,"application/x-ndjson")&&strstr(f.o,"\"stage\":\"boot\"")&&!strstr(f.o,key));k++;
+ init(&f,0,"");strcpy(f.h,"GET /logs HTTP/1.1\r\n\r\n");f.hn=strlen(f.h);r=run(&f);assert(r.error==OTA_UNAUTHORIZED&&!f.begins&&!strstr(f.o,"\"stage\":\"boot\""));k++;
+ init(&f,0,"");snprintf(f.h,sizeof(f.h),"GET /logs HTTP/1.1\r\nAuthorization: Bearer %s\r\n\r\n",key);strstr(f.h,"Bearer ")[7]='x';f.hn=strlen(f.h);r=run(&f);assert(r.error==OTA_UNAUTHORIZED&&!f.begins&&!strstr(f.o,"\"stage\":\"boot\""));k++;
+ memset(snapshot,'x',8192);snapshot[8192]=0;init(&f,0,"");snprintf(f.h,sizeof(f.h),"GET /logs HTTP/1.1\r\nAuthorization: Bearer %s\r\n\r\n",key);f.hn=strlen(f.h);f.wc=7;r=run(&f);assert(r.error==OTA_OK&&strstr(f.o,"Content-Length: 8192\r\n")&&strlen(strstr(f.o,"\r\n\r\n")+4)==8192&&!f.begins);k++;
+ snapshot[8192]='x';snapshot[8193]=0;init(&f,0,"");snprintf(f.h,sizeof(f.h),"GET /logs HTTP/1.1\r\nAuthorization: Bearer %s\r\n\r\n",key);f.hn=strlen(f.h);r=run(&f);assert(r.error==OTA_IO&&!f.on&&!f.begins);snapshot[0]=0;k++;
  init(&f,9,"");strstr(f.h,"Bearer ")[7]='x';bad(&f,OTA_UNAUTHORIZED);k++;
  const char*x[]={"Content-Length: 9\r\n","Transfer-Encoding: chunked\r\n","Connection: keep-alive\r\n","Content-Length: -1\r\n","X-ROM-CRC32: cbf43926\r\n","Bad Name: x\r\n","X-A: x\ny\r\n"};for(unsigned i=0;i<sizeof(x)/sizeof(x[0]);i++){init(&f,9,x[i]);bad(&f,OTA_BAD_HEADER);k++;}
  init(&f,0,"");bad(&f,OTA_BAD_HEADER);k++;init(&f,OTA_CHANNEL_MAX_ROM+1u,"");bad(&f,OTA_TOO_LARGE);k++;

@@ -30,14 +30,19 @@ def validate_running_image(data, original_path=None, ota_manifest=None):
         import json as _json
         format_id = _json.loads(Path(ota_manifest).read_text(encoding='utf-8')).get('format')
         builders = {'ap01-ota-channel-0041-v1': 'build-ota-channel-0041.py',
-                    'ap01-ota-channel-0031-v1': 'build-ota-channel-0031.py'}
+                    'ap01-ota-channel-0031-v1': 'build-ota-channel-0031.py',
+                    'ap01-ota-channel-0031-v2': 'build-ota-expanded-0031.py',
+                    'ap01-diagnostics-0031-v1': 'build-ota-expanded-0031.py',
+                    'ap01-http-0031-v1': 'build-ota-expanded-0031.py',
+                    'ap01-http-ram-0031-v1': 'build-ram-diagnostics-0031.py'}
+        builders['ap01-http-gif-0031-v1']='build-ota-expanded-0031.py'
         if format_id not in builders:
             raise ValueError('unsupported OTA manifest format ' + repr(format_id))
         spec = importlib.util.spec_from_file_location('ota_builder', Path(__file__).with_name(builders[format_id]))
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         built = module.validate_candidate(data, ota_manifest)
-        is_0031 = format_id == 'ap01-ota-channel-0031-v1'
+        is_0031 = format_id.startswith('ap01-ota-channel-0031-') or format_id in ('ap01-diagnostics-0031-v1','ap01-http-0031-v1','ap01-http-ram-0031-v1','ap01-http-gif-0031-v1')
         identity.update(original_sha256=IMAGE_SHA256_0031 if is_0031 else IMAGE_SHA256,
                         kind='0031-independent-ota-channel' if is_0031 else '0041-independent-ota-channel',
                         original_path=built['original']['path'],
