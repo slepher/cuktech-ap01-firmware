@@ -135,6 +135,8 @@ static ap01_sim_state_t g_ap01_sim;
 static void ap01_wifi_init(void);
 static void ap01_wifi_offline(void);
 static bool ap01_wifi_reset(void);
+static void ap01_wifi_tick(uint64_t now);
+static bool ap01_wifi_has_attempt(void);
 static void ap01_sim_init(void);
 static void ap01_sim_tick(void);
 static bool ap01_sim_save(void);

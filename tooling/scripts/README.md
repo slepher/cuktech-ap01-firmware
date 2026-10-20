@@ -6,6 +6,8 @@
 
 ## 0041 QEMU执行与Patch注入
 
+`test-screen-window-0041.py --qemu <现有Linux AP01引擎> --image roms/0041/ap01-1.0.2_0041.bin --output <已有目录中的新JSON>` 有界执行原厂滑动、动画回调、窗口/页面标签查找和初始化尾部，检查9/10/17个孩子及24次双向转换。对象及LVGL叶函数为合成夹具，不执行真实分配/完整UI，也不访问设备。结果、REA静态证据与接口调整见[追加验证](../../reverse/reports/ap01/screen-host-append-validation-20261020.md)。引擎及WSL依赖须已有；报告拒绝覆盖。
+
 当前目标与验收见[独立OTA闭环验收](../../reverse/reports/ap01/qemu-ota-final-20261017.md)，硬件细节见[模型证据](../../reverse/reports/ap01/qemu-rtc-display-20261017.md)。原件已进NuttX、MiIO及LVGL原生初始化/定时回调；`ui-empty-scan-continuous-125.json`在50秒宿主观察期推进到虚拟8628ms，无guest异常。LCD捕获仍是原厂开机Logo，不能称完整主界面显示已验。显式`--icount-shift 2 --icount-sleep on`是合成时间，不表示E907精确计时；`start-qemu-ap01.py`历史RTC实例不代表最新模型。
 
 `run-qemu-mock.sh <新报告.json>`先编译当前模型，再有限时执行精确0041。必要功能显式启用：`--rom-shim <bin> --clic-mock --pec-uart-mock --flash-fixture <bin>`；CPU还须开启`x-ap01-clic=on,x-ap01-p=on`及原有T-Head扩展。`--breakpoint 0x62fc2500 --pass-interrupts 1000 --pass-ecalls 1000`允许原厂trap/handler/mret实际执行，其他异常仍停止。报告记录原件/引擎/shim/fixture哈希、UART、异常和QMP显示/Flash状态；截图与`pixel_writes`须结合执行入口判读，不将合成测试画面算作原厂UI。
@@ -186,9 +188,9 @@ pwsh -File tooling/scripts/sim-control.ps1 bank 1 1
 
 设置顺序为：屏幕常亮 → 屏幕保护 → **Wi-Fi** → 屏幕亮度 → 版本信息 → 操作指南 → 恢复出厂设置 → 返回。进入 Wi-Fi 后直接显示保存的网络名称，旋钮选择、单击切换；`*` 标记当前选择，末尾为返回。空列表仅提供返回。最多保存 8 个网络。
 
-Wi-Fi 列表独立保存在 HOSTFS 的 `ap01-sim-state.bin.wifi-list`，原有 `AP01SCF1` 结构不变。每条记录保存显示用 SSID 和一份不透明的原厂配置快照。激活时将快照**逐字节**覆盖 `ap01-sim-state.bin.wapi.conf`，不添加列表头、CRC 或其他字段；绑定标记和其他设置不受切换影响。重启以该原始文件匹配保存的网络。配置快照最多 1024 字节，SSID 最多 32 个 UTF-8 字节；状态回包只包含名称、槽号及当前槽号，不包含配置内容。
+Wi-Fi列表独立保存在HOSTFS的 `ap01-sim-state.bin.wifi-list`，原有 `AP01SCF1` 结构不变。每条记录保存展示SSID和最多1024字节的不透明SIM配置。试联将字节写入 `.wapi.conf`，先用独立 `.wifi-pending` 日志记录旧槽/候选槽；关联后等待IP事件，才确认活动槽和联网。失败/超时恢复旧字节并独立重连旧网；进程在试联中重启也恢复旧配置。两网都失败时保存列表仍可用，能从本地菜单手选旧网，不需要管理会话。SSID最多32个UTF-8字节，回包不含配置内容。
 
-这是一种**保留原始字节的兼容策略**，不是对米家存储格式的重新实现。输入必须是已经正确的原厂 Wi-Fi 配置快照，名称仅用于展示；程序不解析、不验证其中的 SSID/密码，也不能仅凭名称和密码生成原厂配置。目前没有证据证明 `/data/wapi.conf` 涵盖原厂米家配网的全部持久状态，不能把本模拟器的字节保留测试当作实机米家兼容验收。本功能不连接真实无线网络、不写真实设备。
+这是SIM交互与恢复模型，**不是实机PSM存储兼容实现**。已实读确认当前设备使用 `/data/network.ssid`、`/data/e#network.password` 等多份键值文件，并无 `wapi.conf`；密码还使用设备相关加密。SIM不解析或生成该合同，不连接真实无线网络、不写真实设备，不能把模型联网或字节保留测试当成米家兼容验收。
 
 通过现有本地管理接口导入、切换、删除（路径按实际 HOSTFS 修改）：
 
@@ -199,7 +201,9 @@ python3 tooling/scripts/sim-control.py wifi-select 0 --root /home/slepher/nuttx-
 python3 tooling/scripts/sim-control.py wifi-delete 3 --root /home/slepher/nuttx-ap01-sim
 ```
 
-`wifi-put` 也用于修改同一槽的记录，保存列表不会自动激活。修改或删除当前槽前，先选择其他网络，或者执行 `wifi-release` 取消激活并保留列表；`wifi 0` 仅模拟断网，仍保留激活配置。OTA 和绑定进行期间拒绝切换/取消激活。相同名称或相同原始快照不能重复占用不同槽，避免重启时匹配歧义。
+`wifi-put` 也用于修改同一槽，保存列表不会自动激活；允许编辑/删除当前SSID的候选记录，当前独立快照及连接保持不变。缺失当前SSID时菜单追加只读恢复项，按SSID去重；真正切换需要从菜单明确选择。`wifi-release` 取消激活并保留列表，`wifi 0` 仅模拟断网。OTA和绑定进行期间拒绝切换/取消激活，试联期间拒绝编辑列表。
+
+菜单中的 `...` 表示正在尝试，`*` 表示已收到IP确认，`!` 表示保存的活动配置当前离线。状态回包另有 `wifi_phase/wifi_target/wifi_previous`。SIM驱动默认分两次事件模拟关联和IP；测试可在选择前执行 `wifi-plan primary rollback delay_ms`，其中两个结果分别为0成功、1失败、2静默超时，延迟10–3000ms；`wifi-result 0/1/2` 可显式注入关联/IP/失败。未关联时IP事件被拒绝。模拟事件只用于测试，不是发往实机的配网命令。
 
 **不依赖联网的另一入口**：模拟器停止时使用 `--offline`，无需管理会话或网络；下次启动导入列表，不会自动激活：
 
@@ -218,4 +222,16 @@ cc -std=c11 -D_POSIX_C_SOURCE=200809L -D_DARWIN_C_SOURCE -Wall -Wextra -Werror -
 
 `test_sim_wifi.c` 覆盖独立存储、原始字节保留、旧格式不变、重启恢复、离线导入、故障保持旧激活配置、损坏拒绝及重置。`test-complete-sim.py` 已增加名称列表、菜单位置、点击切换和错误返回的真实 X11 验收步骤；它需要另外配置的 NuttX/LVGL SIM 环境。
 
-原厂格式与完整界面验收均按未闭环缺口跟踪，详见 [0041 Wi-Fi 选择缺口记录](../../reverse/reports/ap01/knowledge/0041-sim-wifi-selection-gaps.md)。
+完整GUI验收使用 `test-complete-sim.py`，可用 `AP01_SIM_EVIDENCE` 指向预建的新证据目录，避免覆盖历史截图。原厂格式与实机切网/绑定保留仍按未闭环缺口跟踪，详见 [0041 Wi-Fi 选择缺口记录](../../reverse/reports/ap01/knowledge/0041-sim-wifi-selection-gaps.md)。
+
+## 0041 实机独立诊断
+
+`diagnostic-client-0041.py` 使用已登记设备的 token JSON，通过18080常驻维护服务读取状态、原厂文件、ramlog及物理Flash；无需业务owner或C2会话。接口及部署证据见[专项](../../reverse/reports/ap01/independent-diagnostic-0041-20261021.md)。
+
+```sh
+python tooling/scripts/diagnostic-client-0041.py --host DEVICE_IP:18080 --token-file /private/device-token.json --mac DEVICE_MAC --operation status
+python tooling/scripts/diagnostic-client-0041.py --host DEVICE_IP:18080 --token-file /private/device-token.json --mac DEVICE_MAC --operation file --path /data/wapi.conf --output /private/wapi.conf
+python tooling/scripts/diagnostic-client-0041.py --host DEVICE_IP:18080 --token-file /private/device-token.json --mac DEVICE_MAC --operation flash --offset 0x710000 --length 0x10000 --output /private/data-partition.bin
+```
+
+原始字节只写文件，不输出配置内容；已有文件拒绝覆盖，失败前缀保留为`.partial`。每块核对MAC、boot ID、偏移、长度和CRC32，导出后再次核对boot ID。分块读取不承诺全局原子快照；普通文件的总长变化会终止读取，ramlog按一次非阻塞有界采样保存。

@@ -272,7 +272,7 @@ static void ap01_sim_init(void)
   else if (errno != ENOENT) ap01_sim_reply("config-load", AP01_SIM_ERROR, "storage", "read-failed");
   ap01_wifi_init();
   ap01_wifi_offline();
-  g_ap01_sim.wifi_connected = g_ap01_sim.wifi_configured;
+  g_ap01_sim.wifi_connected = g_ap01_sim.wifi_configured && !ap01_wifi_has_attempt();
   if (g_ap01_sim.wifi_connected) ap01_sim_weather_refresh();
 }
 
@@ -618,6 +618,7 @@ static bool ap01_sim_ota_cancel(void)
 static void ap01_sim_tick(void)
 {
   uint64_t now = ap01_sim_millis();
+  ap01_wifi_tick(now);
   if (g_ap01_sim_update_due && now >= g_ap01_sim_update_due)
     {
       if (!g_ap01_sim.wifi_connected || (g_ap01_sim.update_target && !g_ap01_sim.charger_connected)) g_ap01_sim_update_fault = 1;

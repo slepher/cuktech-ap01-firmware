@@ -17,7 +17,7 @@ from PIL import Image
 
 ROOT = Path(os.environ.get('NUTTX_SIM_HOME', '/home/slepher/nuttx-ap01-sim'))
 SOURCE = Path(__file__).resolve().parent
-EVIDENCE = SOURCE.parents[1] / 'reverse/rehost'
+EVIDENCE = Path(os.environ.get('AP01_SIM_EVIDENCE', SOURCE.parents[1] / 'reverse/rehost'))
 REPORT = EVIDENCE / 'complete-nuttx-sim-verification.json'
 LOG = EVIDENCE / 'complete-nuttx-sim-keyboard.log'
 assert EVIDENCE.is_dir()
@@ -57,7 +57,7 @@ def wait(check, description, timeout=10):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         state = snapshot()
-        if check(state):
+        if state and check(state):
             return state
         if sim is not None and sim.poll() is not None:
             raise AssertionError(f'SIM exited: {description}\n{LOG.read_text()[-6000:]}')
@@ -133,7 +133,7 @@ def clock_pixels(path, digits):
     asset_spec = importlib.util.spec_from_file_location('assets', SOURCE / 'rehost-assets.py')
     assets = importlib.util.module_from_spec(asset_spec)
     asset_spec.loader.exec_module(assets)
-    rom = (EVIDENCE.parent / 'ap01-1.0.2_0041.bin').read_bytes()
+    rom = Path(os.environ.get('AP01_ROM', SOURCE.parents[1] / 'roms/0041/ap01-1.0.2_0041.bin')).read_bytes()
     actual = Image.open(path).convert('RGB')
     for x, digit in zip((20, 83, 181, 244), digits):
         png, width, height = assets.png_at(rom, assets.DIGITS[int(digit)])
@@ -417,16 +417,86 @@ try:
     check(result['request_ok'] and result['wifi_active'] == -1, 'profile edits leave active configuration unchanged')
     key('Return')
     capture('wifi-names')
+    binding_before_wifi = snapshot()['bound']
+    command('wifi-plan', 0, 0, 800, status=2)
     key('Return')
-    check(snapshot()['wifi_active'] == 0, 'click Wi-Fi name activates it')
+    check(not snapshot()['wifi'] and snapshot()['wifi_target'] == 0,
+          'menu selection starts a network attempt without claiming connected')
+    capture('wifi-associating')
+    wait(lambda s: s['wifi_phase'] == 'waiting-ip', 'association is distinct from IP ready')
+    check(not snapshot()['wifi'], 'association alone is not network success')
+    capture('wifi-waiting-ip')
+    wait(lambda s: s['wifi_active'] == 0 and s['wifi'], 'click Wi-Fi name confirms IP')
     check((ROOT / 'ap01-sim-state.bin.wapi.conf').read_bytes() == fixture_native, 'active native bytes preserved')
+    result = control.request('wifi-put', (0,), ROOT, profile=('Home', fixture_native + b'-candidate'))
+    check(result['request_ok'] and result['wifi'] and result['wifi_current_ssid'] == 'Home',
+          'editing current SSID candidate only changes saved list')
+    check((ROOT / 'ap01-sim-state.bin.wapi.conf').read_bytes() == fixture_native,
+          'list update leaves current network configuration untouched')
+    command('wifi-delete', 0, status=2)
+    check(snapshot()['wifi'] and snapshot()['wifi_active'] == 8 and snapshot()['wifi_current_virtual'],
+          'deleted current record remains a unique local recovery item')
+    check(sum(p['ssid'] == 'Home' for p in snapshot()['wifi_profiles']) == 1,
+          'uniq merges current SSID once after saved record deletion')
+    capture('wifi-current-uniq')
+    result = control.request('wifi-put', (0,), ROOT, profile=('Home', fixture_native))
+    check(result['request_ok'] and not result['wifi_current_virtual'] and result['wifi'],
+          'saving current SSID merges without duplicate or reconnection')
     command('fault', 1, status=2)
     key('Right')
     key('Return')
     check(snapshot()['wifi_active'] == 0 and snapshot()['ui']['system'] == 7, 'failed switch retains old Wi-Fi')
     key('Return')  # dismiss error; keep selected row
+    command('wifi-plan', 1, 0, 100, status=2)
     key('Return')
-    check(snapshot()['wifi_active'] == 3, 'retry activates second Wi-Fi')
+    wait(lambda s: s['wifi_phase'] == 'confirmed' and s['wifi_active'] == 0 and s['wifi'],
+         'post-disconnect association failure restores original network')
+    check((ROOT / 'ap01-sim-state.bin.wapi.conf').read_bytes() == fixture_native,
+          'failed candidate restores original persistent bytes')
+    capture('wifi-automatic-rollback')
+    command('wifi-plan', 2, 0, 100, status=2)
+    key('Return')
+    wait(lambda s: s['wifi_phase'] == 'confirmed' and s['wifi_active'] == 0 and s['wifi'],
+         'silent network timeout restores original network')
+    command('wifi-plan', 1, 1, 100, status=2)
+    key('Return')
+    wait(lambda s: s['wifi_phase'] == 'disconnected' and not s['wifi'],
+         'candidate and original network can both be unavailable')
+    check(snapshot()['mode'] == 2 and snapshot()['selection'] == 2,
+          'local Wi-Fi menu remains usable with no network')
+    capture('wifi-offline-menu')
+    # No management request is issued between this snapshot and restored IP.
+    offline_request = snapshot()['request_high_water']
+    key('Left')
+    key('Return')
+    wait(lambda s: s['wifi_phase'] == 'confirmed' and s['wifi_active'] == 0 and s['wifi'],
+         'rotary menu alone reconnects original network while offline')
+    check(snapshot()['request_high_water'] == offline_request,
+          'offline recovery needs no management command or session')
+    capture('wifi-local-recovery')
+    # Interrupt a trial before the driver can produce association/IP events.
+    command('wifi-plan', 2, 0, 3000, status=2)
+    key('Right')
+    key('Return')
+    check((ROOT / 'ap01-sim-state.bin.wifi-pending').exists(), 'trial has durable recovery marker')
+    stop()
+    start()
+    wait(lambda s: s['wifi_phase'] == 'confirmed' and s['wifi_active'] == 0 and s['wifi'],
+         'restart during trial restores original configuration and reconnects')
+    check((ROOT / 'ap01-sim-state.bin.wapi.conf').read_bytes() == fixture_native,
+          'restart never commits an unconfirmed candidate')
+    check(not (ROOT / 'ap01-sim-state.bin.wifi-pending').exists(), 'recovered trial marker cleared')
+    go('Settings')
+    key('Return')
+    key('Right', 2)
+    key('Return')
+    command('wifi-plan', 0, 0, 200, status=2)
+    key('Right')
+    key('Return')
+    wait(lambda s: s['wifi_phase'] == 'confirmed' and s['wifi_active'] == 3 and s['wifi'],
+         'retry activates second Wi-Fi only after IP confirmation')
+    check(snapshot()['bound'] == binding_before_wifi, 'SIM binding survives trials, rollback and restart')
+    capture('wifi-second-network-confirmed')
     key('Right')
     key('Return')
     check(snapshot()['mode'] == 1, 'Wi-Fi Back returns to settings')

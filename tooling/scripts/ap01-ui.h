@@ -588,7 +588,7 @@ static void ap01_ui_press(void)
           else if (g_ap01_ui_selection == 2)
             {
               unsigned slot = ap01_ui_wifi_slot(g_ap01_ui_option);
-              back = slot == AP01_WIFI_SLOTS;
+              back = slot == AP01_WIFI_MENU_END;
               if (!back && !ap01_wifi_select(slot)) ap01_ui_service_feedback();
             }
           else if (g_ap01_ui_selection == 3)

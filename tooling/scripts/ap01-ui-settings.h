@@ -105,7 +105,7 @@ static void ap01_ui_draw_time_options(void)
 
 static unsigned ap01_ui_wifi_count(void)
 {
-  unsigned count = 0;
+  unsigned count = ap01_wifi_current_virtual() ? 1 : 0;
   for (unsigned i = 0; i < AP01_WIFI_SLOTS; ++i) count += g_ap01_wifi[i].length != 0;
   return count;
 }
@@ -114,7 +114,8 @@ static unsigned ap01_ui_wifi_slot(unsigned choice)
 {
   for (unsigned i = 0; i < AP01_WIFI_SLOTS; ++i)
     if (g_ap01_wifi[i].length && choice-- == 0) return i;
-  return AP01_WIFI_SLOTS;
+  if (ap01_wifi_current_virtual() && choice == 0) return AP01_WIFI_SLOTS;
+  return AP01_WIFI_MENU_END;
 }
 
 static void ap01_ui_wifi_draw(void)
@@ -126,10 +127,11 @@ static void ap01_ui_wifi_draw(void)
   for (unsigned i = 0; i <= count; ++i)
     {
       unsigned slot = ap01_ui_wifi_slot(i);
-      bool back = slot == AP01_WIFI_SLOTS;
-      lv_obj_t *row = ap01_ui_settings_row(list, back ? "返回" : g_ap01_wifi[slot].ssid,
+      bool back = slot == AP01_WIFI_MENU_END;
+      lv_obj_t *row = ap01_ui_settings_row(list, back ? "返回" : ap01_wifi_menu_profile(slot)->ssid,
         5 + (int)i * 73 - scroll, i == g_ap01_ui_option,
-        !back && (int)slot == g_ap01_wifi_active ? "*" : NULL, back);
+        !back && (int)slot == g_ap01_wifi_target && ap01_wifi_has_attempt() ? "..." :
+        !back && (int)slot == g_ap01_wifi_active ? (g_ap01_sim.wifi_connected ? "*" : "!") : NULL, back);
       /* SSIDs may occupy all 32 bytes: leave space for the active marker. */
       lv_obj_t *label = lv_obj_get_child(row, 0);
       lv_obj_set_width(label, 238);
