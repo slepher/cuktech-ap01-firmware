@@ -3,6 +3,7 @@
 #ifndef AP01_SIM_SERVICE_H
 #define AP01_SIM_SERVICE_H
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -131,6 +132,9 @@ typedef struct
 } ap01_sim_state_t;
 static ap01_sim_state_t g_ap01_sim;
 
+static void ap01_wifi_init(void);
+static void ap01_wifi_offline(void);
+static bool ap01_wifi_reset(void);
 static void ap01_sim_init(void);
 static void ap01_sim_tick(void);
 static bool ap01_sim_save(void);

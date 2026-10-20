@@ -32,6 +32,17 @@ static void ap01_sim_control_init(void)
     }
 }
 
+static void ap01_sim_json_string(FILE *out, const char *text)
+{
+  fputc('"', out);
+  for (const unsigned char *p = (const unsigned char *)text; *p; ++p)
+    {
+      if (*p == '"' || *p == '\\') fputc('\\', out);
+      fputc(*p, out);
+    }
+  fputc('"', out);
+}
+
 static void ap01_sim_status_publish(void)
 {
   FILE *out = fopen(AP01_SIM_RESPONSE ".new", "w");
@@ -47,6 +58,16 @@ static void ap01_sim_status_publish(void)
     g_ap01_sim.binding, g_ap01_sim.weather.status, g_ap01_sim.charger_connected,
     g_ap01_sim.ota, g_ap01_sim.ota_progress, g_ap01_sim.update_check,
     g_ap01_sim.firmware_version, g_ap01_sim.device_firmware_version);
+  fprintf(out, "\"wifi_active\":%d,\"wifi_profiles\":[", g_ap01_wifi_active);
+  bool first_wifi = true;
+  for (unsigned i = 0; i < AP01_WIFI_SLOTS; ++i)
+    if (g_ap01_wifi[i].length)
+      {
+        fprintf(out, "%s{\"slot\":%u,\"ssid\":", first_wifi ? "" : ",", i);
+        ap01_sim_json_string(out, g_ap01_wifi[i].ssid);
+        fputc('}', out); first_wifi = false;
+      }
+  fputs("],", out);
   fprintf(out, "\"ui\":{\"charge_view\":%u,\"charge_item\":%u,\"charge_popup\":%u,\"guide_active\":%u,\"guide_stage\":%u,\"guide_option\":%u,\"system\":%u,\"saver\":%u,\"boot\":%u},",
     g_ap01_ui_charge_view, g_ap01_ui_charge_index, g_ap01_ui_charge_popup,
     g_ap01_ui_guide_active, g_ap01_ui_guide_stage, g_ap01_ui_option,
@@ -120,9 +141,15 @@ static bool ap01_sim_control_poll(void)
               if (a) g_ap01_sim.charger_connected = true;
               ap01_sim_reply(operation, AP01_SIM_OK, "device-event", "");
             }
+          else if (!strcmp(operation, "wifi-put")) ap01_wifi_import_file(a, ".wifi-input");
+          else if (!strcmp(operation, "wifi-delete"))
+            { ap01_sim_wifi_profile empty = {0}; ap01_wifi_put(a, &empty); }
+          else if (!strcmp(operation, "wifi-release")) ap01_wifi_release();
+          else if (!strcmp(operation, "wifi-select")) ap01_wifi_select(a);
           else if (!strcmp(operation, "wifi"))
             {
-              if (a) ap01_sim_wifi_configure("AP01-Test");
+              if (a && g_ap01_wifi_active >= 0) ap01_wifi_select((unsigned)g_ap01_wifi_active);
+              else if (a) ap01_sim_wifi_configure("AP01-Test");
               else ap01_sim_wifi_disconnect();
             }
           else if (!strcmp(operation, "fault") && a <= 2)

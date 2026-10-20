@@ -31,8 +31,14 @@ REPORT.write_text(json.dumps(report, indent=2) + '\n')
 store = ROOT / 'ap01-sim-state.bin'
 backup = ROOT / 'ap01-sim-state.acceptance-backup'
 assert not backup.exists(), 'Previous state backup requires recovery first'
+wifi_files = list(ROOT.glob('ap01-sim-state.bin.wifi-*')) + list(ROOT.glob('ap01-sim-state.bin.wapi.conf*'))
+wifi_backups = [(file, file.with_name(file.name + '.acceptance-backup')) for file in wifi_files]
+assert all(not file.name.endswith('.acceptance-backup') and not saved.exists()
+           for file, saved in wifi_backups), 'Wi-Fi backup requires recovery first'
 if store.exists():
     store.rename(backup)
+for file, saved in wifi_backups:
+    file.rename(saved)
 sim = None
 xserver = None
 log = None
@@ -398,7 +404,33 @@ try:
         check(snapshot()['settings'][field], f'{field} enabled')
         key('Right', 2)
         key('Return')
+    key('Right')  # Wi-Fi is directly below screensaver.
+    key('Return')
+    check(snapshot()['selection'] == 2 and snapshot()['mode'] == 2, 'Wi-Fi menu position')
+    capture('wifi-empty')
+    key('Return')
+    check(snapshot()['mode'] == 1, 'empty Wi-Fi list has working Back')
+    fixture_native = b'opaque-original-config-test\x00\xff'
+    result = control.request('wifi-put', (0,), ROOT, profile=('Home', fixture_native))
+    check(result['request_ok'], 'management imports saved Wi-Fi without activation')
+    result = control.request('wifi-put', (3,), ROOT, profile=('Office', fixture_native + b'2'))
+    check(result['request_ok'] and result['wifi_active'] == -1, 'profile edits leave active configuration unchanged')
+    key('Return')
+    capture('wifi-names')
+    key('Return')
+    check(snapshot()['wifi_active'] == 0, 'click Wi-Fi name activates it')
+    check((ROOT / 'ap01-sim-state.bin.wapi.conf').read_bytes() == fixture_native, 'active native bytes preserved')
+    command('fault', 1, status=2)
     key('Right')
+    key('Return')
+    check(snapshot()['wifi_active'] == 0 and snapshot()['ui']['system'] == 7, 'failed switch retains old Wi-Fi')
+    key('Return')  # dismiss error; keep selected row
+    key('Return')
+    check(snapshot()['wifi_active'] == 3, 'retry activates second Wi-Fi')
+    key('Right')
+    key('Return')
+    check(snapshot()['mode'] == 1, 'Wi-Fi Back returns to settings')
+    key('Right')  # brightness
     key('Return')
     key('Return')
     key('Left', 12)
@@ -515,7 +547,7 @@ try:
         if target == 1:
             go('Settings')
             key('Return')
-            key('Right', 3)
+            key('Right', 4)
             key('Return')
             key('Return')  # native conditional TA1208 update row
         else:
@@ -569,7 +601,7 @@ try:
     command('charger', 0, status=2)
     go('Settings')
     key('Return')
-    key('Right', 3)
+    key('Right', 4)
     key('Return')
     capture('versions-disconnected')
     key('Return')  # only native Back remains when TA1208 absent
@@ -581,7 +613,7 @@ try:
     check(snapshot()['configured'] and not snapshot()['wifi'], 'configured and online states remain distinct')
     go('Settings')
     key('Return')
-    key('Right', 5)
+    key('Right', 6)
     key('Return')
     capture('factory-reset-confirm')
     key('Left')  # native default is Confirm; choose Cancel explicitly
@@ -618,6 +650,11 @@ finally:
     if xserver:
         xserver.terminate()
         xserver.wait(timeout=5)
+    for file in list(ROOT.glob('ap01-sim-state.bin.wifi-*')) + list(ROOT.glob('ap01-sim-state.bin.wapi.conf*')):
+        if not file.name.endswith('.acceptance-backup'):
+            file.unlink(missing_ok=True)
+    for file, saved in wifi_backups:
+        saved.rename(file)
     store.unlink(missing_ok=True)
     if backup.exists():
         backup.rename(store)

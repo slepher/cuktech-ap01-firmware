@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* 0041 settings: table 0xa01bb718, creators 0xa01a2c02/0xa01afb66. */
+/* 0041 settings plus SIM Wi-Fi selection; original table 0xa01bb718. */
 static void ap01_ui_settings_header(const char *title)
 {
   ap01_ui_label(g_ap01_ui_root, title, 18,
@@ -54,15 +54,15 @@ static void ap01_ui_draw_settings(void)
   ap01_ui_settings_header("设置");
   lv_obj_t *list = ap01_ui_settings_viewport();
   /* a00fd1ac preserves pairs and scrolls only at native boundary states. */
-  static const int positions[] = {0, 0, 141, 141, 287, 287, 400};
+  static const int positions[] = {0, 0, 141, 141, 287, 287, 433, 473};
   int scroll = positions[g_ap01_ui_selection];
   for (unsigned i = 0; i < AP01_UI_SETTINGS_COUNT; ++i)
     {
       const char *value = i < 2 ? (g_ap01_ui_setting_enabled[i] ? "打开" : "关闭") : NULL;
-      if (i == 3) value = NULL;
+      if (i == 4) value = NULL;
       ap01_ui_settings_row(list, ap01_ui_setting_name(i), 5 + (int)i * 73 - scroll,
                             g_ap01_ui_mode == AP01_UI_MODE_LIST && i == g_ap01_ui_selection,
-                            value, i == 6);
+                            value, i == 7);
     }
 }
 
@@ -103,15 +103,52 @@ static void ap01_ui_draw_time_options(void)
     }
 }
 
+static unsigned ap01_ui_wifi_count(void)
+{
+  unsigned count = 0;
+  for (unsigned i = 0; i < AP01_WIFI_SLOTS; ++i) count += g_ap01_wifi[i].length != 0;
+  return count;
+}
+
+static unsigned ap01_ui_wifi_slot(unsigned choice)
+{
+  for (unsigned i = 0; i < AP01_WIFI_SLOTS; ++i)
+    if (g_ap01_wifi[i].length && choice-- == 0) return i;
+  return AP01_WIFI_SLOTS;
+}
+
+static void ap01_ui_wifi_draw(void)
+{
+  unsigned count = ap01_ui_wifi_count();
+  if (g_ap01_ui_option > count) g_ap01_ui_option = count;
+  lv_obj_t *list = ap01_ui_settings_viewport();
+  int scroll = g_ap01_ui_option > 1 ? (int)(g_ap01_ui_option - 1) * 73 : 0;
+  for (unsigned i = 0; i <= count; ++i)
+    {
+      unsigned slot = ap01_ui_wifi_slot(i);
+      bool back = slot == AP01_WIFI_SLOTS;
+      lv_obj_t *row = ap01_ui_settings_row(list, back ? "返回" : g_ap01_wifi[slot].ssid,
+        5 + (int)i * 73 - scroll, i == g_ap01_ui_option,
+        !back && (int)slot == g_ap01_wifi_active ? "*" : NULL, back);
+      /* SSIDs may occupy all 32 bytes: leave space for the active marker. */
+      lv_obj_t *label = lv_obj_get_child(row, 0);
+      lv_obj_set_width(label, 238);
+      lv_label_set_long_mode(label, LV_LABEL_LONG_DOT);
+    }
+  if (!count)
+    ap01_ui_label(g_ap01_ui_root, "Wi-Fi: 0", 18, 45,
+                  lv_color_hex(0x808080), &ap01_rom_ascii17);
+}
+
 static void ap01_ui_draw_settings_detail(void)
 {
   const unsigned selection = g_ap01_ui_selection;
-  if (selection == 4)
+  if (selection == 5)
     {
       ap01_ui_guide_draw();
       return;
     }
-  if (selection != 3) ap01_ui_settings_header(ap01_ui_setting_name(selection));
+  if (selection != 4) ap01_ui_settings_header(ap01_ui_setting_name(selection));
   if (selection < 2)
     {
       /* Native options: 0xa059d33c/344 and fixed back text 0xa037b664.
@@ -125,7 +162,8 @@ static void ap01_ui_draw_settings_detail(void)
                               i < 2 && (g_ap01_ui_setting_enabled[selection] == (i == 0))
                                 ? "*" : NULL, i == 2);
     }
-  else if (selection == 2)
+  else if (selection == 2) ap01_ui_wifi_draw();
+  else if (selection == 3)
     {
       ap01_ui_label(g_ap01_ui_root,
                      g_ap01_ui_brightness_edit ? "左右滑动调节，单击确认" : "单击进入亮度调节",
@@ -152,11 +190,11 @@ static void ap01_ui_draw_settings_detail(void)
       lv_obj_set_style_bg_color(bar, lv_color_hex(0xffa500), LV_PART_INDICATOR);
       ap01_ui_settings_row(g_ap01_ui_root, "返回", 160, g_ap01_ui_option == 1, NULL, true);
     }
-  else if (selection == 3)
+  else if (selection == 4)
     {
       ap01_ui_system_version_draw();
     }
-  else if (selection == 5)
+  else if (selection == 6)
     {
       lv_obj_t *prompt = ap01_ui_label(g_ap01_ui_root, "确认恢复出厂设置？", 0, 70,
                                        lv_color_hex(0xffffff), &ap01_rom_title25);

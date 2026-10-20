@@ -270,6 +270,8 @@ static void ap01_sim_init(void)
       else ap01_sim_reply("config-load", AP01_SIM_OK, "readback", "");
     }
   else if (errno != ENOENT) ap01_sim_reply("config-load", AP01_SIM_ERROR, "storage", "read-failed");
+  ap01_wifi_init();
+  ap01_wifi_offline();
   g_ap01_sim.wifi_connected = g_ap01_sim.wifi_configured;
   if (g_ap01_sim.wifi_connected) ap01_sim_weather_refresh();
 }
@@ -302,6 +304,7 @@ static bool ap01_sim_factory_reset(void)
   ap01_sim_defaults();
   if (!ap01_sim_persist())
     { ap01_sim_decode(previous, length); g_ap01_sim_store_invalid = invalid; return false; }
+  if (!ap01_wifi_reset()) return false;
   g_ap01_sim.wifi_connected = false; g_ap01_sim.binding = AP01_SIM_IDLE;
   g_ap01_sim.weather.status = AP01_SIM_IDLE; g_ap01_sim.ota = AP01_SIM_IDLE;
   g_ap01_sim_weather_due = g_ap01_sim_binding_due = g_ap01_sim_protocol_due = g_ap01_sim_ota_due = g_ap01_sim_update_due = 0;
@@ -713,3 +716,5 @@ static void ap01_sim_tick(void)
         }
     }
 }
+
+#include "ap01-sim-wifi.h"

@@ -174,3 +174,42 @@ pwsh -File tools/ap01/sim-control.ps1 bank 1 1
 最终0041全功能SIM验收及产物见[验收报告](../../project-workflow/ap01/application-rehost-complete-0041-20261017.md)。构建脚本固定上游提交，并修复X11 Return/Space自动重复事件对对3秒长按的干扰；无需修改宿主键盘设置。完整验收入口为`test-complete-sim.py`；历史分批测试仅对应其当时版本。
 
 当前RF续作：`--rf-calibration-mock` 显式启用合成LOFCAL/ACAL/TX PM反馈；`MIX020=0`选择fixture不执行ROSCAL/RCCAL，非硅片复位声明。`rf-fullcal-61.json`已运行原厂LOFCAL/ACAL/TX/BZTX/RX搜索及结果写回，停后续MIX708，主UI仍未到；MAXW已补齐，P77项和PM14组`tests-rf-pm-selector-60.json`通过。完整边界见`project-workflow/ap01/qemu-rtc-display-20261017.md`。
+
+
+## 0041 模拟界面的 Wi-Fi 选择
+
+设置顺序为：屏幕常亮 → 屏幕保护 → **Wi-Fi** → 屏幕亮度 → 版本信息 → 操作指南 → 恢复出厂设置 → 返回。进入 Wi-Fi 后直接显示保存的网络名称，旋钮选择、单击切换；`*` 标记当前选择，末尾为返回。空列表仅提供返回。最多保存 8 个网络。
+
+Wi-Fi 列表独立保存在 HOSTFS 的 `ap01-sim-state.bin.wifi-list`，原有 `AP01SCF1` 结构不变。每条记录保存显示用 SSID 和一份不透明的原厂配置快照。激活时将快照**逐字节**覆盖 `ap01-sim-state.bin.wapi.conf`，不添加列表头、CRC 或其他字段；绑定标记和其他设置不受切换影响。重启以该原始文件匹配保存的网络。配置快照最多 1024 字节，SSID 最多 32 个 UTF-8 字节；状态回包只包含名称、槽号及当前槽号，不包含配置内容。
+
+这是一种**保留原始字节的兼容策略**，不是对米家存储格式的重新实现。输入必须是已经正确的原厂 Wi-Fi 配置快照，名称仅用于展示；程序不解析、不验证其中的 SSID/密码，也不能仅凭名称和密码生成原厂配置。目前没有证据证明 `/data/wapi.conf` 涵盖原厂米家配网的全部持久状态，不能把本模拟器的字节保留测试当作实机米家兼容验收。本功能不连接真实无线网络、不写真实设备。
+
+通过现有本地管理接口导入、切换、删除（路径按实际 HOSTFS 修改）：
+
+```sh
+python3 tooling/scripts/sim-control.py wifi-put 0 --ssid Home --native-config /private/path/home-wapi.conf --root /home/slepher/nuttx-ap01-sim
+python3 tooling/scripts/sim-control.py wifi-put 3 --ssid Office --native-config /private/path/office-wapi.conf --root /home/slepher/nuttx-ap01-sim
+python3 tooling/scripts/sim-control.py wifi-select 0 --root /home/slepher/nuttx-ap01-sim
+python3 tooling/scripts/sim-control.py wifi-delete 3 --root /home/slepher/nuttx-ap01-sim
+```
+
+`wifi-put` 也用于修改同一槽的记录，保存列表不会自动激活。修改或删除当前槽前，先选择其他网络，或者执行 `wifi-release` 取消激活并保留列表；`wifi 0` 仅模拟断网，仍保留激活配置。OTA 和绑定进行期间拒绝切换/取消激活。相同名称或相同原始快照不能重复占用不同槽，避免重启时匹配歧义。
+
+**不依赖联网的另一入口**：模拟器停止时使用 `--offline`，无需管理会话或网络；下次启动导入列表，不会自动激活：
+
+```sh
+python3 tooling/scripts/sim-control.py wifi-put 2 --ssid Travel --native-config /private/path/travel-wapi.conf --offline --root /home/slepher/nuttx-ap01-sim
+```
+
+离线输入为独立的 `.wifi-offline-2` 文件，导入成功后删除，失败则保留供检查。配置及临时文件按 `0600` 写入，包含凭据，请留在本机。列表损坏不会被静默覆盖；恢复出厂设置可重建空列表。文件提交使用同步后原子重命名；不承诺多个文件之间的掉电事务。
+
+宿主验证：
+
+```sh
+cc -std=c11 -D_POSIX_C_SOURCE=200809L -D_DARWIN_C_SOURCE -Wall -Wextra -Werror -Wno-unused-function -fsanitize=address,undefined tooling/scripts/test_sim_wifi.c -o /tmp/ap01-wifi-check
+/tmp/ap01-wifi-check
+```
+
+`test_sim_wifi.c` 覆盖独立存储、原始字节保留、旧格式不变、重启恢复、离线导入、故障保持旧激活配置、损坏拒绝及重置。`test-complete-sim.py` 已增加名称列表、菜单位置、点击切换和错误返回的真实 X11 验收步骤；它需要另外配置的 NuttX/LVGL SIM 环境。
+
+原厂格式与完整界面验收均按未闭环缺口跟踪，详见 [0041 Wi-Fi 选择缺口记录](../../reverse/reports/ap01/knowledge/0041-sim-wifi-selection-gaps.md)。

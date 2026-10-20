@@ -41,7 +41,7 @@ enum ap01_ui_mode_e
   AP01_UI_MODE_DETAIL
 };
 
-#define AP01_UI_SETTINGS_COUNT 7
+#define AP01_UI_SETTINGS_COUNT 8
 #define AP01_UI_PORT_COUNT 2
 
 static lv_obj_t *g_ap01_ui_root;
@@ -92,10 +92,10 @@ static const char *ap01_ui_mode_name(enum ap01_ui_mode_e mode)
 
 static const char *ap01_ui_setting_name(unsigned int selection)
 {
-  /* Direct 0041 six-pointer table at 0xa01bb718; final row is separate. */
+  /* Original 0041 order, with the SIM Wi-Fi row inserted after screensaver. */
   static const char *const names[AP01_UI_SETTINGS_COUNT] =
     {
-      "屏幕常亮", "屏幕保护", "屏幕亮度", "版本信息", "操作指南",
+      "屏幕常亮", "屏幕保护", "Wi-Fi", "屏幕亮度", "版本信息", "操作指南",
       "恢复出厂设置", "返回"
     };
   return selection < AP01_UI_SETTINGS_COUNT ? names[selection] : "未知设置";
@@ -252,7 +252,7 @@ static void ap01_ui_guide_return(void)
     {
       g_ap01_ui_page = AP01_UI_SETTINGS;
       g_ap01_ui_mode = AP01_UI_MODE_LIST;
-      g_ap01_ui_selection = 4;
+      g_ap01_ui_selection = 5;
     }
 }
 
@@ -434,8 +434,15 @@ static void ap01_ui_turn(int direction)
     }
   else if (g_ap01_ui_page == AP01_UI_SETTINGS && g_ap01_ui_mode == AP01_UI_MODE_DETAIL)
     {
-      if (g_ap01_ui_selection == 3) ap01_ui_system_version_turn(direction);
-      else if (g_ap01_ui_selection == 2 && g_ap01_ui_brightness_edit)
+      if (g_ap01_ui_selection == 2)
+        {
+          unsigned limit = ap01_ui_wifi_count();
+          if (g_ap01_ui_option > limit) g_ap01_ui_option = limit;
+          if (direction > 0 && g_ap01_ui_option < limit) ++g_ap01_ui_option;
+          if (direction < 0 && g_ap01_ui_option > 0) --g_ap01_ui_option;
+        }
+      else if (g_ap01_ui_selection == 4) ap01_ui_system_version_turn(direction);
+      else if (g_ap01_ui_selection == 3 && g_ap01_ui_brightness_edit)
         {
           /* Native callback a00fd1ac: raw0..110 in steps10; right0->110. */
           if (direction > 0) g_ap01_ui_brightness = g_ap01_ui_brightness >= 1 &&
@@ -553,16 +560,16 @@ static void ap01_ui_press(void)
         { g_ap01_ui_mode = AP01_UI_MODE_LIST; g_ap01_ui_selection = 0; }
       else if (g_ap01_ui_mode == AP01_UI_MODE_LIST)
         {
-          if (g_ap01_ui_selection == 6)
+          if (g_ap01_ui_selection == 7)
             { g_ap01_ui_mode = AP01_UI_MODE_OVERVIEW; g_ap01_ui_selection = 0; }
           else
             {
               g_ap01_ui_mode = AP01_UI_MODE_DETAIL;
-              g_ap01_ui_option = g_ap01_ui_selection == 5 ? 1 : 0;
+              g_ap01_ui_option = g_ap01_ui_selection == 6 ? 1 : 0;
               g_ap01_ui_brightness_edit = false;
               g_ap01_ui_brightness = g_ap01_sim.settings.brightness;
-              if (g_ap01_ui_selection == 3) ap01_ui_system_version_open();
-              if (g_ap01_ui_selection == 4) ap01_ui_guide_open(false);
+              if (g_ap01_ui_selection == 4) ap01_ui_system_version_open();
+              if (g_ap01_ui_selection == 5) ap01_ui_guide_open(false);
             }
         }
       else
@@ -580,6 +587,12 @@ static void ap01_ui_press(void)
             }
           else if (g_ap01_ui_selection == 2)
             {
+              unsigned slot = ap01_ui_wifi_slot(g_ap01_ui_option);
+              back = slot == AP01_WIFI_SLOTS;
+              if (!back && !ap01_wifi_select(slot)) ap01_ui_service_feedback();
+            }
+          else if (g_ap01_ui_selection == 3)
+            {
               back = !g_ap01_ui_brightness_edit && g_ap01_ui_option == 1;
               if (!back && !g_ap01_ui_brightness_edit) g_ap01_ui_brightness_edit = true;
               else if (!back)
@@ -589,8 +602,8 @@ static void ap01_ui_press(void)
                   if (ap01_ui_settings_commit(&candidate)) g_ap01_ui_brightness_edit = false;
                 }
             }
-          else if (g_ap01_ui_selection == 3) back = ap01_ui_system_version_press();
-          else if (g_ap01_ui_selection == 5)
+          else if (g_ap01_ui_selection == 4) back = ap01_ui_system_version_press();
+          else if (g_ap01_ui_selection == 6)
             {
               if (g_ap01_ui_option == 0) back = true;
               else if (!ap01_sim_factory_reset()) ap01_ui_service_feedback();

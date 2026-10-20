@@ -217,6 +217,9 @@ int main(void)
   CHECK(!g_ap01_sim_store_invalid && g_ap01_sim.settings.output_mode == 0 && !g_ap01_sim.bound);
   CHECK(g_ap01_sim.firmware_version == 41); /* corrupt record never supplies a version */
   CHECK(unlink(service_test_path) == 0);
+  char wifi_path[256];
+  CHECK(ap01_wifi_path(wifi_path, ".wifi-list") && unlink(wifi_path) == 0);
+  CHECK(ap01_wifi_path(wifi_path, ".wapi.conf") && unlink(wifi_path) == 0);
   printf("SIM service checks PASS: %u; config_max=%u state_bytes=%zu\n", checks,
          (unsigned)AP01_SIM_CONFIG_MAX, sizeof(g_ap01_sim));
   return 0;

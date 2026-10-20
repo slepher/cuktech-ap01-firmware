@@ -205,7 +205,7 @@ static void ap01_ui_system_tick(void)
       g_ap01_ui_system_seen_revision = g_ap01_sim.revision;
       if (!ap01_ui_system_active() &&
           (g_ap01_ui_page == AP01_UI_MIJIA ||
-           (g_ap01_ui_page == AP01_UI_SETTINGS && g_ap01_ui_selection == 3)))
+           (g_ap01_ui_page == AP01_UI_SETTINGS && (g_ap01_ui_selection == 4 || g_ap01_ui_selection == 2))))
         g_ap01_ui_system_changed = true;
     }
   if ((!g_ap01_ui_system_seen && g_ap01_sim.binding == AP01_SIM_PENDING) ||

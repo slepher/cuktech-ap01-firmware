@@ -30,7 +30,7 @@ case ${1:-status} in
     cp "$source_dir/ap01-ui-settings.h" ../apps/examples/lvgldemo/ap01-ui-settings.h
     cp "$source_dir/ap01-ui-charge.h" ../apps/examples/lvgldemo/ap01-ui-charge.h
     cp "$source_dir/ap01-ui-details.h" ../apps/examples/lvgldemo/ap01-ui-details.h
-    cp "$source_dir/ap01-ui-guide.h" "$source_dir/ap01-ui-system.h" "$source_dir/ap01-sim-service.h" "$source_dir/ap01-sim-service-impl.h" "$source_dir/ap01-sim-control.h" ../apps/examples/lvgldemo/
+    cp "$source_dir/ap01-ui-guide.h" "$source_dir/ap01-ui-system.h" "$source_dir/ap01-sim-wifi.h" "$source_dir/ap01-sim-service.h" "$source_dir/ap01-sim-service-impl.h" "$source_dir/ap01-sim-control.h" ../apps/examples/lvgldemo/
     python3 - <<'PY'
 from pathlib import Path
 p = Path('arch/sim/src/sim/posix/sim_x11eventloop.c')
