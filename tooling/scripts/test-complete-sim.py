@@ -17,7 +17,7 @@ from PIL import Image
 
 ROOT = Path(os.environ.get('NUTTX_SIM_HOME', '/home/slepher/nuttx-ap01-sim'))
 SOURCE = Path(__file__).resolve().parent
-EVIDENCE = SOURCE.parents[1] / 'artifacts/ap01-research/rehost-20261016'
+EVIDENCE = SOURCE.parents[1] / 'reverse/rehost'
 REPORT = EVIDENCE / 'complete-nuttx-sim-verification.json'
 LOG = EVIDENCE / 'complete-nuttx-sim-keyboard.log'
 assert EVIDENCE.is_dir()

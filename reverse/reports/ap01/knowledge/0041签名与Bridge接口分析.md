@@ -12,7 +12,7 @@
 
 新版仍有NuttX内置应用表、米家网络任务、原厂界面任务、littlefs资源区和登记到通用堆的4 MiB外部内存，支持保留系统/驱动、增加Bridge设备应用的研究方向。没有证明现成局域网HTTP服务、可直接使用的Bridge GATT或动态可执行文件加载器。此报告提供入口和预算约束，不承诺这些地址已成为稳定SDK ABI。
 
-证据分为：原文件/CRC/结构解析；Capstone候选定位；GNU独立反汇编；Ghidra真实函数反编译与交叉引用；公开芯片SDK条件。字符串命中、通用SDK和不完整伪代码各自保留限制。原始输出均在Git忽略的`artifacts/ap01-research/0041-20261013/`，研究工具在本仓库，第三方克隆只读。
+证据分为：原文件/CRC/结构解析；Capstone候选定位；GNU独立反汇编；Ghidra真实函数反编译与交叉引用；公开芯片SDK条件。字符串命中、通用SDK和不完整伪代码各自保留限制。原始输出均在Git忽略的`reverse/analysis/0041-20261013/`，研究工具在本仓库，第三方克隆只读。
 
 ## 镜像身份与地址
 
@@ -28,7 +28,7 @@
 
 代码和flash常量使用`VA = 文件偏移 + 0x9ffff000`，入口文件0x1000对应0xa0000000。这不是烧录偏移，也不适用于拷贝到RAM后的全部对象。0041比0031小34,816 B；相对7 MiB槽的文件尺寸差额570,328 B不能直接当可追加代码量。
 
-来源：[最终候选定位](../../../artifacts/ap01-research/0041-20261013/refined/comparison.json)、[启动结构清单](../../../artifacts/ap01-research/0041-20261013/refined/inventory.json)。候选扫描止于文件0x1be7a0/0x1ba700，不是全ROM控制流。未解码项包括内嵌数据，不能把其数量称为厂商指令数量。GCC后缀共享让`mcu_signed_file+4`成为`signed_file`的实际地址，工具已处理内部字符串起点；只查零终止字符串起点会漏掉该引用。
+来源：[最终候选定位](../../../analysis/0041-20261013/refined/comparison.json)、[启动结构清单](../../../analysis/0041-20261013/refined/inventory.json)。候选扫描止于文件0x1be7a0/0x1ba700，不是全ROM控制流。未解码项包括内嵌数据，不能把其数量称为厂商指令数量。GCC后缀共享让`mcu_signed_file+4`成为`signed_file`的实际地址，工具已处理内部字符串起点；只查零终止字符串起点会漏掉该引用。
 
 ## REA、Ghidra与分析质量
 
@@ -63,7 +63,7 @@ Provider通常提供会话、查询和证据组织；同一引擎同配置的单
 
 0031同一位置直接继续解析cert_verify，再仅在signed_file非零时要求original_length；false没有新版这一立即拒绝。不能由局部分支证明0031任意包均可安装，但它与公开修改版采用signed_file=false的安装记录相符。
 
-证据：[0041 Ghidra参数解析](../../../artifacts/ap01-research/0041-20261013/0041-ghidra-pass1.txt)、[0031对照](../../../artifacts/ap01-research/0041-20261013/0031-ghidra-parser-control.txt)、[GNU完整窗口](../../../artifacts/ap01-research/0041-20261013/0041-ota-parser-gnu.txt)。
+证据：[0041 Ghidra参数解析](../../../analysis/0041-20261013/0041-ghidra-pass1.txt)、[0031对照](../../../analysis/0041-20261013/0031-ghidra-parser-control.txt)、[GNU完整窗口](../../../analysis/0041-20261013/0041-ota-parser-gnu.txt)。
 
 ## 后续验签、CRC与切槽
 
@@ -78,9 +78,9 @@ Provider通常提供会话、查询和证据组织；同一引擎同配置的单
 | 0xa0055a14的0xff13分支 | 取ro.boot.update_slot，更新分区项/计数，选择0xe000或0xf000表记录写入路径 | custom0和RAM表字段仍待细化；未证明断电恢复/Boot2重试 |
 | 0xa0074ea2 | 名为ota_mcu的独立验证/写magic路径，使用不同结构字段与偏移8 | 不能将MCU/PogoPin路径当作主应用安装绕过 |
 
-证据：[验证与安装调用](../../../artifacts/ap01-research/0041-20261013/0041-ghidra-pass2.txt)、[证书/CRC/分区](../../../artifacts/ap01-research/0041-20261013/0041-ghidra-pass3.txt)、[分派与网络](../../../artifacts/ap01-research/0041-20261013/0041-ghidra-pass5.txt)。伪代码中的FUN名称仅代表地址，表中语义是按调用/参数/日志综合判断。
+证据：[验证与安装调用](../../../analysis/0041-20261013/0041-ghidra-pass2.txt)、[证书/CRC/分区](../../../analysis/0041-20261013/0041-ghidra-pass3.txt)、[分派与网络](../../../analysis/0041-20261013/0041-ghidra-pass5.txt)。伪代码中的FUN名称仅代表地址，表中语义是按调用/参数/日志综合判断。
 
-根证书文件偏移0x259ba4..0x259dd6，代码直接引用。OpenSSL解析为CA:TRUE、O=Mijia Root/C=CN、P-256公开密钥、证书签名ecdsa-with-SHA256。[公开证书](../../../artifacts/ap01-research/0041-20261013/mijia-root-public.pem)、[独立解析](../../../artifacts/ap01-research/0041-20261013/mijia-root-openssl.txt)。
+根证书文件偏移0x259ba4..0x259dd6，代码直接引用。OpenSSL解析为CA:TRUE、O=Mijia Root/C=CN、P-256公开密钥、证书签名ecdsa-with-SHA256。[公开证书](../../../analysis/0041-20261013/mijia-root-public.pem)、[独立解析](../../../analysis/0041-20261013/mijia-root-openssl.txt)。
 
 所以当前证据是设备拥有验签公钥/信任根，不能推导固件签名私钥位于设备。固件签名通常由发布方完成；设备身份密钥即使存在也不等于发布方签名私钥。无法由该公开密钥直接反推出私钥；实际研究价值在实现、信任配置与可用安装入口，不在暴力破解标准椭圆曲线。未证明此0041实现存在可利用缺陷。
 
@@ -120,7 +120,7 @@ Provider通常提供会话、查询和证据组织；同一引擎同配置的单
 
 0041分区初始化0xa0059762实际读取E000/F000两份596 B表，校验并比较age，然后要求fw起点10000或7b0000且长度700000。它创建fw1/fw2各7 MiB、ota 512 KiB、crash 48 KiB、reserve 64 KiB、resource 0xeb0000起0x140000=1.25 MiB，并将/resource挂载littlefs。资源区容量不等于空闲量；512 KiB ota节点也不能容纳本次完整BIN。原厂固件槽机制保留，本项目应用/Bundle仍用单份覆盖方案。
 
-0xa0029640..0xa0029688加载同一通用堆对象0x62fc6aec，分别增加内部区域及0xa8000000..0xa8400000共4 MiB；区域登记调用0xa002e9c2。[GNU参数核对](../../../artifacts/ap01-research/0041-20261013/0041-heap-region-gnu.txt)。这是0041自己的机器码，不沿用0031地址。窗口起点不证明整个函数边界；pass2的该候选函数出现unaff_s0，不能当完整启动伪代码。登记4 MiB不是已测空闲4 MiB，仍缺运行时最小空闲量、连续块、显示DMA/对齐要求。
+0xa0029640..0xa0029688加载同一通用堆对象0x62fc6aec，分别增加内部区域及0xa8000000..0xa8400000共4 MiB；区域登记调用0xa002e9c2。[GNU参数核对](../../../analysis/0041-20261013/0041-heap-region-gnu.txt)。这是0041自己的机器码，不沿用0031地址。窗口起点不证明整个函数边界；pass2的该候选函数出现unaff_s0，不能当完整启动伪代码。登记4 MiB不是已测空闲4 MiB，仍缺运行时最小空闲量、连续块、显示DMA/对齐要求。
 
 ## Bridge可复用接口与设计取舍
 

@@ -10,4 +10,4 @@
 
 本轮REA inspect_firmware_regions返回 unsupported_provider：该集成要求Linux与调用者提供的Binwalk。本轮有效证据来自普通Python字节扫描、已有精确哈希匹配的机器码引用扫描、Capstone局部反汇编；不是REA反编译证据。没有打开设备或写入固件。
 
-证据：`../../artifacts/ap01-research/usb-firmware-scan-20261013.json`；历史机器码引用：`../../artifacts/ap01-research/0041-20261013/comparison.json`。
+证据：`../../artifacts/ap01-research/usb-firmware-scan-20261013.json`；历史机器码引用：`../../reverse/analysis/0041-20261013/comparison.json`。

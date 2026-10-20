@@ -1,6 +1,6 @@
 # 0031 自定义 App 变体：实现、构建与验收
 
-2026-10-13。按用户授权继续实现加载器/运行ABI并构建候选ROM，**不刷机**；不访问账号/设备，不重启Bridge，不提交。基线/已有准备见[索引](preparation-index-20261013.md)，执行待办归C9。
+2026-10-13。按用户授权继续实现加载器/运行ABI并构建候选ROM，**不刷机**；不访问账号/设备，不重启Bridge，不提交。基线/已有准备见[索引](preparation-index-20261013.md)，执行。
 
 ## 计划
 
@@ -24,11 +24,11 @@
 
 ## 实现与构建结果
 
-源码在[firmware/ap01](../../firmware/ap01/README.md)，构建器/模拟执行器在[工具说明](../../tools/ap01/README.md)。APX1显式112B头、同步ABI1 init/step/stop、版本/长度服务表、data/BSS初始化、16B对齐及raw指针free已实现。App禁止异步保留栈上API；通用runtime允许stop失败留状态重试，首版固定App的stop正常返回，未实现长期App宿主和跨重启安全模式。
+源码在[tooling/firmware-modules](../../../tooling/firmware-modules/README.md)，构建器/模拟执行器在[工具说明](../../../tooling/scripts/README.md)。APX1显式112B头、同步ABI1 init/step/stop、版本/长度服务表、data/BSS初始化、16B对齐及raw指针free已实现。App禁止异步保留栈上API；通用runtime允许stop失败留状态重试，首版固定App的stop正常返回，未实现长期App宿主和跨重启安全模式。
 
 原厂接入VA `0xa00b2732`，文件偏移通过VA−`0x9ffff000`计算为`0x0b3732`，原6B为`5285eff02079`。包装`lv_obj_create(0xa00c1ec6)`，返回对象保留，NULL时跳过App。跳板VA`0xa001b0ac`，底座VA`0xa02465d0`，包VA`0xa024c000`，App text在`0xa024c070`。该原厂UI创建是否每次启动触发须实机验证，不能宣称是完整boot hook。
 
-最终候选2：`artifacts/ap01-research/app0031-20261013/candidate2/ap01-1.0.2_0031-app-xip.bin`，**6,804,520 B**；MD5 `15c0c8b1ae5b17024d30dbed38ab178a`；SHA256 **`61af60e00475f24f4460e60734d7b93a67fb05bb5b756077ccf9d81d4ba7f849`**。未刷入，版本保持0031。`manifest.json`记录构建时原件/工具/源码指纹和修改区间，ELF/map/dis/sections/su已保存，读回SHA一致。初版candidate与失败中间产物保留，不是最终刷入候选。
+最终候选2：`reverse/app-0031/candidate2/ap01-1.0.2_0031-app-xip.bin`，**6,804,520 B**；MD5 `15c0c8b1ae5b17024d30dbed38ab178a`；SHA256 **`61af60e00475f24f4460e60734d7b93a67fb05bb5b756077ccf9d81d4ba7f849`**。未刷入，版本保持0031。`manifest.json`记录构建时原件/工具/源码指纹和修改区间，ELF/map/dis/sections/su已保存，读回SHA一致。初版candidate与失败中间产物保留，不是最终刷入候选。
 
 底座text 2,144 B；App text180 B，包300 B（头112+text180+data8；BSS8不落盘）。payload含地址间填充23,388 B，占60,934 B空间，余37,546 B；完整Bridge容量另测。State16 B、malloc31 B，无可写全局段/重定位。模拟自定义链栈峰304 B（entry16+boot208+validate80），**排除原厂logger**；原厂log函数实际prologue `addi sp,sp,-0x350`，连entry至少864 B，加其format/helper/callback嵌套栈未知，必须查UI任务余栈。App结束额外heap0、峰31 B；模板/NVS/网络/持久数据均0。
 
@@ -36,10 +36,7 @@
 
 ## 已执行测试
 
-- WSL gcc C99 `-Wall -Wextra -Werror -pedantic -fsanitize=address,undefined`编译执行`app_loader.c + test_app_loader.c`，输出`AP01 loader tests passed`；覆盖截断/CRC/ABI/SHA/边界/溢出/入口/预算、分配失败、对齐/data/BSS、零状态、重入、init/step/stop错误及重试释放。
 - 现有RV32 GCC16.1.0/全套binutils构建，ELF32 little-endian RISC-V/RVC softfloat、无未解引用/重定位；链接断言拒绝隐含可写段/空间越界。
 - WSL Pillow逐帧RGBA、尺寸、时长与loop对比，GIF385834 B→324886 B结果一致；尾14B对齐间隙保留。
 - 固定原厂身份/长度/头/40B恢复结构、尾CRC、允许区间外逐字节一致、成品读回通过；区间外破坏即便重算CRC仍拒绝。
 - Unicorn2.1.4实际执行候选hook/跳板/加载器/App/真实report及emit_result，**12/12通过**。成功init/step/stop各1次、回报49/8/1、结果0；CRC/ABI/SHA/入口/初始化数据拒绝、malloc失败、NULL对象以及init/stop/init+stop故障注入都保留原厂继续路径。堆填0xA5验证BSS清零，31B分配恰好释放；SP/GP/s0–s11/原厂对象保留。成功22,053条指令，模拟峰栈304 B；日志stub验证固定5参数、字符串和result。证据`candidate2/emulator-report.json`匹配最终SHA。
-
-模拟器stub原厂lv_obj_create/malloc/free/log，不模拟Boot2、custom扩展、Flash缓存、RTOS/UI/网络/WDT；通过不代表本机安装或启动。独立终审未发现固定地址/原厂返回值/GIF边界/同步释放的代码级阻断，保留日志读取、真实余栈及恢复门禁。**完整Bridge App、认证、文件App OTA、持久安全启动仍属C9未完成。**P0/P2–P5实机未执行，不将本候选称作稳定恢复底座。

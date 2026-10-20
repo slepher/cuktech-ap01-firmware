@@ -1,6 +1,5 @@
 # AP01 0041 ROM逆向交接：从这里开始
 
-更新：2026-10-17，Asia/Hong_Kong。本文是当前状态快照和接手入口，不是待办副本。平台待办仍归`docs/roadmap/backlog.md`的C9；现场设备/Bridge部署仍以根目录`PROGRESS.md`为准。
 
 ## 一分钟结论
 
@@ -8,7 +7,7 @@
 2. **原厂应用界面已在NuttX SIM中重建并验收**，包括原ROM字体/图片、页面、旋钮和模拟业务；它不是原厂整ROM执行，也没有真实米家/充电器/OTA服务接通。
 3. **miio_client与mible_mesh_common_bt完整代码逆向正在推进，未完成。** MiIO全部162个已知根已完成局部实现审阅，90项描述符已关联实现合同；MiBLE补齐传输/计数器/认证等9份合同。当前同profile315函数，依赖闭包仍开放；见[上层续作与验收](upper-layer-0041-20261017.md)。
 4. **已实际修复私有profile的no-return和已观察T-Head/历史P指令语义。** 蓝牙main恢复5696 B、公共初始化7982 B，第二版模型387项检查通过，HTTP/OTA八个函数的已知坏指令截断已消除。当前工作是回调、ABI、类型和直接/间接依赖闭包，不能再按旧generic profile的截断伪代码作结论。详细复现见[私有模型专项](private-profile-0041-20261017.md)。
-5. **未刷AP01实机，未停止实机任务，未改Bridge。** 用户要求复杂工作使用 **GPT-6.1 Sol子代理，不用Luna**。仍保留“先不刷实机”的约束。
+5. **未刷AP01实机，未停止实机任务，未改Bridge。** 仍保留“先不刷实机”的约束。
 
 ## 工作区、身份与文件
 
@@ -16,16 +15,16 @@
 
 **最新路线调整（2026-10-17）**：用户选择保留原厂后台、Patch注入独立App，并要求QEMU执行0041；没有可用救砖入口，继续不刷实机。已实现QEMU10.1.0最小machine和有限功能模型，18项回归通过；原件执行到RAM中的OTP读取触发，尚未启动NuttX/UI。QEMU专用入口注入/返回的非零寄存器对照通过，候选不可安装。优先续作[QEMU运行记录](qemu-0041-runtime-20261017.md)及[计划](qemu-0041-plan-20261017.md)；下文完整MiIO/MiBLE源码恢复账本保留，不再作为Patch接入的前置。0041实机/Bridge仍未改。
 
-仓库：`D:\Documents\PlatformIO\Projects\codex_status`。PowerShell工具命令使用`login:false`并显式切换目录。旁仓库`D:\Documents\PlatformIO\Projects\cuktech-ap01-firmware-tools`只读。研究证据位于已存在的`artifacts/ap01-research/`；多数大文件被Git忽略，换机器/工作树前需另行保留，不要假定git clone会带回。
+仓库：`D:\Documents\PlatformIO\Projects\cuktech-ap01-firmware`。PowerShell工具命令使用`login:false`并显式切换目录。旁仓库`D:\Documents\PlatformIO\Projects\cuktech-ap01-firmware-tools`只读。研究证据位于已存在的`evidence/`；多数大文件被Git忽略，换机器/工作树前需另行保留，不要假定git clone会带回。
 
 | 对象 | 仓库内路径/位置 | 身份与边界 |
 | --- | --- | --- |
-| 0041原件 | `artifacts/ap01-research/ap01-1.0.2_0041.bin` | 6,769,704 B；SHA256见下；只读 |
-| 研究证据目录 | `artifacts/ap01-research/rehost-20261016/` | 名称仍为16日，包含17日最新结果；不要按目录日期误判旧版 |
-| 原件旧Ghidra导出 | `artifacts/ap01-research/0041-20261013/0041-ghidra-pass1.txt`至`pass5.txt` | 大量已有伪代码/调用关系；保留custom0/unaff/函数边界限制 |
-| REA旧协议证据 | `artifacts/ap01-research/rehost-20261016/miio-mible-rea-0041.evidence.json` | 冻结的30项函数记录，约11.4 MB |
+| 0041原件 | `roms/0041/ap01-1.0.2_0041.bin` | 6,769,704 B；SHA256见下；只读 |
+| 研究证据目录 | `reverse/rehost/` | 名称仍为16日，包含17日最新结果；不要按目录日期误判旧版 |
+| 原件旧Ghidra导出 | `reverse/analysis/0041-20261013/0041-ghidra-pass1.txt`至`pass5.txt` | 大量已有伪代码/调用关系；保留custom0/unaff/函数边界限制 |
+| REA旧协议证据 | `reverse/rehost/miio-mible-rea-0041.evidence.json` | 冻结的30项函数记录，约11.4 MB |
 | 指纹清单 | 同目录`miio-mible-rea-manifest-0041.json` | 绑定协议报告、原件、参考源码与Evidence，不是全代码完成证明 |
-| 私有分析根 | `artifacts/ap01-research/private-0041-20261017/` | 独立Ghidra/REA副本、语言、profile、修复脚本与Evidence；共享工具不改 |
+| 私有分析根 | `evidence/rea-0041-20261017/` | 独立Ghidra/REA副本、语言、profile、修复脚本与Evidence；共享工具不改 |
 | 当前完整采集 | 私有根`evidence/upper-complete.evidence.json` | 315函数、179061078 B；内容SHA见`upper-manifest.json`；同一新profile |
 | 当前覆盖与索引 | 私有根`evidence/upper-coverage.json`、`upper-command-catalog.json` | 2529条直接边、537个未采集直接callee、161处未定向调用；90项描述符合同索引 |
 | 当前指纹清单 | 私有根`evidence/upper-manifest.json` | 190处Evidence引用、57模型输入校验；旧manifest绑定的18文件均不变 |
@@ -44,8 +43,8 @@
 快速只读核验：
 
 ```powershell
-Set-Location 'D:\Documents\PlatformIO\Projects\codex_status'
-Get-FileHash artifacts/ap01-research/ap01-1.0.2_0041.bin -Algorithm SHA256
+Set-Location 'D:\Documents\PlatformIO\Projects\cuktech-ap01-firmware'
+Get-FileHash roms/0041/ap01-1.0.2_0041.bin -Algorithm SHA256
 ```
 
 ## 原厂启动与两个任务的位置
@@ -213,14 +212,14 @@ REA_ANALYSIS_PROVIDER=ghidra
 
 ## SIM这条线：完成了什么，没完成什么
 
-源码在`tools/ap01/`：`ap01-ui*.h`为界面/控制器，`ap01-sim-service*.h`为模拟业务，`ap01-sim-control.h`为HOSTFS控制传输，`nuttx-sim.c`适配键盘，`rehost-assets.py`生成原厂资源。
+源码在`tooling/scripts/`：`ap01-ui*.h`为界面/控制器，`ap01-sim-service*.h`为模拟业务，`ap01-sim-control.h`为HOSTFS控制传输，`nuttx-sim.c`适配键盘，`rehost-assets.py`生成原厂资源。
 
 已完成33个构造器、7组额外行为、25项模拟服务；121项资源、55套ROM字体（含字距）；320×240；左右键旋转、Enter/Space确认、按住3秒返回、Esc返回、R天气重试、Q退出。51个widget/79个selection编号审计保留未观察空洞，不能当作130个已知页面。
 
 最终同一候选通过502步/99截图、WSLg30步/15截图、147项宿主ASan/UBSan、字体校验及81772天农历检查。宿主ELF：
 
 ```text
-artifacts/ap01-research/rehost-20261016/ap01-ui-0041-complete-sim.elf
+reverse/rehost/ap01-ui-0041-complete-sim.elf
 14936232 B
 SHA256 ac23b8b3b64b6959f36819f3e9824fb287729c00c4803c419964c12424a930d1
 ```
@@ -230,21 +229,21 @@ SHA256 ac23b8b3b64b6959f36819f3e9824fb287729c00c4803c419964c12424a930d1
 WSL发行版`Ubuntu-24.04`；工作区`/home/slepher/nuttx-ap01-sim`。固定NuttX提交`6fc5b3e9dc51dcda46d99519f72b7f2ec6db2e64`、apps提交`8ff533beb37eeef1f288c467acd7c50b542464eb`，NuttX12.10/LVGL9.2.1。常用命令：
 
 ```powershell
-pwsh -File tools/ap01/nuttx-sim.ps1 status
-pwsh -File tools/ap01/nuttx-sim.ps1 run
-pwsh -File tools/ap01/sim-control.ps1 status
+pwsh -File tooling/scripts/nuttx-sim.ps1 status
+pwsh -File tooling/scripts/nuttx-sim.ps1 run
+pwsh -File tooling/scripts/sim-control.ps1 status
 ```
 
 **SIM没有真实HTTP监听。** 控制脚本经HOSTFS写sim-request.txt，UI每100 ms读取，调用模拟服务，再原子替换sim-response.json；有session/id围栏与超时，不连接云端。不要把“25项服务”说成25个HTTP接口。模拟绑定/联网/充电/更新成功也不证明对应原厂服务成功。
 
-完整业务回归会临时隔离/恢复SIM配置并管理自己的进程；运行前读`tools/ap01/README.md`并停止核实的SIM。普通逆向不需要重建或重复运行UI回归。构建脚本有X11键盘自动重复及LVGL GIF解码边界修复，保留不要例行clean。
+完整业务回归会临时隔离/恢复SIM配置并管理自己的进程；运行前读`tooling/scripts/README.md`并停止核实的SIM。普通逆向不需要重建或重复运行UI回归。构建脚本有X11键盘自动重复及LVGL GIF解码边界修复，保留不要例行clean。
 
 ## OTA签名离线候选：另一个成果，不能混用
 
 用户授权去掉的是0041相对0031新增的unsigned拒绝行为。已有候选仅改`VA0xa006f7fc / offset0x707fc`的2 B分支`dde7→7da0`，目标`0xa006f8aa`，另重算末尾4 B恢复CRC。原件与其他型号/版本/边界/证书检查保留。
 
 ```text
-artifacts/ap01-research/rehost-20261016/ap01-1.0.2_0041-unsigned-ota.bin
+reverse/rehost/ap01-1.0.2_0041-unsigned-ota.bin
 6769704 B
 SHA256 1bbe8f45359eb7cdb55f337643f3ce28894999ffb21beab92fb62e995cd4854d
 ```
@@ -257,11 +256,10 @@ roth-m/miioclient-mqtt是2019年前后社区兼容替代实现，固定提交`06
 
 它支持相同54322本地接口和部分方法名，但有固定id12345、固定cloud_connected及简化ok回执。**它不是已确认的原厂SDK早期源码，不能直接替换AP01服务。** 可参考解析/测试形状，不能据此省略原厂认证或回执检查。
 
-用户希望Codex Status作为独立App，并能用旋钮在其页面和原厂页面间切换。建议统一应用宿主/输入分发，业务独立、底座公共服务共用；这目前是架构方向，**尚未实现两个App宿主及AP01真实HTTP服务**。此前0031的APX1同步XIP加载器只是离线小型原型，不是0041长期动态加载器。不要直接搬0031地址或把原型当完成品。
+外部程序可考虑作为独立App，并能用旋钮在其页面和原厂页面间切换。建议统一应用宿主/输入分发，业务独立、底座公共服务共用；这目前是架构方向，**尚未实现两个App宿主及AP01真实HTTP服务**。此前0031的APX1同步XIP加载器只是离线小型原型，不是0041长期动态加载器。不要直接搬0031地址或把原型当完成品。
 
 ## 接手后的执行顺序与完成标准
 
-1. **先核验原件与会话。** 读取本文、根AGENTS/PROGRESS、当前C9相关条目即可，不必通读历史。保留已冻结SIM/OTA/协议证据。
 2. **复用已修复模型。** 私有v2已实际验证，先读`private-profile-0041-20261017.md`及私有模型/修复报告。只有发现新的具体指令缺口才创建独立新修订，不重复修复共享旧profile或覆盖已冻结证据。
 3. **建立两任务的完整覆盖账本。** 先展开核心/任务/回调/表项根，再递归直接/间接依赖；每函数记录地址、body范围、归属模块、REA Evidence、伪代码可用性、vendor/截断限制。共享内核/驱动/密码库列明实现边界，不能静默丢弃。
 4. **分模块恢复实现。** 网络/配网/重连、RPC与回执、云传输、OTA、BLE网关/GATT、认证/快配、持久化、超时及退出路径。实现级伪代码必须带地址与证据；未知调用写未知，不用空函数、固定成功或假认证替代。
@@ -288,14 +286,14 @@ roth-m/miioclient-mqtt是2019年前后社区兼容替代实现，固定提交`06
 | 继续两任务逆向 | 本文 → [上层续作](upper-layer-0041-20261017.md) → 私有`upper-command-catalog.json`/选中合同与Evidence；模型复现见[私有模型](private-profile-0041-20261017.md) |
 | 查命令/蓝牙数据 | 证据目录`miio-rpc-rea-0041.json`、`local-rpc-rea-0041.json`、`mible-protocol-rea-0041.json` |
 | 判断脱离影响 | [任务依赖报告](mijia-task-dependencies-0041-20261017.md)；不要拿SIM模拟结果代替 |
-| 调整原厂界面重建 | [最终SIM验收](application-rehost-complete-0041-20261017.md)、[功能矩阵](application-function-matrix-0041.json)、`tools/ap01/README.md` |
-| 查OTA候选 | 证据目录`ap01-1.0.2_0041-unsigned-ota.manifest.json`及`tools/ap01/patch_0041_unsigned_ota.py` |
+| 调整原厂界面重建 | [最终SIM验收](application-rehost-complete-0041-20261017.md)、[功能矩阵](application-function-matrix-0041.json)、`tooling/scripts/README.md` |
+| 查OTA候选 | 证据目录`ap01-1.0.2_0041-unsigned-ota.manifest.json`及`tooling/scripts/patch_0041_unsigned_ota.py` |
 | 查分区/系统入口 | [0041基础分析](knowledge/0041签名与Bridge接口分析.md)的“新版资源和应用入口”部分 |
 
 ## 操作约束速记
 
 - 仅用GPT-6.1 Sol子代理做该复杂任务；共享REA单一所有者，子代理明确文件所有权，不回退他人改动。
 - 新目录须先通过`require_escalated`提权预建，不能先建后修ACL；已有目录中新文件无需重建目录。Python用`-B`避免意外创建__pycache__；Windows可加`-X utf8`。WSL调用遵循工具实际审批。
-- 不执行`pio run`、固件烧录、串口诊断、Bridge启停或账户操作来“顺便验证”。本轮无此需要；将来授权范围改变时仍先读`docs/agent-operations.md`对应节。
+- 不执行`pio run`、固件烧录、串口诊断、Bridge启停或账户操作来“顺便验证”。本轮无此需要；
 - 凭据/token/账号原文不进入文档、日志或提交。原件和第三方文件只读，未经要求不提交/推送。不要清理已有.pio、WSL构建缓存、真实data或私有证据。
 - 历史文档中的“禁止追加逆向”及0031部署路线属于旧阶段；最新用户已明确授权0041完整代码逆向，优先遵循当前授权。早期SIM“页面缺失/功能不可用”记录也不能覆盖17日最终验收，但真实后台服务依然未接通。

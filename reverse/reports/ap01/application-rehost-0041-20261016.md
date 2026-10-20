@@ -25,11 +25,11 @@ WSL Ubuntu-24.04 的 `/home/slepher/nuttx-ap01-sim` 已编译并通过82步真�
 
 ## 逆向与资源来源
 
-0041原件 `artifacts/ap01-research/ap01-1.0.2_0041.bin`，6,769,704 B，SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。REA原始RV32LE映射base `0x9ffff000`、entry `0xa0000000`；UI入口`0xa005cc1e`，直接证据`ev_29c3e3a3ec43f12e0a1d9c5db26f6b39875288fb82b8c2126a9974ddfe734175`。设置注册回调候选`0xa00ab588`尚不能当完整函数/可调用ABI。
+0041原件 `roms/0041/ap01-1.0.2_0041.bin`，6,769,704 B，SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。REA原始RV32LE映射base `0x9ffff000`、entry `0xa0000000`；UI入口`0xa005cc1e`，直接证据`ev_29c3e3a3ec43f12e0a1d9c5db26f6b39875288fb82b8c2126a9974ddfe734175`。设置注册回调候选`0xa00ab588`尚不能当完整函数/可调用ABI。
 
 已有Ghidra导出 `0041-20261013/0041-ghidra-pass3.txt:2260` 的两次`FUN_ram_a00f1102`分别传端口1/2，说明功率与时间之间仍有C1/C2条件页。子代理最初漏列，已由父代理核对原文并纠正。字符串存在不等同于函数入口或事件顺序。
 
-证据目录统一为 `artifacts/ap01-research/rehost-20261016/`：
+证据目录统一为 `reverse/rehost/`：
 
 - `page-logic-0041.json`：24条REA记录，完整导出后已关闭会话；记录unknown计数不是完整行为恢复证明。
 - `asset-index-0041.json`：199/199 PNG均经CRC/IEND扫描且与0031精确匹配；旧10个GIF中9个精确匹配，额外签名候选未当作完整GIF。
@@ -46,27 +46,25 @@ LVGL9.2.1的GIF解码器把`frm_off + str_len == frm_size`误报越界；构建�
 
 - 离线候选：`ap01-1.0.2_0041-unsigned-ota.bin`，6,769,704 B，SHA256 `1bbe8f45359eb7cdb55f337643f3ce28894999ffb21beab92fb62e995cd4854d`。
 - 同名`.manifest.json`记录修改范围、前后校验值、候选指纹及未刷机状态。
-- `python -B tools/ap01/test_0041_unsigned_ota.py`：8项通过，无跳过。独立Unicorn RV32实际执行原件/候选的load、lui和branch三条指令，标志0/1四组PC与内存标志核对一致；其他测试核验CRC、变异拒绝及禁止覆盖。
+- `python -B tooling/scripts/test_0041_unsigned_ota.py`：8项通过，无跳过。独立Unicorn RV32实际执行原件/候选的load、lui和branch三条指令，标志0/1四组PC与内存标志核对一致；其他测试核验CRC、变异拒绝及禁止覆盖。
 
 这证明局部分支已按预期修改，不是完整OTA下载/安装或硬件启动验收。补丁只影响候选自身运行后的后续OTA；不能使当前运行的原厂0041自动接受这个未签名候选。Boot2/eFuse/首次安装及掉电恢复仍未验证。此次没有刷写，也没有修改签名私钥、TLS验证或Bridge认证。
 
 ## 构建与复现
 
 ```powershell
-pwsh -File tools/ap01/nuttx-sim.ps1 stop
-pwsh -File tools/ap01/nuttx-sim.ps1 build
-pwsh -File tools/ap01/nuttx-sim.ps1 run
-pwsh -File tools/ap01/nuttx-sim.ps1 status
+pwsh -File tooling/scripts/nuttx-sim.ps1 stop
+pwsh -File tooling/scripts/nuttx-sim.ps1 build
+pwsh -File tooling/scripts/nuttx-sim.ps1 run
+pwsh -File tooling/scripts/nuttx-sim.ps1 status
 ```
 
 这些WSL构建/运行仍按项目规则提权；新目录需预先提权创建。构建器默认读取本仓库0041原件，也可用`AP01_ROM`显式指定相同指纹文件。LVGL配置变化时只让其源码重编，保留其他缓存。键盘回归从WSL执行：
 
 ```sh
-python3 /mnt/d/Documents/PlatformIO/Projects/codex_status/tools/ap01/test-nuttx-sim.py
+python3 ./tooling/scripts/test-nuttx-sim.py
 ```
 
 最终 `ap01-ui-0041-sim.elf` 6,327,928 B，SHA256 `b5a9419cd5305a7ab04616aa0e4f4b580e463438d0f7af40f5ade0e345d02462`；匹配`.config`、源码/生成资源/修复后解码器压缩归档`ap01-ui-0041-sim.tgz` 3,388,725 B，SHA256 `2ace891b7a169b152b5ff1f8af50cfb71b84a20ca984157cb715079b0b99c7ff`。它们均位于上述证据目录，与AP01离线候选BIN是两种独立产物。验收JSON `nuttx-sim-verification.json`绑定同一ELF哈希；截图`ui-time.png`、`ui-settings-first.png`、`ui-brightness.png`、`ui-pet-a.png`等已审阅。
 
 ## 后续验收缺口
-
-C9保持开放。继续逐页定位0041原厂创建器/控件绑定与设置回调，补齐详情、端口状态驱动、字体和布局，再接入数据/存储/OTA服务。SIM输入成功不能替代原厂物理旋钮或实机充电、米家、更新验收。

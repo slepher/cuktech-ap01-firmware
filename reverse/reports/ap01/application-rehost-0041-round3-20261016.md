@@ -16,7 +16,7 @@
 
 ## 逆向证据
 
-`artifacts/ap01-research/rehost-20261016/photo-evidence-round3.json`含12项REA记录，并补充主代理图片解码检查：
+`reverse/rehost/photo-evidence-round3.json`含12项REA记录，并补充主代理图片解码检查：
 
 - 日历回调`0xa00a4df8`：星期字体`0xa037253c`高12/基线2，日期`0xa0254988`高14/基线3；日历helper`0xa00a6548`尺寸270×150。单元格绝对坐标未完整恢复。
 - 时间小星期字体`0xa0254844`高16/基线2；日期`0xa0254a60`高17/基线0。三套新字体与上一批十套一并导入，仍未恢复kerning。
@@ -36,12 +36,12 @@
 
 与照片的定位/字距/圆弧状态尚非逐像素等价，透视照片本身也不是320×240参考帧；仅大时钟数字做了精确像素验证。C1/C2、功率/日期/天气详情、指南实操阶段、米家绑定、真实充电/天气数据及在线页面跳过仍未完整移植。不是完整原厂ROM启动，不生成可烧录AP01的新ROM。
 
-运行入口 `pwsh -File D:\Documents\PlatformIO\Projects\codex_status\tools\ap01\nuttx-sim.ps1 run`。聚焦窗口后左右键旋转、Enter/Space短按、Esc返回、F对照场景、Q退出。重新编译前用同脚本stop，再build。
+运行入口 `pwsh -File tooling\scripts\nuttx-sim.ps1 run`。聚焦窗口后左右键旋转、Enter/Space短按、Esc返回、F对照场景、Q退出。重新编译前用同脚本stop，再build。
 
 ## 最终产物 / Status
 
 - 最终118步真实X11键盘回归通过，24小时/12小时四位数字逐像素误差均0；恢复默认值显示00:37再次通过。5个GIF互异且分别动画、指南2628个选中底色像素、F返回宿主RTC均通过；无LVGL警告。
 - 中途一次ImageMagick截图工具返回1，未取得具体原因，测试未计通过；补全错误输出后重跑同二进制118步通过。没有因此放宽像素/交互断言。
-- 宿主ELF `artifacts/ap01-research/rehost-20261016/ap01-ui-0041-round3-sim.elf`，9217768 B，SHA256 `985cb9fb6d588c31e5feda50c72ab3d09680417c9c306147c52676f305504dc8`。`.config`/`.tgz`同前缀，源码/资源/构建日志/回归报告哈希见`round3-artifacts.json`；保留前两批归档。
+- 宿主ELF `reverse/rehost/ap01-ui-0041-round3-sim.elf`，9217768 B，SHA256 `985cb9fb6d588c31e5feda50c72ab3d09680417c9c306147c52676f305504dc8`。`.config`/`.tgz`同前缀，源码/资源/构建日志/回归报告哈希见`round3-artifacts.json`；保留前两批归档。
 - `round3-ui-time.png`、`round3-ui-date.png`、`round3-ui-weather.png`及`round3-ui-time-format-24h.png`为本轮固定对照场景；12小时制截图单独命名。人工与Sol只读审阅完成，无新增阻断问题，不宣称全画面逐像素一致。
 - WSLg最终窗口曾启动，DISPLAY=:0，启动PID201559；普通模式取宿主时间。最终核对时窗口已退出，日志为`X connection to :0 broken (explicit kill or server shutdown)`，具体关闭来源未知；启动入口可重新运行。未提交、未刷实机。

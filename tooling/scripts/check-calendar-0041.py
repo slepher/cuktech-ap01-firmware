@@ -12,7 +12,7 @@ import struct
 
 
 ROOT = Path(__file__).resolve().parents[2]
-ROM = ROOT / "artifacts/ap01-research/ap01-1.0.2_0041.bin"
+ROM = ROOT / "roms/0041/ap01-1.0.2_0041.bin"
 EXPECTED = "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9"
 BASE = 0x9FFFF000
 
@@ -141,8 +141,8 @@ def validate():
     assert all(x["same_year"] for x in term_cases if x["year"] in (1970, 2026, 2099))
     return dict(status="passed", rom_sha256=source_hash,
                 source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-                               for p in (Path(__file__), ROOT / "tools/ap01/ap01-ui-details.h",
-                                         ROOT / "tools/ap01/ap01-ui-pages.h")},
+                               for p in (Path(__file__), ROOT / "tooling/scripts/ap01-ui-details.h",
+                                         ROOT / "tooling/scripts/ap01-ui-pages.h")},
                 supported_days=count, anchors=results, subtitle_anchors=label_anchors,
                 unused_week_festivals_verified=True, solar_term_checks=term_cases,
                 scope="Recovered algorithm/ROM tables only; rendering and interaction require parent SIM tests")

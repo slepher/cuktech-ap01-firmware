@@ -2,7 +2,7 @@
 set -euo pipefail
 script_dir=$(cd -- "$(dirname -- "$0")" && pwd)
 repo=$(realpath "$script_dir/../..")
-out="$repo/artifacts/ap01-research/qemu-0041-20261017"
+out="$repo/evidence/qemu/0041-20261017"
 tool="$repo/../cuktech-ap01-firmware-tools/tools/docker/toolchain/bin/riscv64-unknown-elf"
 sdk="$repo/../bouffalo_sdk"
 prefix=${1:-qemu-bootrom-shim-v10}

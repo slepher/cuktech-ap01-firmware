@@ -12,7 +12,7 @@ from pathlib import Path
 import capstone
 
 PROJECT = Path(__file__).resolve().parents[2]
-# Read-only upstream inputs; research code and outputs belong to codex_status.
+# Read-only upstream reference; research is maintained in this repository.
 ROOT = PROJECT.parent / "cuktech-ap01-firmware-tools"
 sys.path.insert(0, str(ROOT))
 from core.firmware_image import validate_baseline, FirmwareValidationError

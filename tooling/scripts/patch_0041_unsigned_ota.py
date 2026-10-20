@@ -228,7 +228,7 @@ def patch_file(input_path: Path, output_path: Path) -> tuple[Path, dict[str, obj
     original = input_path.read_bytes()
     candidate, validation = patch_bytes(original)
     document = {
-        "tool": "tools/ap01/patch_0041_unsigned_ota.py",
+        "tool": "tooling/scripts/patch_0041_unsigned_ota.py",
         "target": "AP01 1.0.2_0041 unsigned app OTA rejection gate",
         "flashed": False,
         "input": {"path": str(input_path), **validation["input"]},
@@ -273,7 +273,7 @@ def self_test() -> None:
     assert signed_file_flow(False, patched=False) == ("unsigned_reject",)
     assert signed_file_flow(False, patched=True) == ("continue", "skip_signature_validation")
     assert signed_file_flow(True, patched=False) == ("continue", "validate_signature")
-    source_path = Path(__file__).resolve().parents[2] / "artifacts/ap01-research/ap01-1.0.2_0041.bin"
+    source_path = Path(__file__).resolve().parents[2] / "roms/0041/ap01-1.0.2_0041.bin"
     original = source_path.read_bytes()
     source = image_metadata(original, require_identity=True)
     candidate, validation = patch_bytes(original)

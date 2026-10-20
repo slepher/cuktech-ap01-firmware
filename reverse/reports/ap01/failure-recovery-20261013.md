@@ -18,7 +18,7 @@
 
 本候选不改原厂固件槽或引导数据，但不存在内存隔离。所谓“包失败返回原厂”只涵盖可正常返回的失败，不能涵盖 CPU 异常、死锁、内存踩踏、断电和底座启动失败。当前 App 没有网络维护入口，也不能在运行中独立替换 XIP 文件。
 
-候选2终审已完成，SHA256`61af60e00475f24f4460e60734d7b93a67fb05bb5b756077ccf9d81d4ba7f849`，RV32模拟12/12通过。正常返回错误、init/stop强制失败仍保留原厂对象/寄存器，唯一workspace释放；不替任意App清理外部副作用。已增加一次原厂日志result marker，但sink配置及同机读取未知，首次刷入前必须取得可观测路径。原厂logger实际帧848B，连entry16B至少864B+格式helper/回调嵌套；304B模拟栈不含它，真实UI任务余栈仍须验证。详细[实现验收](app-implementation-20261013.md)，最终离线汇总`artifacts/ap01-research/app0031-20261013/candidate2/verification.json`。没有因此新增独立救砖能力。
+候选2终审已完成，SHA256`61af60e00475f24f4460e60734d7b93a67fb05bb5b756077ccf9d81d4ba7f849`，RV32模拟12/12通过。正常返回错误、init/stop强制失败仍保留原厂对象/寄存器，唯一workspace释放；不替任意App清理外部副作用。已增加一次原厂日志result marker，但sink配置及同机读取未知，首次刷入前必须取得可观测路径。原厂logger实际帧848B，连entry16B至少864B+格式helper/回调嵌套；304B模拟栈不含它，真实UI任务余栈仍须验证。详细[实现验收](app-implementation-20261013.md)，最终离线汇总`reverse/app-0031/candidate2/verification.json`。没有因此新增独立救砖能力。
 
 ## 双槽和 Type-C 不能直接当救砖保障
 

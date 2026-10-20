@@ -672,7 +672,7 @@ def main(argv=None):
     )
 
     report = {
-        "tool": "tools/ap01/test_app_rom.py",
+        "tool": "tooling/scripts/test_app_rom.py",
         "tool_version": 1,
         "unicorn": "2.1.4",
         "directory": str(directory),

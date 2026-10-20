@@ -104,11 +104,11 @@ RothM的socket/select与本地JSON分派适合解释兼容接口和构造离线�
 
 ## 6. 产物、限制与后续缺口
 
-- [原厂90项命令表/注册与回执分析](../../artifacts/ap01-research/rehost-20261016/miio-rpc-rea-0041.json)
-- [本地消息目录/6值状态](../../artifacts/ap01-research/rehost-20261016/local-rpc-rea-0041.json)
-- [蓝牙包装/参数/特征/11值状态](../../artifacts/ap01-research/rehost-20261016/mible-protocol-rea-0041.json)
-- [30项真实REA函数证据](../../artifacts/ap01-research/rehost-20261016/miio-mible-rea-0041.evidence.json)
-- [输入/输出指纹清单](../../artifacts/ap01-research/rehost-20261016/miio-mible-rea-manifest-0041.json)
+- 原厂90项命令表/注册与回执分析（材料未随仓库收录：`../../reverse/rehost/miio-rpc-rea-0041.json`）
+- 本地消息目录/6值状态（材料未随仓库收录：`../../reverse/rehost/local-rpc-rea-0041.json`）
+- 蓝牙包装/参数/特征/11值状态（材料未随仓库收录：`../../reverse/rehost/mible-protocol-rea-0041.json`）
+- 30项真实REA函数证据（材料未随仓库收录：`../../reverse/rehost/miio-mible-rea-0041.evidence.json`）
+- 输入/输出指纹清单（材料未随仓库收录：`../../reverse/rehost/miio-mible-rea-manifest-0041.json`）
 
 REA使用通用RV32/RVC模型，存在厂商扩展指令未解码、RAM初始化未建模及内存函数被误标no-return的限制。部分函数伪代码只剩清零调用，而Listing仍包含后续指令；本轮分别记录REA观察和原件字节/Capstone辅助证据，不把线性指令猜测当完整控制流证明。Ghidra字符串对象可能显示共享后缀的较长字符串；参数键按原件精确地址读回，而非照抄显示名称。
 

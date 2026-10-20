@@ -12,8 +12,8 @@ import patch_0041_unsigned_ota as patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / "artifacts/ap01-research/ap01-1.0.2_0041.bin"
-CANDIDATE = ROOT / "artifacts/ap01-research/rehost-20261016/ap01-1.0.2_0041-unsigned-ota.bin"
+SOURCE = ROOT / "roms/0041/ap01-1.0.2_0041.bin"
+CANDIDATE = ROOT / "reverse/rehost/ap01-1.0.2_0041-unsigned-ota.bin"
 MANIFEST = CANDIDATE.with_name(CANDIDATE.stem + ".manifest.json")
 
 
@@ -37,7 +37,7 @@ class UnsignedOtaPatchTests(unittest.TestCase):
     def test_real_rv32_load_and_branch_with_both_flag_values(self):
         # Independent instruction execution, rather than testing only the
         # Python encoder/decoder against each other. Reuse local native deps.
-        deps = ROOT / "artifacts/ap01-research/app0031-20261013/deps"
+        deps = ROOT / "reverse/app-0031/deps"
         if not (deps / "unicorn").is_dir():
             self.skipTest("local Unicorn dependency unavailable")
         sys.path.insert(0, str(deps))

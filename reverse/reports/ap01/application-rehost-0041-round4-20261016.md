@@ -8,7 +8,7 @@
 - 充电页面代理：独占`ap01-ui-charge.h`与对应证据，恢复C1/C2、Power总览/菜单，接手REA后核对端口创建器/按键。
 - 主代理：控制器/资源/字体/构建/真实X11验证，补米家静态引导入口、修复整合问题并归档。
 
-原件 `artifacts/ap01-research/ap01-1.0.2_0041.bin`，6769704 B，SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。BASE=0x9ffff000，入口0xa0000000。原件及第三方克隆只读，新文件都位于既有目录。
+原件 `roms/0041/ap01-1.0.2_0041.bin`，6769704 B，SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。BASE=0x9ffff000，入口0xa0000000。原件及第三方克隆只读，新文件都位于既有目录。
 
 ## 本批实现
 
@@ -40,7 +40,7 @@ Power总览恢复A/C3/C2/C1仪表顺序、原字体、数字区及输出模式�
 
 ## 证据与验证
 
-证据目录 `artifacts/ap01-research/rehost-20261016/`：
+证据目录 `reverse/rehost/`：
 
 - `charge-0041-round4.json`：8项REA记录、原件机器指令继续段、端口/模式表及滚动规则；原通用Ghidra对memcpy错误的no-return会截断创建器，补充段不能冒充完整自动反编译。
 - `details-0041-round4.json`：10个定向函数、原始创建器片段和已知/未知布局；日期a00f21e8、a010bc78、a010c14a等；天气a00b35ee/a00b821e。
@@ -55,11 +55,11 @@ Power总览恢复A/C3/C2/C1仪表顺序、原字体、数字区及输出模式�
 
 尚未完整：农历/节日查表、端口连接态专属动画/放心充/协议助手对话与设备动作、三项指南实操、真实天气/充电/绑定/持久服务、在线页面跳过、字距和部分细节布局。本批可运行相应的离线页面及导航，不能称为完整原厂ROM运行或原厂UI逐像素复现。
 
-NuttX SIM 12.10.0 / LVGL 9.2.1，WSL Ubuntu-24.04既有环境。启动 `pwsh -File D:\Documents\PlatformIO\Projects\codex_status\tools\ap01\nuttx-sim.ps1 run`；左右旋转，Enter/Space短按，Esc返回，F切换照片固定场景/宿主RTC，Q退出。重编前stop，再build。未提交。
+NuttX SIM 12.10.0 / LVGL 9.2.1，WSL Ubuntu-24.04既有环境。启动 `pwsh -File tooling\scripts\nuttx-sim.ps1 run`；左右旋转，Enter/Space短按，Esc返回，F切换照片固定场景/宿主RTC，Q退出。重编前stop，再build。未提交。
 
 ## 最终归档 / Status
 
 - 最终219步真实X11键盘回归通过；32套原厂字体的生成/独立检查通过，无LVGL警告。时钟四位PNG在24/12小时制像素误差均0，功率模式卡15573个选中底色像素验证蒙版着色，五个GIF均动画。接口动作明确不可用；新模式随SIM恢复默认值重置0。
-- ELF `artifacts/ap01-research/rehost-20261016/ap01-ui-0041-round4-sim.elf`，9577232 B，SHA256 `b679d9535823d436e2ed5456a85d65bc23b0727eb75dc08d6190dd68e8e9449b`；`.config`/`.tgz`同前缀。`round4-artifacts.json`绑定归档、源码、生成资源和回归报告，构建副本与仓库头文件逐字节核对。
+- ELF `reverse/rehost/ap01-ui-0041-round4-sim.elf`，9577232 B，SHA256 `b679d9535823d436e2ed5456a85d65bc23b0727eb75dc08d6190dd68e8e9449b`；`.config`/`.tgz`同前缀。`round4-artifacts.json`绑定归档、源码、生成资源和回归报告，构建副本与仓库头文件逐字节核对。
 - `round4-ui-c1.png/c2.png`、`power-detail.png/power-modes.png/power-port-1.png`（后者均有round4-ui-前缀）、`date-detail*.png`、`weather-detail-0..4.png`、`mijia.png`均在同一证据目录。截图中详情部分为12小时制，分别保留此前00:37/12:37时钟测试，不能把它误称照片24小时制逐页对照。
 - 原件与上一批unsigned OTA候选哈希复核均未变。最终WSLg启动PID240140、DISPLAY=:0，普通启动用宿主RTC；PID随重启变化。未刷实机。

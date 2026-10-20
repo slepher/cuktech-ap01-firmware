@@ -6,7 +6,7 @@
 
 本项目是原厂更新包、二进制注入源码、逆向资料和模拟验证记录的独立快照，没有原厂完整源码。0031 A→B2→A 已有 QEMU（运行固件指令的模拟器）记录，包含更新后同一份模拟存储的重新启动。此次未重新运行整套模拟；历史记录见 [0031 OTA 验证](qemu-ota-0031-20261017.md)。
 
-迁移尚未完成工具路径适配：`build-ota-channel-0031.sh` 仍引用 `firmware/ap01` 和 `artifacts/ap01-research`；`test-ota-channel.py` 仍引用 `firmware/ap01`；`download_official.py` 的账号缓存路径仍是 `artifacts/ap01-research/xiaomi-account.dpapi`。实际源码在 `tooling/firmware-modules`，账号缓存在 `evidence/private`。上述入口不能直接当作已适配的构建、测试或登录命令。
+迁移尚未完成工具路径适配：`build-ota-channel-0031.sh` 仍引用 `tooling/firmware-modules` 和 `artifacts/ap01-research`；`test-ota-channel.py` 仍引用 `tooling/firmware-modules`；`download_official.py` 的账号缓存路径仍是 `artifacts/ap01-research/xiaomi-account.dpapi`。实际源码在 `tooling/firmware-modules`，账号缓存在 `evidence/private`。上述入口不能直接当作已适配的构建、测试或登录命令。
 
 历史候选清单保留旧 WSL 绝对路径。本次仅在私有准备目录生成重新定位的清单副本，原清单和原证据保持原样；清单里的 `flashable=false`（尚未达到实机刷写条件）保持原值。
 

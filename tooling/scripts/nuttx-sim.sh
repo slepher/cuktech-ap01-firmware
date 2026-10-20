@@ -22,7 +22,7 @@ case ${1:-status} in
     test "$(git rev-parse HEAD)" = 6fc5b3e9dc51dcda46d99519f72b7f2ec6db2e64
     test "$(git -C ../apps rev-parse HEAD)" = 8ff533beb37eeef1f288c467acd7c50b542464eb
     python3 "$source_dir/rehost-assets.py" \
-      "${AP01_ROM:-$source_dir/../../artifacts/ap01-research/ap01-1.0.2_0041.bin}" \
+      "${AP01_ROM:-$source_dir/../../roms/0041/ap01-1.0.2_0041.bin}" \
       ../apps/examples/lvgldemo/ap01-assets.h
     cp "$source_dir/nuttx-sim.c" ../apps/examples/lvgldemo/lvgldemo.c
     cp "$source_dir/ap01-ui.h" ../apps/examples/lvgldemo/ap01-ui.h

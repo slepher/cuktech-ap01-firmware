@@ -13,9 +13,9 @@
 已完成Windows x64原生实现与真实验收，全程未调用WSL。
 
 - 环境：Windows Node24.19.0、JDK21.0.10、Ghidra12.1.4；native addon来自官方npm `rea-agents@6.5.0`，manifest/ABI/sha校验通过，SHA256 `665c57ab90aef0712a6aafc423c7992a88bf608bea63b370cb30c695900f9aed`。二进制仅留本地忽略目录。
-- RV32/RV64真实CLI/MCP全套通过：base `0x9ffff000`、entry `0xa0000000`、offset4096；独立映射、直接调用、全局引用、伪代码、规范地址复用、原件不变、运行目录清理。证据[JSON](../../artifacts/rea-windows-riscv-real.json)，run `750c79b8-df22-426b-a86a-90939c180ea2`。
-- 110项回归通过：provider69、launcher26、CLI5、MCP10。包含无位宽/非法入口错误、既有目标拒绝和会话保护；[日志](../../artifacts/rea-windows-focused.log)。
-- Windows native真实conformance通过：DACL、快照、junction/ADS拒绝、取消、子孙进程终止、无关进程保留、owner关闭清理和内存预算；[JSON](../../artifacts/rea-windows-native-real.json)。
+- RV32/RV64真实CLI/MCP全套通过：base `0x9ffff000`、entry `0xa0000000`、offset4096；独立映射、直接调用、全局引用、伪代码、规范地址复用、原件不变、运行目录清理。证据JSON（材料未随仓库收录：`../../artifacts/rea-windows-riscv-real.json`），run `750c79b8-df22-426b-a86a-90939c180ea2`。
+- 110项回归通过：provider69、launcher26、CLI5、MCP10。包含无位宽/非法入口错误、既有目标拒绝和会话保护；日志（材料未随仓库收录：`../../artifacts/rea-windows-focused.log`）。
+- Windows native真实conformance通过：DACL、快照、junction/ADS拒绝、取消、子孙进程终止、无关进程保留、owner关闭清理和内存预算；JSON（材料未随仓库收录：`../../artifacts/rea-windows-native-real.json`）。
 - `npm run check`、`npm run build:cached`、`npm run docs:check`（含5项README一致性测试）及`git diff --check`均通过。
 
 ## Windows运行

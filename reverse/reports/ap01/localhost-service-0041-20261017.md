@@ -26,10 +26,10 @@
 
 ## 复查材料与边界
 
-- [0041既有完整网络函数导出](../../artifacts/ap01-research/0041-20261013/0041-ghidra-pass5.txt:43)
-- [本次原件指令窗口](../../artifacts/ap01-research/rehost-20261016/localhost-0041-handler.txt)
-- [本次字符串定位](../../artifacts/ap01-research/rehost-20261016/localhost-0041-strings.json)
-- [先前0041绑定证据](knowledge/0041签名与Bridge接口分析.md:125)
+- [0041既有完整网络函数导出](../../analysis/0041-20261013/0041-ghidra-pass5.txt)（第 43 行）
+- 本次原件指令窗口（材料未随仓库收录：`../../reverse/rehost/localhost-0041-handler.txt`）
+- 本次字符串定位（材料未随仓库收录：`../../reverse/rehost/localhost-0041-strings.json`）
+- [先前0041绑定证据](knowledge/0041签名与Bridge接口分析.md)（第 125 行）
 
 Capstone 5.0.7按RV32/RVC线性解码选定窗口，未知T-Head指令按原始长度保留；不以线性寄存器猜测证明跨分支值流。Ghidra旧导出同样含custom0/unaff等限制。以上是静态实现证据，未观察实机当前监听状态，未验证任意RPC调用或真实云端/更新效果。原厂也可能存在本轮未覆盖的其他服务，不能据本入口断言全ROM不存在HTTP服务器。
 

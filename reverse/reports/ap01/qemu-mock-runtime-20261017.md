@@ -10,7 +10,7 @@ WSL Ubuntu-24.04 **PID11338**，已实际从0041入口执行，当前QMP `status
 
 暂停原因：`mepc=0xa002a12e / mcause=5 / mtval=0x20009014`，尚未实现MCU_MISC RTC/机器定时器配置。PC已进入零异常向量并被断点捕获；不能直接从PC0继续冒充恢复。下一步补定时器模型后从原件入口重新启动，再处理后续GPIO/CLIC等真实依赖。完整启动仍开放。
 
-会话/独立核对/日志均在`artifacts/ap01-research/qemu-0041-20261017/`：`live-mock-session.json`、`live-mock-session.verify.json`、`live-mock-session.qemu.log`、`live-mock-session.pid`。调试和QMP使用会话JSON登记的`/tmp/ap01-live-*.gdb/.qmp` Unix socket，没有公开TCP端口。
+会话/独立核对/日志均在`evidence/qemu/0041-20261017/`：`live-mock-session.json`、`live-mock-session.verify.json`、`live-mock-session.qemu.log`、`live-mock-session.pid`。调试和QMP使用会话JSON登记的`/tmp/ap01-live-*.gdb/.qmp` Unix socket，没有公开TCP端口。
 
 ## 已实现并验证的Mock
 
@@ -26,19 +26,19 @@ BootROM三个模拟入口及一个unsupported入口均通过明确登记的table
 
 ## 产物与启动
 
-冻结Mock引擎`artifacts/ap01-research/qemu-0041-20261017/qemu-system-riscv32-mock`，SHA256 `2e77fda96cc801d8a75e470a49f75f72df2e6d77b8d6321da653fe73e8b00673`；它是WSL Linux ELF，原有非Mock冻结引擎未覆盖。
+冻结Mock引擎`evidence/qemu/0041-20261017/qemu-system-riscv32-mock`，SHA256 `2e77fda96cc801d8a75e470a49f75f72df2e6d77b8d6321da653fe73e8b00673`；它是WSL Linux ELF，原有非Mock冻结引擎未覆盖。
 
 合成fixture `otp-synthetic-ap01.bin`，SHA256 `a4d7631e1ffc7f5dee69950ff2f2fc66cf20d22d143bf07ecf3126c19c376ad6`。只用于模拟，不导入任何设备/账号凭据。原厂BIN SHA256仍为`972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。
 
-`tools/ap01/start-qemu-ap01.py`启动独立daemon，无工具stdio继承；有限时运行后在边界暂停，保存PID/exe/命令/socket/寄存器，日志16MiB上限、禁core。启动失败时从唯一pidfile恢复并验证PID后清理自己的daemon。成功会话保留供检查，无显示窗口。复现时输出名须不存在：
+`tooling/scripts/start-qemu-ap01.py`启动独立daemon，无工具stdio继承；有限时运行后在边界暂停，保存PID/exe/命令/socket/寄存器，日志16MiB上限、禁core。启动失败时从唯一pidfile恢复并验证PID后清理自己的daemon。成功会话保留供检查，无显示窗口。复现时输出名须不存在：
 
 ```bash
-cd /mnt/d/Documents/PlatformIO/Projects/codex_status
-python3 -B tools/ap01/start-qemu-ap01.py \
-  --qemu artifacts/ap01-research/qemu-0041-20261017/qemu-system-riscv32-mock \
-  --image artifacts/ap01-research/ap01-1.0.2_0041.bin \
-  --otp-fixture artifacts/ap01-research/qemu-0041-20261017/otp-synthetic-ap01.bin \
-  --output artifacts/ap01-research/qemu-0041-20261017/live-mock-next.json
+cd /mnt/d/Documents/PlatformIO/Projects/cuktech-ap01-firmware
+python3 -B tooling/scripts/start-qemu-ap01.py \
+  --qemu evidence/qemu/0041-20261017/qemu-system-riscv32-mock \
+  --image roms/0041/ap01-1.0.2_0041.bin \
+  --otp-fixture evidence/qemu/0041-20261017/otp-synthetic-ap01.bin \
+  --output evidence/qemu/0041-20261017/live-mock-next.json
 ```
 
 在提权WSL命令中运行；不需要PIO/串口/设备/Bridge。当前实例已经启动，复现命令会另建实例，不是连接现有实例。

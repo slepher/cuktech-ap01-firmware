@@ -46,4 +46,4 @@ rcS分别后台启动两任务及lvgl_ui_main；两项内置入口各配置6144 
 
 本轮不执行停用实验。实际故障表现、启动是否等待、丢失网络时的超时路径、充电控制/保护及可回收RAM，均需在匹配ROM的运行环境验证；SIM的模拟服务不能替代这些实机结论。
 
-证据：[miio子代理报告](../../artifacts/ap01-research/rehost-20261016/miio-dependency-0041.json)、[蓝牙子代理报告](../../artifacts/ap01-research/rehost-20261016/mible-dependency-0041.json)、[父级UI/天气指令窗口](../../artifacts/ap01-research/rehost-20261016/app-service-ui-dependency-windows.txt)、[原厂启动/入口表](knowledge/0041签名与Bridge接口分析.md:102)、[localhost核对](localhost-service-0041-20261017.md)。已留存Ghidra导出含custom0/unaff限制，本轮Capstone对未知厂商指令保留原始字节，不将字符串定位当作运行验证。
+证据：miio子代理报告（材料未随仓库收录：`../../reverse/rehost/miio-dependency-0041.json`）、蓝牙子代理报告（材料未随仓库收录：`../../reverse/rehost/mible-dependency-0041.json`）、父级UI/天气指令窗口（材料未随仓库收录：`../../reverse/rehost/app-service-ui-dependency-windows.txt`）、原厂启动/入口表（材料未随仓库收录：`knowledge/0041签名与Bridge接口分析.md:102`）、[localhost核对](localhost-service-0041-20261017.md)。已留存Ghidra导出含custom0/unaff限制，本轮Capstone对未知厂商指令保留原始字节，不将字符串定位当作运行验证。

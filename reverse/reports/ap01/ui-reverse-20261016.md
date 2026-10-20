@@ -2,7 +2,7 @@
 
 用户要求在SIM搭建同时启动subagent做应用逆向。由原生 `luna_runner` 子代理执行，父代理读取导出的编码器伪代码并核对5条记录。仅静态读取精确0031原件，未执行ROM、修改第三方源码或访问设备。
 
-原件6804520 B，SHA256 `8a721fc8ef25458d415b2460e4a251e0503a82f7743fdff85b12612190e5c1cb`；REA6.5.0/Ghidra12.1.4，raw RV32 LE，base0x9ffff000、entry0xa0000000。完整Evidence包 [rea-ui-subagent-20261016.json](../../artifacts/ap01-research/rea-ui-subagent-20261016.json)，5042322 B、5条；导出核对完成后已关闭会话。
+原件6804520 B，SHA256 `8a721fc8ef25458d415b2460e4a251e0503a82f7743fdff85b12612190e5c1cb`；REA6.5.0/Ghidra12.1.4，raw RV32 LE，base0x9ffff000、entry0xa0000000。完整Evidence包 [rea-ui-subagent-20261016.json](../../analysis/rea-ui-subagent-20261016.json)，5042322 B、5条；导出核对完成后已关闭会话。
 
 ## 应用与输入路径
 

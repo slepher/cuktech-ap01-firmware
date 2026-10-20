@@ -23,7 +23,7 @@ import requests
 from features.official_firmware_source.login import XiaomiQrLogin
 from features.official_firmware_source.xiaomi_cloud import XiaomiCloudClient
 
-OUTPUT = PROJECT / "artifacts/ap01-research"
+OUTPUT = PROJECT / "evidence/private"
 CREDENTIALS = OUTPUT / "xiaomi-account.dpapi"
 MAX_ROM_BYTES = 16 * 1024 * 1024
 VERSIONS = {"1.0.2_0041", "1.02_0041"}
@@ -326,7 +326,7 @@ def main() -> int:
         self_test()
         return 0
     if not OUTPUT.is_dir():
-        print("先按仓库规则创建 artifacts/ap01-research 目录", flush=True)
+        print("先按仓库规则创建 evidence/private 目录", flush=True)
         return 2
     qr = OUTPUT / "xiaomi-login-qr.png"
     if qr.exists() and (args.login or not CREDENTIALS.exists()):

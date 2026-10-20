@@ -24,6 +24,6 @@
 
 相同端口与方法证明针对同一协议家族兼容，并不能证明官方源码沿袭或AP01来自该项目。没有识别出能据此确认AP01原厂miio_client发布版本号的证据。
 
-本次下载二进制50924 B，ELF32/LSB/e_machine=40(ARM)，SHA256 `df9087f2a47ca3e87ee0fcd3464578bdabf7724b2b07304f9e13ee7b02b8cef6`。文件身份、URL及源码/脚本哈希见[本地清单](../../artifacts/ap01-research/rehost-20261016/roth-m-miio-client-inventory.json)。二进制含local.query_status/local.query_time等实现文本；这不代替可重现构建或源到二进制逐指令一致证明。
+本次下载二进制50924 B，ELF32/LSB/e_machine=40(ARM)，SHA256 `df9087f2a47ca3e87ee0fcd3464578bdabf7724b2b07304f9e13ee7b02b8cef6`。文件身份、URL及源码/脚本哈希见本地清单（材料未随仓库收录：`../../reverse/rehost/roth-m-miio-client-inventory.json`）。二进制含local.query_status/local.query_time等实现文本；这不代替可重现构建或源到二进制逐指令一致证明。
 
 AP01对照依据[任务功能调查](mijia-task-dependencies-0041-20261017.md)和[localhost接收器原件分析](localhost-service-0041-20261017.md)。如果借鉴该代码移植，必须重新编译并适配NuttX，逐项补原厂依赖、认证/错误/超时/帧边界；不得直接运行ARM ELF或将固定cloud_connected/ok当成真实业务成功。GPL许可标记不证明整个原厂SDK开源。

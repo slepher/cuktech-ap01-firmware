@@ -22,7 +22,7 @@
 
 `maintenance.h/.c`是可单独编译的维护事务核心：完整身份认证回调、流式接收、包预检、停业务前保存状态、共用排他安装、未知结果查询、显式AMT1恢复记录和内置文案；`test_maintenance.c`在宿主和RV32执行同一组故障检查。核心自身不依赖业务执行单元，但设备端独立任务/HTTP、持久binding、原厂共用排他、文件安装及UI适配尚不存在，**不是已运行的设备服务或维护界面，不是可刷ROM**。现有旁仓库只有补丁源码和原厂二进制，不是原厂完整工程；按用户要求不额外逆向。
 
-构建用 `tools/ap01/build_maintenance.py`，详细结果及资源见[维护构建记录](../../project-workflow/ap01/maintenance-build-20261015.md)。下面同步ABI诊断候选保持其原有范围，不用于启动维护服务。
+构建用 `tooling/scripts/build_maintenance.py`，详细结果及资源见[维护构建记录](../../reverse/reports/ap01/maintenance-build-20261015.md)。下面同步ABI诊断候选保持其原有范围，不用于启动维护服务。
 
 本目录是本项目的可交叉编译源码，不改第三方克隆。首版为**同步 ABI 诊断候选**：原厂创建对象 → 校验固化的 APX1 包 → 初始化 App 状态 → init/step/stop → 释放状态 → 返回原厂对象。它不实现完整 Bridge、任意文件加载、App-only OTA 或持久安全启动。
 
@@ -36,4 +36,4 @@ APX1 为112字节显式小端头：magic/format/header/total/ABI/flags、固定X
 
 每次hook正常返回后，经0031原厂日志`0xa007cfa2`发一次`APX1 diag0031 result=%u (0=init-step-stop-ok)`；0成功，其他值为ABI错误枚举。实际Ghidra确认5个固定参数+varargs，日志sink可为空。同机日志开启/读取通道尚未核实，因此marker存在不等于实机可观测已验。原厂logger帧848 B，连entry16 B至少864 B，再加格式helper/回调栈；模拟304 B排除了logger。首刷前须核实日志回读和UI任务余栈。
 
-构建/测试命令和产物见 [工具说明](../../tools/ap01/README.md)、[实现验收](../../project-workflow/ap01/app-implementation-20261013.md)。所有硬件启动、网络保留、看门狗、Flash/XIP映射和更新接受情况仍待刷机后验证；本阶段用户明确要求不刷机。
+构建/测试命令和产物见 [工具说明](../../tooling/scripts/README.md)、[实现验收](../../reverse/reports/ap01/app-implementation-20261013.md)。所有硬件启动、网络保留、看门狗、Flash/XIP映射和更新接受情况仍待刷机后验证；本阶段用户明确要求不刷机。

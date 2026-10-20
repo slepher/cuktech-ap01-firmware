@@ -1,6 +1,5 @@
 # AP01 安全回退闭环试验（0031 fallback + ota_1 开发槽）
 
-2026-10-17。目标：ota_0 = 永久固定 0031 fallback（认证 HTTP OTA）；ota_1 = 开发/实验槽。试验最小保护：ota_1 开发镜像**不启动 HTTP OTA**；开发槽基座在开机早期把下一次启动预切回 ota_0，健康运行约 10 s 后锁回 ota_1，使 ota_1 在 1–10 s 内崩溃/卡死时只需重新上电即可回到 ota_0。仅 QEMU + 合成 NOR + 宿主 loopback；不刷实机、不访问设备/串口/云端、不改 Bridge。归 backlog C9。
 
 ## Plan
 
@@ -12,7 +11,7 @@
 
 ## Task / Status
 
-- [x] 安全模块原型 `firmware/ap01/ota_0031_safety.c` + `tools/ap01/build-safety-0031.sh`（无写静态段；栈：`switch_boot` 32 B、`ota_0031_main` 16 B）
+- [x] 安全模块原型 `tooling/firmware-modules/ota_0031_safety.c` + `tooling/scripts/build-safety-0031.sh`（无写静态段；栈：`switch_boot` 32 B、`ota_0031_main` 16 B）
 - [x] 安全开发镜像 `ota-safety-dev2-0031.bin`（6,804,520 B，sha `2333e9f6…`，build_id `c2065eb5…`；与 fallback 共用 auth key；`flashable=false`）
 - [x] 通过真实 OTA 把它装入 ota_1：`ota-safety-upload-162.json`（pass，快照 NOR 由 A→dev2 提交）
 - [x] 预切验证：`ota-safety-window-164.json`（25 host s ≈ 3.9 guest s）——`native_ff13_calls` 1 次、payload 调用点 `0xa01f8758`、返回 0；分区表从 `E000 age1/active0, F000 age2/active1` 变为 **`E000 age3/active0, F000 age2/active1`**，即下次启动选择 ota_0
@@ -37,7 +36,7 @@
 
 ## 结果（round 3：锁回成立，最小闭环跑通）
 
-- 模块 v4（[ota_0031_safety.c](D:/Documents/PlatformIO/Projects/codex_status/firmware/ap01/ota_0031_safety.c)，sha `3ea64c29…`）：开机 ff13 预切 E000→active0；9 s 后直接重写 E000 表为 active=1、age+1。RAM 表缓冲在 `0x62fc8cd8`（magic `0x54504642`），复用 RAM 原生 CRC/写入叶。
+- 模块 v4（[ota_0031_safety.c](../../../tooling/firmware-modules/ota_0031_safety.c)，sha `3ea64c29…`）：开机 ff13 预切 E000→active0；9 s 后直接重写 E000 表为 active=1、age+1。RAM 表缓冲在 `0x62fc8cd8`（magic `0x54504642`），复用 RAM 原生 CRC/写入叶。
 - 开发镜像 `ota-safety-dev3-0031.bin`（sha `b9cc6ed9…`，build_id `eaf63e0c…`，`flashable=false`），经 fallback HTTP 真实装载 ota_1：`ota-safety-upload-167.json`。
 - 崩溃窗：169 → `E000 age3/active0`（下次选 ota_0）；同 NOR 复启 fallback 170 HTTP 200/401/500 通过。
 - 锁定窗：168 → `E000 age4/active1`（下次选 ota_1）；同 NOR 复启 dev3 171 正常进入系统。

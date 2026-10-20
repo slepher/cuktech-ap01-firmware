@@ -32,16 +32,16 @@
 
 最终同一二进制通过 **502步/99张截图** 的隔离X11业务回归和 **30步/15张截图** 的可见WSLg复验，包含八阶段指南、连接态、3秒长按和两种时间屏保动画。宿主服务 **147项ASan/UBSan**、字体独立校验、农历 **81772天** 和节日/节气锚点检查通过。完整日志无缺字、LVGL错误或panic。矩阵含33个构造器、7组额外业务和25项服务契约；51个widget/79个selection编号保留未观察空洞，并非宣称130个页面。
 
-候选为NuttX宿主SIM ELF：`artifacts/ap01-research/rehost-20261016/ap01-ui-0041-complete-sim.elf`，**14936232 B**，SHA256 **`ac23b8b3b64b6959f36819f3e9824fb287729c00c4803c419964c12424a930d1`**。不是可刷写的AP01 ROM。121项原厂资源/55套字体的生成头SHA256为`59dae249259dae585a2c423b0df3b2a93e675ff9f1a50f226c44c04b13cb0afc`。
+候选为NuttX宿主SIM ELF：`reverse/rehost/ap01-ui-0041-complete-sim.elf`，**14936232 B**，SHA256 **`ac23b8b3b64b6959f36819f3e9824fb287729c00c4803c419964c12424a930d1`**。不是可刷写的AP01 ROM。121项原厂资源/55套字体的生成头SHA256为`59dae249259dae585a2c423b0df3b2a93e675ff9f1a50f226c44c04b13cb0afc`。
 
-归档：[业务报告](../../artifacts/ap01-research/rehost-20261016/complete-nuttx-sim-verification.json)、[可见窗口报告](../../artifacts/ap01-research/rehost-20261016/complete-live-verification.json)、[源码/配置/ELF/测试指纹](../../artifacts/ap01-research/rehost-20261016/complete-manifest.json)、[源码包](../../artifacts/ap01-research/rehost-20261016/ap01-ui-0041-complete-source.zip)。配置、构建日志、服务日志、两处上游适配代码与资源清单使用同目录`complete-`前缀保存。
+归档：业务报告（材料未随仓库收录：`../../reverse/rehost/complete-nuttx-sim-verification.json`）、可见窗口报告（材料未随仓库收录：`../../reverse/rehost/complete-live-verification.json`）、源码/配置/ELF/测试指纹（材料未随仓库收录：`../../reverse/rehost/complete-manifest.json`）、源码包（材料未随仓库收录：`../../reverse/rehost/ap01-ui-0041-complete-source.zip`）。配置、构建日志、服务日志、两处上游适配代码与资源清单使用同目录`complete-`前缀保存。
 
 可见窗口暴露WSLg的自动重复松开/按下会破坏长按；构建脚本对NuttX X11适配器过滤Return/Space相同时间戳的重复事件对，不修改服务器全局键盘设置。该修改后的二进制重新通过上述完整回归。保留LVGL9.2.1 GIF合法末尾token边界修复及错误路径释放。
 
-复现：先`nuttx-sim.ps1 stop`，然后`nuttx-sim.ps1 build`；WSL中执行`python3 -B tools/ap01/test-complete-sim.py`（路径以仓库为当前目录），通过后`nuttx-sim.ps1 run`启动可见窗口。依赖固定NuttX `6fc5b3e9dc51dcda46d99519f72b7f2ec6db2e64`、apps `8ff533beb37eeef1f288c467acd7c50b542464eb`；已有WSL工作区与安装依赖见工具说明。此前轮次和缺字失败候选均不代替本次最终报告。
+复现：先`nuttx-sim.ps1 stop`，然后`nuttx-sim.ps1 build`；WSL中执行`python3 -B tooling/scripts/test-complete-sim.py`（路径以仓库为当前目录），通过后`nuttx-sim.ps1 run`启动可见窗口。依赖固定NuttX `6fc5b3e9dc51dcda46d99519f72b7f2ec6db2e64`、apps `8ff533beb37eeef1f288c467acd7c50b542464eb`；已有WSL工作区与安装依赖见工具说明。此前轮次和缺字失败候选均不代替本次最终报告。
 
 服务宿主ASan/UBSan已覆盖147项，模型状态12860 B；15条180点历史共10800 B。持久格式最小189 B、默认199 B、示例SSID9 B时208 B、最大268 B（32 B SSID/47 B地点）。这些是宿主模型/格式成本，不是整App峰值或AP01实机RAM验收。SIM主任务栈配置65536 B；未对实机NVS/栈/无线/flash作结论。
 
 ## 使用
 
-见[工具说明](../../tools/ap01/README.md)。`nuttx-sim.ps1 run`运行WSLg；左右/Enter/Space/Esc/R/Q为旋钮、确认、返回、天气重试和退出。`sim-control.ps1`注入本地服务事件；进程启动退休遗留请求，不重放工厂复位/更新等旧操作。后台仅运行本次SIM，不启停Bridge或访问串口。未提交或刷写实机；原件和unsigned OTA离线候选保持不变。
+见[工具说明](../../../tooling/scripts/README.md)。`nuttx-sim.ps1 run`运行WSLg；左右/Enter/Space/Esc/R/Q为旋钮、确认、返回、天气重试和退出。`sim-control.ps1`注入本地服务事件；进程启动退休遗留请求，不重放工厂复位/更新等旧操作。后台仅运行本次SIM，不启停Bridge或访问串口。未提交或刷写实机；原件和unsigned OTA离线候选保持不变。

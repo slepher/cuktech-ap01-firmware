@@ -1,50 +1,20 @@
-# AP01 逆向与 Bridge 接入研究
+# AP01 逆向研究索引
 
-本目录归 codex_status 管理。第三方 `cuktech-ap01-firmware-tools` 克隆仅作为只读材料来源，本项目的研究成果和后续改动在这里维护。2026-10-12 从该克隆迁入，迁移过程与验证见 [迁移记录](migration.md)。
+本目录保存固件研究结论。外部程序入 ROM 的通用方法由本项目维护，具体业务实现及发布由使用方维护。
 
-## 阅读入口
+| 主题 | 入口 |
+| --- | --- |
+| 范围与证据标准 | [研究需求](requirements.md)、[研究计划](plan.md)、[任务](task.md)、[状态](status.md) |
+| 外部程序编译和打包进 ROM | [打包说明](design.md)、[0031 XIP 实现](app-implementation-20261013.md)、[模块源码](../../../tooling/firmware-modules/README.md) |
+| 静态工具与来源 | [静态分析方法](reverse-design.md)、[阶段报告](report.md)、[上游材料对照](../cuktech-ap01-repository-value-analysis.md) |
+| 0031 分区、启动和堆 | [分区与启动](knowledge/0031分区与启动入口复查.md)、[网络与 HTTP](knowledge/0031网络监听与HTTP复查.md) |
+| 0031 首次安装与槽尾实验 | [首次安装](first-install-0031-20261018.md)、[实机成功记录](knowledge/0031-tail-physical-success-20261018.md)、[镜像准入](ota-image-admission-20261019.md) |
+| 0031 扩容、物理读取和诊断 | [扩容](ota-expansion-0031-20261018.md)、[启动调查](knowledge/0031-expanded-boot-investigation.md)、[网络控制台](knowledge/0031-network-console.md)、[PEC 与升级](knowledge/0031-pec-readback-and-controlled-upgrade.md) |
+| 0041 续作与原厂上层 | [交接](0041-handoff.md)、[上层恢复](upper-layer-0041-20261017.md)、[MiIO/MiBLE](miio-mible-protocol-rea-0041-20261017.md) |
+| 0041 静态比较与签名 | [版本对比](0041-reverse-20261013.md)、[签名分析](knowledge/0041签名与Bridge接口分析.md)、[下载核验](firmware-download-20261013.md) |
+| REA / RISC-V / Ghidra | [私有分析环境](private-profile-0041-20261017.md)、[RISC-V 实现](rea-riscv-implementation-20261016.md) |
+| QEMU 模型与 OTA | [显示交接](qemu-display-handoff-20261017.md)、[RTC 与显示](qemu-rtc-display-20261017.md)、[0041 OTA](qemu-ota-final-20261017.md)、[0031 OTA](qemu-ota-0031-20261017.md) |
+| 原厂 UI 重建 / NuttX SIM | [SIM 环境](nuttx-sim-20261016.md)、[静态 UI](ui-reverse-20261016.md)、[重建验收](application-rehost-complete-0041-20261017.md)、[功能矩阵](application-function-matrix-0041.json)、[Wi-Fi 缺口](knowledge/0041-sim-wifi-selection-gaps.md) |
+| 恢复与限制 | [恢复评估](failure-recovery-20261013.md)、[恢复策略](recovery-policy-20261017.md)、[USB 调查](usb-firmware-check-20261013.md) |
 
-**接手0041先读：[当前逆向交接](0041-handoff.md)。** 已汇总基线指纹、SIM/OTA边界、miio/mible入口、REA操作、全代码覆盖缺口及下一步，无需先通读本目录历史。
-
-| 内容 | 文档 |
-|---|---|
-| 0041上层续作：MiIO162根/90命令合同、MiBLE传输与认证、315函数证据 | [发现/验收/继续入口](upper-layer-0041-20261017.md) |
-| 0041私有REA修复：no-return、两版厂商指令模型、276函数、官方SDK源码对照 | [实施/验收/复现与边界](private-profile-0041-20261017.md) |
-| 0041 miio/mible REA续作：命令表、回执、BLE包装/GATT及状态映射 | [协议恢复、证据及未决项](miio-mible-protocol-rea-0041-20261017.md) |
-| 0041全功能应用SIM：33构造器、7组额外业务、25服务，502步及可见窗口验收 | [最终验收/产物/边界](application-rehost-complete-0041-20261017.md)、[功能矩阵](application-function-matrix-0041.json) |
-| 0041第四批：C1/C2、功率/日期/天气详情及219步SIM回归 | [实现/指纹/边界](application-rehost-0041-round4-20261016.md) |
-| 0041第三批：照片校准四页、13套ROM字体、118步SIM回归 | [实现/指纹/边界](application-rehost-0041-round3-20261016.md) |
-| 0041第二批：ROM字体、布局/设置/旋钮与108步SIM回归 | [实现/指纹/边界](application-rehost-0041-round2-20261016.md) |
-| 0041应用重建首批运行及新增unsigned门槛离线修改 | [实现/指纹/复现与边界](application-rehost-0041-20261016.md) |
-| 开源NuttX上重建原厂应用（当前主线） | [应用层重建方案与边界](application-rehost-plan-20261016.md) |
-| 原厂整ROM执行探测：CSR处异常，未启动系统 | [实际结果与板级模型缺口](full-rom-runtime-20261016.md) |
-| NuttX SIM + LVGL 320×240与键盘旋钮，已编译运行 | [搭建/使用/验收](nuttx-sim-20261016.md)、[原厂应用静态逆向](ui-reverse-20261016.md) |
-| REA支持RISC-V裸BIN、加载基址与入口分离 | [工具实施计划](rea-riscv-bin-plan.md)（6.5.0分支已实现，真实RV32/RV64验收通过；[证据与限制](rea-riscv-implementation-20261016.md)，待办归C9） |
-| 当前Wi-Fi双屏核对与旋钮确认绑定 | [具体方案](screen-binding-design-20261014.md)（多对多持久绑定、claim租约、固定4位码；设计完成，未实现） |
-| 历史0031蓝牙安全能力调查 | [2026-10-14绑定专项](ble-binding-20261014.md)（原厂安全检查固定拒绝已验证，需补齐SMP；绑定未实现） |
-| 当前结论与未完成事项 | [交接](status.md)、[任务核对](task.md)；平台待办归 [C9](../../docs/roadmap/backlog.md) |
-| 0031 逆向、首次安装、0041 限制、USB 与签名 | [阶段报告](report.md) |
-| Bridge 接入、资源预算、常驻 Wi-Fi、单份应用 OTA | [接入设计](design.md) |
-| 分区、启动、内置应用及外部堆证据 | [分区与启动复查](knowledge/0031分区与启动入口复查.md) |
-| 原厂网络监听与 HTTP 调查 | [网络复查](knowledge/0031网络监听与HTTP复查.md) |
-| 扫码获取固件的安全性 | [扫码审查](qr-login-review.md) |
-| 0041原厂文件、下载校验和可复用登录 | [下载验收](firmware-download-20261013.md) |
-| 0041历史专项：版本/签名及资源对照 | [0041分析](knowledge/0041签名与Bridge接口分析.md)、[专项计划与验收](0041-reverse-20261013.md) |
-| 0031自定义App：首次刷入、App更新与恢复 | [刷入方案](first-flash-plan-20261013.md) |
-| 已有准备、历史试编译与接续缺口 | [资料核查索引](preparation-index-20261013.md) |
-| 最小XIP App候选ROM、ABI与离线验收 | [实现验收](app-implementation-20261013.md)、[源码说明](../../firmware/ap01/README.md) |
-| App/底座失败及不开壳恢复难度 | [恢复评估](failure-recovery-20261013.md) |
-| 研究需求与工具依赖 | [需求和规格](requirements.md)、[静态分析设计](reverse-design.md) |
-| 上游项目对比 | [三项目价值分析](../../docs/cuktech-ap01-repository-value-analysis.md) |
-
-2026-10-16最新主线为**基于0041的应用层重建与NuttX SIM移植**，首批已运行；同时生成撤销0041新增unsigned OTA拒绝的离线候选，未刷写。完整Bridge/应用OTA服务未实现。此前0031 XIP App仅保留历史候选；本轮未核验设备当前版本。原厂代码、上游作者报告、探针和实测分别注明来源，不能互相代替。
-
-2026-10-13已下载并独立核验0041原件，文件位于本仓库`artifacts/ap01-research/`。新版已完成选定Ghidra函数反编译、0031/GNU对照、证书/分区/堆与首次安装条件评定；没有升级设备，尚无已证实0041安装绕过。登录缓存仍位于Git忽略的artifacts目录，本轮静态逆向未读取。
-
-## 工具、证据与来源
-
-[分析工具](../../tools/ap01/README.md)归本仓库；读取同父目录第三方克隆的原厂镜像、校验模块和载荷源码。引用版本为 `3bd98a8ca4fb35a9f8869121b13961d405b16dff`，上游知识和源码链接固定到该版本。文中未带本仓库前缀的 `core/`、`features/agents_dashboard*`、原厂固件路径及上游 `knowledge/` 均指该只读克隆。源码不重复导入；上游许可与作者归属见 [原项目许可说明](https://github.com/andy-JustSayWhen/cuktech-ap01-firmware-tools/blob/3bd98a8ca4fb35a9f8869121b13961d405b16dff/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E5%BC%95%E7%94%A8%E4%B8%8E%E8%AE%B8%E5%8F%AF.md)。
-
-原始反汇编、地址索引及预算对象位于本仓库的 `artifacts/ap01-research/raw/`；保留字节和历史来源路径，不改写成新测量结果。此前主项目生成的压缩证据仍在 `artifacts/c9-ap01-compression-evidence.json`。这些原始产物随 artifacts 规则不入 Git；文档与分析脚本可随本仓库提交。原厂 ROM、账号、设备配置未迁入。
-
-迁移前全部研究文件及六份带追加段落的上游文档保存在本地 `artifacts/ap01-research/source-before-move.zip`，路径与哈希清单为 `migration-manifest.json`。这份备份用于核对迁移完整性，不是后续文档维护位置。
+带日期的文件保留该阶段的验证边界；“当时未取得原件”“未安装”等表述不能替代后续报告。原始产物与私有材料的位置规则见[仓库入口](../../../README.md)。

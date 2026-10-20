@@ -1,6 +1,5 @@
 # 0041 RTC、CLIC 与显示 Mock 续作
 
-2026-10-17，C9。用户要求原厂0041在QEMU启动到界面，全程禁止刷实机。
 
 ## 结果与当前阻塞
 
@@ -12,7 +11,7 @@
 
 **尚未启动原厂界面。** 原件已越过原来的RTC停点，完成早期GPIO/时钟及UART0/1初始化；当前真实停点为PEC调用入口`0xa066fd06`，调用方`0xa002a448`，参数`(1,0,0)`。此前直接执行该区域，在`0xa066fd08`因`0x25583e2f`非法取指进入原厂公共trap`0x62fc2500`。这不是应补RV64 AMO.D的证据。
 
-最新原件证据：`artifacts/ap01-research/qemu-0041-20261017/rtc-display-reviewed-original.json`。独立QMP截图是黑屏，LCD `commands=0 / tx_bytes=0 / pixel_writes=0`；NuttX调度、rcS和UI均未验收。合成像素测试只证明显示模型，不代替原厂UI。
+最新原件证据：`evidence/qemu/0041-20261017/rtc-display-reviewed-original.json`。独立QMP截图是黑屏，LCD `commands=0 / tx_bytes=0 / pixel_writes=0`；NuttX调度、rcS和UI均未验收。合成像素测试只证明显示模型，不代替原厂UI。
 
 原件6769704 B，SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`，文件和取指映射未Patch。设备、Bridge及旧冻结实例未改；所有有限时测试进程均退出。此前PID11338的RTC停点只属于旧引擎快照，不能代表本轮最新模型。
 
@@ -30,7 +29,7 @@
 | DMA0 | 有界M2M、SPI request11、UART空RX等待；16B LLI，最多1024块/4MiB；实际传输后TC/ERR/W1C及IRQ31。非法地址、循环及宽度拒绝；错误允许已经发生的部分传输，不伪称回滚。 |
 | GPIO23 TE | 面板TE启用、sleep-out和display-on都有效时才启动理想60Hz边沿，经原厂GPIO状态/清除/屏蔽与IRQ60。关闭/复位取消timer；物理频率及面板顺时针输出旋转仅为显式模型假设。 |
 
-固定SDK `41bf338a57be53919d99f6c6715a96100428c97d`；QEMU v10.1.0 commit `f8b2f64e2336a28bf0d50b6ef8a7d8c013e9bcf3`。主模型在`tools/ap01/qemu-ap01.c`，UART/SPI/DMA各有独立头文件；CPU变更合并于`qemu-ap01-cpu.patch`，构建脚本幂等校验。
+固定SDK `41bf338a57be53919d99f6c6715a96100428c97d`；QEMU v10.1.0 commit `f8b2f64e2336a28bf0d50b6ef8a7d8c013e9bcf3`。主模型在`tooling/scripts/qemu-ap01.c`，UART/SPI/DMA各有独立头文件；CPU变更合并于`qemu-ap01-cpu.patch`，构建脚本幂等校验。
 
 模型检查按各自阶段证据记录：core55、RTC6（`tests-rtc-mac-01.json`）、CLIC7（`tests-clic-08.json`）、P77（`tests-p-05.json`）、UART6、DMA5、LCD7（`lcd-clocked-rx-20261018-review.json`）、PEC11（`tests-pec-01.json`）、Flash9（`flash-new-leaves-dev-20261018-review.json`）、WDG/TIMER4（`tests-timer-01.json`）、AON5（`tests-aon-02.json`）、RF LOFCAL8（`tests-rf-cal-shared-42.json`）、ACAL8（`tests-rf-acal-tick-44c.json`）、TX/RX PM14（`tests-rf-pm-selector-60.json`）。它们绑定各阶段引擎，并非全套已在同一最终引擎重跑。TE在icount下16667us；独立像素测试不代替原厂UI，原厂Logo证据另列。
 
@@ -63,10 +62,10 @@ RF base只保存已从原件连续RMW、RAM策略表写入确认的配置字段�
 现有输出目录内选新报告名，提权WSL运行：
 
 ```bash
-bash tools/ap01/run-qemu-mock.sh \
-  artifacts/ap01-research/qemu-0041-20261017/NEW.json \
-  --rom-shim artifacts/ap01-research/qemu-0041-20261017/qemu-bootrom-shim-v12.bin \
-  --pec-uart-mock --flash-fixture artifacts/ap01-research/qemu-0041-20261017/flash-synthetic-0041-v3.bin \
+bash tooling/scripts/run-qemu-mock.sh \
+  evidence/qemu/0041-20261017/NEW.json \
+  --rom-shim evidence/qemu/0041-20261017/qemu-bootrom-shim-v12.bin \
+  --pec-uart-mock --flash-fixture evidence/qemu/0041-20261017/flash-synthetic-0041-v3.bin \
   --clic-mock --rf-calibration-mock --mac-empty-mock \
   --cpu rv32,x-ap01-clic=on,x-ap01-p=on,xtheadba=on,xtheadbb=on,xtheadbs=on,xtheadcmo=on,xtheadcondmov=on,xtheadmac=on,xtheadmemidx=on,xtheadmempair=on,xtheadsync=on \
   --breakpoint 0x62fc2500 --pass-interrupts 10000 --pass-ecalls 1000 \

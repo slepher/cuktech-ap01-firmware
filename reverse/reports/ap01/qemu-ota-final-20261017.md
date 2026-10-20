@@ -4,7 +4,7 @@
 
 用户要求的离线顺序已完成：原厂0041在必要Mock中持续执行→unsigned候选上注入独立OTA模块→A安装B→同一NOR虚拟复启B→B回刷A→同一NOR复启A后通道仍可用。没有访问/刷写实机或启停Bridge；验证阶段未提交，后续按用户要求将源码、测试和交接记录提交，私有artifact不入库。
 
-报告均在`artifacts/ap01-research/qemu-0041-20261017/`。最终QEMU10.1.0引擎SHA256 `7246b77aa123e3b785d8c1093b4ee2bac19a3fb1b489bc0d1035963d87e18b9d`；v12 shim SHA256 `6752a1a51f973b2f917e779e12edd5a6419cccacde2ff69dfcc2d23e5434e886`。
+报告均在`evidence/qemu/0041-20261017/`。最终QEMU10.1.0引擎SHA256 `7246b77aa123e3b785d8c1093b4ee2bac19a3fb1b489bc0d1035963d87e18b9d`；v12 shim SHA256 `6752a1a51f973b2f917e779e12edd5a6419cccacde2ff69dfcc2d23e5434e886`。
 
 | 验收 | 证据 |
 |---|---|

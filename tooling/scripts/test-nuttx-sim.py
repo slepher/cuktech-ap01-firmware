@@ -10,7 +10,7 @@ import subprocess
 import time
 
 root = Path(os.environ.get("NUTTX_SIM_HOME", "/home/slepher/nuttx-ap01-sim"))
-evidence = Path(__file__).resolve().parents[2] / "artifacts/ap01-research/rehost-20261016"
+evidence = Path(__file__).resolve().parents[2] / "reverse/rehost"
 assert evidence.is_dir(), "Pre-create the evidence directory with required permissions"
 log_path = evidence / "round4-nuttx-sim-keyboard.log"
 executable = root / "nuttx/nuttx"

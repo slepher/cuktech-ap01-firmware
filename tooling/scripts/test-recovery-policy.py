@@ -191,7 +191,7 @@ def main():
     a=p.parse_args();out=a.output.resolve()
     paths=[out.with_suffix(s) for s in ('.host','.so','.elf','.payload.bin','.rom.bin','.qemu.log')]+[out]
     if not out.parent.is_dir() or any(x.exists() for x in paths):p.error('new files in existing directory required')
-    src=ROOT/'firmware/ap01'
+    src=ROOT/'tooling/firmware-modules'
     sources=[src/'recovery_policy.c',src/'test_recovery_policy.c']
     report=dict(simulation_only=True,integrated_rom_tested=False,physical_boot2_tested=False,
         universal_recovery_claim_supported=False,source_sha256={x.name:hashlib.sha256(x.read_bytes()).hexdigest() for x in sources+[src/'recovery_policy.h']})

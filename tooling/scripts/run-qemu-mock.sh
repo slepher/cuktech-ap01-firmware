@@ -16,9 +16,9 @@ shift
     > "$report.build.log" 2>&1)
 python3 -B "$script_dir/run-qemu-ap01.py" \
     --qemu /home/slepher/qemu-ap01-0041/build/qemu-system-riscv32 \
-    --image artifacts/ap01-research/ap01-1.0.2_0041.bin \
+    --image roms/0041/ap01-1.0.2_0041.bin \
     --mhint-latch --mtvt-latch --cache-csr-latches --boot-mmio --efuse-shadow \
-    --otp-fixture artifacts/ap01-research/qemu-0041-20261017/otp-synthetic-ap01.bin \
+    --otp-fixture evidence/qemu/0041-20261017/otp-synthetic-ap01.bin \
     --psram-mock --boot2-mock --run-to-trap --timeout 15 \
     --cpu rv32,x-ap01-p=on,xtheadba=on,xtheadbb=on,xtheadbs=on,xtheadcmo=on,xtheadcondmov=on,xtheadmac=on,xtheadmemidx=on,xtheadmempair=on,xtheadsync=on \
     --output "$report" "$@"

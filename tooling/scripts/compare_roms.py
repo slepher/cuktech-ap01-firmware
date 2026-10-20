@@ -18,7 +18,7 @@ old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
 DELTA = 0x9ffff000
 INPUTS = {
-    "0041": (ROOT / "artifacts/ap01-research/ap01-1.0.2_0041.bin", 6769704,
+    "0041": (ROOT / "roms/0041/ap01-1.0.2_0041.bin", 6769704,
              "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9"),
     "0031": (ROOT.parent / "cuktech-ap01-firmware-tools/artifacts/firmware/original/ap01-1.0.2_0031.bin", 6804520,
              "8a721fc8ef25458d415b2460e4a251e0503a82f7743fdff85b12612190e5c1cb"),

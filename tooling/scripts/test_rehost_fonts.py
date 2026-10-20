@@ -9,7 +9,7 @@ sys.dont_write_bytecode = True
 spec = importlib.util.spec_from_file_location("assets", Path(__file__).with_name("rehost-assets.py"))
 assets = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(assets)
-rom = (Path(__file__).resolve().parents[2] / "artifacts/ap01-research/ap01-1.0.2_0041.bin").read_bytes()
+rom = (Path(__file__).resolve().parents[2] / "roms/0041/ap01-1.0.2_0041.bin").read_bytes()
 assert hashlib.sha256(rom).hexdigest() == assets.SHA256
 
 height, baseline, glyphs, pixels = assets.native_font(rom, 0xa02549ac)

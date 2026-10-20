@@ -77,8 +77,8 @@ def trampoline(target):
 
 
 def build(output, upstream):
-    if not output.is_dir() or not output.resolve().is_relative_to(REPO / "artifacts/ap01-research"):
-        raise ValueError("Output must be a precreated repository artifacts/ap01-research directory")
+    if not output.is_dir() or not output.resolve().is_relative_to(REPO / "evidence/private"):
+        raise ValueError("Output must be a precreated repository evidence/private directory")
     output = output.resolve()
     # A fixed namespace makes reruns refuse rather than silently replacing evidence.
     names = ["app.elf", "app.bin", "app.apx", "base.elf", "payload.bin", "manifest.json",
@@ -106,7 +106,7 @@ def build(output, upstream):
         raise ValueError("Payload space mismatch")
     put_binary(output / "original.gif", gif_old)
     put_binary(output / "optimized.gif", gif_new)
-    gif_check = json.loads(run_wsl("python3", wsl_path(REPO / "tools/ap01/verify_gif.py"),
+    gif_check = json.loads(run_wsl("python3", wsl_path(REPO / "tooling/scripts/verify_gif.py"),
                                     wsl_path(output / "original.gif"), wsl_path(output / "optimized.gif")))
     put(output / "gif-check.json", json.dumps(gif_check, indent=2) + "\n")
     tool_dir = upstream / "tools/docker/toolchain/bin"
@@ -115,7 +115,7 @@ def build(output, upstream):
                 for name in ("gcc", "as", "ld", "objcopy")}
     flags = ["-march=rv32imac", "-mabi=ilp32", "-Os", "-ffreestanding", "-fno-builtin",
              "-fno-pic", "-msmall-data-limit=0", "-mno-relax", "-fstack-usage",
-             "-Wall", "-Wextra", "-Werror", "-std=c99", "-I" + wsl_path(REPO / "firmware/ap01")]
+             "-Wall", "-Wextra", "-Werror", "-std=c99", "-I" + wsl_path(REPO / "tooling/firmware-modules")]
 
     def assemble(stem, source, c=False):
         if c:
@@ -127,7 +127,7 @@ def build(output, upstream):
 
     def link(stem, objects):
         run_wsl(prefix + "ld", "-m", "elf32lriscv", "--no-relax", "-T",
-                wsl_path(REPO / ("firmware/ap01/" + stem + ".ld")),
+                wsl_path(REPO / ("tooling/firmware-modules/" + stem + ".ld")),
                 "-Map=" + wsl_path(output / (stem + ".map")),
                 *[wsl_path(output / (name + ".o")) for name in objects],
                 "-o", wsl_path(output / (stem + ".elf")))
@@ -144,7 +144,7 @@ def build(output, upstream):
                 symbols[fields[2]] = int(fields[0], 16)
         return symbols
 
-    assemble("diagnostic_app", REPO / "firmware/ap01/diagnostic_app.c", True)
+    assemble("diagnostic_app", REPO / "tooling/firmware-modules/diagnostic_app.c", True)
     app_symbols = link("app", ["diagnostic_app"])
     run_wsl(prefix + "objcopy", "-O", "binary", wsl_path(output / "app.elf"), wsl_path(output / "app.bin"))
     text = (output / "app.bin").read_bytes()
@@ -163,9 +163,9 @@ def build(output, upstream):
     package = bytes(header) + body
     put_binary(output / "app.apx", package)
     put(output / "assets.S", '.section .app_package,"a",@progbits\n.incbin "' + wsl_path(output / "app.apx") + '"\n')
-    assemble("app_loader", REPO / "firmware/ap01/app_loader.c", True)
-    assemble("base", REPO / "firmware/ap01/base.c", True)
-    assemble("entry", REPO / "firmware/ap01/entry.S")
+    assemble("app_loader", REPO / "tooling/firmware-modules/app_loader.c", True)
+    assemble("base", REPO / "tooling/firmware-modules/base.c", True)
+    assemble("entry", REPO / "tooling/firmware-modules/entry.S")
     assemble("assets", output / "assets.S")
     base_symbols = link("base", ["entry", "base", "app_loader", "assets"])
     if base_symbols["ap01_entry"] != BASE_VA:
@@ -200,7 +200,7 @@ def build(output, upstream):
     if sha((output / "ap01-1.0.2_0031-app-xip.bin").read_bytes()) != sha(candidate):
         raise ValueError("Candidate readback mismatch")
     put(output / "symbols.json", json.dumps({"base": base_symbols, "app": app_symbols}, indent=2) + "\n")
-    sources = list((REPO / "firmware/ap01").glob("*")) + [Path(__file__), REPO / "tools/ap01/verify_gif.py"]
+    sources = list((REPO / "tooling/firmware-modules").glob("*")) + [Path(__file__), REPO / "tooling/scripts/verify_gif.py"]
     manifest = {"target": "AP01 1.0.2_0031 native XIP diagnostic App", "flashed": False,
                 "baseline": baseline.to_dict(), "candidate": report.to_dict(),
                 "allowed_ranges": [value.to_dict() for value in allowed], "toolchain": versions,

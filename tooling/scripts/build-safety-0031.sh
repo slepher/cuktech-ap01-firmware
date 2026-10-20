@@ -3,8 +3,8 @@
 set -euo pipefail
 script_dir=$(cd -- "$(dirname -- "$0")" && pwd)
 repo=$(realpath "$script_dir/../..")
-out="$repo/artifacts/ap01-research/qemu-0031-20261017"
-source_dir="$repo/firmware/ap01"
+out="$repo/evidence/qemu/0031-20261017"
+source_dir="$repo/tooling/firmware-modules"
 tool="$repo/../cuktech-ap01-firmware-tools/tools/docker/toolchain/bin/riscv64-unknown-elf"
 prefix=${1:-safety-linked-0031-v1}
 [[ "$prefix" =~ ^[a-zA-Z0-9_-]+$ && -d "$out" ]]

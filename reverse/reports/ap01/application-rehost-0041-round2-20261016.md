@@ -14,11 +14,11 @@
 
 ## 证据与纠正
 
-源ROM `artifacts/ap01-research/ap01-1.0.2_0041.bin`，6769704 B，SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。ROM未改写，VA=file offset+0x9ffff000。
+源ROM `roms/0041/ap01-1.0.2_0041.bin`，6769704 B，SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。ROM未改写，VA=file offset+0x9ffff000。
 
 子代理分工：布局/字体/设置详情静态取证；页面实现；主页面及日期天气详情REA；最终只读审阅。主代理核对原始字节、事件分支、资源指针并集成/构建。
 
-证据均位于 `artifacts/ap01-research/rehost-20261016/`：
+证据均位于 `reverse/rehost/`：
 
 - `main-knob-0041-round2.json`：主回调为0xa00afc88。**旧代理报告将Time/Pet右旋分支误称短按的结论无效**；实际Time短按打开时间设定，Pet短按切换原表GIF。
 - `detail-knob-0041-round2.json`：日期详情页0x18、天气详情页0x19；天气子索引0..4有边界。日期有0..5分散状态，其全部视觉语义未明。本轮未把这些未完整恢复的详情状态机伪装实现。
@@ -30,7 +30,7 @@
 WSL Ubuntu-24.04，现有隔离环境 `/home/slepher/nuttx-ap01-sim`；NuttX提交 `6fc5b3e9dc51dcda46d99519f72b7f2ec6db2e64`、apps提交 `8ff533beb37eeef1f288c467acd7c50b542464eb`。生成资源只在本地忽略目录中保存，不提交ROM字形/图片/GIF字节。
 
 ```powershell
-pwsh -File D:\Documents\PlatformIO\Projects\codex_status\tools\ap01\nuttx-sim.ps1 run
+pwsh -File tooling\scripts\nuttx-sim.ps1 run
 ```
 
 聚焦NuttX窗口，左右键旋转，Enter/Space短按，Esc返回，Q退出。构建前先用同一脚本stop，再build；不使用PlatformIO固件目标。
@@ -45,7 +45,7 @@ pwsh -File D:\Documents\PlatformIO\Projects\codex_status\tools\ap01\nuttx-sim.ps
 
 ## 最终归档
 
-- ELF：`artifacts/ap01-research/rehost-20261016/ap01-ui-0041-round2-sim.elf`，9173656 B，SHA256 `95f5adc25ccec49ebf7ddc4f1e2112bf30d9c2fba4e5238f09d750e201e1cdb8`。最终108步真实X11回归通过，所有GIF分别动画/互异、指南按钮2628个选中色像素、reset恢复24小时制。没有LVGL警告。
+- ELF：`reverse/rehost/ap01-ui-0041-round2-sim.elf`，9173656 B，SHA256 `95f5adc25ccec49ebf7ddc4f1e2112bf30d9c2fba4e5238f09d750e201e1cdb8`。最终108步真实X11回归通过，所有GIF分别动画/互异、指南按钮2628个选中色像素、reset恢复24小时制。没有LVGL警告。
 - `.config`与`.tgz`同前缀；全部尺寸/哈希见`round2-artifacts.json`。源码、精确ELF、生成资源及本地LVGL GIF边界修复一并归档；首批ELF未覆盖。
-- 字体位图独立测试通过：`python -X utf8 -B tools/ap01/test_rehost_fonts.py`。
+- 字体位图独立测试通过：`python -X utf8 -B tooling/scripts/test_rehost_fonts.py`。
 - WSLg窗口已启动，PID 175791，DISPLAY=:0；运行时PID随重启变化。

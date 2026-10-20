@@ -15,17 +15,17 @@
 
 **用户随后指出可采用开源NuttX、仅重建应用层；后续主线转为[应用重建方案](application-rehost-plan-20261016.md)，硬件模型不作为应用移植前置条件。** 本轮已完成部分模型及测试，原厂ROM仍未完整启动；没有将应用重建版与原厂BIN运行混称。
 
-- 模型 [emulate_ap01.py](../../tools/ap01/emulate_ap01.py)：复用Unicorn2.1.4，原件只读。实现MHINT及其他已遇到的CSR软件可见读改写；MTVEC/MTVT保存CLIC模式，CLIC配置及80个槽的初始化读写；RAM物理/缓存/重映射地址共享底层存储。
+- 模型 [emulate_ap01.py](../../../tooling/scripts/emulate_ap01.py)：复用Unicorn2.1.4，原件只读。实现MHINT及其他已遇到的CSR软件可见读改写；MTVEC/MTVT保存CLIC模式，CLIC配置及80个槽的初始化读写；RAM物理/缓存/重映射地址共享底层存储。
 - 实现实际遇到的INSB、ADDSL、EXT/EXTU、RV32 T-Head字节/半字/字索引及前后递增访存、功能性cache维护；ROM指令不改写，普通函数不替换成功stub。未知编码继续异常停止。ADDSL按厂商规范移位rs2，定向回归覆盖两操作数非对称和32位溢出，避免受QEMU解码文件旧注释误导。
 - GLB/PDS/HBN、TZ配置、SF_CTRL配置、SYSMAP及eFuse控制仅实现启动已遇到的寄存器白名单；未知地址拒绝。配置寄存器有文档复位值/写掩码或显式模型初态，不把状态寄存器一概返回ready。TZ隔离、flash事务、实际USB/无线、完整中断派发、计时和OTP加载仍未实现；这些寄存器锁存不能视为完整外设模型。
 - 原厂真实回放观察 **180961条指令尝试**，MHINT由0读改写到0x100000，执行进入RAM `0x62fc1d5c`。两块搬运结果分别7104 B/10536 B，与原件文件0x1c14/0x37d4源数据逐字节一致；执行流来自原厂搬运代码，不是宿主预填充。
 - 最终停在T-Head存储指令访问eFuse影子地址 `0x20056000`；该影子区清零/OTP加载尚未建模。**不是遇到设备私钥不足的已证实结论，也没有把首个eFuse控制访问误当设备身份读取。** 0x20056800实际是EF_IF_CTRL_0，按SDK复位值实现后已通过首个读取。
-- [最终回放JSON](../../artifacts/ap01-research/hardware-model-final-20261016.json)、[REA静态证据](../../artifacts/ap01-research/rea-hardware-model-20261016.json)（5条记录）；逐步失败在同目录hardware-model-step1..20.json。step7包含已纠正的ADDSL移位错误，step15为旧版每指令停启导致的时间预算耗尽，不能拿它们作为最终验收。最终CLI成功输出的是调查证据，`full_rom_boot_verified=false`。
-- [11项语义测试](../../tools/ap01/test_ap01_hardware.py)通过，覆盖CSR六种读改写、零寄存器/别名、ADDSL操作数顺序与溢出、INSB各字节、原厂复制指令对、访存前后更新/负偏移、符号提取、RAM别名、MMIO掩码/子字节、未知CSR/MMIO与ROM写入拒绝。参数路径与模型相同。
+- [最终回放JSON](../../analysis/hardware-model-final-20261016.json)、[REA静态证据](../../analysis/rea-hardware-model-20261016.json)（5条记录）；逐步失败在同目录hardware-model-step1..20.json。step7包含已纠正的ADDSL移位错误，step15为旧版每指令停启导致的时间预算耗尽，不能拿它们作为最终验收。最终CLI成功输出的是调查证据，`full_rom_boot_verified=false`。
+- [11项语义测试](../../../tooling/scripts/test_ap01_hardware.py)通过，覆盖CSR六种读改写、零寄存器/别名、ADDSL操作数顺序与溢出、INSB各字节、原厂复制指令对、访存前后更新/负偏移、符号提取、RAM别名、MMIO掩码/子字节、未知CSR/MMIO与ROM写入拒绝。参数路径与模型相同。
 
 ```powershell
-python -B tools/ap01/test_ap01_hardware.py --deps artifacts/ap01-research/app0031-20261013/deps
-python -B tools/ap01/emulate_ap01.py --image ../cuktech-ap01-firmware-tools/artifacts/firmware/original/ap01-1.0.2_0031.bin --deps artifacts/ap01-research/app0031-20261013/deps --output <已有目录中的新JSON>
+python -B tooling/scripts/test_ap01_hardware.py --deps reverse/app-0031/deps
+python -B tooling/scripts/emulate_ap01.py --image ../cuktech-ap01-firmware-tools/artifacts/firmware/original/ap01-1.0.2_0031.bin --deps reverse/app-0031/deps --output <已有目录中的新JSON>
 ```
 
 来源固定为博流SDK commit `41bf338a57be53919d99f6c6715a96100428c97d`：[CSR定义](https://github.com/bouffalolab/bouffalo_sdk/blob/41bf338a57be53919d99f6c6715a96100428c97d/drivers/lhal/include/arch/risc-v/t-head/Core/Include/csi_rv32_gcc.h)、[内存映射](https://github.com/bouffalolab/bouffalo_sdk/blob/41bf338a57be53919d99f6c6715a96100428c97d/drivers/lhal/config/bl616/bl616_memorymap.h)、[寄存器目录](https://github.com/bouffalolab/bouffalo_sdk/tree/41bf338a57be53919d99f6c6715a96100428c97d/drivers/soc/bl616/std/include/hardware)。本地sdk-*.h/c/S均为artifacts只读参考；原厂0031未证明与该SDK提交完全对应，已用ROM实际访问交叉核对。扩展指令语义参考[厂商ADDSL规范](https://github.com/XUANTIE-RV/thead-extension-spec/blob/master/xtheadba/addsl.adoc)、[LWIA规范](https://github.com/XUANTIE-RV/thead-extension-spec/blob/master/xtheadmemidx/lwia.adoc)和OpenOCD的旧版Packed指令编码；不把最新RISC-V P草案当作原厂旧版P编码。
@@ -36,10 +36,10 @@ python -B tools/ap01/emulate_ap01.py --image ../cuktech-ap01-firmware-tools/arti
 现有SIM为x86-64源码目标，不接纳AP01原厂RV32裸BIN。WSL未安装qemu-system-riscv32/64，现有Unicorn2.1.4位于app0031-20261013/deps，包含Windows原生库，可复用。已有材料是应用槽镜像，非全闪存/BootROM/Boot2/实际分区与外部文件系统备份。
 
 ## Review
-**完整原厂ROM尚未运行成功。** 已复用现有Unicorn2.1.4 Windows库实际执行原件入口探测；原件哈希前后不变。证据 [rom-startup-probe-20261016.json](../../artifacts/ap01-research/rom-startup-probe-20261016.json)，工具 [probe_rom_startup.py](../../tools/ap01/probe_rom_startup.py)。本轮无ROM补丁、外设stub、设备访问或SIM变更。
+**完整原厂ROM尚未运行成功。** 已复用现有Unicorn2.1.4 Windows库实际执行原件入口探测；原件哈希前后不变。证据 [rom-startup-probe-20261016.json](../../analysis/rom-startup-probe-20261016.json)，工具 [probe_rom_startup.py](../../../tooling/scripts/probe_rom_startup.py)。本轮无ROM补丁、外设stub、设备访问或SIM变更。
 
 ```powershell
-python -B tools/ap01/probe_rom_startup.py --image ../cuktech-ap01-firmware-tools/artifacts/firmware/original/ap01-1.0.2_0031.bin --deps artifacts/ap01-research/app0031-20261013/deps --output <已有目录中的新JSON>
+python -B tooling/scripts/probe_rom_startup.py --image ../cuktech-ap01-firmware-tools/artifacts/firmware/original/ap01-1.0.2_0031.bin --deps reverse/app-0031/deps --output <已有目录中的新JSON>
 ```
 
 结果：观察到7条指令尝试，SP=0x62fdb890；最后一条hook记录为0xa0000018，原字节 `f322507c`，小端指令字0x7c5022f3，按标准CSR编码为 `csrrs t0,0x7c5,zero`。执行引擎随后产生异常号2，回调/停止时PC=0xa000001c。**最后尝试的指令地址与异常回调PC分别记录，不能把0xa000001c称为已证明的故障指令地址。** 未进入系统初始化、应用表或图形界面。

@@ -17,7 +17,7 @@ import sys
 
 sys.dont_write_bytecode = True
 REPO = Path(__file__).resolve().parents[2]
-SOURCE = REPO / "firmware/ap01"
+SOURCE = REPO / "tooling/firmware-modules"
 OPT_SHA = "796abb5350f3790e9184de1a0e748576f71e237365ccadd45fe315eaf1148c09"
 STAGE_SHA = "24e50a65c633748f4680a59cc7e97d40582727cf27af06662fb29a6d182afa13"
 MISSING_PORTS = [
@@ -114,7 +114,7 @@ def emulate(elf, names, deps):
 
 def build(args):
     output = args.output.resolve()
-    if not output.is_dir() or not output.is_relative_to(REPO / "artifacts/ap01-research"):
+    if not output.is_dir() or not output.is_relative_to(REPO / "evidence/private"):
         raise ValueError("use an existing, precreated repository AP01 artifacts directory")
     if (output / "maintenance-build.json").exists():
         raise FileExistsError("existing build evidence must not be overwritten")
@@ -190,7 +190,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--upstream", type=Path, default=REPO.parent / "cuktech-ap01-firmware-tools")
     parser.add_argument("--llvm", type=Path, default=Path("/usr/local/opt/llvm/bin"))
-    parser.add_argument("--deps", type=Path, default=REPO / "artifacts/ap01-research/ble0031-20261014/deps")
+    parser.add_argument("--deps", type=Path, default=REPO / "evidence/private/ble0031-20261014/deps")
     parser.add_argument("--require-rom", action="store_true", help="exit 2 if a deployable ROM cannot be produced")
     args = parser.parse_args()
     try:
