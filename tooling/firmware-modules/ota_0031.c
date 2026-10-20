@@ -27,7 +27,6 @@
 #endif
 
 extern const unsigned char ota_0031_manifest[256] __attribute__((visibility("hidden")));
-extern const unsigned char ota_0031_reference_header[256] __attribute__((visibility("hidden")));
 int snprintf(char *,size_t,const char *,...);
 
 #ifndef OTA_PORT_HOST_TEST
@@ -59,7 +58,7 @@ typedef struct {
 } server;
 typedef struct {
     server *owner;
-    int fd,started,finished;
+    int fd,started,finished,flash_owned;
     uint32_t last_ms;uint64_t high_ms;
     char *snapshot;
     flash_io flash;
@@ -227,7 +226,8 @@ static int begin(void *opaque,uint32_t length,uint32_t timeout)
     if(!timeout||c->started||ota_image_begin(&c->image,length))return OTA_STORE_ERROR;
     FN(0xa01b19e4,void(*)(void))();
     int busy=c->owner->fenced;
-    if(!busy)c->owner->fenced=1;
+    if(!busy)busy=!diagnostic_flash_acquire(&c->owner->diagnostic);
+    if(!busy){c->owner->fenced=1;c->flash_owned=1;}
     FN(0xa01b1948,void(*)(void))();
     if(busy)return OTA_STORE_BUSY;
     c->started=1;c->flash.fd=-1;c->flash.flip=0;
@@ -267,12 +267,13 @@ static void close_store(connection *c)
         FN(0xa01ab044,void(*)(flash_io*))(&c->flash);
         c->flash.fd=-1;
     }
+    if(c->flash_owned){diagnostic_flash_release(&c->owner->diagnostic);c->flash_owned=0;}
 }
 static int commit(void *opaque,uint32_t timeout)
 {
     connection *c=opaque;uint64_t deadline=now(c)+timeout;
     if(!timeout||!c->started||c->finished)return OTA_STORE_ERROR;
-    if(!ota_image_valid(&c->image,ota_0031_reference_header)){
+    if(!ota_image_valid(&c->image)){
         event(c,"image_rejected",-1);return OTA_STORE_ERROR;
     }
     event(c,"image_valid",0);

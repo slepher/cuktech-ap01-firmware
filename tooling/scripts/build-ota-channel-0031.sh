@@ -10,11 +10,17 @@ prefix=${1:-ota-channel-linked-0031-v1}
 base=${3:-0xa01f8640}
 version=${4:-ap01-ota/2}
 mode=${5:-release}
-[[ "$mode" == release || "$mode" == probe || "$mode" == full-upload ]]
+[[ "$mode" == release || "$mode" == probe || "$mode" == full-upload || "$mode" == recovery ]]
 extra_flags=()
 units=(channel port image diagnostic_console diagnostic_console_0031)
 if [[ "$mode" != release ]]; then extra_flags+=(-DOTA_PORT_NO_ENTRY -DAP01_HTTP_PROBE); units+=(probe_network_console_0031); fi
 if [[ "$mode" == full-upload ]]; then extra_flags+=(-DAP01_HTTP_FULL_UPLOAD); fi
+if [[ "$mode" == recovery ]]; then extra_flags+=(-DAP01_HTTP_RECOVERY_PROBE); fi
+upload_image=${6:-}
+if [[ -n "$upload_image" ]]; then
+    [[ "$mode" == full-upload && -f "$upload_image" ]]
+    extra_flags+=(-DAP01_HTTP_UPLOAD_TARGET)
+fi
 [[ "$prefix" =~ ^[a-zA-Z0-9_-]+$ && -d "$out" ]]
 for suffix in channel.s channel.o channel.su port.s port.o port.su image.s image.o image.su manifest.s manifest.o elf bin map; do
     [[ ! -e "$out/$prefix.$suffix" ]] || { echo 'Choose a new output prefix' >&2; exit 2; }
@@ -42,6 +48,23 @@ cat >> "$out/$prefix.manifest.s" <<ASM
 ota_0031_reference_header:
 .incbin "$repo/roms/0031/ap01-1.0.2_0031.bin",0,256
 ASM
+if [[ -n "$upload_image" ]]; then
+    python3 - "$upload_image" "$out/$prefix.upload-tail.bin" <<'PY'
+from pathlib import Path
+import sys
+p=Path(sys.argv[1]);data=p.read_bytes();assert 0x67e000<len(data)<=0x700000
+Path(sys.argv[2]).write_bytes(bytes(v^85 for v in data[0x67e000:]))
+PY
+    cat >> "$out/$prefix.manifest.s" <<ASM
+.section .rodata.probe_upload,"a"
+.global ap01_probe_upload_length
+ap01_probe_upload_length:
+.long $(stat -c %s "$upload_image")
+.global ap01_probe_upload_tail
+ap01_probe_upload_tail:
+.incbin "$out/$prefix.upload-tail.bin"
+ASM
+fi
 "$tool-as" -march=rv32imafc_zicsr -mabi=ilp32f \
     "$out/$prefix.manifest.s" -o "$out/$prefix.manifest.o"
 probe_objects=()

@@ -91,8 +91,9 @@ static header_info read_header(uint32_t address,unsigned valid)
     info.header_crc_ok=crc32(header,252)==word(header+252);
     return info;
 }
-static void status_reply(console_connection *connection,int active)
+static void status_reply(console_connection *connection,int active,diagnostic_console_state *state)
 {
+    int physical_available=diagnostic_flash_acquire(state);
     uint32_t mapping=AP01_FLASH_OFFSET(),reset=AP01_RESET_REASON();
     unsigned char table[596];
 #ifndef DIAG_TABLE_RAM
@@ -110,12 +111,14 @@ static void status_reply(console_connection *connection,int active)
     }
     /* VFS firmware nodes may serialize behind an active writer. Read the
      * headers through the original physical reader instead. */
-    header_info first=read_header(fw?word(fw+12):0,fw!=NULL),second=read_header(fw?word(fw+16):0,fw!=NULL);
+    header_info first={0},second={0};
+    if(physical_available){first=read_header(fw?word(fw+12):0,fw!=NULL);second=read_header(fw?word(fw+16):0,fw!=NULL);}
+    else{first.error=16;second.error=16;}
     char build[33];static const char hex[]="0123456789abcdef";
     for(unsigned i=0;i<16;i++){unsigned v=ota_0031_manifest[36+i];build[2*i]=hex[v>>4];build[2*i+1]=hex[v&15];}build[32]=0;
     unsigned char physical[596];unsigned pt_valid[2]={0},pt_age[2]={0},pt_active[2]={0};int pt_rc[2];
     for(unsigned i=0;i<2;i++){
-        pt_rc[i]=DIAG_FN(0xa0057eaa,int(*)(uint32_t,void*,uint32_t))(0xe000u+i*0x1000u,physical,sizeof(physical));
+        pt_rc[i]=physical_available?DIAG_FN(0xa0057eaa,int(*)(uint32_t,void*,uint32_t))(0xe000u+i*0x1000u,physical,sizeof(physical)):-16;
         unsigned entries=pt_rc[i]?0:(unsigned)physical[6]|(unsigned)physical[7]<<8;
         if(!pt_rc[i]&&word(physical)==0x54504642u&&entries>0&&entries<=16&&
            crc32(physical,12)==word(physical+12)&&crc32(physical+16,entries*36)==word(physical+16+entries*36)){
@@ -124,8 +127,9 @@ static void status_reply(console_connection *connection,int active)
                 if(!e[0]&&e[3]=='F'&&e[4]=='W'&&!e[5]){pt_active[i]=(unsigned)e[2]+1;break;}}
         }
     }
+    if(physical_available)diagnostic_flash_release(state);
     char body[2048];int n=snprintf(body,sizeof(body),
-        "{\"protocol\":\"AP01-DIAG/1\",\"build\":\"%s\",\"ms\":%u,\"shell_pid\":%d,"
+        "{\"protocol\":\"AP01-DIAG/1\",\"build\":\"%s\",\"ms\":%u,\"shell_pid\":%d,\"physical_reads\":\"%s\","
         "\"running\":{\"source\":\"bootrom329\",\"xip_offset\":%u,\"slot\":%u,\"address\":%u},"
         "\"reset\":{\"source\":\"0031.boot_snapshot\",\"native_code\":%u},"
         "\"physical_tables\":[{\"address\":57344,\"read_rc\":%d,\"crc_ok\":%u,\"age\":%u,\"active_slot\":%u},"
@@ -134,7 +138,7 @@ static void status_reply(console_connection *connection,int active)
         "\"active\":%d,\"image_length\":%u,\"max_length\":[%u,%u],\"address\":[%u,%u]},"
         "\"fw1\":{\"bytes\":%d,\"errno\":%d,\"span\":%u,\"entry\":%u,\"header_crc_ok\":%u},"
         "\"fw2\":{\"bytes\":%d,\"errno\":%d,\"span\":%u,\"entry\":%u,\"header_crc_ok\":%u}}\n",
-        build,DIAG_FN(0xa0059c62,uint32_t(*)(void))(),active,
+        build,DIAG_FN(0xa0059c62,uint32_t(*)(void))(),active,physical_available?"attempted":"busy",
         mapping,ap01_running_slot(mapping),ap01_slot_address(ap01_running_slot(mapping)),reset,
         pt_rc[0],pt_valid[0],pt_age[0],pt_active[0],pt_rc[1],pt_valid[1],pt_age[1],pt_active[1],
         slot_number("ro.boot.current_slot"),slot_number("ro.boot.update_slot"),valid,valid?word(table+8):0,
@@ -151,14 +155,15 @@ static void logs_reply(console_connection *connection,const char *data)
     char header[32];int n=snprintf(header,sizeof(header),"OK LOGS %u\n",size);
     if(n>0&&(unsigned)n<sizeof(header)&&!respond(connection,header,(unsigned)n,1000))respond(connection,data,size,5000);
 }
-static void flash_reply(console_connection *connection,const diagnostic_console_io *io)
+static void flash_reply(console_connection *connection,const diagnostic_console_io *io,diagnostic_console_state *state)
 {
     uint32_t address=0,length=0;
     if(diagnostic_console_flash_range(io,milliseconds(connection)+10000,&address,&length)){
         respond(connection,"ERR range\n",10,1000);return;
     }
+    if(!diagnostic_flash_acquire(state)){respond(connection,"ERR busy\n",9,1000);return;}
     unsigned char *data=DIAG_FN(0xa002fc1a,void*(*)(size_t))(length);
-    if(!data){respond(connection,"ERR memory\n",11,1000);return;}
+    if(!data){diagnostic_flash_release(state);respond(connection,"ERR memory\n",11,1000);return;}
     unsigned read=0;
     while(read<length){
         unsigned count=length-read;if(count>256)count=256;
@@ -168,6 +173,7 @@ static void flash_reply(console_connection *connection,const diagnostic_console_
         if(DIAG_FN(0xa0057eaa,int(*)(uint32_t,void*,uint32_t))(address+read,data+read,count))break;
         read+=count;
     }
+    diagnostic_flash_release(state);
     if(read!=length)respond(connection,"ERR read\n",9,1000);
     else{
         char header[64];int n=snprintf(header,sizeof(header),"OK FLASH %u %08x\n",length,crc32(data,length));
@@ -205,9 +211,9 @@ int diagnostic_console_0031_handle(int fd,diagnostic_console_state *state,const 
     state->shell_pid=active;
     DIAG_FN(0xa01b1948,void(*)(void))();
     if(busy){respond(&connection,"ERR busy\n",9,1000);return -1;}
-    if(operation==DIAGNOSTIC_STATUS){status_reply(&connection,active);return 0;}
+    if(operation==DIAGNOSTIC_STATUS){status_reply(&connection,active,state);return 0;}
     if(operation==DIAGNOSTIC_LOGS){logs_reply(&connection,logs?logs(opaque):NULL);return 0;}
-    if(operation==DIAGNOSTIC_FLASH){flash_reply(&connection,&io);return 0;}
+    if(operation==DIAGNOSTIC_FLASH){flash_reply(&connection,&io,state);return 0;}
     if(operation==DIAGNOSTIC_INTERRUPT||operation==DIAGNOSTIC_CLOSE){
         int r=active>0?DIAG_FN(0xa00520be,int(*)(int,int))(active,operation==DIAGNOSTIC_CLOSE?9:2):-3;
         if(r){char error[48];int n=snprintf(error,sizeof(error),"ERR signal %d\n",r);

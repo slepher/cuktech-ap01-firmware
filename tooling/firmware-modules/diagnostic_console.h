@@ -17,7 +17,13 @@ enum diagnostic_operation {DIAGNOSTIC_INVALID,DIAGNOSTIC_SHELL,DIAGNOSTIC_STATUS
 enum diagnostic_operation diagnostic_console_operation(const diagnostic_console_io *,uint64_t deadline);
 /* Physical read only: 1..64 KiB inside the board's 16 MiB NOR. */
 int diagnostic_console_flash_range(const diagnostic_console_io *,uint64_t,uint32_t *,uint32_t *);
-typedef struct {int shell_pid,parent_pid;} diagnostic_console_state;
+typedef struct {int shell_pid,parent_pid;int flash_busy;} diagnostic_console_state;
+/* One nonblocking guard for our OTA writer and physical diagnostic readers.
+ * Release before any network output; LOGS only reads its RAM snapshot. */
+static inline int diagnostic_flash_acquire(diagnostic_console_state *s)
+{return !__atomic_exchange_n(&s->flash_busy,1,__ATOMIC_ACQUIRE);}
+static inline void diagnostic_flash_release(diagnostic_console_state *s)
+{__atomic_store_n(&s->flash_busy,0,__ATOMIC_RELEASE);}
 int diagnostic_console_0031_handle(int fd,diagnostic_console_state *,const char *(*logs)(void *),void *);
 int diagnostic_console_0031_own_child(int pid,int parent_pid);
 int ota_0031_start(void);

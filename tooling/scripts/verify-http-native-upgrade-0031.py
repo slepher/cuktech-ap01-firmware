@@ -31,6 +31,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('report', 'image', 'fixture', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument("--uploaded-image",type=Path,help="Explicit target when the native probe uploads a separate production ROM")
     args = parser.parse_args()
     if args.output.exists():
         parser.error('new output required')
@@ -38,6 +39,7 @@ def main():
     image, before = args.image.read_bytes(), args.fixture.read_bytes()
     after = Path(report['flash_snapshot']['path']).read_bytes()
     digest = hashlib.sha256(image).hexdigest()
+    target_image = args.uploaded_image.read_bytes() if args.uploaded_image else image
     checks = {
         'source_identity': digest == report['image_sha256'],
         'fixture_identity': hashlib.sha256(before).hexdigest() == report['flash_fixture_sha256'],
@@ -63,14 +65,14 @@ def main():
     checks.update(
         selected_inactive_slot=new_fw[2] == target and new_age > old_age,
         partition_layout_unchanged=new_fw[3:28] == old_fw[3:28],
-        target_exact=after[start:start + len(image)] == image,
-        target_padding_unchanged=after[start + len(image):end] == before[start + len(image):end],
+        target_exact=after[start:start + len(target_image)] == target_image,
+        target_padding_unchanged=after[start + len(target_image):end] == before[start + len(target_image):end],
         boot2_unchanged=after[:0xe000] == before[:0xe000],
         active_unchanged=after[0x10000:0x710000] == before[0x10000:0x710000],
         crash_and_ota_staging_unchanged=after[0x720000:0x7b0000] == before[0x720000:0x7b0000],
         reserve_unchanged=after[0xff0000:] == before[0xff0000:],
     )
-    result = dict(passed=all(checks.values()), checks=checks, validated_images=[digest],
+    result = dict(passed=all(checks.values()), checks=checks, validated_images=[hashlib.sha256(target_image).hexdigest()], running_image_sha256=digest,
                   device_accessed=False, physical_boot_verified=False, flashable=False,
                   scope='native guest TCP, readback, slot commit and reset request; /data journal and native /resource initialization may change',
                   http_response_observed=False, source_report=str(args.report),

@@ -49,10 +49,12 @@ static int fake_seek(int fd,int offset,int whence)
 {assert(fd==4&&offset==0&&whence==2);position=disk_used;return (int)position;}
 static int fake_sync(int fd){assert(fd==4);syncs++;if(sync_failure){err=5;return -1;}return 0;}
 static int fake_close(int fd){assert(fd==4);return 0;}
+static int fail_flash_open(flash_io *f,uint32_t n){(void)n;f->fd=-1;return -1;}
 static void fake_lock(void){}
 static uintptr_t import_function(uintptr_t address)
 {
     switch(address){
+    case 0xa009b656:return (uintptr_t)fail_flash_open;
     case 0xa01b19e4:case 0xa01b1948:return (uintptr_t)fake_lock;
     case 0xa002fc1a:return (uintptr_t)malloc;
     case 0xa0059c62:return (uintptr_t)fake_clock;
@@ -104,6 +106,15 @@ int main(void)
     assert(strstr(logs(&c),"\"stage\":\"log_status\",\"errno\":0"));
     memcpy(disk,"broken\0data\n",12);disk_used=12;
     server corrupt={0};load_log(&corrupt);assert(!corrupt.log_used&&corrupt.log_needs_reset);
+    /* A reader causes a bounded busy response before opening a writer.
+     * A failed writer open releases both Flash ownership and retry fence. */
+    server guarded={0};connection writer={0};writer.owner=&guarded;writer.flash.fd=-1;
+    assert(diagnostic_flash_acquire(&guarded.diagnostic));
+    assert(begin(&writer,296,1000)==OTA_STORE_BUSY&&!guarded.fenced&&!writer.flash_owned);
+    diagnostic_flash_release(&guarded.diagnostic);
+    assert(begin(&writer,296,1000)==OTA_STORE_ERROR&&guarded.fenced&&writer.flash_owned);
+    abort_store(&writer);assert(!guarded.fenced&&!guarded.diagnostic.flash_busy&&!writer.flash_owned);
+    assert(diagnostic_flash_acquire(&guarded.diagnostic));diagnostic_flash_release(&guarded.diagnostic);
     free(c.snapshot);
     puts("{\"passed\":true,\"checks\":9,\"scope\":\"actual port journal; fake native VFS, no physical flash\"}");
     return 0;

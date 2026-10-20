@@ -7,6 +7,8 @@
 static unsigned char tables[2][596],ram_table[596];
 static uint32_t fake_mapping=0x7b1000,reset_reason=4;
 static int read_failure,corrupt_table;
+static unsigned reads;
+static const char *input;static unsigned input_at;
 static char output[4096];static unsigned used;
 static uintptr_t import_function(uintptr_t);
 #define DIAG_FN(a,t) ((t)import_function(a))
@@ -21,6 +23,7 @@ static char *environment(const char *name)
 {return !strcmp(name,"ro.boot.current_slot")?"/dev/fw1":"/dev/fw2";}
 static int physical_read(uint32_t address,void *data,uint32_t size)
 {
+    reads++;
     if(address==0xe000||address==0xf000){
         if(read_failure)return -5;
         assert(size==596);memcpy(data,tables[address==0xf000],size);
@@ -35,9 +38,14 @@ static int ready(console_poll *p,unsigned n,int timeout)
 {assert(n==1&&timeout>0);p->revents=p->events;return 1;}
 static int send_bytes(int fd,const void *data,size_t n,int flags,const void *to,unsigned length)
 {(void)flags;(void)to;(void)length;assert(fd==5&&used+n<sizeof(output));memcpy(output+used,data,n);used+=(unsigned)n;output[used]=0;return (int)n;}
+static int receive_bytes(int fd,void *data,size_t n,int flags)
+{(void)fd;(void)flags;if(!input[input_at])return 0;assert(n==1);*(char*)data=input[input_at++];return 1;}
 static uintptr_t import_function(uintptr_t address)
 {
     switch(address){
+    case 0xa010a4a4:return (uintptr_t)receive_bytes;
+    case 0xa002fc1a:return (uintptr_t)malloc;
+    case 0xa002e0a0:return (uintptr_t)free;
     case 0xa0057eaa:return (uintptr_t)physical_read;
     case 0xa0059c62:return (uintptr_t)clock_ms;
     case 0xa0026d00:return (uintptr_t)environment;
@@ -56,12 +64,27 @@ static void init_table(unsigned char *p,uint32_t age,unsigned active)
 int main(void)
 {
     init_table(tables[0],8,0);init_table(tables[1],9,1);memcpy(ram_table,tables[0],596);
-    console_connection c={5,0,0};status_reply(&c,-1);
+    console_connection c={5,0,0};diagnostic_console_state state={0};status_reply(&c,-1,&state);
     assert(strstr(output,"\"current_slot\":1")&&strstr(output,"\"running\":{\"source\":\"bootrom329\",\"xip_offset\":8065024,\"slot\":2"));
     assert(strstr(output,"\"native_code\":4")&&strstr(output,"\"age\":9,\"active_slot\":2"));
     assert(strstr(output,"\"header_crc_ok\":1"));puts(output);
-    used=0;corrupt_table=1;status_reply(&c,-1);assert(strstr(output,"\"crc_ok\":0,\"age\":0,\"active_slot\":0"));
-    used=0;read_failure=1;status_reply(&c,-1);assert(strstr(output,"\"read_rc\":-5,\"crc_ok\":0"));
+    used=0;corrupt_table=1;status_reply(&c,-1,&state);assert(strstr(output,"\"crc_ok\":0,\"age\":0,\"active_slot\":0"));
+    used=0;read_failure=1;status_reply(&c,-1,&state);assert(strstr(output,"\"read_rc\":-5,\"crc_ok\":0"));
+    read_failure=0;corrupt_table=0;
+    assert(!state.flash_busy&&diagnostic_flash_acquire(&state));
+    unsigned before=reads;
+    for(unsigned i=0;i<64;i++){
+        used=0;status_reply(&c,-1,&state);
+        assert(reads==before&&state.flash_busy);
+        assert(strstr(output,"\"physical_reads\":\"busy\"")&&strstr(output,"\"read_rc\":-16"));
+        assert(strstr(output,"\"slot\":2")&&strstr(output,"\"errno\":16"));
+    }
+    diagnostic_console_io io={&c,receive,transmit,milliseconds};
+    used=0;input="00010000 00000100\n";input_at=0;
+    flash_reply(&c,&io,&state);
+    assert(!strcmp(output,"ERR busy\n")&&reads==before&&state.flash_busy);
+    diagnostic_flash_release(&state);used=0;status_reply(&c,-1,&state);
+    assert(reads==before+4&&!state.flash_busy&&strstr(output,"\"physical_reads\":\"attempted\""));
     for(unsigned i=0;i<5;i++){uint32_t offsets[]={0x10000,0x11000,0x7b0000,0x7b1000,0x99999};
         fake_mapping=offsets[i];assert(ap01_running_slot(fake_mapping)==(i<2?1:i<4?2:0));}
     puts("{\"passed\":true,\"physical_table_failures\":2,\"mapping_cases\":5,\"env_mismatch_tested\":true}");

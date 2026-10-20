@@ -86,6 +86,18 @@ def assemble(base, payload, mode, gif=b'', extra_padding=0):
     return bytes(out), allowed
 
 
+def recovery_markers(data):
+    marker=b'0x5245434f56455259544147'
+    offsets=[];at=0
+    while True:
+        at=data.find(marker,at)
+        if at<0:break
+        offsets.append(at);at+=1
+    if len(offsets)!=2 or offsets[1]!=len(data)-40:
+        raise ValueError('native recovery requires exactly two markers; second must be final trailer')
+    return offsets
+
+
 def validate_candidate(data, manifest_path):
     m=json.loads(Path(manifest_path).read_text(encoding='utf-8'))
     if m.get('format') not in (FORMAT,DIAGNOSTIC_FORMAT,HTTP_FORMAT,GIF_HTTP_FORMAT):
@@ -122,6 +134,9 @@ def validate_candidate(data, manifest_path):
     if (diagnostic or unified) and (data[:256]!=base[:256] or data[CLOUD_OFFSET:CLOUD_OFFSET+4]!=CLOUD_ORIGINAL or
                        m.get('cloud_ota_dispatch_modified') is not False or m.get('original_gif_preserved') != (m['mode']!='gif-http')):
         raise ValueError('diagnostic image changed stock startup metadata or native OTA entry')
+    if m.get('native_recovery_compatible'):
+        if recovery_markers(data)!=m.get('recovery_marker_offsets'):
+            raise ValueError('recovery marker manifest mismatch')
     return m
 
 
@@ -157,6 +172,7 @@ def main():
         if not a.legacy_manifest:p.error('legacy manifest required for bridge')
         old=json.loads(a.legacy_manifest.read_text());gif=base64.b64decode(old['placeholder_gif']['base64'],validate=True)
     data,allowed=assemble(base,payload,a.mode,gif,a.extra_padding)
+    markers=recovery_markers(data) if a.mode=="http" else None
     m=dict(format=GIF_HTTP_FORMAT if a.mode=='gif-http' else HTTP_FORMAT if unified else DIAGNOSTIC_FORMAT if diagnostic else FORMAT,mode=a.mode,extra_padding=a.extra_padding,
            original=dict(path=str(a.original.resolve()),sha256=legacy.IMAGE_SHA),
            image=dict(path=str(output),bytes=len(data),sha256=legacy.sha(data)),
@@ -166,6 +182,7 @@ def main():
            placeholder_gif=base64.b64encode(gif).decode(),cloud_ota_dispatch_modified=not (diagnostic or unified),
            original_gif_preserved=a.mode not in ('bridge','gif-http'),allowed_ranges=allowed,
            flashable=False,physical_device_verified=False)
+    if markers is not None:m.update(native_recovery_compatible=True,recovery_marker_offsets=markers)
     if unified:m.update(independent_ota_enabled=True,diagnostic_port=18080,startup_mapping_verified=False)
     if diagnostic:m.update(independent_ota_enabled=False,diagnostic_port=18081,startup_mapping_verified=False)
     for path,content in ((paths[2],bytes(payload)),(output,data)):

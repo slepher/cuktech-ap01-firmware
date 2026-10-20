@@ -9,6 +9,12 @@ int snprintf(char *,size_t,const char *,...);
 void *memset(void *,int,size_t);
 typedef struct {volatile int passed,stage,bytes;} result;
 typedef struct {uint16_t family,port;uint32_t addr;unsigned char pad[8];} address;
+static char **probe_environment(void)
+{
+    const unsigned char *self=*(const unsigned char *volatile *)(uintptr_t)0x62fc6bf8u;
+    const unsigned char *group=*(const unsigned char*const*)(self+8);
+    return group?*(char**const*)(group+80):NULL;
+}
 static unsigned value(const char *s){unsigned n=0;for(;*s;s++){if(*s<'0'||*s>'9')return 0;n=n*10+(unsigned)(*s-'0');}return n;}
 static int same(const char *a,const char *b){while(*a&&*a==*b){a++;b++;}return *a==*b;}
 static int contains(const char *s,const char *needle)
@@ -88,16 +94,37 @@ static int control_test(const char *operation,unsigned length,result *r)
     while(F(0xa003f5f4,int(*)(int,void*,size_t))(session,line,sizeof(line))>0);
     F(0xa0026788,int(*)(int))(session);return 0;
 }
+#ifdef AP01_HTTP_UPLOAD_TARGET
+extern const uint32_t ap01_probe_upload_length;
+extern const unsigned char ap01_probe_upload_tail[];
+#endif
 #ifdef AP01_HTTP_FULL_UPLOAD
+static int upload_read(uint32_t offset,unsigned char *data,unsigned count)
+{
+#ifdef AP01_HTTP_UPLOAD_TARGET
+    if(offset<0x67e000u){
+        unsigned prefix=0x67e000u-offset;if(prefix>count)prefix=count;
+        if(F(0xa0057eaa,int(*)(uint32_t,void*,uint32_t))(0x10000u+offset,data,prefix))return -1;
+        offset+=prefix;data+=prefix;count-=prefix;
+    }
+    for(unsigned i=0;i<count;i++)data[i]=ap01_probe_upload_tail[offset-0x67e000u+i]^85u;
+    return 0;
+#else
+    return F(0xa0057eaa,int(*)(uint32_t,void*,uint32_t))(0x10000u+offset,data,count);
+#endif
+}
 static int full_upload(void)
 {
     unsigned char image[8192];
     uint32_t length=(uint32_t)ota_0031_manifest[12]|(uint32_t)ota_0031_manifest[13]<<8|
         (uint32_t)ota_0031_manifest[14]<<16|(uint32_t)ota_0031_manifest[15]<<24;
+#ifdef AP01_HTTP_UPLOAD_TARGET
+    length=ap01_probe_upload_length;
+#endif
     uint32_t crc=~0u;
     for(uint32_t offset=0;offset<length;){
         unsigned count=length-offset;if(count>256)count=256;
-        if(F(0xa0057eaa,int(*)(uint32_t,void*,uint32_t))(0x10000u+offset,image,count))return -1;
+        if(upload_read(offset,image,count))return -1;
         for(unsigned i=0;i<count;i++){crc^=image[i];for(unsigned bit=0;bit<8;bit++)crc=(crc>>1)^(0xedb88320u&(0u-(crc&1)));}
         offset+=count;
     }
@@ -107,7 +134,7 @@ static int full_upload(void)
     for(uint32_t offset=0;offset<length;){
         unsigned count=length-offset;if(count>8192)count=8192;
         for(unsigned read=0;read<count;){unsigned piece=count-read;if(piece>256)piece=256;
-            if(F(0xa0057eaa,int(*)(uint32_t,void*,uint32_t))(0x10000u+offset+read,image+read,piece))return -1;
+            if(upload_read(offset+read,image+read,piece))return -1;
             read+=piece;}
         if(write_all(fd,(const char*)image,count))return -1;
         offset+=count;
@@ -124,6 +151,16 @@ static int client(int argc,char **argv)
 {
     if(argc!=2)return -1;
     result *r=(result*)(uintptr_t)value(argv[1]);if(!r)return -1;
+#ifdef AP01_HTTP_RECOVERY_PROBE
+    /* Offline fixture calls the actual 0031 recovery helper, not an emulation
+     * of its parser. Address independently recovered from pinned stock0031. */
+    int recovery=F(0xa0063f00,int(*)(void*,unsigned))(NULL,1);
+    r->stage=16;r->passed=recovery==0;
+    F(0xa002dd70,int(*)(int,const char*,...))(3,"DIAG_RECOVERY {\"result\":%d}\n",recovery);
+    /* Stop the bounded fixture after observing success or explicit rejection. */
+    F(0xa005576c,int(*)(uint32_t,void*))(0xff04,NULL);
+    return recovery;
+#endif
     r->stage=20;int upload=pending_upload();if(upload<0)return -1;
     char concurrent[9216];
     r->stage=21;if(http_query("GET","/logs",concurrent,sizeof(concurrent))<0||
@@ -164,15 +201,21 @@ static int client(int argc,char **argv)
     char status[1536];
     if(write_all(fd,"STATUS\n",7)||read_line(fd,status,sizeof(status))<0)return -1;
     F(0xa0026788,int(*)(int))(fd);
-    if(!contains(status,"\"protocol\":\"AP01-DIAG/1\"")||!contains(status,"\"header_crc_ok\":1")||!contains(status,"\"crc_ok\":1")||
+    if(!contains(status,"\"protocol\":\"AP01-DIAG/1\"")||!contains(status,"\"physical_reads\":\"busy\"")||!contains(status,"\"crc_ok\":1")||
        !contains(status,"\"source\":\"bootrom329\"")||!contains(status,"\"source\":\"0031.boot_snapshot\"")||!contains(status,"\"physical_tables\":"))return -1;
+    for(unsigned i=0;i<12;i++){
+        fd=connect_authenticated();if(fd<0)return -1;
+        if(write_all(fd,"STATUS\n",7)||read_line(fd,status,sizeof(status))<0)return -1;
+        F(0xa0026788,int(*)(int))(fd);
+        if(!contains(status,"\"physical_reads\":\"busy\""))return -1;
+    }
+    F(0xa002dd70,int(*)(int,const char*,...))(3,"DIAG_STATUS_BUSY_13_OK\n");
     r->stage=9;fd=connect_authenticated();if(fd<0)return -1;
     if(write_all(fd,"FLASH\n00010000 00000100\n",24)||read_line(fd,line,sizeof(line))<0)return -1;
-    if(!contains(line,"OK FLASH 256 "))return -1;
-    unsigned char header[256];used=0;
-    while(used<sizeof(header)){n=F(0xa003f5f4,int(*)(int,void*,size_t))(fd,header+used,sizeof(header)-used);if(n<=0)return -1;used+=(unsigned)n;}
+    if(!same(line,"ERR busy\n"))return -1;
     F(0xa0026788,int(*)(int))(fd);
-    if(header[0]!='B'||header[1]!='F'||header[2]!='N'||header[3]!='P')return -1;
+    F(0xa002dd70,int(*)(int,const char*,...))(3,"DIAG_FLASH_BUSY_OK\n");
+    /* Busy FLASH has no body; the subsequent LOGS must still be admitted. */
     r->stage=10;fd=connect_authenticated();if(fd<0)return -1;
     if(write_all(fd,"LOGS\n",5)||read_line(fd,line,sizeof(line))<0)return -1;
     if(!contains(line,"OK LOGS ")||read_line(fd,line,sizeof(line))<0||!contains(line,"diagnostic_probe"))return -1;
@@ -201,7 +244,7 @@ int ota_0031_main(int argc,char **argv)
     int listener=ota_0031_start();
     char pointer[16];snprintf(pointer,sizeof(pointer),"%u",(unsigned)(uintptr_t)r);char *args[]={pointer,NULL};
     int pid=F(0xa019d362,int(*)(const char*,unsigned,int,unsigned,int(*)(int,char**),char**,char**))
-        ("diag-client",0,100,24576,client,args,NULL);
+        ("diag-client",0,100,24576,client,args,probe_environment());
     if(pid<0)return -1;
     uint32_t start=F(0xa0059c62,uint32_t(*)(void))();int status=0;
     for(;;){
