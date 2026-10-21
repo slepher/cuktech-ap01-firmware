@@ -173,6 +173,18 @@ extern "C" void *ap01_window_find(void (*poll)(void *)) {
     }
     return nullptr;
 }
+extern "C" void *ap01_window_services(void) {
+    /* Verified 0041 lv_ll: node size, head, tail; next follows node+size+4.
+       Only inspect our timer callback before interpreting its user_data. */
+    auto *list=(uintptr_t *)(uintptr_t)0x62fc95f0;
+    if(list[0]!=24)return nullptr;
+    for(auto *t=(uint8_t *)list[1];t;t=*(uint8_t **)(t+28)) {
+        if(*(void (**)(void *))(t+8)!=timer)continue;
+        auto *w=*(ap01_window_0041 **)(t+12);
+        if(w&&w->timer==t&&w->services)return w->services;
+    }
+    return nullptr;
+}
 extern "C" int ap01_window_bind(ap01_window_0041 *w) {
     if(!w||!w->win||!w->event||!w->poll)return 0;
     if(!w->timer)w->timer=ROM(0xa008bc64,void *(*)(void (*)(void *),unsigned,void *))(timer,50,w);

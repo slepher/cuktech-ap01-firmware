@@ -73,3 +73,14 @@ APX1 为112字节显式小端头：magic/format/header/total/ABI/flags、固定X
 每次hook正常返回后，经0031原厂日志`0xa007cfa2`发一次`APX1 diag0031 result=%u (0=init-step-stop-ok)`；0成功，其他值为ABI错误枚举。实际Ghidra确认5个固定参数+varargs，日志sink可为空。同机日志开启/读取通道尚未核实，因此marker存在不等于实机可观测已验。原厂logger帧848 B，连entry16 B至少864 B，再加格式helper/回调栈；模拟304 B排除了logger。首刷前须核实日志回读和UI任务余栈。
 
 构建/测试命令和产物见 [工具说明](../../tooling/scripts/README.md)、[实现验收](../../reverse/reports/ap01/app-implementation-20261013.md)。所有硬件启动、网络保留、看门狗、Flash/XIP映射和更新接受情况仍待刷机后验证；本阶段用户明确要求不刷机。
+
+
+## AP01 平台与外部 App 边界（2026-10-22）
+
+本目录拥有 `native_maintenance_0041.*` 的维护路由、设备码鉴权/限流、OTA/切槽生命周期；`native_services_0041.*` 拥有原生 Flash/slot 回调、18080 执行器和 Wi-Fi 切网/恢复。`native_http_transport_0041.*` 拥有有界 HTTP 解析及系统端点请求预算；`native_device_code_menu_0041.*`、字体和 hooks 拥有原厂设置菜单。所有现有事务/持久格式、路径、设备码轮换和 Bridge 凭据兼容保持。
+
+外部 `codex_status` 仅拥有 Bridge 配对/绑定、C2 业务和模板显示。平台通过 `native_app_port_0041.h` 的配对、principal 复制、在线回调连接 App；App 只观察系统 busy 门。`native_services_0041.h` 为启动/生命周期连接，不允许在 App 入口重新实现 Flash/切槽/切网策略。菜单通过既有 window/timer 的 services 指针定位固件服务，不读取 App 私有布局，不新增全局可写 singleton 或线程。
+
+完整 ROM 打包和四个固定 Settings hooks 由 `tooling/scripts/build-native-app-rom-0041.py` 负责；外部 `tools/build-ap01-rom.py` 仅为兼容入口。输出包含原 NULL timer guard 与原 OTA/恢复校验。构建采用两个相邻仓库，外部已有 RV32 audit/link/test 工具编排本目录源；不需要历史隔离源码副本。`test_native_maintenance_0041.cpp` 保留维护回归，并通过 `AP01_MAINTENANCE_ONLY_TEST=1` 在不链接 App/渲染器时验证八位码 OTA、轮换/重放、重启恢复和无稳定记录切槽；SHA256 复用外部通用字节工具。
+
+本次是源码职责迁移，不是设备部署。Wi-Fi 菜单原有未完成验收仍留待办；不把编译或 App 回归通过当作菜单/RF/物理救援验收。

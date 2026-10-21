@@ -6,7 +6,7 @@ SECTIONS {
   . = 0xa0674000;
   .manifest : { KEEP(*(.ap01_manifest)) }
   ASSERT(SIZEOF(.manifest)==256,"Native manifest must be 256 bytes")
-  .text : { KEEP(*(.text.ap01Register0041)) KEEP(*(.text.ap01TimerDelete0041)) KEEP(*(.text.ap01HostProbe0041)) *(.text .text.*) }
+  .text : { KEEP(*(.text.ap01Register0041)) KEEP(*(.text.ap01MenuHooks0041)) KEEP(*(.text.ap01TimerDelete0041)) KEEP(*(.text.ap01HostProbe0041)) *(.text .text.*) }
   .rodata : { *(.rodata .rodata.* .srodata .srodata.*) }
   .abi : { KEEP(*(.ap01_abi)) }
   .forbidden : {

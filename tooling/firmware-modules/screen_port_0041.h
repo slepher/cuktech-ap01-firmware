@@ -24,6 +24,7 @@ typedef struct ap01_window_0041 {
     void (*event)(void *,void *);
     void (*poll)(void *);
     void *timer;
+    void *services; /* Firmware service, retained with this lifetime anchor. */
 } ap01_window_0041;
 typedef struct ap01_lvgl_api_0041 {
     uint32_t abi_version,struct_bytes;
@@ -51,6 +52,7 @@ void ap01_window_unmount(ap01_screen_slot *,ap01_page_0041 *,unsigned count);
 int ap01_window_bind(ap01_window_0041 *);
 /* UI-thread only: the retained timer is the lifetime anchor across win deletion. */
 void *ap01_window_find(void (*poll)(void *));
+void *ap01_window_services(void);
 void ap01_window_detach(ap01_window_0041 *);
 unsigned ap01_window_binding_count(void *win);
 void ap01_window_unbind(ap01_window_0041 *);

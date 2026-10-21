@@ -243,3 +243,8 @@ python tooling/scripts/diagnostic-client-0041.py --host DEVICE_IP:18080 --token-
 `verify-native-wifi-profiles-qemu.py --runner 隔离源码/tools/run-ap01-native-qemu.py`在WSL中复用原生runner的image/manifest、合成Flash、engine、shim、profile和output参数，验证认证路由、当前SSID去重、候选修改、原厂加密PSM存储及当前缓存不变。须启用`--lvgl-input-model --model-wifi-mac 0200000000A1 --fb-ready-api-model --animation-wexti-model`，禁止`--native-loopback`；已有合成绑定可用原runner的`--resume-native-report`恢复。
 
 当前凭据只在模拟RAM注入合成值；mutex、PSM和VFS执行原厂代码。旧构建的OTA回执可能正确触发维护互斥，应准备一致的合成夹具。此脚本不连接实机，不能证明真实射频或米家绑定。候选、重启和离线对比记录见[列表接口专项](../../reverse/reports/ap01/wifi-profiles-0041-20261021.md)。
+
+
+### 外部 App 完整 ROM 打包（当前边界）
+
+`build-native-app-rom-0041.py --source-dir <RV32-audit/link-output> --output <new-candidate.bin>` 从相邻 `codex_status` 的真实 audit/link 输出打包，使用本仓库原厂0041；App 外部入口只转调此脚本。该脚本拥有镜像边界/校验、原厂 unsigned OTA、NULL timer guard 和四个 Settings hooks 补丁，保留旧候选重建校验。`enable-device-code-menu-0041.py` 是旧隔离基线的安装器；当前共享模块构建已直接纳入菜单，不再对当前树运行该历史安装器。
