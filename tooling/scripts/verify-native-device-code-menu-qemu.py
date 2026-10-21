@@ -10,6 +10,10 @@ import sys
 i = sys.argv.index('--runner')
 runner = Path(sys.argv[i + 1]).resolve()
 del sys.argv[i:i + 2]
+firmware_code = '--firmware-code' in sys.argv
+if firmware_code: sys.argv.remove('--firmware-code')
+auth = '--device-code-auth' in sys.argv
+if auth: sys.argv.remove('--device-code-auth')
 restart = '--device-code-restart' in sys.argv
 if restart:
     sys.argv.remove('--device-code-restart')
@@ -65,6 +69,9 @@ replace("                        elif action.get('native_page') is not None:", "
                         elif action.get('native_page') is not None:""")
 replace("                    elif action.get('observe'):", """                    elif action.get('menu_tick'):
                         action['value']=int.from_bytes(bytes.fromhex(super().request(f"m{profile['tick']:x},4")),'little');action['done'].set()
+                    elif action.get('menu_read_code'):
+                        owner=int.from_bytes(bytes.fromhex(super().request(f"m{action['menu_read_code']+0x10:x},4")),'little')
+                        action['value']=bytes.fromhex(super().request(f'm{owner+17:x},9')).rstrip(b'\\0').decode('ascii');action['done'].set()
                     elif action.get('menu_context_state'):
                         owner=int.from_bytes(bytes.fromhex(super().request(f"m{action['menu_context_state']+0x10:x},4")),'little')
                         action['value']=int.from_bytes(bytes.fromhex(super().request(f"m{owner+12:x},4")),'little');action['done'].set()
@@ -78,9 +85,15 @@ replace("                    elif action.get('observe'):", """                  
                     elif action.get('observe'):""")
 replace('    def diagnostic_probe(self,token,identity):', '''    def device_code_probe(self,token,identity):
         import zlib
+        credential=token
+        def current_code(layout):
+            row=self.action(menu_child=layout['list'],key=0,event='auth_readout')
+            code=self.action(menu_read_code=row,event='auth_menu_code')
+            assert len(code)==8 and code.isdigit(),'invalid menu code'
+            return code
         def stored(required=True):
             body=json.dumps(dict(device_mac=identity,path='/data/ap01_ui.device_code',offset=0,length=64)).encode()
-            status,value=self.http(self.port,'POST','/api/diagnostic/file',body,token)
+            status,value=self.http(self.port,'POST','/api/diagnostic/file',body,credential)
             if not required and status!=200:return None
             assert status==200,('device-code file',status,value.get('error'))
             raw=bytes.fromhex(value['data_hex'])
@@ -113,8 +126,8 @@ replace('    def diagnostic_probe(self,token,identity):', '''    def device_code
             assert value['found']==1 and value['list'],value
             assert self.action(menu_count=value['list'],event='native_child_count')==count,value
             return value
-        before=stored(False)
-        if DEVICE_CODE_RESTART:
+        before=None if DEVICE_CODE_AUTH else stored(False)
+        if DEVICE_CODE_RESTART and not DEVICE_CODE_AUTH:
             previous=json.loads(resume_report.read_bytes())['native_device_code_menu']
             assert before is not None and hashlib.sha256(before).hexdigest()==previous['record_sha256'], 'restart lost saved code'
         self.action(onboarded=True)
@@ -141,7 +154,25 @@ replace('    def diagnostic_probe(self,token,identity):', '''    def device_code
         assert arrows==[True,True,False],('code/action chevrons',arrows)
         self.report['native_device_code_style']={'passed':True,'arrows_hidden':arrows,
             'number_font':'complete original 0xa055fb7c for both states'}
+        if DEVICE_CODE_AUTH:
+            credential=current_code(layout)
+            status,_=self.http(self.port,'GET','/api/diagnostic/status',b'',token)
+            assert status==401,'binding token authorized manual diagnostics'
+            status,_=self.http(self.port,'GET','/api/diagnostic/status',b'','')
+            assert status==401,'missing menu code accepted'
+            status,_=self.http(self.port,'GET','/api/diagnostic/status',b'',credential)
+            assert status==200,'current menu code rejected'
+            status,value=self.http(self.port,'GET','/api/wifi/profiles',b'',credential)
+            assert status==200,('manual Wi-Fi auth',status,value.get('error'))
+            # Menu code must not replace firmware/Bridge credentials.
+            status,_=self.http(self.port,'GET','/api/firmware/slots',b'',credential)
+            assert status==(200 if DEVICE_CODE_FIRMWARE else 401),'menu code firmware policy'
+            status,_=self.http(self.port,'GET','/api/maintenance/status',b'',token)
+            assert status==200,'original maintenance credential rejected'
         first=stored()
+        if DEVICE_CODE_AUTH and DEVICE_CODE_RESTART:
+            previous=json.loads(resume_report.read_bytes())['native_device_code_menu']
+            assert hashlib.sha256(first).hexdigest()==previous['record_sha256'],'restart rotated code'
         if before is not None:assert first==before,'opening rotated persisted code'
         capture('device-code-submenu')
         readout=self.action(menu_child=layout['list'],key=0,event='numeric_readout')
@@ -155,7 +186,14 @@ replace('    def diagnostic_probe(self,token,identity):', '''    def device_code
         self.report['native_device_code_navigation']={'passed':True,'parent_trace':parent_trace,
             'submenu_trace':trace,'numeric_row_never_selected':True}
         if not DEVICE_CODE_RESTART:
-            key(10);second=stored();assert second!=first,'explicit regenerate did not rotate'
+            key(10)
+            if DEVICE_CODE_AUTH:
+                old=credential;credential=current_code(lookup(3))
+                status,_=self.http(self.port,'GET','/api/diagnostic/status',b'',old)
+                assert status==401,'old code survived regeneration'
+                status,_=self.http(self.port,'GET','/api/diagnostic/status',b'',credential)
+                assert status==200,'regenerated code rejected'
+            second=stored();assert second!=first,'explicit regenerate did not rotate'
             capture('device-code-regenerated')
         else:second=first
         key(0x13);capture('device-code-return');key(10);lookup(8)
@@ -171,6 +209,12 @@ replace('    def diagnostic_probe(self,token,identity):', '''    def device_code
         key(0x13);key(10);lookup(8);key(0x13);key(10)
         assert self.action(menu_focus=True)==native_ui_root
         self.nor_snapshot('device-code-persisted')
+        if DEVICE_CODE_AUTH:
+            self.report['native_device_code_auth']={'passed':True,
+                'checks':['missing_code_rejected','binding_token_no_manual_access','menu_code_accepted',
+                    'manual_wifi_accepted','menu_code_firmware_access' if DEVICE_CODE_FIRMWARE else 'menu_code_no_firmware_access','original_maintenance_accepted',
+                    'restart_preserves_code' if DEVICE_CODE_RESTART else 'rotation_invalidates_old_code'],
+                'credential_logged':False,'physical_verified':False}
         self.report['native_device_code_menu']={'passed':True,
             'restart_recovered':DEVICE_CODE_RESTART,'previous_file_present':before is not None,
             'record_sha256':hashlib.sha256(second).hexdigest(),
@@ -195,4 +239,4 @@ replace("    report['native_runner_sha256']=NATIVE_RUNNER_SHA",
         "\n    report['native_runner_sha256']=NATIVE_RUNNER_SHA")
 sys.argv[0] = str(runner)
 exec(compile(source, str(runner), 'exec'),
-     {'__name__':'__main__','__file__':str(runner),'DEVICE_CODE_RESTART':restart})
+     {'__name__':'__main__','__file__':str(runner),'DEVICE_CODE_RESTART':restart,'DEVICE_CODE_AUTH':auth,'DEVICE_CODE_FIRMWARE':firmware_code})
