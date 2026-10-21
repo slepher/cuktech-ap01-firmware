@@ -29,10 +29,11 @@ struct FontData {
     const Cmap *cmaps;
     const void *kern;
     uint32_t packed;
+    uint32_t stride;
 };
 static_assert(sizeof(void *) == 4 && sizeof(Font) == 36, "0041 RV32 font wrapper ABI");
 static_assert(offsetof(Font, data) == 24 && offsetof(Font, fallback) == 28, "0041 font offsets");
-static_assert(sizeof(Glyph) == 8 && sizeof(Cmap) == 20 && sizeof(FontData) == 20,
+static_assert(sizeof(Glyph) == 8 && sizeof(Cmap) == 20 && sizeof(FontData) == 24,
               "0041 compact fmt_txt font ABI");
 #include "native_device_code_font_0041.inc"
 }

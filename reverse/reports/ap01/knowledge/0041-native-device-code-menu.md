@@ -1,6 +1,6 @@
 # 0041 原厂设置菜单：持久设备码候选
 
-2026-10-21：按用户要求收尾提交。本次已实现、编译并生成候选；原生 QEMU 菜单运行验收及实机验收尚未完成，不能据此宣称菜单已在实机可用。未刷机，设备仍运行此前应用槽1版本，救援槽0未动。
+2026-10-21：已实现并在执行真实0041 ROM的QEMU中验证菜单进入、点击更新、返回和重启持久化。实机尚未部署，不能据此宣称菜单已在实机可用；设备仍运行此前应用槽1版本，救援槽0未动。
 
 ## 行为与样式
 
@@ -22,6 +22,20 @@
 
 宿主ASan/UBSan测试通过：首次创建、重复读取零写入、重启保留、前导零、随机数拒绝采样、写入/读回/重命名失败、提交结果未知、损坏拒绝和中断后的临时记录恢复，共15类检查。RV32审计和链接通过，无可写静态段或未解析导入；字体生成可复现。完整镜像重建和原厂字节保护检查通过；五类非法钩子表被拒绝。
 
-本地候选：`evidence/native-settings-menu-20261021/ap01-0041-device-code-menu-candidate01.bin`，7,018,104字节，build `c029d5107c7927b27fd1d979da203c70`，SHA256 `cc0e417b8e75c2f20461c26c0c6eccd227dedefbd3c0ceb2a873ea31d49dfe0b`。清单保持 `flashable=false`、`simulator_verified=false`、`hardware_verified=false`。
+当前本地候选：`evidence/native-settings-menu-20261021/ap01-0041-device-code-menu-candidate02.bin`，7,018,168字节，build `1faf1ef0e52e4dfdd671db968fbaff11`，SHA256 `286d3accf21eaeda1598c63ecf9e0d533ad77dfc711f56c3c1a2e292d7fb9a8a`。归档时的清单保持未验标记，之后的运行结果独立记录，不修改历史清单。候选01已被替代，不能部署。
 
-后续使用 `tooling/scripts/verify-native-device-code-menu-qemu.py`，通过原厂 `lv_group_send_data` 输入，在真实ROM中检查8行父菜单、3行子菜单、只读首行、点击更新、返回及重启持久化。脚本目前只做了语法与包装后语法检查，尚未执行该验收。原厂控件内部OOM会assert；显示布局、回调生命周期和真实熵源也仍需运行验证。
+## 真实ROM运行发现与修复
+
+候选01在原厂新增行构造调用中不能返回。`native-menu05.json`断点证明到达新增行调用`0xa0686bfa`，但未到返回点`0xa0686bfc`。原厂裁剪字库不能先处理新增文案；现在先以空文本创建行、装好补字字体再设置文字，标题往返也按清空文本、换字体、设置标题处理。
+
+同时修正补字FontData的ABI：真实结构为24字节，原字体回调`0xa00e48fa`读取描述符偏移20的stride字节，不能只定义前20字节。三个原字体对应字段均为零，新增描述符明确补零。证据为本地`font-stride-abi.json`；修复后重新生成字库并完整审计、链接和重建候选02。
+
+`tooling/scripts/verify-native-device-code-menu-qemu.py`通过原厂`lv_group_send_data`及当前焦点对象的原厂事件分发输入，不直接调用新增菜单回调。`native-menu06.json`验证8行父菜单、3行子菜单、只读首行、显式生成、返回父菜单和返回主页；`native-menu07.json`使用同一份保存后的Flash重新启动，比对记录摘要完全一致。`native-menu08.json`进一步验证按下/KEY/释放完整点击、关闭原厂页面后重建并重入，全部通过。
+
+截图来自原厂LVGL实际RGB565帧缓冲。QEMU的LCD画面可能停在开机logo，不能拿它代替原厂帧缓冲。虚拟fbdev的POLLOUT等待还会导致旧帧；截图前在UI线程调用原厂`lv_display_refr_timer(NULL)`（`0xa00e0ac8`，原就绪回调本身采用相同调用）刷新默认显示器。此为外设就绪模型，不由宿主绘制像素。
+
+最终`native-menu09.json`通过完整点击、页面销毁重建、同一Flash重启摘要比对和原厂刷新后的画面验收。人工检查帧缓冲：`native-menu09.device-code-entry.fb1.png`显示原设置末尾的新增入口与原返回，`native-menu09.device-code-submenu.fb0.png`显示标题、八位数字及重新生成，`native-menu09.device-code-return.fb1.png`显示选中的“返回主菜单”。均沿用原厂圆角行、背景、青色高亮、箭头、字号和滚动视窗；图片中的数字仅为QEMU合成数据。最终检查范围为新增菜单，不代表完整业务应用或物理LCD验收。
+
+重跑需传原生runner的完整参数，包括`--lvgl-input-model --safety-seconds <有界时长>`，使用合成绑定和MAC，禁止`--native-loopback`。`--device-code-restart`要求前次报告含设备码摘要，并使用前次保存的Flash；验证重启前后摘要及打开前后记录均不变。
+
+持久文件16字节，提交时临时文件另16字节；模块不增加可写全局。原厂控件内部OOM仍会assert，原生完整调用链栈峰值、实机熵源、LCD/SPI及实体旋钮仍须实机验收。本次运行未改实机网络字段、配网列表或任何槽位。

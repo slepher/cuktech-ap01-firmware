@@ -200,7 +200,7 @@ static const Glyph NormalGlyphs[] = {
 
 static const Cmap NormalCmap = {53,36081,1,NormalUnicode,nullptr,20,3,0};
 
-static const FontData NormalData = {NormalBitmap,NormalGlyphs,&NormalCmap,nullptr,0x08010000};
+static const FontData NormalData = {NormalBitmap,NormalGlyphs,&NormalCmap,nullptr,0x08010000,0};
 
 static const Font NormalFallback = {0xa00e4864,0xa00e45aa,0,20,2,0x0001fe00,&NormalData,nullptr,nullptr};
 
@@ -402,7 +402,7 @@ static const Glyph SelectedGlyphs[] = {
 
 static const Cmap SelectedCmap = {20013,17313,1,SelectedUnicode,nullptr,17,3,0};
 
-static const FontData SelectedData = {SelectedBitmap,SelectedGlyphs,&SelectedCmap,nullptr,0x08010000};
+static const FontData SelectedData = {SelectedBitmap,SelectedGlyphs,&SelectedCmap,nullptr,0x08010000,0};
 
 static const Font SelectedFallback = {0xa00e4864,0xa00e45aa,0,20,2,0x0001fe00,&SelectedData,nullptr,nullptr};
 
@@ -454,7 +454,7 @@ static const Glyph TitleGlyphs[] = {
 
 static const Cmap TitleCmap = {22791,7931,1,TitleUnicode,nullptr,2,3,0};
 
-static const FontData TitleData = {TitleBitmap,TitleGlyphs,&TitleCmap,nullptr,0x08010000};
+static const FontData TitleData = {TitleBitmap,TitleGlyphs,&TitleCmap,nullptr,0x08010000,0};
 
 static const Font TitleFallback = {0xa00e4864,0xa00e45aa,0,25,4,0x0001fe00,&TitleData,nullptr,nullptr};
 

@@ -86,7 +86,7 @@ def generate(rom, font_path):
         output.append(f'static const Glyph {name}Glyphs[] = {{\n' + '\n'.join(
             '    {' + ','.join(str(value) for value in row) + '},' for row in records) + '\n};\n')
         output.append(f'static const Cmap {name}Cmap = {{{start},{end - start + 1},1,{name}Unicode,nullptr,{len(missing)},3,0}};\n')
-        output.append(f'static const FontData {name}Data = {{{name}Bitmap,{name}Glyphs,&{name}Cmap,nullptr,0x08010000}};\n')
+        output.append(f'static const FontData {name}Data = {{{name}Bitmap,{name}Glyphs,&{name}Cmap,nullptr,0x08010000,0}};\n')
         output.append(f'static const Font {name}Fallback = {{0xa00e4864,0xa00e45aa,0,{size},{baseline},0x0001fe00,&{name}Data,nullptr,nullptr}};\n')
         output.append(f'static const Font {name}Font = {{0xa00e4864,0xa00e45aa,0,{size},{baseline},0x0001fe00,(const void *)0x{wrapper[6]:08x},&{name}Fallback,nullptr}};\n')
         assert all(cp in existing or cp in missing for cp in required)

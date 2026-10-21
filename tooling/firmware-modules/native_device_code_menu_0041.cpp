@@ -64,10 +64,11 @@ Object mainList(Object parent, Context *context) {
     Object list = AP01_MENU_ROM_FN(0xa01a2c02, Object (*)(Object))(parent);
     if (!list || !context) return list;
     Object row = AP01_MENU_ROM_FN(0xa019cdc0, Object (*)(Object, const char *, int, int))
-        (list, "\u8bbe\u5907\u7801", 0, 0);
+        (list, "", 0, 0);
     if (!row) return list;
     userData(row) = context;
     font(child(row, 0), false);
+    text(child(row, 0), "\u8bbe\u5907\u7801");
     AP01_MENU_ROM_FN(0xa00de128, void (*)(Object, int))(row, 6);
     return list;
 }
@@ -84,10 +85,10 @@ Object codeList(Object parent, Context &context) {
         Object row = index == 2 ?
             AP01_MENU_ROM_FN(0xa019ce64, Object (*)(Object, int, int))(list, 0, 0) :
             AP01_MENU_ROM_FN(0xa019cdc0, Object (*)(Object, const char *, int, int))
-                (list, labels[index], 0, 0);
+                (list, "", 0, 0);
         if (!row) { destroy(list); return nullptr; }
         if (index == 0) userData(row) = &context;
-        text(child(row, 0), labels[index]); font(child(row, 0), false);
+        font(child(row, 0), false); text(child(row, 0), labels[index]);
     }
     return list;
 }
@@ -133,10 +134,11 @@ bool replaceList(Context &context, bool submenu) {
     if (!next || children(next) != (submenu ? 3u : 8u)) { destroy(next); return false; }
     Object previous = data[2]; data[2] = next;
     context.submenu = submenu; context.selected = 0;
-    text(data[0], submenu ? "\u8bbe\u5907\u7801" : "\u8bbe\u7f6e");
+    text(data[0], "");
     if (submenu) AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))
         (data[0], ap01DeviceCodeTitleFont0041());
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(data[0], (void *)0xa02548d4);
+    text(data[0], submenu ? "\u8bbe\u5907\u7801" : "\u8bbe\u7f6e");
     select(context, next, 0, submenu ? 0 : 6);
     destroy(previous); resetTimer(data); return true;
 }
