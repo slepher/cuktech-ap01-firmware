@@ -235,3 +235,9 @@ python tooling/scripts/diagnostic-client-0041.py --host DEVICE_IP:18080 --token-
 ```
 
 原始字节只写文件，不输出配置内容；已有文件拒绝覆盖，失败前缀保留为`.partial`。每块核对MAC、boot ID、偏移、长度和CRC32，导出后再次核对boot ID。分块读取不承诺全局原子快照；普通文件的总长变化会终止读取，ramlog按一次非阻塞有界采样保存。
+
+## 原生QEMU配网列表专项
+
+`verify-native-wifi-profiles-qemu.py --runner 隔离源码/tools/run-ap01-native-qemu.py`在WSL中复用原生runner的image/manifest、合成Flash、engine、shim、profile和output参数，验证认证路由、当前SSID去重、候选修改、原厂加密PSM存储及当前缓存不变。须启用`--lvgl-input-model --model-wifi-mac 0200000000A1 --fb-ready-api-model --animation-wexti-model`，禁止`--native-loopback`；已有合成绑定可用原runner的`--resume-native-report`恢复。
+
+当前凭据只在模拟RAM注入合成值；mutex、PSM和VFS执行原厂代码。旧构建的OTA回执可能正确触发维护互斥，应准备一致的合成夹具。此脚本不连接实机，不能证明真实射频或米家绑定。候选、重启和离线对比记录见[列表接口专项](../../reverse/reports/ap01/wifi-profiles-0041-20261021.md)。
