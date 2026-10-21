@@ -24,6 +24,7 @@ def replace(old, new):
 
 replace("                    if action.get('wall_time'):action['value']=regs[10]", """                    if action.get('wall_time'):action['value']=regs[10]
                     if action.get('menu_count'):action['value']=regs[10]
+                    if action.get('menu_child'):action['value']=regs[10]
                     if action.get('menu_lookup'):
                         def word(address):
                             return int.from_bytes(bytes.fromhex(super(NativeRSP,self).request(f'm{address:x},4')),'little')
@@ -51,6 +52,8 @@ replace("                        elif action.get('native_page') is not None:", "
                                 return int.from_bytes(bytes.fromhex(super(NativeRSP,self).request(f'm{address:x},4')),'little')
                             group=word(0x62fc95bc);node=word(group+12);focused=word(node)
                             changes={1:timer_va,2:temporary,10:focused,11:action['group_event'],12:0,32:send_event_va}
+                        elif action.get('menu_child'):
+                            changes={1:timer_va,2:temporary,10:action['menu_child'],11:action['key'],32:0xa00dcee4}
                         elif action.get('menu_count'):
                             changes={1:timer_va,2:temporary,10:action['menu_count'],32:0xa00dd144}
                         elif action.get('menu_refresh_default'):
@@ -62,6 +65,11 @@ replace("                        elif action.get('native_page') is not None:", "
                         elif action.get('native_page') is not None:""")
 replace("                    elif action.get('observe'):", """                    elif action.get('menu_tick'):
                         action['value']=int.from_bytes(bytes.fromhex(super().request(f"m{profile['tick']:x},4")),'little');action['done'].set()
+                    elif action.get('menu_context_state'):
+                        owner=int.from_bytes(bytes.fromhex(super().request(f"m{action['menu_context_state']+0x10:x},4")),'little')
+                        action['value']=int.from_bytes(bytes.fromhex(super().request(f"m{owner+12:x},4")),'little');action['done'].set()
+                    elif action.get('menu_object_flags'):
+                        action['value']=int.from_bytes(bytes.fromhex(super().request(f"m{action['menu_object_flags']+0x24:x},4")),'little');action['done'].set()
                     elif action.get('menu_focus'):
                         def word(address):
                             return int.from_bytes(bytes.fromhex(super(NativeRSP,self).request(f'm{address:x},4')),'little')
@@ -118,12 +126,34 @@ replace('    def diagnostic_probe(self,token,identity):', '''    def device_code
         for _ in range(6):key(0x13)
         assert bytes.fromhex(lookup(8)['state'])[1]==0x36
         capture('device-code-entry')
+        parent_trace=[6]
+        for value,expected in ((0x13,7),(0x13,0),(0x14,7),(0x14,6)):
+            key(value);observed=bytes.fromhex(lookup(8)['state'])[1]-0x30
+            assert observed==expected,('parent wrap',observed,expected)
+            parent_trace.append(observed)
         key(10);lookup(3)
+        layout=lookup(3);arrows=[]
+        for index in range(3):
+            row=self.action(menu_child=layout['list'],key=index,event='native_style_child')
+            arrow=self.action(menu_child=row,key=1,event='native_style_arrow')
+            assert arrow,'stock row structure changed'
+            arrows.append(bool(self.action(menu_object_flags=arrow)&1))
+        assert arrows==[True,True,False],('code/action chevrons',arrows)
+        self.report['native_device_code_style']={'passed':True,'arrows_hidden':arrows,
+            'number_font':'complete original 0xa055fb7c for both states'}
         first=stored()
         if before is not None:assert first==before,'opening rotated persisted code'
         capture('device-code-submenu')
-        key(10);assert stored()==first,'read-only row wrote a code'
-        key(0x13)
+        readout=self.action(menu_child=layout['list'],key=0,event='numeric_readout')
+        trace=[self.action(menu_context_state=readout)]
+        assert trace[0]==1,'initial focus must be regeneration'
+        for value,expected in ((0x14,2),(0x14,1),(0x13,2),(0x13,1)):
+            key(value);selected=self.action(menu_context_state=readout)
+            assert selected==expected and selected!=0,('submenu wrap',selected,expected)
+            assert stored()==first,'navigation changed code'
+            trace.append(selected)
+        self.report['native_device_code_navigation']={'passed':True,'parent_trace':parent_trace,
+            'submenu_trace':trace,'numeric_row_never_selected':True}
         if not DEVICE_CODE_RESTART:
             key(10);second=stored();assert second!=first,'explicit regenerate did not rotate'
             capture('device-code-regenerated')
@@ -131,14 +161,14 @@ replace('    def diagnostic_probe(self,token,identity):', '''    def device_code
         key(0x13);capture('device-code-return');key(10);lookup(8)
         assert bytes.fromhex(lookup(8)['state'])[1]==0x36
         key(10);lookup(3);assert stored()==second,'reopening rotated code'
-        key(0x13);key(0x13);key(10);lookup(8)
+        key(0x13);key(10);lookup(8)
         key(0x13);key(10);time.sleep(.8)
         assert self.action(menu_focus=True)==native_ui_root,'original Return did not restore home focus'
         assert stored()==second
         key(10);lookup(8)
         for _ in range(6):key(0x13)
         key(10);lookup(3);assert stored()==second,'recreated native page rotated code'
-        key(0x13);key(0x13);key(10);lookup(8);key(0x13);key(10)
+        key(0x13);key(10);lookup(8);key(0x13);key(10)
         assert self.action(menu_focus=True)==native_ui_root
         self.nor_snapshot('device-code-persisted')
         self.report['native_device_code_menu']={'passed':True,

@@ -32,9 +32,9 @@ void destroy(Object object) {
 void text(Object label, const char *value) {
     AP01_MENU_ROM_FN(0xa0091b3a, void (*)(Object, const char *))(label, value);
 }
-void font(Object label, bool selected) {
+void font(Object label, bool selected, bool number = false) {
     AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))
-        (label, ap01DeviceCodeFont0041(selected));
+        (label, number ? ap01DeviceCodeNumberFont0041() : ap01DeviceCodeFont0041(selected));
 }
 void color(Object object, uint32_t value) {
     AP01_MENU_ROM_FN(0xa019cd48, void (*)(Object, uint32_t))(object, value);
@@ -88,7 +88,12 @@ Object codeList(Object parent, Context &context) {
                 (list, "", 0, 0);
         if (!row) { destroy(list); return nullptr; }
         if (index == 0) userData(row) = &context;
-        font(child(row, 0), false); text(child(row, 0), labels[index]);
+        font(child(row, 0), false, index == 0); text(child(row, 0), labels[index]);
+        // These are a readout and an action, not navigation into another page.
+        if (index < 2) {
+            Object arrow = child(row, 1);
+            if (arrow) AP01_MENU_ROM_FN(0xa00d8f7c, void (*)(Object, uint32_t))(arrow, 1);
+        }
     }
     return list;
 }
@@ -96,9 +101,9 @@ void select(Context &context, Object list, unsigned previous, unsigned next) {
     Object oldRow = child(list, previous), newRow = child(list, next);
     background(oldRow, 0x262626); background(newRow, 0x22363d);
     Object oldLabel = child(oldRow, 0), newLabel = child(newRow, 0);
-    if (context.submenu || previous == 6) font(oldLabel, false);
+    if (context.submenu || previous == 6) font(oldLabel, false, context.submenu && previous == 0);
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(oldLabel, (void *)0xa025488c);
-    if (context.submenu || next == 6) font(newLabel, true);
+    if (context.submenu || next == 6) font(newLabel, true, context.submenu && next == 0);
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(newLabel, (void *)0xa055fb7c);
     Object oldArrow = child(oldRow, 1), newArrow = child(newRow, 1);
     unsigned back = context.submenu ? 2 : 7;
@@ -139,7 +144,7 @@ bool replaceList(Context &context, bool submenu) {
         (data[0], ap01DeviceCodeTitleFont0041());
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(data[0], (void *)0xa02548d4);
     text(data[0], submenu ? "\u8bbe\u5907\u7801" : "\u8bbe\u7f6e");
-    select(context, next, 0, submenu ? 0 : 6);
+    select(context, next, 0, submenu ? 1 : 6);
     destroy(previous); resetTimer(data); return true;
 }
 void event(void *raw) {
@@ -164,8 +169,11 @@ void event(void *raw) {
     if (!context->submenu) context->selected = state[1] >= 0x30 && state[1] <= 0x37 ? state[1] - 0x30 : 0;
     unsigned selected = context->selected, count = context->submenu ? 3 : 8;
     if (key == 0x13 || key == 0x14) {
+        unsigned first = context->submenu ? 1 : 0; // Numeric readout is never selectable.
         int next = int(selected) + (key == 0x13 ? 1 : -1);
-        if (next >= 0 && unsigned(next) < count) select(*context, data[2], selected, unsigned(next));
+        if (next < int(first)) next = count - 1;
+        else if (unsigned(next) >= count) next = first;
+        select(*context, data[2], selected, unsigned(next));
         if (!context->submenu) state[1] = uint8_t(0x30 + context->selected);
         resetTimer(data); return;
     }

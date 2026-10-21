@@ -36,11 +36,17 @@ static_assert(offsetof(Font, data) == 24 && offsetof(Font, fallback) == 28, "004
 static_assert(sizeof(Glyph) == 8 && sizeof(Cmap) == 20 && sizeof(FontData) == 24,
               "0041 compact fmt_txt font ABI");
 #include "native_device_code_font_0041.inc"
+// Stock selected face has all ten digits; the normal subset lacks 5/6/7/9.
+// Keep an error-text fallback, but never mix individual digit faces.
+static const Font NumberFont = {0xa00e4864,0xa00e45aa,0,20,2,0x0001fe00,
+    (const void *)0xa037bfec,&NormalFont,nullptr};
 }
 
 const void *ap01DeviceCodeFont0041(bool selected) {
     return selected ? &SelectedFont : &NormalFont;
 }
+
+const void *ap01DeviceCodeNumberFont0041() { return &NumberFont; }
 
 const void *ap01DeviceCodeTitleFont0041() {
     return &TitleFont;
