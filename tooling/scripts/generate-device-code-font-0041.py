@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont, __version__ as pillow_version
 
 BASE = 0x9ffff000
 ROM_SHA = '972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9'
-TEXTS = ['设备码', '重新生成', '返回主菜单', '读取失败', '保存失败', '结果待确认', '生成中']
+TEXTS = ['设备码', '重新生成', '返回主菜单', '读取失败', '保存失败', '结果待确认', '生成中', 'Wi-Fi', '连接中', '正在恢复', '切换失败', '恢复失败']
 REQUIRED = sorted(set(map(ord, ''.join(TEXTS) + '0123456789')))
 
 
@@ -57,7 +57,7 @@ def generate(rom, font_path):
     report = {}
     for name, address, weight in [('Normal', 0xa025488c, 400), ('Selected', 0xa055fb7c, 700), ('Title', 0xa02548d4, 400)]:
         wrapper, existing = decode(rom, address)
-        required = set(map(ord, '设备码')) if name == 'Title' else set(REQUIRED)
+        required = set(map(ord, ''.join(TEXTS))) if name == 'Title' else set(REQUIRED)
         missing = sorted(required - existing)
         size, baseline = wrapper[3:5]
         face = ImageFont.truetype(str(font_path), size)
