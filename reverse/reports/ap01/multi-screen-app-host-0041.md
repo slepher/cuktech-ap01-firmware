@@ -2,6 +2,8 @@
 
 本文档记录 `cuktech-ap01-firmware` 与外部业务项目（如 `codex_status`）的职责分工评估结论，以及在 **0041 (`1.0.2_0041`)** 固件基线上构建通用多应用、多屏幕宿主（Multi-App Screen Host）与平滑切入切出机制的完整规划。
 
+> 2026-10-20 实施修订：追加普通页面已完成[机制级原件验证](screen-host-append-validation-20261020.md)，后续已实现共享宿主、真实LVGL创建/绘制及codex_status独立八root，见[重构交付记录](screen-host-refactor-20261020.md)；实机尚未验证。后续以[接口收敛稿](screen-host-interface-0041.md)和[实施计划](multi-screen-app-host-implementation-plan-20261020.md)为准。下文早期静态ABI示例保留为设计历史，不能直接实现：改用每应用容量+动态screen-set，隐藏应用仍需50ms UI轮询；slot不等同child索引；使用20字节兼容tag；优先复用较晚的VA `0xa005d180`挂钩，避免早期追加改变初始化active种子；生命周期leave在完成后派发，实际draw与enter分开。全局8屏限制、priority排序和“任何状态都可逃生”的保证已撤回。
+
 ---
 
 ## 1. 版本定位与仓库职责边界

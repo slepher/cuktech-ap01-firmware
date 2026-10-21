@@ -1,5 +1,5 @@
 # 大文件与生成物默认不入库：保留在本地归档，按 checksums/SHA256SUMS.txt 对账
-# ROM 镜像（下方明确放行的原厂 0041 除外）
+# ROM 镜像（下方明确放行的原厂 0031 / 0041 除外）
 roms/**/*.bin
 roms/**/*.json
 # 逆向运行证据（REA Evidence、QEMU 运行、Ghidra 安装、私有 profile）
@@ -9,6 +9,7 @@ reverse/rehost/
 reverse/app-0031/deps/
 # 二进制与打包物
 *.bin
+!/roms/0031/ap01-1.0.2_0031.bin
 !/roms/0041/ap01-1.0.2_0041.bin
 *.elf
 *.tgz

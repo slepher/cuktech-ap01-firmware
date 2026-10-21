@@ -1,0 +1,4324 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "scope": "0041 XIP ROM only; filenames are lower bound, not recovered C; rehost membership is not full reverse coverage",
+  "c_groups": {
+    "底座与外设业务": [
+      {
+        "path": "PogoPinMng/PogoPinMng.c",
+        "rom_offset": "0x1c39b4",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/UartComm.c",
+        "rom_offset": "0x1c3a94",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/WeatherApi.c",
+        "rom_offset": "0x1c3b30",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/FactoryTestMode.c",
+        "rom_offset": "0x1c3bac",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/MiIotMng.c",
+        "rom_offset": "0x1c4014",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/BuzzerMng.c",
+        "rom_offset": "0x1c4604",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/UiIFaceMng.c",
+        "rom_offset": "0x2694f0",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/UsbIfaceOta.c",
+        "rom_offset": "0x2695fc",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/UsbIfaceMng.c",
+        "rom_offset": "0x269b24",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "PogoPinMng/EsUnitProtocol.c",
+        "rom_offset": "0x26a3f4",
+        "in_ui_matrix": false
+      }
+    ],
+    "其他应用或定制组件（来源待逐项确认）": [
+      {
+        "path": "lvgl_ui_main.c",
+        "rom_offset": "0x1c4b30",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "SystemSettings/SystemSettings.c",
+        "rom_offset": "0x26970c",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "factory_ui/lv_window_slider.c",
+        "rom_offset": "0x26972c",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "lv_lunar_calendar/lv_calendar_ck.c",
+        "rom_offset": "0x269d00",
+        "in_ui_matrix": false
+      },
+      {
+        "path": "lv_comp_calendar/lv_calendar_comp.c",
+        "rom_offset": "0x608b1c",
+        "in_ui_matrix": false
+      }
+    ],
+    "原厂 UI": [
+      {
+        "path": "lv_power_ui/lv_ap01_ui.c",
+        "rom_offset": "0x1c4b60",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_theme.c",
+        "rom_offset": "0x1c4b98",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_guidance.c",
+        "rom_offset": "0x1c4d80",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_wx_data_trans.c",
+        "rom_offset": "0x1c4e30",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_boot_anim.c",
+        "rom_offset": "0x1c4e70",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_scr_saver.c",
+        "rom_offset": "0x269a90",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_setting_data.c",
+        "rom_offset": "0x269c54",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_base.c",
+        "rom_offset": "0x269cdc",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_setting_dtl.c",
+        "rom_offset": "0x37c1dc",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_power1_dtl.c",
+        "rom_offset": "0x37c59c",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_time1_dtl.c",
+        "rom_offset": "0x37c66c",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_date1_dtl.c",
+        "rom_offset": "0x37c6d4",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_wx1_dtl.c",
+        "rom_offset": "0x37c710",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_window.c",
+        "rom_offset": "0x5612fc",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_cuk_con.c",
+        "rom_offset": "0x56c04c",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_pop_up.c",
+        "rom_offset": "0x59cf7c",
+        "in_ui_matrix": true
+      },
+      {
+        "path": "lv_power_ui/lv_ui_power2_dtl.c",
+        "rom_offset": "0x59d568",
+        "in_ui_matrix": true
+      }
+    ],
+    "米家 SDK（来源与许可另核）": [
+      {
+        "path": "miio_sdk/miio_instance/client/miio_client.c",
+        "rom_offset": "0x2590b8",
+        "in_ui_matrix": false
+      }
+    ]
+  },
+  "png": [
+    {
+      "kind": "PNG",
+      "rom_offset": "0x242680",
+      "size": 3102,
+      "width": 143,
+      "height": 22,
+      "rehost_names": [
+        "ap01_logo",
+        "ap01_boot_logo"
+      ],
+      "sha256": "93a11d71c1c1daf3f3a824c4b95bcafdcd78393c02e91bf17845f1387c6e57e2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x2432bc",
+      "size": 694,
+      "width": 82,
+      "height": 13,
+      "rehost_names": [],
+      "sha256": "bc1a9d8bc1e9921aa38cb61f0c9a6c02b5e57e11471cdc4b6d48f3c2d59923b1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x243590",
+      "size": 631,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_power_status"
+      ],
+      "sha256": "becfbff147937077122050c7dcceed409a46fe4461c2a08c49f64282a5b82b64"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x243824",
+      "size": 270,
+      "width": 12,
+      "height": 18,
+      "rehost_names": [
+        "ap01_clock_status",
+        "ap01_power_battery"
+      ],
+      "sha256": "ad5ea5c7cfb489ac0d93c03737cf2d070dc869e259298256c99d6e392bfedd3f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x243950",
+      "size": 17913,
+      "width": 134,
+      "height": 135,
+      "rehost_names": [
+        "ap01_mijia_qr",
+        "ap01_system_mijia_qr"
+      ],
+      "sha256": "bdffea2e6cc2a719c9f4ddc957325d9e6159ac330bb51c95121ca767130b43b9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x247f68",
+      "size": 583,
+      "width": 36,
+      "height": 36,
+      "rehost_names": [
+        "ap01_system_binding_timeout"
+      ],
+      "sha256": "0561ae0d80b70184023e885d7faa7cedc7c4782d58126fd38a60347881a2f0e2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x2481cc",
+      "size": 2374,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "f7b7db36fea9bc8b6b865d1eeced33e844309442d361fd939e75581be53ab92e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x248b30",
+      "size": 35726,
+      "width": 250,
+      "height": 115,
+      "rehost_names": [],
+      "sha256": "11ad2368eb1ba83148b562866e61b3f85fedaee13830ecd6c798edc664c5d33c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x2516dc",
+      "size": 381,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [],
+      "sha256": "e46d8b95caa06929df5159dffc496aa2b3250d3e532504559eb4a1e11893c006"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x251878",
+      "size": 434,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [],
+      "sha256": "dd20aca6f2abcde7471e1ec08a985b17aee40e59d7457e6f6a20d0bc2758e691"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x251a48",
+      "size": 394,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [],
+      "sha256": "9adc29d4f2558b099c80d4f8c68fcdc7bd0dc71e443459d9b3557dcc72328958"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x251bf0",
+      "size": 370,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [],
+      "sha256": "77d0e147d5c5e1a118214480ed7a4d3228009f4df86f7ce568c103e055b2b7d9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x251d80",
+      "size": 2864,
+      "width": 90,
+      "height": 26,
+      "rehost_names": [
+        "ap01_power_gradient"
+      ],
+      "sha256": "3af03b512c2b6be0e0e109e4b3fb7c36c3e4fc4d858df65d2626659ea6e9abde"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x2528cc",
+      "size": 446,
+      "width": 84,
+      "height": 54,
+      "rehost_names": [
+        "ap01_power_card"
+      ],
+      "sha256": "863c267d931a368036106afc056c4a9e6dfc932cd3092b54f1953ec32acce7e5"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x252aa8",
+      "size": 335,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_wifi"
+      ],
+      "sha256": "2ea1b60ce0a0a77751f0a24d701acbbb60f1dadfe19fcb73ff1938e43fc173e2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x252c14",
+      "size": 402,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_time_humidity_icon"
+      ],
+      "sha256": "3d1343037ab8b90dd8c729eda853ce4871de4cba02ea4c11915d8adde4fe1b32"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x252dc4",
+      "size": 527,
+      "width": 19,
+      "height": 19,
+      "rehost_names": [
+        "ap01_saver_thermometer",
+        "ap01_time_temperature_icon",
+        "ap01_weather_tiny_native_1"
+      ],
+      "sha256": "9d06a4325f54fbc10a06850091e55bb62d36527c6b4024abcedf079dddfb361a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x252ff0",
+      "size": 2051,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [
+        "ap01_sun"
+      ],
+      "sha256": "b6507ee2705b633050002636aae04835485d9a02cabf1688a1fbaa38976ff17e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x253810",
+      "size": 427,
+      "width": 18,
+      "height": 18,
+      "rehost_names": [
+        "ap01_sunrise"
+      ],
+      "sha256": "e5494584c1f05d530b2d86df2c313717fb1b1afab3b733490656bad9f863a70d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x2539d8",
+      "size": 439,
+      "width": 18,
+      "height": 18,
+      "rehost_names": [
+        "ap01_sunset"
+      ],
+      "sha256": "3678b47746d2ebe1835e784dc344d0a6e7c51d78204e3ce0616ae72e207abf0c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x255b18",
+      "size": 857,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit0"
+      ],
+      "sha256": "7bb03c3e2d732bd9f0a140211b86763e603183d4f7231025130b757acfa9398d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x255ea0",
+      "size": 861,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "8af0b4f9f82c934dc22eabdc40d084e87176782d06df8d4beacd1d2bc39a0969"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x25621c",
+      "size": 145,
+      "width": 7,
+      "height": 27,
+      "rehost_names": [
+        "ap01_colon"
+      ],
+      "sha256": "ce5c691a0022c58475c09a9b4a3a5f206ed07299ec5e0dbcdb1e596c1981b10e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x365184",
+      "size": 3101,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [
+        "ap01_saver_curve"
+      ],
+      "sha256": "eefc373de64bb8cbb88b720aa0f0e7465c3f59ff50a7c5ca360ffe73a871d519"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x365dc0",
+      "size": 27545,
+      "width": 320,
+      "height": 238,
+      "rehost_names": [
+        "ap01_saver_glow_top"
+      ],
+      "sha256": "3825c3c16f916242f7d7343c8ecefb254755a76daaa1c5e1408e0676b443ab0a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x36c978",
+      "size": 13815,
+      "width": 320,
+      "height": 179,
+      "rehost_names": [
+        "ap01_saver_glow_bottom"
+      ],
+      "sha256": "e987eed1e4b60c99c1711101bf962aa75d4ce2c317e2ec17a52d3dc3b935f43a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x36ff8c",
+      "size": 645,
+      "width": 248,
+      "height": 50,
+      "rehost_names": [
+        "ap01_guide_bubble50"
+      ],
+      "sha256": "107fcedcf98e160b23530afdd8037827abf498496f101fe445f292a8f329df84"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x370230",
+      "size": 708,
+      "width": 248,
+      "height": 70,
+      "rehost_names": [
+        "ap01_guide_bubble70"
+      ],
+      "sha256": "9cdddaaec5ea9ccadeeb561b5c2d1055e33201fa3f268ed86e091beeb2663f83"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x370510",
+      "size": 768,
+      "width": 248,
+      "height": 90,
+      "rehost_names": [
+        "ap01_guide_bubble90"
+      ],
+      "sha256": "802622a64ca66283f5006400e85e4bcca2f7edbb182a18acda4a5e9df4b922bf"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37082c",
+      "size": 1259,
+      "width": 60,
+      "height": 45,
+      "rehost_names": [
+        "ap01_saver_fast"
+      ],
+      "sha256": "f0f4f62a9c173edfeec558d9424d7d50addc2b8b334c661c3c87d07a45356fa8"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x370d34",
+      "size": 397,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [],
+      "sha256": "10a44533edebc9ee6573f41dcaea54b1109799b6161431df4b5707ac3c603ea4"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x370ee0",
+      "size": 383,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [],
+      "sha256": "fc8922e1f06dc56558fea34d184d4ba6b1caf6fd0b91c0afc4176e09a7fbf599"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37107c",
+      "size": 343,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_wifi_off"
+      ],
+      "sha256": "0fffc05b02cd280be8cf8ab1ee4d3be885df446ff75c0b9041fd019b89a3bc8e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3711f0",
+      "size": 300,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_6"
+      ],
+      "sha256": "ec617a2ebbd786ceabb52aadc9e4669d9cbaff4f020a4980242086582495d39a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x371338",
+      "size": 345,
+      "width": 25,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_5"
+      ],
+      "sha256": "6e792977f317e307328b9c271ec07740036fdbe7fafa7e4f3e1b5ee0b023a74e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3714b0",
+      "size": 330,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_14"
+      ],
+      "sha256": "d4b07ac858506412ed523f91a78329d7edf1053861ab2deb31305f4e8c7ec11d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x371618",
+      "size": 363,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_7"
+      ],
+      "sha256": "1048714b2641e306463f3626c9ee786c0657d670cb0e83910f8a426ee893f3bb"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3717a0",
+      "size": 599,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_8"
+      ],
+      "sha256": "1dea7c8ab5d61fe74c7d73e88d16b53d6acefcea2011f0c72289bf5f4decd45b"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x371a14",
+      "size": 623,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_9"
+      ],
+      "sha256": "b8a4473367d5e73ceb14520369545ecd6f3a53a4d5642dccc4fcc6dbde6ac7df"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x371ca0",
+      "size": 398,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_13"
+      ],
+      "sha256": "02d5c52b38883dfc0dc68ee53ef0ab6021cefc0190d339e0a8ddfc273ca254d9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x371e4c",
+      "size": 462,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_12"
+      ],
+      "sha256": "f42f75b4829b0822a947866390dbc99cffc8ed48301f159acf87912d15aeea4c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x372038",
+      "size": 539,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_3"
+      ],
+      "sha256": "3953de6a96d227c24d4b0d510968bdf3e50cb2465dcd2e3ab12e19920ad6409e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x372270",
+      "size": 564,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_4"
+      ],
+      "sha256": "beb894942b7252467e6f420d7183e8caa8be7fb7a8105ff6d476f4715dcb33e8"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3724c0",
+      "size": 687,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_1"
+      ],
+      "sha256": "563f2e8cd643d7d65a3c0599bce2b0c7c43aee700c5c9742b2b0f829928909e8"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37278c",
+      "size": 698,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_2"
+      ],
+      "sha256": "b3e6add216e76d04113e3ff1fe30cbde5da9130eef982a38a569a1fc28d3f3d2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x372a64",
+      "size": 524,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_22"
+      ],
+      "sha256": "8e3705c73ec0db5617edfcfc6779d37fe62b6a16c040115b4a121dd32a105f59"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x372c8c",
+      "size": 539,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_23"
+      ],
+      "sha256": "6d4ed7805b0d4efa0b8e0c894c8c4b0990569d22b79c2e427929011c71109649"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x372ec4",
+      "size": 516,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_11"
+      ],
+      "sha256": "5d285dc7a32f7a7d075c8e27741713c4b399b0fa16502a87127890b67492c534"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3730e4",
+      "size": 604,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [
+        "ap01_weather_small_native_10"
+      ],
+      "sha256": "15473cdbd2e884adadbaefb1dbf571ed8059b665736635e3e0cd38b638d067ec"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37360c",
+      "size": 656,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "d6fa012dd1961b4194675ebe152b53f8cbfeb1793392ab81bc8018eb390aa1ed"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3738b8",
+      "size": 923,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "c0acd1a268285aacfe7287a1a3e30af110a8c00ff36939b8a3363b17d14cd180"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x373c70",
+      "size": 348,
+      "width": 34,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "a10faefd50e82a7f8cb09a219bf369edf8764aa96a0f832a6033b5f4c51f03e8"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x373de8",
+      "size": 530,
+      "width": 34,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "6be36aa2eed147096c90c883ab69d12f4129150609b09a1728c51730abcf0e92"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374018",
+      "size": 574,
+      "width": 41,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "b4855d0dc5169e17f508cd5e52bb5053f6bd8a48ca6256b8c93481b4669cac44"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374274",
+      "size": 788,
+      "width": 41,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "d831810034d87244cc93e38c72597002d59294092a3f97b9a2ac46803e462eb2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3745a4",
+      "size": 711,
+      "width": 43,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "582deb461a0824a979e55bee80833d6ad3f60724bbd84ab0c062874399197712"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374888",
+      "size": 959,
+      "width": 43,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "2398d472c174690559f16e6c34f13087a4b7627afd32315f3aebf5551e969a69"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374c64",
+      "size": 482,
+      "width": 45,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "b0c0130796c3ba103bd44472d4de58ce67f7e25c6e43a07fa8dbadadc2e7e48d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374e64",
+      "size": 909,
+      "width": 45,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "773a3eae91cf84bf06de5d360ad5f42ce43fa6f15802884221cffdd6fecd1d8e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x375210",
+      "size": 578,
+      "width": 41,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "d2e512f34e58b46a7015ae6eaacbe8ea386cf5ff7dcfc6143a2512d49c2eb95f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x375470",
+      "size": 859,
+      "width": 41,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "4d2c19abeb96c50a88aa15a4b7028f96383b2175cc8b55c1ffdf2e93b5fc2619"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3757e8",
+      "size": 686,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "88289be71383b5cc1ac2795e05c8e76118e0160ee329500ef4c407c4ac641c82"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x375ab4",
+      "size": 995,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "0c36746c9192c0c52a8d7f12a3290e87b860f52174719d9838d23ef61e4f5a7b"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x375eb4",
+      "size": 364,
+      "width": 43,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "3aa574ad26dcb974c4ae19070da4194a35e64f2272cf254804083fe0af3c54e0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37603c",
+      "size": 863,
+      "width": 43,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "a4eb11f398b0187ba4b48881e361b7bfbcb9f1d5b083286c267fac3f0e019290"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3763b8",
+      "size": 742,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "dcebcafbbdfd3a60ca263b3202034b52f656dde1e9c1356622f0669206ecec16"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3766bc",
+      "size": 1047,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "36f56b56e0c11971bcfff0af3d90b8cdeb02784bfdb8699f137336369e83b847"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x376af0",
+      "size": 702,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "b54754ab0683003d564217816a1e29bc7f89b61d6dd92962b921dde5112e5873"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x376dcc",
+      "size": 996,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "6c6715075d1a88f7f1cb22de8ba038a741faf373892df5b2f0da388fc9c9a39e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3771f8",
+      "size": 199,
+      "width": 9,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "bb8aa95d6d78a0601022e4307cd4ad3304b01a43d2605a8f5c00acdfdaf3b64f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3772dc",
+      "size": 201,
+      "width": 9,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "1d6176323be9eb65b54302406831d0382cdcc3646acb6a8c07799948359a2f9c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3773c4",
+      "size": 368,
+      "width": 28,
+      "height": 14,
+      "rehost_names": [],
+      "sha256": "4a8afccaad09506536e171fd9a5df5595f7b5976cc80450d6780e1110bdc3798"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x377550",
+      "size": 502,
+      "width": 28,
+      "height": 14,
+      "rehost_names": [],
+      "sha256": "eab5f7a470e90f44dd7ade5f91d420b906473731e15873d0da384f8587283030"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x377790",
+      "size": 492,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit1"
+      ],
+      "sha256": "4b848ed625db2501ee91167898e31781effda02b003e3d667b28d5db008e0f2e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x377998",
+      "size": 741,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit2"
+      ],
+      "sha256": "9155eaa063ccc2ed6c8a50a26613c326b2235bca11beca3479657696aab07d4a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x377c9c",
+      "size": 890,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit3"
+      ],
+      "sha256": "8998e8373065a6c2877fb35e9800ea5d2be766b862851bc679a6fbca75bbc206"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x378034",
+      "size": 510,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit4"
+      ],
+      "sha256": "cc3b22ac4cd7f18a4c25236d2d23bb31b5b1113e202c5e7035d46c7ca81d0271"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x378250",
+      "size": 742,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit5"
+      ],
+      "sha256": "c9bd7f87c20c499e240c6aaa7c00e9b9bdd97f40c5f51760f1b000e0efb1c31a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x378554",
+      "size": 860,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit6"
+      ],
+      "sha256": "d5351f271c846315192718efb5160ec2a668992f0c045b6aefc4512287f7df8a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3788cc",
+      "size": 485,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit7"
+      ],
+      "sha256": "6438ff2941b6199d0e0422dd181067b1293751464a659d2dcac391ca148ffa0c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x378ad0",
+      "size": 898,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit8"
+      ],
+      "sha256": "34eb6b964c522cc9e020201d7f31d28878985bbfa47ba4b601056a90a435a15f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x378e70",
+      "size": 898,
+      "width": 55,
+      "height": 50,
+      "rehost_names": [
+        "digit9"
+      ],
+      "sha256": "8f1b7aba0b2760f6aaca40edf69f08c3ab1f93b652b7ca1c7fdcc0b09cccad32"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3798b0",
+      "size": 385,
+      "width": 44,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "74f05b8d17cac089eb768c8f3c591eba0d1b338929dbc5097fc52e7b0a436edf"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x379a50",
+      "size": 754,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "721f00cae826936bfed8b661f216860c0e866f2460368dd149c6fd25b76c20bb"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x379d60",
+      "size": 928,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "3c2e784a00aa5c777477e43b0884d28aed605f0f538f431ce76d33a1b04adb6f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37a11c",
+      "size": 594,
+      "width": 61,
+      "height": 55,
+      "rehost_names": [],
+      "sha256": "73348999fea124d3a9b9d61ed67b552270e9d98e3d00df3b29947c2a401e7101"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37a38c",
+      "size": 714,
+      "width": 58,
+      "height": 56,
+      "rehost_names": [],
+      "sha256": "38b787a76c430d1de5b5fb7c448fb753a031334ec3b42493697ece2c7e77a72a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37a674",
+      "size": 935,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "c33c1e0d4106e42d9616ca84a566c4e39bea1300c25dc317f1a7a5ff2d72cd23"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37aa38",
+      "size": 372,
+      "width": 60,
+      "height": 54,
+      "rehost_names": [],
+      "sha256": "a893286782d3ba3f47537a23b339a96b986c55d0028fa2d3ba8b21b7f5ca57a6"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37abc8",
+      "size": 988,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "ac17c0ad5ea55ef9171711fab063599660ed476926f5b96018a705e12186158c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37afc0",
+      "size": 943,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "5a74f88d5c81b9676b5fb3f491026f22aa7225371190628f0f05dbdc1c1ceb45"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x532ba8",
+      "size": 2560,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "2bd6a5991e5b356faaed81c693791ad3842c43467b579c714a3c42cca0d1fab8"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5335c4",
+      "size": 3332,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "b6ee720e0a983170f1bacbe11e980dec61eac3855564f65876f8906f79051e12"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5342e4",
+      "size": 3542,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "06d725255f42561eca49d2a21c22623964354ec497cda9245decdfefd6ab3c9a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5350d8",
+      "size": 3616,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "ddcd2bdc590d0b9a5f55ea81369eb29ec28f3a0b90e605bf1aa742409b2baaa5"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x535f14",
+      "size": 3946,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "7aeac8a0a0e7ba5e9324fbef4cb998db3a9a791a959eea7e97909d4f8a1416b9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x536e9c",
+      "size": 4092,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "5840e74a84a27070eb271dbfee18eb348c5798aaef465a47a3c51b8418af4faa"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x537eb4",
+      "size": 4218,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "029d46cd9b4652d5daa91e300aacdffe28ce6f3ee4fb30bc1781884233e38429"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x538f4c",
+      "size": 4312,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "1384e1d619e6d88e44b80f8fdd096c89964591f94da4184a9ff6446c9e5cf3e7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53a040",
+      "size": 4462,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "63bac6d253c0dd5581f81d3e787faf00cfd31f9bf0487b596d0b65d8175ad3ac"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53b1cc",
+      "size": 4605,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "a1a57c8b648a624603cc51fb438ba52d52419edbb76a46653d286e682d6e85da"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53c3e8",
+      "size": 4735,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "323b011a3c4e4a3e9a37df249161454a83477bfd6b16cc1788cb89b58452943d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53d684",
+      "size": 3995,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "255d42547c3ad3765a41a1c3b12280c0df0bbf73f96371c52e325890bdf2eecd"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53e63c",
+      "size": 4054,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "14b076e6939a043c661f96fc8d80c5b567a47471b1aa478ee7963da2689faa19"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53f630",
+      "size": 4096,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "b405d263289badbd1c35924e68f29a3fd6a6e9751d639c0faf9db77ca01af60e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x540668",
+      "size": 4195,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "bdbcc532839f5dc0fb8a298cb58fc707fc20288bf0826c3b55e25857ff4393d2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5416cc",
+      "size": 2630,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "0969a0c92a2c528b45c42d2351497388909e9ab4506e1c8a00a98a7ec26e816b"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x542130",
+      "size": 2736,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "2aeb9b63c76d42d61a5d8f6739bc429b00067280bb4b805d58f6a51148f2cf28"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x542bfc",
+      "size": 2768,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "93c18360a3ed6cf1012ebada9517b153f2ca0063e4eea00635c9c56beea679d6"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5436e8",
+      "size": 2968,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "01512f541f62019aae1d0bf12e88e90050ff063837984d7d6ce032146a3590d1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54429c",
+      "size": 3034,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "7ed64c5fe3461e97c2f41e79c33e70df8b867f9bc8cc1497d637ac1c2f7022ce"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x544e94",
+      "size": 3136,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "ce750e3cb708d3a6761363b83b5e9bc27b34e3bb7d4e94ee194f599077467cc2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x545af0",
+      "size": 3229,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "2fc1fa0e3836c86f720e436530f7a0d0ca569721d99ef886b7c29e447bf739b1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5467ac",
+      "size": 3320,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "4401478eadd3b1ca9c2c0297c85ca89ecd5018a968464df565936764bdab3851"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5474c0",
+      "size": 3431,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "737612a94a5305ae6d0a280225834e7a827cc3e71a07c549dc409ce6ae8cf898"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x548244",
+      "size": 3502,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "e6f84585fe623e548cdce77c17f5cb0711edf9034a12ee1b04646ee926566968"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x549010",
+      "size": 3567,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "397a58cda503f40dd847ddcf645919ad8d22d6b94a987b5fdab0ae99413fee83"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x549e1c",
+      "size": 3616,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "d467e6759b51432e2cb9c8f6bb71b90b66568ec0ea75a75c8495d595480fcbc5"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54ac58",
+      "size": 3676,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "4f86d286c6b17c3328f84b6db19aed930a5b46620f28e217f42cb15d555eb890"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54bad0",
+      "size": 4032,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "05813e0dca43c75e44b645d803d377cd0b19625c8b12e20aad91672042a04adc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54caac",
+      "size": 3948,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "3c18d6dbaac131c05262aa44d5a813898b41535be739f56edeb16afe93515602"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54da34",
+      "size": 36105,
+      "width": 250,
+      "height": 115,
+      "rehost_names": [],
+      "sha256": "fb535a5a2a1b9d86fa9cf58cd5724d10d8c293ad04eb9c6f85ccc4b83ffc472f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x55675c",
+      "size": 35963,
+      "width": 250,
+      "height": 115,
+      "rehost_names": [],
+      "sha256": "4be6fbae136b22a6c5865e60d025bb6a38debad9abeed2f7a7b8a7b95c2b35dc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x55f3f4",
+      "size": 285,
+      "width": 13,
+      "height": 20,
+      "rehost_names": [
+        "ap01_charge_mode_icon"
+      ],
+      "sha256": "cce8010a24c302d186cbab1c679ee5e0042c245ac612bc07822aef90394c37b7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x55f530",
+      "size": 328,
+      "width": 14,
+      "height": 18,
+      "rehost_names": [
+        "ap01_charge_cable_icon"
+      ],
+      "sha256": "44a78e6b0eb86cf2f32c6955a50ebf3b0d7c9e10c99a9d2aded68053aaf98dbd"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x55f694",
+      "size": 827,
+      "width": 300,
+      "height": 68,
+      "rehost_names": [
+        "ap01_setting_row"
+      ],
+      "sha256": "d71784b03a7de015a61c85db52bd7060679f602b709ab0faaf75c19558183c41"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x55f9ec",
+      "size": 855,
+      "width": 300,
+      "height": 76,
+      "rehost_names": [
+        "ap01_brightness_row"
+      ],
+      "sha256": "163ee2f53feadc6c910284e101dd16ea4f0c46b1a83989df6e3c6e73d959b647"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x55fd60",
+      "size": 869,
+      "width": 300,
+      "height": 80,
+      "rehost_names": [
+        "ap01_charge_mode_card"
+      ],
+      "sha256": "0a163afd454c84fe5f1cf821a5f2592a7aaf6ab77cc1dd0157789b6334da79e1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5600e4",
+      "size": 904,
+      "width": 300,
+      "height": 90,
+      "rehost_names": [
+        "ap01_system_version_card"
+      ],
+      "sha256": "66dd23940be2965cf3b312020edfc60d71b6a82f99173467f07fc7088049e249"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x560488",
+      "size": 918,
+      "width": 300,
+      "height": 94,
+      "rehost_names": [
+        "ap01_charge_port_card"
+      ],
+      "sha256": "504a746deb30b291520351b993890394a005e4fc0cf6c715d177f72392a62691"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x564644",
+      "size": 1933,
+      "width": 50,
+      "height": 40,
+      "rehost_names": [
+        "ap01_weather_aqi_scale"
+      ],
+      "sha256": "0a3ee5a30a1fe0d37561fb77ef7406dc9904f0b4059272d309849a03e4417ba1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x564df0",
+      "size": 2084,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_1"
+      ],
+      "sha256": "5b55ff25fa57cdb53bf7c59c7eabaa4ead1ff0e09047c5397e4e0eca380450e7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x56f790",
+      "size": 9996,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_guide_practice_power"
+      ],
+      "sha256": "ea7dd2d0052c720f71db38cc2bf965a56aa983e89379723d589080138ff50134"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x571eb8",
+      "size": 14973,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_guide_practice_c1_done"
+      ],
+      "sha256": "54eb31105067e7adf5550d043afe705e8e128b93206b5950872ad77ce8d7ce48"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x575938",
+      "size": 40836,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_guide_practice_intro"
+      ],
+      "sha256": "29f3af9f1aabe11432329b8588c78dba2aca91488137abad1dcda43f6699acba"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x57f8d8",
+      "size": 39885,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_guide_practice_turn_done"
+      ],
+      "sha256": "7491e8eaa0e31c5836acc9d23ecb7e0977e6b341084c9c403ab5fb8eb86807c2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5894c4",
+      "size": 39812,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_guide_turn"
+      ],
+      "sha256": "f6197043872f60cb5e706de052a43489d4147eee5f4ca3d3c0a8a453442b746a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x593064",
+      "size": 39515,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_guide_press"
+      ],
+      "sha256": "62bdf155de17cf966e6a60518bdee4e9a914499fe8324965a7f5e4b35960c59c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5e99cc",
+      "size": 1042,
+      "width": 126,
+      "height": 20,
+      "rehost_names": [
+        "ap01_charge_safe_title"
+      ],
+      "sha256": "98aeb206d853e6a59db57dd0c6cf7fd16df08dd2eb574da5a4465de960066d7f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5e9e18",
+      "size": 3015,
+      "width": 127,
+      "height": 14,
+      "rehost_names": [
+        "ap01_charge_safe_hint"
+      ],
+      "sha256": "492bdf037895c187225dc2a7a5a6aea2f0e1a20a63801a44a4bfe24b1351f5c1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5ea9e0",
+      "size": 3557,
+      "width": 131,
+      "height": 40,
+      "rehost_names": [
+        "ap01_charge_safe_caption"
+      ],
+      "sha256": "58e525937cfc4f1b5e22d72e5c18cd43c84c8ec97a5e283247d89fb0ec4ae35e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5eb7e4",
+      "size": 2042,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_charge_protocol_scan"
+      ],
+      "sha256": "8677847db00fcd8d8da644aaf6a968b824205126a43fe642b283279939a2aae0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5ebffc",
+      "size": 3073,
+      "width": 86,
+      "height": 21,
+      "rehost_names": [
+        "ap01_charge_protocol_title"
+      ],
+      "sha256": "6d58dac37a015f287271f606764926f5c32c4f77ef0c8425777a808a62f96cf3"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5ecc1c",
+      "size": 74533,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_charge_protocol_bg"
+      ],
+      "sha256": "7da94ed8d372b2a26b6a0ec97882ab6e9f90b6ba0de194ecaca2122097a9caac"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5fef60",
+      "size": 5873,
+      "width": 195,
+      "height": 16,
+      "rehost_names": [
+        "ap01_charge_protocol_caption"
+      ],
+      "sha256": "afc9359f9338932768ab7c02ecf7df5f94dc248c63dcf0560ebddf6dbdf14c5e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x600670",
+      "size": 3871,
+      "width": 45,
+      "height": 45,
+      "rehost_names": [],
+      "sha256": "4da2ef001c2ee5011325fc41bfe64603fd12ac571d86af9dbc853397a645fbc7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6015ac",
+      "size": 3726,
+      "width": 45,
+      "height": 45,
+      "rehost_names": [],
+      "sha256": "023f1d2b7a51039a597cdade7ea9b12b7cacc1453eb8c957680cb369c80880a0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x605d24",
+      "size": 6233,
+      "width": 66,
+      "height": 66,
+      "rehost_names": [
+        "ap01_system_ota_success"
+      ],
+      "sha256": "7dcaf904c89bfa08718f8d856efee58db58c421b6f4b74729ae04c7e2998080d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x60759c",
+      "size": 732,
+      "width": 280,
+      "height": 70,
+      "rehost_names": [
+        "ap01_system_confirm_button"
+      ],
+      "sha256": "4c6752a9075fb9b0cfaf7f704751e3178e60c18c7a0d3a3b333c3d84b0f78de4"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x607894",
+      "size": 338,
+      "width": 22,
+      "height": 22,
+      "rehost_names": [
+        "ap01_brightness_icon"
+      ],
+      "sha256": "06470a89b3efadf6eefcfe77e5c4b847c645e8687b629af173d873f15f161da2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6294f8",
+      "size": 574,
+      "width": 144,
+      "height": 64,
+      "rehost_names": [],
+      "sha256": "84d1923568aff547f9ef051bc58670d7d88f262ad32d4114746b75733f1f5e9c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x629754",
+      "size": 489,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_6"
+      ],
+      "sha256": "337143e6ec054b631574072222656820303b1f3c8bd43d0ccbf4c4b15553fb19"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62995c",
+      "size": 650,
+      "width": 51,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_5"
+      ],
+      "sha256": "275ae710a9f5cdf644f32d8de9bfc4932add2450377864788597bcc4b118cff9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x629c04",
+      "size": 561,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_14"
+      ],
+      "sha256": "3a46f9a93c70e6b4cf719bc62eaa21613eca2617ab754c665527d21093be8919"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x629e54",
+      "size": 657,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_7"
+      ],
+      "sha256": "a9ce6ee6fbf997f1d0209d2614079ae473faaaf7ffb4ff28dc2173675a169081"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62a104",
+      "size": 1166,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_8"
+      ],
+      "sha256": "538e4bce6d571c9891e37b40cae84316d8010d959dddbea3537d4dff1ccff11a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62a5b0",
+      "size": 1264,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_9"
+      ],
+      "sha256": "642f7f1ba4fa723994faa1748016fe51d56c7fd13d29caed3b9af924185e3ecc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62aabc",
+      "size": 746,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_13"
+      ],
+      "sha256": "af919cdb4fdd30729508ea9e7bfee7d6218b648d50d41c6e6fcb33c60e12afff"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62adc4",
+      "size": 794,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_12"
+      ],
+      "sha256": "7fdbb5d87723470f08aa0b9ecc9d963c4ce43a21b624bed7d0a7f57dee888c04"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62b0fc",
+      "size": 1081,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_3"
+      ],
+      "sha256": "7faa0f6b949390481d88380a0f30d1ca48d613702363ad839dca4f3957a181ad"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62b554",
+      "size": 1157,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_4"
+      ],
+      "sha256": "0c17d9d51b5ffbf72ac3dfa6afdc630b601532aec50303c50021a0bc1f5cd128"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62b9f8",
+      "size": 1603,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_2"
+      ],
+      "sha256": "74e33a2f2c5a211715d83480956a623757fc5cf52d4575fc8271309037ef504a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62c058",
+      "size": 1528,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_22"
+      ],
+      "sha256": "f65ee502a1ac4ad5e01af59bf6b435e042791b3af83fff1cff74424cae0a3912"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62c66c",
+      "size": 1510,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_23"
+      ],
+      "sha256": "aa5d58018acf9503c4477b7e860789436fdc13d0d949865d754a562151ada71c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62cc70",
+      "size": 929,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_11"
+      ],
+      "sha256": "2e3c384860ae6817912857207c9d6116811ffb24af5c9d77e8ef7d8509de1d6e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62d030",
+      "size": 1158,
+      "width": 50,
+      "height": 50,
+      "rehost_names": [
+        "ap01_weather_large_native_10"
+      ],
+      "sha256": "b4a1ee30d6229ecce52fd78a0ee9e70fc13ba188c73898921f94f291aa9cf08d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62f440",
+      "size": 2224,
+      "width": 58,
+      "height": 46,
+      "rehost_names": [
+        "ap01_arc"
+      ],
+      "sha256": "3fd2355a8ce9ddb07db5842005324a6bf798c27d2e86b99dd5a42a8d5da922fc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62fd0c",
+      "size": 473,
+      "width": 26,
+      "height": 19,
+      "rehost_names": [
+        "ap01_charge_port_icon"
+      ],
+      "sha256": "8b0f8db57e46e3f2e782de4b38d6d1a4140dfec95d08e2dd115a92f7a588e7c7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x62ff04",
+      "size": 250,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_6"
+      ],
+      "sha256": "50e4d410d638981bbdcdd1cfd9e0b89f01aab77e120945417bb774a1ba6ceb1a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x63001c",
+      "size": 336,
+      "width": 21,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_5"
+      ],
+      "sha256": "f979acbcd42eb1ca5532e966ad2faaed66cca9ed539e1c866a67dec9c78cb33f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x630188",
+      "size": 305,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_14"
+      ],
+      "sha256": "becb8a07e612155ce1a2939bbdd9299c0c9349a4dea8dfe3513159cb5aad3a6c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6302d8",
+      "size": 315,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_7"
+      ],
+      "sha256": "836f775726a9db262da90969338744cf9f7ec446e6407cf27a11cececf3f0f1b"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x630430",
+      "size": 486,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_8"
+      ],
+      "sha256": "2c447fccf64505e3712fc18efb21c12819a3ebafc6134b9e17b67b527f0457de"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x630634",
+      "size": 512,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_9"
+      ],
+      "sha256": "9396361b0b2982c67c1f91b52d6722dd5a9324c67628eb4f59c1b8746c62e072"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x630850",
+      "size": 339,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_13"
+      ],
+      "sha256": "bbd5236405ed5dadaaade04f60c8d76c6974359e4513fe4ebdd73a4deff2c729"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6309c0",
+      "size": 367,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_12"
+      ],
+      "sha256": "00deee84760678217af03cd2fc78ce35586f79c20a46283e3841046ead2f11fc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x630b4c",
+      "size": 469,
+      "width": 20,
+      "height": 16,
+      "rehost_names": [
+        "ap01_weather_tiny_native_3"
+      ],
+      "sha256": "bcaafc41aeaefdea7a5e54e2379cd63494449171f5a0953c868aa890c2ea7524"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x630d40",
+      "size": 478,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_4"
+      ],
+      "sha256": "a19e22f1368fa2c622ff66e88aaf83596ec295a3b0554bedb9af79af17a5f679"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x630f3c",
+      "size": 593,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_2"
+      ],
+      "sha256": "750a47d277a9fe85c685c3f199ebc757bfd5c666044ea64738c2b5afc18511c5"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6311ac",
+      "size": 579,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_22"
+      ],
+      "sha256": "d58cb70b6eac0b382b10f1612e23d9b10eeba4c8024a481bc53f12937498195c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x63140c",
+      "size": 585,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_23"
+      ],
+      "sha256": "bc56d9e2b2d29eb085f11d68ebf26703b0292a903da6dcadb6dc8c96f4208101"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x631674",
+      "size": 451,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_11"
+      ],
+      "sha256": "0bf2843028fda0b2b8a16a1daf4526eec78f6599580e2f9a0ef76cf71f683dac"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x631854",
+      "size": 491,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [
+        "ap01_weather_tiny_native_10"
+      ],
+      "sha256": "d283d531eb08e579954b32d035d167d5f58899ac9009c49be0e0069bc09b69ed"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6325d8",
+      "size": 726,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "1870439fdadee7c529e6f6712ce5615b3bdf4148a1f41d6769c094ec0586bfea"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6328cc",
+      "size": 922,
+      "width": 71,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "4dc61e0b734dbb981f0b143f40bf5bedfbf462167122981beafe07ef60ffe9e9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x632c84",
+      "size": 756,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "7d4d543d1a05d9a8fbd3aaff1dbdde025b923c067a09dc785458d3f798d711a2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x632f94",
+      "size": 882,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "9cb5763078717c81c6070350ee2e5719f53a4a713ff71b44f79a8b296c4b51bc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x633324",
+      "size": 1601,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "1dbea5994a18f40d5be71ca3cc6fc48505ea81f0a668a072f5537b64dae34fd0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x633984",
+      "size": 1841,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "9c1e79218d5449846dd4d2736708c6f741a5b1560971a1f9a3aac97ffb9100cf"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6340d4",
+      "size": 1045,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "63ed20c7bf57ca462713e8fc4636994924e10a4750e2a4c5c68b2d126c52d126"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x634508",
+      "size": 1112,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "8501d1a1ee29babe9ce85a45bdb4fadeb8461a2b325a822521e5ecb419b851f5"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x63497c",
+      "size": 1491,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "9c6e6fa8aac1ff962e6416a97f66380b6b0a289897f64b33a82e709210c15bf0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x634f6c",
+      "size": 1712,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "c3a8784d2a811d26e943e7a5a550dcfde5bc6891c91ca38fc6979a9cdef86015"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x635638",
+      "size": 2476,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "08ca4767e246111952ddc77321e4316842df8863eb870e93b7501cfb261bdbd7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x636000",
+      "size": 2167,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "742fc516fbf23d452e92c7d2ab873166b66d98092ac1098ce865f63fc9cb5275"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x636894",
+      "size": 2201,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "22f21c4a6fba1a653decd0362a425217e1b7e41c428728652ccca532316f91ec"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x63714c",
+      "size": 1270,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "83f9d29d6ecd409cdb4d292c090d589f117111802e74879a2b5597654df65f04"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x637660",
+      "size": 1537,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "22f2b5ff71c0338f6d5a0148b514eb032d0ac76ef897c180fbf23a91a0f7a7bf"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x66bd44",
+      "size": 455,
+      "width": 82,
+      "height": 36,
+      "rehost_names": [
+        "ap01_guide_button"
+      ],
+      "sha256": "de60f4f02a10c762e90d8f000cb49e5a18f1b6e6149a28bcfd61454468cede44"
+    }
+  ],
+  "gif": [
+    {
+      "kind": "GIF",
+      "rom_offset": "0x1c5a6c",
+      "size": 385834,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_pet_0"
+      ],
+      "sha256": "5e656788665f7f0022b0b5500d569a8aae07f4a46b080d033b3cacfa4abc940d"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x28e838",
+      "size": 187664,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_saver_time_0"
+      ],
+      "sha256": "6aabaaa5bc3dda4ad75a2d97af1280835fb49f97cf0c502b442d166e72110e5b"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x2bc564",
+      "size": 157250,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_saver_time_1"
+      ],
+      "sha256": "2f06037f3be1afef5849430b05060c05dbb2ae10a84b6e8fc2bbe67451ecf9a7"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x2e2bc4",
+      "size": 502081,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_saver_power"
+      ],
+      "sha256": "053b16cc10cff7a52544ab0c495f561b10727f718d0ce6a3efa2f034cda3a9e2"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x37d080",
+      "size": 490119,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_pet_4"
+      ],
+      "sha256": "77b8d8e66df819b8488b0588a5b755e575a219cd3d4ea5a05a097a54d05b89ae"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x3f4b24",
+      "size": 486765,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_pet_1"
+      ],
+      "sha256": "1503762f4891dc635476336a1970b3677d1ae93511f443d075e9393b7a4c5afd"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x46b8b0",
+      "size": 221445,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_pet_2"
+      ],
+      "sha256": "99b4f6a24ae4012891ff3482e4d82b697490fbb24d2262298c6741189467c68a"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x4a19d4",
+      "size": 569645,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_pet_3"
+      ],
+      "sha256": "d65a7e3f00fac64a836c289c3af014efa9f3cb3a10c2629ad075b6294580d804"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x59eb58",
+      "size": 72453,
+      "width": 170,
+      "height": 170,
+      "rehost_names": [],
+      "sha256": "b1836244bdff025640481bc292636f0031a6eedba84b6021989e26256519661f"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x5b067c",
+      "size": 230831,
+      "width": 170,
+      "height": 170,
+      "rehost_names": [
+        "ap01_charge_safe_intro"
+      ],
+      "sha256": "9e097fe5b770be7bf9a402dc02d458700497da547d3568557b01a1cc28153115"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x643fc0",
+      "size": 130357,
+      "width": 320,
+      "height": 240,
+      "rehost_names": [
+        "ap01_charge_bank_insert"
+      ],
+      "sha256": "de824d676d31622f0a85c55d9c03449e342cc5a41972316004d0a2ef33543daa"
+    }
+  ],
+  "rehost_entries": [
+    {
+      "name": "ap01_arc",
+      "offset": "0x62f440",
+      "size": 2224
+    },
+    {
+      "name": "ap01_logo",
+      "offset": "0x242680",
+      "size": 3102
+    },
+    {
+      "name": "ap01_sun",
+      "offset": "0x252ff0",
+      "size": 2051
+    },
+    {
+      "name": "ap01_colon",
+      "offset": "0x25621c",
+      "size": 145
+    },
+    {
+      "name": "ap01_sunrise",
+      "offset": "0x253810",
+      "size": 427
+    },
+    {
+      "name": "ap01_sunset",
+      "offset": "0x2539d8",
+      "size": 439
+    },
+    {
+      "name": "ap01_wifi",
+      "offset": "0x252aa8",
+      "size": 335
+    },
+    {
+      "name": "ap01_wifi_off",
+      "offset": "0x37107c",
+      "size": 343
+    },
+    {
+      "name": "ap01_setting_row",
+      "offset": "0x55f694",
+      "size": 827
+    },
+    {
+      "name": "ap01_clock_status",
+      "offset": "0x243824",
+      "size": 270
+    },
+    {
+      "name": "ap01_time_humidity_icon",
+      "offset": "0x252c14",
+      "size": 402
+    },
+    {
+      "name": "ap01_power_card",
+      "offset": "0x2528cc",
+      "size": 446
+    },
+    {
+      "name": "ap01_power_gradient",
+      "offset": "0x251d80",
+      "size": 2864
+    },
+    {
+      "name": "ap01_power_status",
+      "offset": "0x243590",
+      "size": 631
+    },
+    {
+      "name": "ap01_power_battery",
+      "offset": "0x243824",
+      "size": 270,
+      "alias_of": "ap01_clock_status"
+    },
+    {
+      "name": "ap01_guide_turn",
+      "offset": "0x5894c4",
+      "size": 39812
+    },
+    {
+      "name": "ap01_guide_press",
+      "offset": "0x593064",
+      "size": 39515
+    },
+    {
+      "name": "ap01_guide_button",
+      "offset": "0x66bd44",
+      "size": 455
+    },
+    {
+      "name": "ap01_brightness_row",
+      "offset": "0x55f9ec",
+      "size": 855
+    },
+    {
+      "name": "ap01_brightness_icon",
+      "offset": "0x607894",
+      "size": 338
+    },
+    {
+      "name": "ap01_charge_mode_card",
+      "offset": "0x55fd60",
+      "size": 869
+    },
+    {
+      "name": "ap01_charge_port_card",
+      "offset": "0x560488",
+      "size": 918
+    },
+    {
+      "name": "ap01_charge_mode_icon",
+      "offset": "0x55f3f4",
+      "size": 285
+    },
+    {
+      "name": "ap01_mijia_qr",
+      "offset": "0x243950",
+      "size": 17913
+    },
+    {
+      "name": "ap01_charge_protocol_bg",
+      "offset": "0x5ecc1c",
+      "size": 74533
+    },
+    {
+      "name": "ap01_charge_protocol_title",
+      "offset": "0x5ebffc",
+      "size": 3073
+    },
+    {
+      "name": "ap01_charge_protocol_caption",
+      "offset": "0x5fef60",
+      "size": 5873
+    },
+    {
+      "name": "ap01_charge_protocol_scan",
+      "offset": "0x5eb7e4",
+      "size": 2042
+    },
+    {
+      "name": "ap01_charge_safe_title",
+      "offset": "0x5e99cc",
+      "size": 1042
+    },
+    {
+      "name": "ap01_charge_safe_caption",
+      "offset": "0x5ea9e0",
+      "size": 3557
+    },
+    {
+      "name": "ap01_charge_safe_hint",
+      "offset": "0x5e9e18",
+      "size": 3015
+    },
+    {
+      "name": "ap01_charge_port_icon",
+      "offset": "0x62fd0c",
+      "size": 473
+    },
+    {
+      "name": "ap01_charge_cable_icon",
+      "offset": "0x55f530",
+      "size": 328
+    },
+    {
+      "name": "ap01_guide_practice_intro",
+      "offset": "0x575938",
+      "size": 40836
+    },
+    {
+      "name": "ap01_guide_practice_turn_done",
+      "offset": "0x57f8d8",
+      "size": 39885
+    },
+    {
+      "name": "ap01_guide_practice_power",
+      "offset": "0x56f790",
+      "size": 9996
+    },
+    {
+      "name": "ap01_guide_practice_c1_done",
+      "offset": "0x571eb8",
+      "size": 14973
+    },
+    {
+      "name": "ap01_guide_bubble50",
+      "offset": "0x36ff8c",
+      "size": 645
+    },
+    {
+      "name": "ap01_guide_bubble70",
+      "offset": "0x370230",
+      "size": 708
+    },
+    {
+      "name": "ap01_guide_bubble90",
+      "offset": "0x370510",
+      "size": 768
+    },
+    {
+      "name": "ap01_boot_logo",
+      "offset": "0x242680",
+      "size": 3102,
+      "alias_of": "ap01_logo"
+    },
+    {
+      "name": "ap01_saver_glow_top",
+      "offset": "0x365dc0",
+      "size": 27545
+    },
+    {
+      "name": "ap01_saver_glow_bottom",
+      "offset": "0x36c978",
+      "size": 13815
+    },
+    {
+      "name": "ap01_saver_curve",
+      "offset": "0x365184",
+      "size": 3101
+    },
+    {
+      "name": "ap01_saver_fast",
+      "offset": "0x37082c",
+      "size": 1259
+    },
+    {
+      "name": "ap01_saver_thermometer",
+      "offset": "0x252dc4",
+      "size": 527
+    },
+    {
+      "name": "ap01_system_mijia_qr",
+      "offset": "0x243950",
+      "size": 17913,
+      "alias_of": "ap01_mijia_qr"
+    },
+    {
+      "name": "ap01_system_binding_timeout",
+      "offset": "0x247f68",
+      "size": 583
+    },
+    {
+      "name": "ap01_system_ota_success",
+      "offset": "0x605d24",
+      "size": 6233
+    },
+    {
+      "name": "ap01_system_confirm_button",
+      "offset": "0x60759c",
+      "size": 732
+    },
+    {
+      "name": "ap01_system_version_card",
+      "offset": "0x5600e4",
+      "size": 904
+    },
+    {
+      "name": "ap01_weather_aqi_scale",
+      "offset": "0x564644",
+      "size": 1933
+    },
+    {
+      "name": "ap01_time_temperature_icon",
+      "offset": "0x252dc4",
+      "size": 527,
+      "alias_of": "ap01_saver_thermometer"
+    },
+    {
+      "name": "digit0",
+      "offset": "0x255b18",
+      "size": 857
+    },
+    {
+      "name": "digit1",
+      "offset": "0x377790",
+      "size": 492
+    },
+    {
+      "name": "digit2",
+      "offset": "0x377998",
+      "size": 741
+    },
+    {
+      "name": "digit3",
+      "offset": "0x377c9c",
+      "size": 890
+    },
+    {
+      "name": "digit4",
+      "offset": "0x378034",
+      "size": 510
+    },
+    {
+      "name": "digit5",
+      "offset": "0x378250",
+      "size": 742
+    },
+    {
+      "name": "digit6",
+      "offset": "0x378554",
+      "size": 860
+    },
+    {
+      "name": "digit7",
+      "offset": "0x3788cc",
+      "size": 485
+    },
+    {
+      "name": "digit8",
+      "offset": "0x378ad0",
+      "size": 898
+    },
+    {
+      "name": "digit9",
+      "offset": "0x378e70",
+      "size": 898
+    },
+    {
+      "name": "ap01_pet_0",
+      "offset": "0x1c5a6c",
+      "size": 385834,
+      "sha256": "5e656788665f7f0022b0b5500d569a8aae07f4a46b080d033b3cacfa4abc940d"
+    },
+    {
+      "name": "ap01_pet_1",
+      "offset": "0x3f4b24",
+      "size": 486765,
+      "sha256": "1503762f4891dc635476336a1970b3677d1ae93511f443d075e9393b7a4c5afd"
+    },
+    {
+      "name": "ap01_pet_2",
+      "offset": "0x46b8b0",
+      "size": 221445,
+      "sha256": "99b4f6a24ae4012891ff3482e4d82b697490fbb24d2262298c6741189467c68a"
+    },
+    {
+      "name": "ap01_pet_3",
+      "offset": "0x4a19d4",
+      "size": 569645,
+      "sha256": "d65a7e3f00fac64a836c289c3af014efa9f3cb3a10c2629ad075b6294580d804"
+    },
+    {
+      "name": "ap01_pet_4",
+      "offset": "0x37d080",
+      "size": 490119,
+      "sha256": "77b8d8e66df819b8488b0588a5b755e575a219cd3d4ea5a05a097a54d05b89ae"
+    },
+    {
+      "name": "ap01_charge_bank_insert",
+      "offset": "0x643fc0",
+      "size": 130357,
+      "sha256": "de824d676d31622f0a85c55d9c03449e342cc5a41972316004d0a2ef33543daa"
+    },
+    {
+      "name": "ap01_charge_safe_intro",
+      "offset": "0x5b067c",
+      "size": 230831,
+      "sha256": "9e097fe5b770be7bf9a402dc02d458700497da547d3568557b01a1cc28153115"
+    },
+    {
+      "name": "ap01_saver_time_0",
+      "offset": "0x28e838",
+      "size": 187664,
+      "sha256": "6aabaaa5bc3dda4ad75a2d97af1280835fb49f97cf0c502b442d166e72110e5b"
+    },
+    {
+      "name": "ap01_saver_time_1",
+      "offset": "0x2bc564",
+      "size": 157250,
+      "sha256": "2f06037f3be1afef5849430b05060c05dbb2ae10a84b6e8fc2bbe67451ecf9a7"
+    },
+    {
+      "name": "ap01_saver_power",
+      "offset": "0x2e2bc4",
+      "size": 502081,
+      "sha256": "053b16cc10cff7a52544ab0c495f561b10727f718d0ce6a3efa2f034cda3a9e2"
+    },
+    {
+      "name": "ap01_weather_large_native_1",
+      "wrapper": "0xa0563dd4",
+      "offset": "0x564df0",
+      "size": 2084
+    },
+    {
+      "name": "ap01_weather_large_native_2",
+      "wrapper": "0xa062a9dc",
+      "offset": "0x62b9f8",
+      "size": 1603
+    },
+    {
+      "name": "ap01_weather_large_native_3",
+      "wrapper": "0xa062a0e0",
+      "offset": "0x62b0fc",
+      "size": 1081
+    },
+    {
+      "name": "ap01_weather_large_native_4",
+      "wrapper": "0xa062a538",
+      "offset": "0x62b554",
+      "size": 1157
+    },
+    {
+      "name": "ap01_weather_large_native_5",
+      "wrapper": "0xa0628940",
+      "offset": "0x62995c",
+      "size": 650
+    },
+    {
+      "name": "ap01_weather_large_native_6",
+      "wrapper": "0xa0628738",
+      "offset": "0x629754",
+      "size": 489
+    },
+    {
+      "name": "ap01_weather_large_native_7",
+      "wrapper": "0xa0628e38",
+      "offset": "0x629e54",
+      "size": 657
+    },
+    {
+      "name": "ap01_weather_large_native_8",
+      "wrapper": "0xa06290e8",
+      "offset": "0x62a104",
+      "size": 1166
+    },
+    {
+      "name": "ap01_weather_large_native_9",
+      "wrapper": "0xa0629594",
+      "offset": "0x62a5b0",
+      "size": 1264
+    },
+    {
+      "name": "ap01_weather_large_native_10",
+      "wrapper": "0xa062c014",
+      "offset": "0x62d030",
+      "size": 1158
+    },
+    {
+      "name": "ap01_weather_large_native_11",
+      "wrapper": "0xa062bc54",
+      "offset": "0x62cc70",
+      "size": 929
+    },
+    {
+      "name": "ap01_weather_large_native_12",
+      "wrapper": "0xa0629da8",
+      "offset": "0x62adc4",
+      "size": 794
+    },
+    {
+      "name": "ap01_weather_large_native_13",
+      "wrapper": "0xa0629aa0",
+      "offset": "0x62aabc",
+      "size": 746
+    },
+    {
+      "name": "ap01_weather_large_native_14",
+      "wrapper": "0xa0628be8",
+      "offset": "0x629c04",
+      "size": 561
+    },
+    {
+      "name": "ap01_weather_large_native_22",
+      "wrapper": "0xa062b03c",
+      "offset": "0x62c058",
+      "size": 1528
+    },
+    {
+      "name": "ap01_weather_large_native_23",
+      "wrapper": "0xa062b650",
+      "offset": "0x62c66c",
+      "size": 1510
+    },
+    {
+      "name": "ap01_weather_small_native_1",
+      "wrapper": "0xa03714a4",
+      "offset": "0x3724c0",
+      "size": 687
+    },
+    {
+      "name": "ap01_weather_small_native_2",
+      "wrapper": "0xa0371770",
+      "offset": "0x37278c",
+      "size": 698
+    },
+    {
+      "name": "ap01_weather_small_native_3",
+      "wrapper": "0xa037101c",
+      "offset": "0x372038",
+      "size": 539
+    },
+    {
+      "name": "ap01_weather_small_native_4",
+      "wrapper": "0xa0371254",
+      "offset": "0x372270",
+      "size": 564
+    },
+    {
+      "name": "ap01_weather_small_native_5",
+      "wrapper": "0xa037031c",
+      "offset": "0x371338",
+      "size": 345
+    },
+    {
+      "name": "ap01_weather_small_native_6",
+      "wrapper": "0xa03701d4",
+      "offset": "0x3711f0",
+      "size": 300
+    },
+    {
+      "name": "ap01_weather_small_native_7",
+      "wrapper": "0xa03705fc",
+      "offset": "0x371618",
+      "size": 363
+    },
+    {
+      "name": "ap01_weather_small_native_8",
+      "wrapper": "0xa0370784",
+      "offset": "0x3717a0",
+      "size": 599
+    },
+    {
+      "name": "ap01_weather_small_native_9",
+      "wrapper": "0xa03709f8",
+      "offset": "0x371a14",
+      "size": 623
+    },
+    {
+      "name": "ap01_weather_small_native_10",
+      "wrapper": "0xa03720c8",
+      "offset": "0x3730e4",
+      "size": 604
+    },
+    {
+      "name": "ap01_weather_small_native_11",
+      "wrapper": "0xa0371ea8",
+      "offset": "0x372ec4",
+      "size": 516
+    },
+    {
+      "name": "ap01_weather_small_native_12",
+      "wrapper": "0xa0370e30",
+      "offset": "0x371e4c",
+      "size": 462
+    },
+    {
+      "name": "ap01_weather_small_native_13",
+      "wrapper": "0xa0370c84",
+      "offset": "0x371ca0",
+      "size": 398
+    },
+    {
+      "name": "ap01_weather_small_native_14",
+      "wrapper": "0xa0370494",
+      "offset": "0x3714b0",
+      "size": 330
+    },
+    {
+      "name": "ap01_weather_small_native_22",
+      "wrapper": "0xa0371a48",
+      "offset": "0x372a64",
+      "size": 524
+    },
+    {
+      "name": "ap01_weather_small_native_23",
+      "wrapper": "0xa0371c70",
+      "offset": "0x372c8c",
+      "size": 539
+    },
+    {
+      "name": "ap01_weather_tiny_native_1",
+      "wrapper": "0xa0251da8",
+      "offset": "0x252dc4",
+      "size": 527
+    },
+    {
+      "name": "ap01_weather_tiny_native_2",
+      "wrapper": "0xa062ff20",
+      "offset": "0x630f3c",
+      "size": 593
+    },
+    {
+      "name": "ap01_weather_tiny_native_3",
+      "wrapper": "0xa062fb30",
+      "offset": "0x630b4c",
+      "size": 469
+    },
+    {
+      "name": "ap01_weather_tiny_native_4",
+      "wrapper": "0xa062fd24",
+      "offset": "0x630d40",
+      "size": 478
+    },
+    {
+      "name": "ap01_weather_tiny_native_5",
+      "wrapper": "0xa062f000",
+      "offset": "0x63001c",
+      "size": 336
+    },
+    {
+      "name": "ap01_weather_tiny_native_6",
+      "wrapper": "0xa062eee8",
+      "offset": "0x62ff04",
+      "size": 250
+    },
+    {
+      "name": "ap01_weather_tiny_native_7",
+      "wrapper": "0xa062f2bc",
+      "offset": "0x6302d8",
+      "size": 315
+    },
+    {
+      "name": "ap01_weather_tiny_native_8",
+      "wrapper": "0xa062f414",
+      "offset": "0x630430",
+      "size": 486
+    },
+    {
+      "name": "ap01_weather_tiny_native_9",
+      "wrapper": "0xa062f618",
+      "offset": "0x630634",
+      "size": 512
+    },
+    {
+      "name": "ap01_weather_tiny_native_10",
+      "wrapper": "0xa0630838",
+      "offset": "0x631854",
+      "size": 491
+    },
+    {
+      "name": "ap01_weather_tiny_native_11",
+      "wrapper": "0xa0630658",
+      "offset": "0x631674",
+      "size": 451
+    },
+    {
+      "name": "ap01_weather_tiny_native_12",
+      "wrapper": "0xa062f9a4",
+      "offset": "0x6309c0",
+      "size": 367
+    },
+    {
+      "name": "ap01_weather_tiny_native_13",
+      "wrapper": "0xa062f834",
+      "offset": "0x630850",
+      "size": 339
+    },
+    {
+      "name": "ap01_weather_tiny_native_14",
+      "wrapper": "0xa062f16c",
+      "offset": "0x630188",
+      "size": 305
+    },
+    {
+      "name": "ap01_weather_tiny_native_22",
+      "wrapper": "0xa0630190",
+      "offset": "0x6311ac",
+      "size": 579
+    },
+    {
+      "name": "ap01_weather_tiny_native_23",
+      "wrapper": "0xa06303f0",
+      "offset": "0x63140c",
+      "size": 585
+    }
+  ],
+  "fonts": [
+    {
+      "name": "ap01_rom_ascii17",
+      "wrapper": "0xa02549ac",
+      "height": 17,
+      "baseline": 3,
+      "glyphs": 50,
+      "kerning_restored": true,
+      "kerning_pairs": 121
+    },
+    {
+      "name": "ap01_rom_body20",
+      "wrapper": "0xa025488c",
+      "height": 20,
+      "baseline": 2,
+      "glyphs": 117,
+      "kerning_restored": true,
+      "kerning_pairs": 30
+    },
+    {
+      "name": "ap01_rom_title25",
+      "wrapper": "0xa02548d4",
+      "height": 25,
+      "baseline": 4,
+      "glyphs": 87,
+      "kerning_restored": true,
+      "kerning_pairs": 14
+    },
+    {
+      "name": "ap01_rom_clock21",
+      "wrapper": "0xa02549f4",
+      "height": 21,
+      "baseline": 4,
+      "glyphs": 55,
+      "kerning_restored": true,
+      "kerning_pairs": 172
+    },
+    {
+      "name": "ap01_rom_month",
+      "wrapper": "0xa02547b4",
+      "height": 22,
+      "baseline": 2,
+      "glyphs": 60,
+      "kerning_restored": true,
+      "kerning_pairs": 16
+    },
+    {
+      "name": "ap01_rom_year",
+      "wrapper": "0xa0254988",
+      "height": 14,
+      "baseline": 3,
+      "glyphs": 31,
+      "kerning_restored": true,
+      "kerning_pairs": 30
+    },
+    {
+      "name": "ap01_rom_calendar_week",
+      "wrapper": "0xa037253c",
+      "height": 12,
+      "baseline": 2,
+      "glyphs": 7,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_mini_date",
+      "wrapper": "0xa0254a60",
+      "height": 17,
+      "baseline": 0,
+      "glyphs": 25,
+      "kerning_restored": true,
+      "kerning_pairs": 20
+    },
+    {
+      "name": "ap01_rom_weather_text",
+      "wrapper": "0xa0254820",
+      "height": 15,
+      "baseline": 2,
+      "glyphs": 45,
+      "kerning_restored": true,
+      "kerning_pairs": 5
+    },
+    {
+      "name": "ap01_rom_mini_week",
+      "wrapper": "0xa0254844",
+      "height": 16,
+      "baseline": 2,
+      "glyphs": 65,
+      "kerning_restored": true,
+      "kerning_pairs": 19
+    },
+    {
+      "name": "ap01_rom_temperature",
+      "wrapper": "0xa0254a84",
+      "height": 38,
+      "baseline": 1,
+      "glyphs": 12,
+      "kerning_restored": true,
+      "kerning_pairs": 18
+    },
+    {
+      "name": "ap01_rom_guide_title",
+      "wrapper": "0xa055fb7c",
+      "height": 20,
+      "baseline": 2,
+      "glyphs": 109,
+      "kerning_restored": true,
+      "kerning_pairs": 47
+    },
+    {
+      "name": "ap01_rom_guide_text",
+      "wrapper": "0xa02547fc",
+      "height": 14,
+      "baseline": 2,
+      "glyphs": 42,
+      "kerning_restored": true,
+      "kerning_pairs": 17
+    },
+    {
+      "name": "ap01_rom_charge_gauge",
+      "wrapper": "0xa0254700",
+      "height": 15,
+      "baseline": 3,
+      "glyphs": 10,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_port",
+      "wrapper": "0xa0254724",
+      "height": 9,
+      "baseline": 0,
+      "glyphs": 5,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_watt",
+      "wrapper": "0xa0254748",
+      "height": 17,
+      "baseline": 0,
+      "glyphs": 1,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_number",
+      "wrapper": "0xa025476c",
+      "height": 19,
+      "baseline": 0,
+      "glyphs": 11,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_status",
+      "wrapper": "0xa02547d8",
+      "height": 15,
+      "baseline": 2,
+      "glyphs": 18,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_excellent",
+      "wrapper": "0xa0254aa8",
+      "height": 18,
+      "baseline": 0,
+      "glyphs": 7,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_detail_metric",
+      "wrapper": "0xa0254a18",
+      "height": 24,
+      "baseline": 5,
+      "glyphs": 28,
+      "kerning_restored": true,
+      "kerning_pairs": 44
+    },
+    {
+      "name": "ap01_rom_detail_caption",
+      "wrapper": "0xa0254964",
+      "height": 15,
+      "baseline": 3,
+      "glyphs": 50,
+      "kerning_restored": true,
+      "kerning_pairs": 128
+    },
+    {
+      "name": "ap01_rom_humidity_digits",
+      "wrapper": "0xa05647b4",
+      "height": 12,
+      "baseline": 0,
+      "glyphs": 18,
+      "kerning_restored": true,
+      "kerning_pairs": 16
+    },
+    {
+      "name": "ap01_rom_humidity_unit",
+      "wrapper": "0xa0564790",
+      "height": 8,
+      "baseline": 0,
+      "glyphs": 1,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_forecast",
+      "wrapper": "0xa0372584",
+      "height": 17,
+      "baseline": 3,
+      "glyphs": 96,
+      "kerning_restored": true,
+      "kerning_pairs": 41
+    },
+    {
+      "name": "ap01_rom_weather_note",
+      "wrapper": "0xa0564748",
+      "height": 13,
+      "baseline": 2,
+      "glyphs": 9,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_weather_temp",
+      "wrapper": "0xa05647d8",
+      "height": 28,
+      "baseline": 0,
+      "glyphs": 14,
+      "kerning_restored": true,
+      "kerning_pairs": 32
+    },
+    {
+      "name": "ap01_rom_date_heading",
+      "wrapper": "0xa055fb58",
+      "height": 18,
+      "baseline": 2,
+      "glyphs": 22,
+      "kerning_restored": true,
+      "kerning_pairs": 17
+    },
+    {
+      "name": "ap01_rom_mijia_hint",
+      "wrapper": "0xa0254868",
+      "height": 17,
+      "baseline": 2,
+      "glyphs": 49,
+      "kerning_restored": true,
+      "kerning_pairs": 14
+    },
+    {
+      "name": "ap01_rom_charge_title",
+      "wrapper": "0xa0254790",
+      "height": 17,
+      "baseline": 2,
+      "glyphs": 82,
+      "kerning_restored": true,
+      "kerning_pairs": 88
+    },
+    {
+      "name": "ap01_rom_charge_percent",
+      "wrapper": "0xa059bee4",
+      "height": 19,
+      "baseline": 0,
+      "glyphs": 11,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_percent_unit",
+      "wrapper": "0xa059be9c",
+      "height": 10,
+      "baseline": 0,
+      "glyphs": 1,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_port_number",
+      "wrapper": "0xa0630ad0",
+      "height": 26,
+      "baseline": 0,
+      "glyphs": 11,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_card_label",
+      "wrapper": "0xa0630af4",
+      "height": 16,
+      "baseline": 0,
+      "glyphs": 20,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_card_unit",
+      "wrapper": "0xa0630aac",
+      "height": 13,
+      "baseline": 0,
+      "glyphs": 9,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_card_value",
+      "wrapper": "0xa0630a88",
+      "height": 12,
+      "baseline": 0,
+      "glyphs": 14,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_popup_port",
+      "wrapper": "0xa066b5ec",
+      "height": 17,
+      "baseline": 0,
+      "glyphs": 7,
+      "kerning_restored": true,
+      "kerning_pairs": 4
+    },
+    {
+      "name": "ap01_rom_charge_popup_percent",
+      "wrapper": "0xa066b610",
+      "height": 30,
+      "baseline": 0,
+      "glyphs": 10,
+      "kerning_restored": true,
+      "kerning_pairs": 8
+    },
+    {
+      "name": "ap01_rom_charge_popup_percent_unit",
+      "wrapper": "0xa066b5c8",
+      "height": 15,
+      "baseline": 0,
+      "glyphs": 1,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_popup_power",
+      "wrapper": "0xa066b634",
+      "height": 28,
+      "baseline": 6,
+      "glyphs": 28,
+      "kerning_restored": true,
+      "kerning_pairs": 80
+    },
+    {
+      "name": "ap01_rom_charge_popup_brand",
+      "wrapper": "0xa066b658",
+      "height": 30,
+      "baseline": 6,
+      "glyphs": 41,
+      "kerning_restored": true,
+      "kerning_pairs": 112
+    },
+    {
+      "name": "ap01_rom_charge_protocol_port",
+      "wrapper": "0xa06015e4",
+      "height": 15,
+      "baseline": 0,
+      "glyphs": 6,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_charge_error",
+      "wrapper": "0xa02548b0",
+      "height": 24,
+      "baseline": 4,
+      "glyphs": 95,
+      "kerning_restored": true,
+      "kerning_pairs": 69
+    },
+    {
+      "name": "ap01_rom_charge_device_name",
+      "wrapper": "0xa066b67c",
+      "height": 42,
+      "baseline": 9,
+      "glyphs": 38,
+      "kerning_restored": true,
+      "kerning_pairs": 99
+    },
+    {
+      "name": "ap01_rom_guide_welcome",
+      "wrapper": "0xa0606ac8",
+      "height": 22,
+      "baseline": 3,
+      "glyphs": 31,
+      "kerning_restored": true,
+      "kerning_pairs": 15
+    },
+    {
+      "name": "ap01_rom_guide_practice_body",
+      "wrapper": "0xa0372560",
+      "height": 15,
+      "baseline": 2,
+      "glyphs": 77,
+      "kerning_restored": true,
+      "kerning_pairs": 11
+    },
+    {
+      "name": "ap01_rom_guide_prompt",
+      "wrapper": "0xa066b5a4",
+      "height": 14,
+      "baseline": 3,
+      "glyphs": 26,
+      "kerning_restored": true,
+      "kerning_pairs": 6
+    },
+    {
+      "name": "ap01_rom_saver_time",
+      "wrapper": "0xa03725a8",
+      "height": 25,
+      "baseline": 0,
+      "glyphs": 11,
+      "kerning_restored": true,
+      "kerning_pairs": 9
+    },
+    {
+      "name": "ap01_rom_saver_decimal",
+      "wrapper": "0xa0372518",
+      "height": 48,
+      "baseline": 1,
+      "glyphs": 11,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_saver_watt",
+      "wrapper": "0xa03724f4",
+      "height": 16,
+      "baseline": 0,
+      "glyphs": 1,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_saver_day",
+      "wrapper": "0xa02549d0",
+      "height": 16,
+      "baseline": 4,
+      "glyphs": 33,
+      "kerning_restored": true,
+      "kerning_pairs": 37
+    },
+    {
+      "name": "ap01_rom_calendar_subtitle",
+      "wrapper": "0xa060d91c",
+      "height": 12,
+      "baseline": 2,
+      "glyphs": 92,
+      "kerning_restored": true,
+      "kerning_pairs": 0
+    },
+    {
+      "name": "ap01_rom_calendar_day",
+      "wrapper": "0xa060d940",
+      "height": 18,
+      "baseline": 2,
+      "glyphs": 69,
+      "kerning_restored": true,
+      "kerning_pairs": 20
+    },
+    {
+      "name": "ap01_rom_charge_live_power3",
+      "wrapper": "0xa062c514",
+      "height": 25,
+      "baseline": 0,
+      "glyphs": 11,
+      "kerning_restored": true,
+      "kerning_pairs": 11
+    },
+    {
+      "name": "ap01_rom_power_battery",
+      "wrapper": "0xa025491c",
+      "height": 21,
+      "baseline": 0,
+      "glyphs": 10,
+      "kerning_restored": true,
+      "kerning_pairs": 5
+    },
+    {
+      "name": "ap01_rom_power_battery_unit",
+      "wrapper": "0xa02548f8",
+      "height": 11,
+      "baseline": 0,
+      "glyphs": 11,
+      "kerning_restored": true,
+      "kerning_pairs": 6
+    }
+  ],
+  "unmapped_resources": [
+    {
+      "kind": "PNG",
+      "rom_offset": "0x2432bc",
+      "size": 694,
+      "width": 82,
+      "height": 13,
+      "rehost_names": [],
+      "sha256": "bc1a9d8bc1e9921aa38cb61f0c9a6c02b5e57e11471cdc4b6d48f3c2d59923b1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x2481cc",
+      "size": 2374,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "f7b7db36fea9bc8b6b865d1eeced33e844309442d361fd939e75581be53ab92e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x248b30",
+      "size": 35726,
+      "width": 250,
+      "height": 115,
+      "rehost_names": [],
+      "sha256": "11ad2368eb1ba83148b562866e61b3f85fedaee13830ecd6c798edc664c5d33c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x2516dc",
+      "size": 381,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [],
+      "sha256": "e46d8b95caa06929df5159dffc496aa2b3250d3e532504559eb4a1e11893c006"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x251878",
+      "size": 434,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [],
+      "sha256": "dd20aca6f2abcde7471e1ec08a985b17aee40e59d7457e6f6a20d0bc2758e691"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x251a48",
+      "size": 394,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [],
+      "sha256": "9adc29d4f2558b099c80d4f8c68fcdc7bd0dc71e443459d9b3557dcc72328958"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x251bf0",
+      "size": 370,
+      "width": 24,
+      "height": 24,
+      "rehost_names": [],
+      "sha256": "77d0e147d5c5e1a118214480ed7a4d3228009f4df86f7ce568c103e055b2b7d9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x255ea0",
+      "size": 861,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "8af0b4f9f82c934dc22eabdc40d084e87176782d06df8d4beacd1d2bc39a0969"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x370d34",
+      "size": 397,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [],
+      "sha256": "10a44533edebc9ee6573f41dcaea54b1109799b6161431df4b5707ac3c603ea4"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x370ee0",
+      "size": 383,
+      "width": 20,
+      "height": 20,
+      "rehost_names": [],
+      "sha256": "fc8922e1f06dc56558fea34d184d4ba6b1caf6fd0b91c0afc4176e09a7fbf599"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37360c",
+      "size": 656,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "d6fa012dd1961b4194675ebe152b53f8cbfeb1793392ab81bc8018eb390aa1ed"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3738b8",
+      "size": 923,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "c0acd1a268285aacfe7287a1a3e30af110a8c00ff36939b8a3363b17d14cd180"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x373c70",
+      "size": 348,
+      "width": 34,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "a10faefd50e82a7f8cb09a219bf369edf8764aa96a0f832a6033b5f4c51f03e8"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x373de8",
+      "size": 530,
+      "width": 34,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "6be36aa2eed147096c90c883ab69d12f4129150609b09a1728c51730abcf0e92"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374018",
+      "size": 574,
+      "width": 41,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "b4855d0dc5169e17f508cd5e52bb5053f6bd8a48ca6256b8c93481b4669cac44"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374274",
+      "size": 788,
+      "width": 41,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "d831810034d87244cc93e38c72597002d59294092a3f97b9a2ac46803e462eb2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3745a4",
+      "size": 711,
+      "width": 43,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "582deb461a0824a979e55bee80833d6ad3f60724bbd84ab0c062874399197712"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374888",
+      "size": 959,
+      "width": 43,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "2398d472c174690559f16e6c34f13087a4b7627afd32315f3aebf5551e969a69"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374c64",
+      "size": 482,
+      "width": 45,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "b0c0130796c3ba103bd44472d4de58ce67f7e25c6e43a07fa8dbadadc2e7e48d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x374e64",
+      "size": 909,
+      "width": 45,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "773a3eae91cf84bf06de5d360ad5f42ce43fa6f15802884221cffdd6fecd1d8e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x375210",
+      "size": 578,
+      "width": 41,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "d2e512f34e58b46a7015ae6eaacbe8ea386cf5ff7dcfc6143a2512d49c2eb95f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x375470",
+      "size": 859,
+      "width": 41,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "4d2c19abeb96c50a88aa15a4b7028f96383b2175cc8b55c1ffdf2e93b5fc2619"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3757e8",
+      "size": 686,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "88289be71383b5cc1ac2795e05c8e76118e0160ee329500ef4c407c4ac641c82"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x375ab4",
+      "size": 995,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "0c36746c9192c0c52a8d7f12a3290e87b860f52174719d9838d23ef61e4f5a7b"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x375eb4",
+      "size": 364,
+      "width": 43,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "3aa574ad26dcb974c4ae19070da4194a35e64f2272cf254804083fe0af3c54e0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37603c",
+      "size": 863,
+      "width": 43,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "a4eb11f398b0187ba4b48881e361b7bfbcb9f1d5b083286c267fac3f0e019290"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3763b8",
+      "size": 742,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "dcebcafbbdfd3a60ca263b3202034b52f656dde1e9c1356622f0669206ecec16"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3766bc",
+      "size": 1047,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "36f56b56e0c11971bcfff0af3d90b8cdeb02784bfdb8699f137336369e83b847"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x376af0",
+      "size": 702,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "b54754ab0683003d564217816a1e29bc7f89b61d6dd92962b921dde5112e5873"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x376dcc",
+      "size": 996,
+      "width": 42,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "6c6715075d1a88f7f1cb22de8ba038a741faf373892df5b2f0da388fc9c9a39e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3771f8",
+      "size": 199,
+      "width": 9,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "bb8aa95d6d78a0601022e4307cd4ad3304b01a43d2605a8f5c00acdfdaf3b64f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3772dc",
+      "size": 201,
+      "width": 9,
+      "height": 40,
+      "rehost_names": [],
+      "sha256": "1d6176323be9eb65b54302406831d0382cdcc3646acb6a8c07799948359a2f9c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3773c4",
+      "size": 368,
+      "width": 28,
+      "height": 14,
+      "rehost_names": [],
+      "sha256": "4a8afccaad09506536e171fd9a5df5595f7b5976cc80450d6780e1110bdc3798"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x377550",
+      "size": 502,
+      "width": 28,
+      "height": 14,
+      "rehost_names": [],
+      "sha256": "eab5f7a470e90f44dd7ade5f91d420b906473731e15873d0da384f8587283030"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x3798b0",
+      "size": 385,
+      "width": 44,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "74f05b8d17cac089eb768c8f3c591eba0d1b338929dbc5097fc52e7b0a436edf"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x379a50",
+      "size": 754,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "721f00cae826936bfed8b661f216860c0e866f2460368dd149c6fd25b76c20bb"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x379d60",
+      "size": 928,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "3c2e784a00aa5c777477e43b0884d28aed605f0f538f431ce76d33a1b04adb6f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37a11c",
+      "size": 594,
+      "width": 61,
+      "height": 55,
+      "rehost_names": [],
+      "sha256": "73348999fea124d3a9b9d61ed67b552270e9d98e3d00df3b29947c2a401e7101"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37a38c",
+      "size": 714,
+      "width": 58,
+      "height": 56,
+      "rehost_names": [],
+      "sha256": "38b787a76c430d1de5b5fb7c448fb753a031334ec3b42493697ece2c7e77a72a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37a674",
+      "size": 935,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "c33c1e0d4106e42d9616ca84a566c4e39bea1300c25dc317f1a7a5ff2d72cd23"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37aa38",
+      "size": 372,
+      "width": 60,
+      "height": 54,
+      "rehost_names": [],
+      "sha256": "a893286782d3ba3f47537a23b339a96b986c55d0028fa2d3ba8b21b7f5ca57a6"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37abc8",
+      "size": 988,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "ac17c0ad5ea55ef9171711fab063599660ed476926f5b96018a705e12186158c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x37afc0",
+      "size": 943,
+      "width": 60,
+      "height": 57,
+      "rehost_names": [],
+      "sha256": "5a74f88d5c81b9676b5fb3f491026f22aa7225371190628f0f05dbdc1c1ceb45"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x532ba8",
+      "size": 2560,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "2bd6a5991e5b356faaed81c693791ad3842c43467b579c714a3c42cca0d1fab8"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5335c4",
+      "size": 3332,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "b6ee720e0a983170f1bacbe11e980dec61eac3855564f65876f8906f79051e12"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5342e4",
+      "size": 3542,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "06d725255f42561eca49d2a21c22623964354ec497cda9245decdfefd6ab3c9a"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5350d8",
+      "size": 3616,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "ddcd2bdc590d0b9a5f55ea81369eb29ec28f3a0b90e605bf1aa742409b2baaa5"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x535f14",
+      "size": 3946,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "7aeac8a0a0e7ba5e9324fbef4cb998db3a9a791a959eea7e97909d4f8a1416b9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x536e9c",
+      "size": 4092,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "5840e74a84a27070eb271dbfee18eb348c5798aaef465a47a3c51b8418af4faa"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x537eb4",
+      "size": 4218,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "029d46cd9b4652d5daa91e300aacdffe28ce6f3ee4fb30bc1781884233e38429"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x538f4c",
+      "size": 4312,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "1384e1d619e6d88e44b80f8fdd096c89964591f94da4184a9ff6446c9e5cf3e7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53a040",
+      "size": 4462,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "63bac6d253c0dd5581f81d3e787faf00cfd31f9bf0487b596d0b65d8175ad3ac"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53b1cc",
+      "size": 4605,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "a1a57c8b648a624603cc51fb438ba52d52419edbb76a46653d286e682d6e85da"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53c3e8",
+      "size": 4735,
+      "width": 258,
+      "height": 84,
+      "rehost_names": [],
+      "sha256": "323b011a3c4e4a3e9a37df249161454a83477bfd6b16cc1788cb89b58452943d"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53d684",
+      "size": 3995,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "255d42547c3ad3765a41a1c3b12280c0df0bbf73f96371c52e325890bdf2eecd"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53e63c",
+      "size": 4054,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "14b076e6939a043c661f96fc8d80c5b567a47471b1aa478ee7963da2689faa19"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x53f630",
+      "size": 4096,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "b405d263289badbd1c35924e68f29a3fd6a6e9751d639c0faf9db77ca01af60e"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x540668",
+      "size": 4195,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "bdbcc532839f5dc0fb8a298cb58fc707fc20288bf0826c3b55e25857ff4393d2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5416cc",
+      "size": 2630,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "0969a0c92a2c528b45c42d2351497388909e9ab4506e1c8a00a98a7ec26e816b"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x542130",
+      "size": 2736,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "2aeb9b63c76d42d61a5d8f6739bc429b00067280bb4b805d58f6a51148f2cf28"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x542bfc",
+      "size": 2768,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "93c18360a3ed6cf1012ebada9517b153f2ca0063e4eea00635c9c56beea679d6"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5436e8",
+      "size": 2968,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "01512f541f62019aae1d0bf12e88e90050ff063837984d7d6ce032146a3590d1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54429c",
+      "size": 3034,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "7ed64c5fe3461e97c2f41e79c33e70df8b867f9bc8cc1497d637ac1c2f7022ce"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x544e94",
+      "size": 3136,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "ce750e3cb708d3a6761363b83b5e9bc27b34e3bb7d4e94ee194f599077467cc2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x545af0",
+      "size": 3229,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "2fc1fa0e3836c86f720e436530f7a0d0ca569721d99ef886b7c29e447bf739b1"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5467ac",
+      "size": 3320,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "4401478eadd3b1ca9c2c0297c85ca89ecd5018a968464df565936764bdab3851"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x5474c0",
+      "size": 3431,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "737612a94a5305ae6d0a280225834e7a827cc3e71a07c549dc409ce6ae8cf898"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x548244",
+      "size": 3502,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "e6f84585fe623e548cdce77c17f5cb0711edf9034a12ee1b04646ee926566968"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x549010",
+      "size": 3567,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "397a58cda503f40dd847ddcf645919ad8d22d6b94a987b5fdab0ae99413fee83"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x549e1c",
+      "size": 3616,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "d467e6759b51432e2cb9c8f6bb71b90b66568ec0ea75a75c8495d595480fcbc5"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54ac58",
+      "size": 3676,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "4f86d286c6b17c3328f84b6db19aed930a5b46620f28e217f42cb15d555eb890"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54bad0",
+      "size": 4032,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "05813e0dca43c75e44b645d803d377cd0b19625c8b12e20aad91672042a04adc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54caac",
+      "size": 3948,
+      "width": 206,
+      "height": 67,
+      "rehost_names": [],
+      "sha256": "3c18d6dbaac131c05262aa44d5a813898b41535be739f56edeb16afe93515602"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x54da34",
+      "size": 36105,
+      "width": 250,
+      "height": 115,
+      "rehost_names": [],
+      "sha256": "fb535a5a2a1b9d86fa9cf58cd5724d10d8c293ad04eb9c6f85ccc4b83ffc472f"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x55675c",
+      "size": 35963,
+      "width": 250,
+      "height": 115,
+      "rehost_names": [],
+      "sha256": "4be6fbae136b22a6c5865e60d025bb6a38debad9abeed2f7a7b8a7b95c2b35dc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x600670",
+      "size": 3871,
+      "width": 45,
+      "height": 45,
+      "rehost_names": [],
+      "sha256": "4da2ef001c2ee5011325fc41bfe64603fd12ac571d86af9dbc853397a645fbc7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6015ac",
+      "size": 3726,
+      "width": 45,
+      "height": 45,
+      "rehost_names": [],
+      "sha256": "023f1d2b7a51039a597cdade7ea9b12b7cacc1453eb8c957680cb369c80880a0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6294f8",
+      "size": 574,
+      "width": 144,
+      "height": 64,
+      "rehost_names": [],
+      "sha256": "84d1923568aff547f9ef051bc58670d7d88f262ad32d4114746b75733f1f5e9c"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6325d8",
+      "size": 726,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "1870439fdadee7c529e6f6712ce5615b3bdf4148a1f41d6769c094ec0586bfea"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6328cc",
+      "size": 922,
+      "width": 71,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "4dc61e0b734dbb981f0b143f40bf5bedfbf462167122981beafe07ef60ffe9e9"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x632c84",
+      "size": 756,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "7d4d543d1a05d9a8fbd3aaff1dbdde025b923c067a09dc785458d3f798d711a2"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x632f94",
+      "size": 882,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "9cb5763078717c81c6070350ee2e5719f53a4a713ff71b44f79a8b296c4b51bc"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x633324",
+      "size": 1601,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "1dbea5994a18f40d5be71ca3cc6fc48505ea81f0a668a072f5537b64dae34fd0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x633984",
+      "size": 1841,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "9c1e79218d5449846dd4d2736708c6f741a5b1560971a1f9a3aac97ffb9100cf"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x6340d4",
+      "size": 1045,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "63ed20c7bf57ca462713e8fc4636994924e10a4750e2a4c5c68b2d126c52d126"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x634508",
+      "size": 1112,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "8501d1a1ee29babe9ce85a45bdb4fadeb8461a2b325a822521e5ecb419b851f5"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x63497c",
+      "size": 1491,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "9c6e6fa8aac1ff962e6416a97f66380b6b0a289897f64b33a82e709210c15bf0"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x634f6c",
+      "size": 1712,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "c3a8784d2a811d26e943e7a5a550dcfde5bc6891c91ca38fc6979a9cdef86015"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x635638",
+      "size": 2476,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "08ca4767e246111952ddc77321e4316842df8863eb870e93b7501cfb261bdbd7"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x636000",
+      "size": 2167,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "742fc516fbf23d452e92c7d2ab873166b66d98092ac1098ce865f63fc9cb5275"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x636894",
+      "size": 2201,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "22f21c4a6fba1a653decd0362a425217e1b7e41c428728652ccca532316f91ec"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x63714c",
+      "size": 1270,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "83f9d29d6ecd409cdb4d292c090d589f117111802e74879a2b5597654df65f04"
+    },
+    {
+      "kind": "PNG",
+      "rom_offset": "0x637660",
+      "size": 1537,
+      "width": 70,
+      "height": 70,
+      "rehost_names": [],
+      "sha256": "22f2b5ff71c0338f6d5a0148b514eb032d0ac76ef897c180fbf23a91a0f7a7bf"
+    },
+    {
+      "kind": "GIF",
+      "rom_offset": "0x59eb58",
+      "size": 72453,
+      "width": 170,
+      "height": 170,
+      "rehost_names": [],
+      "sha256": "b1836244bdff025640481bc292636f0031a6eedba84b6021989e26256519661f"
+    }
+  ]
+}

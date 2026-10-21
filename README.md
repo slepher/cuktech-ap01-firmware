@@ -9,7 +9,7 @@
 | 位置 | 用途 |
 | --- | --- |
 | [roms/CATALOG.md](roms/CATALOG.md) | 原厂镜像及实验候选的版本、长度、哈希与验证范围 |
-| `roms/0041/` | Git 收录的未修改原厂 0041 镜像；0031 和其他候选须另行准备 |
+| `roms/0031/`、`roms/0041/` | Git 收录的未修改原厂 0031 / 0041 镜像；实验候选须另行准备 |
 | [reverse/reports/ap01/](reverse/reports/ap01/README.md) | 研究索引、阶段报告和交接；`knowledge/` 保存专题结论 |
 | `reverse/analysis/` | 地址索引、反汇编、资源映射、硬件模型和工具导出 |
 | `reverse/raw/` | 原始探针、交叉反汇编及历史尺寸测量，按原始哈希解释 |

@@ -1,4 +1,40 @@
-# AP01 0031 native XIP App
+# AP01 固件模块
+
+## 0041 共享屏幕宿主与平台代码
+
+`screen_host_0041.h/.c` 是不依赖LVGL/ROM地址的宿主核心：调用方提供实际容量的root槽位和应用清单，每应用按稳定screen ID替换屏幕集，支持异步进入准备、双向导航、焦点锁/3秒逃生和隐藏态UI轮询。物理root不删除或重排；逻辑顺序与物理索引分开。只读 `ap01_host_api` 和 `ap01_lvgl_0041` 提供版本与结构长度。
+
+`screen_port_0041.h/.cpp` 绑定精确0041的原厂窗口、普通页面、标签、定时器和LVGL/I4图像；为每页保留独立root/descriptor，图像帧按需分配，离开动画完成才退役源帧。实际draw回调与切入完成分开。普通控件在 `prepare` 中按需创建，`unbind` 清理逻辑页面资源；物理窗口整体由mount/unmount管理。动画期间依赖原厂idle标志，不用300ms固定延迟替代完成。
+
+窗口DELETE期间通过 `ap01_window_detach` 解除本窗口的原厂通知订阅，保留50ms定时器/context作为生命周期锚点；回调必须在缺窗时检查ready。下一次挂钩用 `ap01_window_find` 复用原Runtime/服务，仅重建UI资源。该操作在UI线程、旧对象仍处于DELETE回调时执行。完整对象删除使用原厂公共入口；打包器另装配NULL定时器删除保护，非NULL沿原件尾部执行。验证和补丁范围见[共存与热重建](../../reverse/reports/ap01/screen-host-lifecycle-20261020.md)。
+
+`test_screen_peer_0041.*` 是独立的两页离线应用，仅 `codex_status/tools/check-ap01-native.py --screen-host-probe` 装配；普通候选不含测试入口。它验证自有图像/输入锁/隐藏轮询与codex_status八模板共存，不新增业务HTTP或维护执行器。
+
+从 `codex_status/ports/ap01` 提取的平台实现：
+
+| 模块 | 职责 |
+| --- | --- |
+| `native_io_0041.*` | 时钟、任务、socket、Flash叶调用、原厂入口识别 |
+| `native_diagnostic_0041.*` | 维护鉴权后的独立状态、原厂文件/ramlog和物理Flash只读导出；单块1024 B及CRC |
+| `native_vfs_0041.*`、`native_filesystem_0041.h` | 原厂LittleFS/VFS绑定与调用方持有的文件对象 |
+| `native_firmware_0041.*`、`native_slot_0041.*` | 独立维护事务、恢复/槽位与原厂分区读写绑定 |
+| `native_ota_image_0041.*` | 0041原生维护使用的镜像准入/完整性检查；与0031模块分别构建 |
+| `native_runtime_0041.cpp`、`native_string_0041.h`、`native_calendar_0041.cpp` | freestanding运行库、原生String兼容层、UTC+8日历 |
+| `native_http_0041.h`、`native_json_0041.h`、`native_integrity_0041.h` | 业务无关的HTTP值类型、请求局部分配器与完整性工具声明 |
+| `native_application_0041.ld` | XIP布局、原厂运行库导入及禁止可写静态/TLS/构造器的链接约束 |
+
+维护模块依赖调用方提供的ArduinoJson头文件和已有 `syncSha256` 字节工具，不依赖 `Ap01Business` / `Ap01Application` / C2协议头。维护鉴权调度仍由调用方接入，只启动一个维护执行器。`codex_status` 保留绑定、Bundle、共享渲染与业务HTTP，并通过兼容头引用这里的实现。平台函数地址不能混用于0031。
+
+纯宿主检查（Linux现有C编译器，产物目录须已授权）：
+
+```sh
+cc -std=c11 -Wall -Wextra -Werror -fsanitize=address,undefined \
+  tooling/firmware-modules/screen_host_0041.c \
+  tooling/firmware-modules/test_screen_host_0041.c -o /tmp/ap01-screen-host-check
+/tmp/ap01-screen-host-check
+```
+
+检查覆盖两应用九root、稳定ID/重排、事务拒绝、隐藏/退役、进入超时、焦点锁、跨应用更新和逃生。原生业务构建从同父目录 `codex_status` 的 `tools/check-ap01-native.py --out <隔离目录>`、`tools/link-ap01-native.py --out <同目录>` 接入；完整ROM候选仍须单独验证，不自动成为可刷产物。
 
 ## 0031 独立整包 OTA（2026-10-18）
 
