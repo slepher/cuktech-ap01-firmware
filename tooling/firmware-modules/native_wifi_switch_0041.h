@@ -11,10 +11,12 @@ struct Ap01WifiSwitchPort0041 {
     // Save/remove an encrypted, verified old-network journal; recover is read-only.
     int (*journal)(void *, const Ap01WifiProfile0041 *)=nullptr;
     int (*recover)(void *, Ap01WifiProfile0041 &)=nullptr;
+    void (*trace)(void *,int stage,int result,int state)=nullptr;
 };
 class Ap01WifiSwitch0041 {
 public:
     enum State {Idle, Queued, Connecting, Saving, Restoring, Connected, Failed, RecoveryFailed, Unavailable, ResultUnknown};
+    enum Stage {Recover=1,Profiles,Current,Blocked,Trial,Online,JournalSave,Persist,JournalClear,Restore,TargetTimeout,RestoreTimeout,Finished,Requested};
 private:
     static const uint32_t budget[2];
     struct Attempt {char ssid[33]={};Ap01WifiProfile0041 previous,target;};
@@ -25,6 +27,7 @@ private:
     std::unique_ptr<Attempt> active;
     uint64_t deadline=0;
     bool journaled=false;
+    void trace(int stage,int result=0) {if(port.trace)port.trace(port.context,stage,result,int(state()));}
     void finish(State);
     void rollback(uint64_t);
 public:

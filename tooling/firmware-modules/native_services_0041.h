@@ -15,4 +15,5 @@ public:
     bool busy() const;
     int selectWifi(const char *);
     int wifiState() const;
+    void traceMenu(int,int,int,int,int);
 };

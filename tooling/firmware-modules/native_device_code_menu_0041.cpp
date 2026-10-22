@@ -5,6 +5,7 @@
 #include "native_io_0041.h"
 #include "native_wifi_profiles_port_0041.h"
 #include "native_wifi_switch_0041.h"
+#include "native_wifi_trace_0041.h"
 #include <memory>
 #include <new>
 #include <stddef.h>
@@ -207,7 +208,10 @@ void select(Context &context, Object list, unsigned previous, unsigned next) {
     if (newArrow) color(newArrow, next == back ? 0xffffff : 0x89d8f3);
     // Preserve the stock paired-row scroll positions (2:141, 4:287, 6:400).
     int y = next < 2 ? 0 : int(next/2)*146-5;
-    AP01_MENU_ROM_FN(0xa00de5dc, void (*)(Object, int, unsigned))(list, y, 1);
+    unsigned first = context.submenu && !context.wifi ? 1 : 0;
+    bool wrapped = previous != next && ((previous == first && next == back) || (previous == back && next == first));
+    // A wrap must expose its destination before the next encoder step.
+    AP01_MENU_ROM_FN(0xa00de5dc, void (*)(Object, int, unsigned))(list, y, wrapped ? 0 : 1);
     context.selected = next;
 }
 void resetTimer(void **data) {
@@ -231,6 +235,7 @@ bool replaceList(Context &context, bool submenu, bool wifi=false) {
     text(data[0],wifi?"Wi-Fi":submenu?"\u8bbe\u5907\u7801":"\u8bbe\u7f6e");
     select(context,next,0,wifi?0:submenu?1:returnIndex);
     if(!submenu)context.networks.reset();
+    ap01WifiMenuTrace0041(Ap01WifiTrace0041::MenuReplace,submenu,wifi,children(next),context.selected);
     destroy(previous); resetTimer(data); return true;
 }
 void event(void *raw) {
@@ -254,8 +259,10 @@ void event(void *raw) {
     auto data = pageData(*context);
     if (!data || !data[2]) return;
     AP01_MENU_ACTIVITY();
-    if (AP01_MENU_ROM_FN(0xa00a769a, int (*)())()) return;
     int key = AP01_MENU_ROM_FN(0xa00d8af6, int (*)(void *))(raw);
+    if (AP01_MENU_ROM_FN(0xa00a769a, int (*)())()) {
+        ap01WifiMenuTrace0041(Ap01WifiTrace0041::WakeConsumed,key,context->selected,context->wifi,context->submenu);return;
+    }
     if (!context->submenu) context->selected = state[1] >= 0x30 && state[1] <= 0x38 ? state[1] - 0x30 : 0;
     unsigned selected=context->selected,count=context->wifi?context->wifiCount+1:context->submenu?3:9;
     if (key == 0x13 || key == 0x14) {
@@ -263,11 +270,13 @@ void event(void *raw) {
         int next = int(selected) + (key == 0x13 ? 1 : -1);
         if (next < int(first)) next = count - 1;
         else if (unsigned(next) >= count) next = first;
+        ap01WifiMenuTrace0041(Ap01WifiTrace0041::MenuKey,key,selected,next,count);
         select(*context, data[2], selected, unsigned(next));
         if (!context->submenu) state[1] = uint8_t(0x30 + context->selected);
         resetTimer(data); return;
     }
-    if (key != 10) { original(raw); return; }
+    if (key != 10) { ap01WifiMenuTrace0041(Ap01WifiTrace0041::MenuForward,key,selected,count,state[2]);original(raw); return; }
+    ap01WifiMenuTrace0041(Ap01WifiTrace0041::MenuKey,key,selected,selected,count);
     // The stock long-press handler consumes the following Enter with this flag.
     if (*((uint8_t *)context->window + 100)) {
         *((uint8_t *)context->window + 100) = 0; resetTimer(data); return;
@@ -292,6 +301,7 @@ void event(void *raw) {
         }else{
             int result=context->wifiTimer?ap01WifiSelect0041(context->networks[selected].ssid):-12;
             int phase=ap01WifiSelectionState0041();
+            ap01WifiMenuTrace0041(Ap01WifiTrace0041::WifiSelect,selected,context->wifiCount,result,phase);
             bool inFlight=(phase>=Ap01WifiSwitch0041::Queued&&phase<=Ap01WifiSwitch0041::Restoring)||phase==Ap01WifiSwitch0041::ResultUnknown;
             if(result&&!(result==-16&&inFlight))text(data[0],"\u5207\u6362\u5931\u8d25");
             else{context->wifiPhase=-1;wifiPoll(context->wifiTimer);}

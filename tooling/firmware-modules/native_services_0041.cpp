@@ -17,7 +17,14 @@ struct Ap01NativeServices0041::State {
     int bootSlot=-1;
     LittleFSClass fs{ap01RomVfs(),"/resource/codex-status"};
     std::unique_ptr<Ap01Maintenance0041> maintenance;
-    Ap01WifiSwitch0041 wifi{ap01WifiSwitchNativePort0041(this,wifiBlocked)};
+    Ap01WifiTrace0041 trace;
+    static Ap01WifiSwitchPort0041 switchPort(State *s) {
+        auto p=ap01WifiSwitchNativePort0041(s,wifiBlocked);
+        p.trace=[](void *p,int stage,int result,int state){
+            ((State *)p)->trace.add(uint32_t(nowMs()),Ap01WifiTrace0041::WifiStage,stage,result,state,0);
+        };return p;
+    }
+    Ap01WifiSwitch0041 wifi{switchPort(this)};
     std::atomic<bool> listening{false},stop{false},ready{false};
     void *healthContext=nullptr;
     bool (*healthy)(void *)=nullptr;
@@ -89,7 +96,8 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
     Ap01MaintenancePort0041 port{s.get(),
         {s.get(),State::firmwareBusy,State::firmwareOpen,State::firmwareWrite,State::firmwareVerify,State::firmwareCommit,State::firmwareClose,s->firmwareBuild,State::firmwareReboot,State::runningSlot,State::inspectSlot,State::selectSlot,State::bootHealthy},
         ap01WifiProfilesNativePort0041(s.get(),State::diagnosticBusy),
-        {s.get(),ap01DiagnosticFile0041,ap01DiagnosticFlash0041,State::diagnosticBusy},
+        {s.get(),ap01DiagnosticFile0041,ap01DiagnosticFlash0041,State::diagnosticBusy,
+         [](void *p,Ap01WifiTraceSnapshot0041 &out){return ((State *)p)->trace.read(out);}},
         [](void *,char out[9]){return ap01DeviceCodeLoad0041(ap01RomVfs(),out);}};
     s->maintenance.reset(new(std::nothrow) Ap01Maintenance0041(s->fs,port,bridge,mac,boot));
     if(!s->maintenance||!s->maintenance->begin(nowMs()))return false;
@@ -111,4 +119,12 @@ extern "C" int ap01WifiSelect0041(const char *ssid) {
 }
 extern "C" int ap01WifiSelectionState0041() {
     auto *services=(Ap01NativeServices0041 *)ap01_window_services();return services?services->wifiState():int(Ap01WifiSwitch0041::Unavailable);
+}
+
+void Ap01NativeServices0041::traceMenu(int event,int a,int b,int c,int d) {
+    auto *s=live.load(std::memory_order_acquire);if(s)s->trace.add(uint32_t(nowMs()),event,a,b,c,d);
+}
+extern "C" void ap01WifiMenuTrace0041(int event,int a,int b,int c,int d) {
+    auto *services=(Ap01NativeServices0041 *)ap01_window_services();
+    if(services)services->traceMenu(event,a,b,c,d);
 }

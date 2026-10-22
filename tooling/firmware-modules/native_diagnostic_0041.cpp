@@ -50,6 +50,18 @@ Ap01HttpReply ap01DiagnosticHttp0041(const Ap01DiagnosticPort &port, const Ap01H
         output["file_reader"] = port.file != nullptr;
         output["flash_reader"] = port.flash != nullptr;
     }
+    if(status&&port.trace) {
+        Ap01WifiTraceSnapshot0041 snapshot;
+        if(!port.trace(port.context,snapshot))return failure(503,"trace_busy");
+        auto trace=output["wifi_trace"].to<ArduinoJson::JsonObject>();
+        trace["version"]=1;trace["capacity"]=16;trace["dropped"]=snapshot.dropped;
+        auto events=trace["events"].to<ArduinoJson::JsonArray>();
+        for(unsigned i=0;i<snapshot.count;++i){
+            const auto &e=snapshot.events[i];auto item=events.add<ArduinoJson::JsonObject>();
+            item["seq"]=e.sequence;item["ms"]=e.ms;item["event"]=e.event;
+            item["a"]=e.a;item["b"]=e.b;item["c"]=e.c;item["d"]=e.d;
+        }
+    }
     if (!status) {
         if (!input["offset"].is<uint32_t>() || !input["length"].is<unsigned>()) return failure(400, "range");
         uint32_t offset = input["offset"].as<uint32_t>();

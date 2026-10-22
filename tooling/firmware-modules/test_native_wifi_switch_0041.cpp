@@ -9,6 +9,8 @@ struct Fake {
     bool ip=false,journalPresent=false,corrupt=false,blocked=false,failTrial=false,failPersist=false,failRestore=false,failClear=false;
     unsigned applies=0,persists=0,journals=0,clears=0;
     Ap01WifiProfile0041 old;
+    std::vector<int> stages,results;
+    static void trace(void *p,int stage,int result,int){auto &f=*(Fake*)p;f.stages.push_back(stage);f.results.push_back(result);}
     std::vector<uint8_t> bytes=std::vector<uint8_t>(114);
     Fake(){
         memcpy(bytes.data(),"WPL1",4);bytes[4]=1;bytes[8]=1;bytes[16]=3;memcpy(bytes.data()+17,"New",3);
@@ -28,7 +30,7 @@ struct Fake {
     static int journal(void *p,const Ap01WifiProfile0041 *v){auto &f=*(Fake*)p;if(v){++f.journals;f.old=*v;f.journalPresent=true;}
         else{++f.clears;f.journalPresent=false;if(f.failClear)return -EIO;}return 0;}
     static int recover(void *p,Ap01WifiProfile0041 &v){auto &f=*(Fake*)p;if(f.corrupt)return -EILSEQ;if(!f.journalPresent)return -ENOENT;v=f.old;return 0;}
-    Ap01WifiSwitchPort0041 port(){return {this,{this,currentRead,load,nullptr,busy},apply,online,journal,recover};}
+    Ap01WifiSwitchPort0041 port(){return {this,{this,currentRead,load,nullptr,busy},apply,online,journal,recover,trace};}
 };
 int main(){
     using S=Ap01WifiSwitch0041;
@@ -36,11 +38,13 @@ int main(){
      assert(s.request("")==-EINVAL);assert(!s.request("New")&&s.busy());assert(s.request("New")==-EBUSY);
      assert(s.feedback(100001)==S::ResultUnknown&&s.busy()&&s.request("New")==-EBUSY);
      s.tick(1);assert(s.state()==S::Connecting&&f.applies==1&&!f.persists&&!f.journalPresent);
-     s.tick(45000);assert(s.state()==S::Connecting);s.tick(45001);assert(s.state()==S::Restoring&&!strcmp(f.current,"Old"));
+     auto logged=f.stages.size();s.tick(45000);assert(s.state()==S::Connecting&&f.stages.size()==logged);s.tick(45001);
+     assert(f.stages[f.stages.size()-2]==S::TargetTimeout&&f.results[f.results.size()-2]==-ETIMEDOUT);assert(s.state()==S::Restoring&&!strcmp(f.current,"Old"));
      f.ip=true;s.tick(45002);assert(s.state()==S::Failed&&!s.busy());
      assert(!s.request("Old"));s.tick(45003);assert(s.state()==S::Connected&&f.applies==2);}
     {Fake f;S s(f.port());s.begin(0);assert(!s.request("New"));s.tick(1);f.ip=true;s.tick(2);
-     assert(s.state()==S::Connected&&!strcmp(f.current,"New")&&f.persists==1&&f.journals==1&&f.clears==1&&!f.journalPresent);}
+     assert(s.state()==S::Connected&&!strcmp(f.current,"New")&&f.persists==1&&f.journals==1&&f.clears==1&&!f.journalPresent);
+     assert((f.stages==std::vector<int>{S::Recover,S::Finished,S::Requested,S::Profiles,S::Current,S::Trial,S::Online,S::JournalSave,S::Persist,S::JournalClear,S::Finished}));}
     {Fake f;S s(f.port());s.begin(0);s.request("New");s.tick(1);f.ip=true;f.failPersist=true;s.tick(2);
      assert(s.state()==S::Restoring&&!strcmp(f.current,"Old")&&f.persists==2&&!f.journalPresent);s.tick(3);assert(s.state()==S::Failed);}
     {Fake f;strcpy(f.old.ssid,"Old");strcpy(f.old.password,"synthetic-old");f.journalPresent=true;strcpy(f.current,"New");

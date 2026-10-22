@@ -22,7 +22,8 @@ static void setText(void *p,const char *s){((Node*)p)->text=s;}
 static void setFont(void *,const void*){}
 static void property(void *,uint32_t){}
 static void size(void *,int,int){}
-static void scroll(void *,int,unsigned){}
+static unsigned scrollAnimation=99;
+static void scroll(void *,int,unsigned animation){scrollAnimation=animation;}
 static void timer(void*){}
 static void reg(void *,void(*)(void*),unsigned,void*){}
 static int lookup(void *,unsigned,void **p,void ***v){*p=page;*v=values;return 1;}
@@ -50,6 +51,7 @@ int ap01DeviceCodeEnsure0041(const Ap01VfsOps &p,bool(*)(void*,uint8_t*,size_t),
 int ap01DeviceCodeRegenerate0041(const Ap01VfsOps &p,bool(*)(void*,uint8_t*,size_t),void*,char out[9]){return ap01DeviceCodeLoad0041(p,out);}
 int ap01WifiProfilesRead0041(const Ap01WifiProfilesPort &,Ap01WifiProfiles0041 &out){out.count=2;strcpy(out.profiles[0].ssid,"One");strcpy(out.profiles[1].ssid,"Two");return 0;}
 Ap01WifiProfilesPort ap01WifiProfilesNativePort0041(void *,bool(*)(void*)){return {};}
+extern "C" void ap01WifiMenuTrace0041(int,int,int,int,int){}
 extern "C" int ap01WifiSelect0041(const char *){++selections;return 0;}
 extern "C" int ap01WifiSelectionState0041(){return 0;}
 int main(){
@@ -57,16 +59,25 @@ int main(){
  void *data[4]={create(page),nullptr,mainList(page,&c),nullptr};values=data;
  void *meta[2]={nullptr,data};userData(page)=meta;userData(window)=state;state[2]=0x1a;state[1]=0x30;
  auto send=[&](int k){keyValue=k;uintptr_t words[4]={(uintptr_t)page,0,0x11,0};event(words);};
+ Ap01WifiTrace0041 trace;Ap01WifiTraceSnapshot0041 snapshot;
+ assert(trace.read(snapshot)&&snapshot.count==0);
+ for(unsigned i=0;i<24;++i)trace.add(i,1,i,i+1,i+2,i+3);
+ assert(trace.read(snapshot)&&snapshot.count==16&&!snapshot.dropped);
+ for(unsigned i=0;i<16;++i)assert(snapshot.events[i].sequence==i+9&&snapshot.events[i].a==int(i+8));
  assert(count(data[2])==9);
  for(int i=0;i<6;++i)assert(((Node*)getChild(getChild(data[2],i),0))->text==std::to_string(i));
  assert(((Node*)getChild(getChild(data[2],7),0))->text=="Wi-Fi");
- for(int i=1;i<=9;++i){send(0x13);assert(state[1]==0x30+i%9);}send(0x14);assert(state[1]==0x38);
+ for(int i=1;i<=9;++i){send(0x13);assert(state[1]==0x30+i%9);assert(scrollAnimation==(i==9?0u:1u));}send(0x14);assert(state[1]==0x38&&!scrollAnimation);
  send(10);assert(stockSelection==0x36); // Factory Back logical index.
  state[1]=0x33;send(10);assert(stockSelection==0x33); // Factory Version unchanged.
  state[1]=0x30;send(0x13);assert(state[1]==0x34); // Restores prior stock detail selection.
  state[1]=0x36;send(10);assert(c.submenu&&!c.wifi&&count(data[2])==3);
  send(0x13);send(10);assert(!c.submenu&&state[1]==0x36);
  send(0x13);send(10);assert(c.wifi&&count(data[2])==3);
+ send(0x14);assert(c.selected==2&&!scrollAnimation);
+ send(0x14);assert(c.selected==1&&scrollAnimation==1);
+ send(0x13);assert(c.selected==2&&scrollAnimation==1);
+ send(0x13);assert(c.selected==0&&!scrollAnimation);
  send(0x14);send(10);assert(!c.submenu&&state[1]==0x37&&count(data[2])==9);
  removeNode(page);removeNode(window);
  puts("menu adapter: stock indices/layout calls, nine-row wrap, stock callback routing, code/Wi-Fi enter and return passed");
