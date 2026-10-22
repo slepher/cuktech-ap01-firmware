@@ -249,8 +249,6 @@ int main(int argc,char **argv){
             Ap01Business business(fs,{nullptr,present},21);
             Ap01Application app(fs,business,{&disk,randomBytes,lock,unlock,systemBusy},"AABBCCDDEEFF",21);assert(app.begin());
         AttachedMaintenance maintenance(fs,{&disk,fake.callbacks()},app,21,disk);assert(maintenance.begin());
-            auto protectedReply=maintenance.handle(request("POST","/api/firmware/begin",beginBody(image)),2);
-            assert(protectedReply.status==409&&text(protectedReply.bytes).find("stable_slot_protected")!=std::string::npos&&!fake.opens);
             fake.valid=false;assert(maintenance.handle(request("POST","/api/firmware/switch",change),3).status==409&&!fake.selections);fake.valid=true;
             fake.identity.crc++;assert(maintenance.handle(request("POST","/api/firmware/switch",change),3).status==409&&!fake.selections);fake.identity.crc--;
             auto reply=maintenance.handle(request("POST","/api/firmware/switch",change),4);
@@ -324,7 +322,6 @@ int main(int argc,char **argv){
                 if(scenario==3||scenario==4){assert(status(101).find("\"boot_safety\":\"unknown\"")!=std::string::npos);fw.tick(10000);assert(fake.selections==before+(scenario==3));continue;}
                 assert(fake.selected==0&&fake.selections==before+1&&!fw.blocksBusiness());
                 assert(status(101).find("\"result\":\"trial\"")!=std::string::npos);
-                assert(fw.handle(request("POST","/api/firmware/begin",beginBody(image)),"bridge-test",102).status==409);
                 if(scenario==1||scenario==6) {
                     fake.healthy=false;fw.tick(10000);fw.tick(30100);
                     assert(fake.selected==0&&fake.selections==before+1&&status(30101).find("retained_stable")!=std::string::npos);
@@ -369,6 +366,7 @@ int main(int argc,char **argv){
         }
         assert(fw.handle(request("POST","/api/firmware/commit",commitBody),"bridge-test",3).status==200&&fake.commits==1);
     }
-    puts("firmware: authenticated OTA, replay/conflict, revision fences, readback, unknown/storage failures, stable-slot protection/recovery, 9s health/30s timeout/fault cases; opaque board/entry, no App manifest and minimal integrity-valid image accepted");
+    puts("firmware: authenticated OTA, replay/conflict, revision fences, readback, unknown/storage failures, explicit slot selection/recovery, 9s health/30s timeout/fault cases; opaque board/entry, no App manifest and minimal integrity-valid image accepted");
 #endif
+    return 0;
 }

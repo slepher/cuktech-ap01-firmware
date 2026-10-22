@@ -1,5 +1,6 @@
 #include "native_diagnostic_0041.h"
 #include "native_json_0041.h"
+#include "native_integrity_0041.h"
 #include <new>
 #include <memory>
 
@@ -23,11 +24,7 @@ bool readablePath(const char *path) {
     }
     return true;
 }
-uint32_t crc32(const uint8_t *bytes, unsigned length) {
-    uint32_t crc = ~0u;
-    while (length--) {crc ^= *bytes++; for (unsigned i=0;i<8;++i) crc=(crc>>1)^(0xedb88320u&(0u-(crc&1)));}
-    return ~crc;
-}
+
 }
 Ap01HttpReply ap01DiagnosticHttp0041(const Ap01DiagnosticPort &port, const Ap01HttpRequest &request,
                                     const char *mac, uint64_t boot) {
@@ -77,7 +74,7 @@ Ap01HttpReply ap01DiagnosticHttp0041(const Ap01DiagnosticPort &port, const Ap01H
         output["source"] = file ? path : "physical_flash";
         output["offset"] = offset; output["length"] = got;
         if (total != UINT32_MAX) {output["total_bytes"]=total;output["eof"]=offset<=total&&unsigned(got)==total-offset;}
-        output["crc32"] = crc32(bytes.get(),got);
+        output["crc32"] = ap01_native_crc32(bytes.get(),got);
         output["data_hex"] = hex.get();
     }
     if (output.overflowed()) return failure(503,"oom");

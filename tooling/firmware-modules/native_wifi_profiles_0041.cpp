@@ -109,12 +109,18 @@ Ap01HttpReply ap01WifiProfilesHttp0041(const Ap01WifiProfilesPort &port,const Ap
            strcmp(obj["device_mac"].as<const char *>(),mac))return failure(409,"device_identity");
         if(!obj["expected_revision"].is<uint32_t>()||!obj["profiles"].is<ArduinoJson::JsonArrayConst>())return failure(400,"shape");
     }
+    if(!put) {
+        std::unique_ptr<Ap01WifiProfiles0041> list(new(std::nothrow) Ap01WifiProfiles0041);
+        if(!list)return failure(503,"oom");
+        int result=ap01WifiProfilesRead0041(port,*list);
+        if(result)return failure(result==-EILSEQ?409:503,result==-EILSEQ?"storage_corrupt":"read_unavailable");
+        return reply(*list,mac);
+    }
     std::unique_ptr<Workspace> work(new(std::nothrow) Workspace);
     if(!work)return failure(503,"oom");
     auto &old=work->old;
     int result=ap01WifiProfilesRead0041(port,old);
     if(result)return failure(result==-EILSEQ?409:503,result==-EILSEQ?"storage_corrupt":"read_unavailable");
-    if(!put)return reply(old,mac);
     if(doc["expected_revision"].as<uint32_t>()!=old.revision)return failure(409,"revision");
     if(old.revision==UINT32_MAX)return failure(409,"revision_exhausted");
     auto rows=doc["profiles"].as<ArduinoJson::JsonArrayConst>();

@@ -250,8 +250,6 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
     bool committing=!strcmp(request.path,"/api/firmware/commit");
     bool rebooting=!strcmp(request.path,"/api/firmware/reboot");
     bool status=!strcmp(request.path,"/api/firmware/status");
-    if((starting||committing||chunk)&&(safety==Armed||safety==RetainedStable||safety==SafetyUnknown))return reject(409,"boot_safety_pending","boot_safety",safety==SafetyUnknown);
-    if(switching&&safety==SafetyUnknown)return reject(503,"boot_safety_unknown","boot_safety",true);
     const char *queryId=!strncmp(request.path,"/api/firmware/",14)?request.path+14:"";
     if((starting||switching||committing||rebooting)&&strcmp(request.method,"POST"))return reject(405,"method");
     NativeJsonAllocator0041 a;JsonDocument input(&a);
@@ -284,7 +282,7 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
             record=std::move(next);booted=commitConfirmed=false;
             if(!save()){failed("receipt_prepare");return reject(503,"receipt_prepare","firmware_storage");}
             commitConfirmed=port.selectSlot(port.context,target)==1;
-            if(commitConfirmed&&(safety==Armed||safety==RetainedStable))safety=RetainedStable;
+            if(commitConfirmed)safety=RetainedStable;
             record->phase=commitConfirmed?Applied:Unknown;record->error=commitConfirmed?"":"commit_unknown";
             if(!save()){record->phase=Unknown;record->error="receipt_commit";}
         }
@@ -305,7 +303,6 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
             int target=-1;
             if(port.runningSlot) {
                 int running=port.runningSlot(port.context);if(running<0||running>1)return reject(503,"running_slot_unknown");target=running^1;
-                if(stable&&stable->slot==unsigned(target))return reject(409,"stable_slot_protected");
             }
             std::unique_ptr<Record> next(new(std::nothrow) Record);if(!next)return reject(503,"firmware_oom");
             next->owner=principal;next->request=queryId;
@@ -314,6 +311,16 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
             next->targetSlot=target;
             ota_image_begin(&next->image,length);record=std::move(next);booted=commitConfirmed=false;
             if(!save()){failed("receipt_prepare");return reject(503,"receipt_prepare","firmware_storage");}
+            // Explicit maintenance supersedes automatic fallback. Before writing
+            // the inactive slot, keep the next boot on the running image.
+            // Persist the transaction first so an unknown selection is never retried.
+            if(safety==Armed||safety==RetainedStable||safety==SafetyUnknown) {
+                if(!port.selectSlot||target<0||port.selectSlot(port.context,unsigned(target)^1)!=1) {
+                    record->phase=Unknown;record->error="boot_selection_unknown";save();
+                    return reject(503,"boot_selection_unknown","slot_select",true);
+                }
+            }
+            safety=Unconfigured;
             opened=port.open(port.context,length);
             if(!opened){failed("flash_open");return reject(500,"flash_open","firmware_open");}
         }
@@ -333,7 +340,7 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
             if(offset!=record->position||request.length>record->length-record->position)return reject(409,"chunk_offset");
             uint32_t lo=record->position>MANIFEST?record->position:MANIFEST;
             uint32_t hi=record->position+request.length<MANIFEST+52?record->position+request.length:MANIFEST+52;
-            if(lo<hi)memcpy(record->manifest+lo-MANIFEST,request.body+lo-record->position,hi-lo);
+            if(lo<hi)memcpy(record->manifest+(lo-MANIFEST),request.body+(lo-record->position),hi-lo);
             if(ota_image_chunk(&record->image,request.body,request.length)||!port.write(port.context,record->position,request.body,request.length)) {
                 failed("flash_write");return reject(500,"flash_write","firmware_write");
             }

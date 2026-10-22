@@ -2,8 +2,8 @@
 An unverified candidate remains flashable=false. No tool here contacts hardware.
 """
 from pathlib import Path
-import argparse,hashlib,json,os,struct,subprocess,zlib,shutil
-ROOT=Path(__file__).resolve().parents[2].parent/'codex_status'
+import argparse,hashlib,json,struct,subprocess,zlib,shutil
+ROOT=Path(__file__).resolve().parents[2]
 BASE=0x9ffff000
 OFFSET=0x675000
 HOOK=0x5e180
@@ -83,10 +83,10 @@ def validate_candidate(data,manifest_path):
     if data!=assemble(original,payload,entry,m.get('unsigned_ota',False),int(m['timer_delete_guard']['entry'],16) if m.get('timer_delete_guard') else None) or sha(data)!=m['image']['sha256']:raise ValueError('candidate reconstruction mismatch')
     return m
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--source-dir',type=Path,default=ROOT/'artifacts/ap01-platform-integration/device');a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--source-dir',type=Path,required=True);p.add_argument('--original',type=Path,default=ROOT/'roms/0041/ap01-1.0.2_0041.bin');p.add_argument('--tool-prefix',required=True);a=p.parse_args()
     output=a.output.resolve();out=a.source_dir.resolve()
     if not output.parent.is_dir():p.error('precreate output directory with elevation')
-    original_path=ROOT.parent/'cuktech-ap01-firmware/roms/0041/ap01-1.0.2_0041.bin'
+    original_path=a.original.resolve()
     original=original_path.read_bytes();payload=bytearray((out/'ap01-native-0041.module.bin').read_bytes())
     linked=json.loads((out/'native-link-report.json').read_text(encoding='utf-8'))
     audit=json.loads((out/'native-core-audit.json').read_text(encoding='utf-8'))
@@ -97,12 +97,14 @@ def main():
     if not linked.get('linked') or sha(payload)!=linked.get('module_sha256') or sha((out/'native-core-audit.json').read_bytes())!=linked.get('audit_sha256'):
         p.error('current module/audit/link fingerprints do not agree')
     if payload[:256]!=bytes(256):p.error('linked module must have a zero manifest')
-    tool=Path(os.environ['USERPROFILE'])/'.platformio/packages/toolchain-riscv32-esp/bin/riscv32-esp-elf'
-    listing=subprocess.check_output([str(tool)+'-nm.exe','-n',str(out/'ap01-native-0041.elf')],text=True)
+    tool=a.tool_prefix
+    nm=str(tool)+'nm';nm=nm+'.exe' if not Path(nm).is_file() and Path(nm+'.exe').is_file() else nm
+    objcopy=str(tool)+'objcopy';objcopy=objcopy+'.exe' if not Path(objcopy).is_file() and Path(objcopy+'.exe').is_file() else objcopy
+    listing=subprocess.check_output([nm,'-n',str(out/'ap01-native-0041.elf')],text=True)
     symbols={line.split()[2]:int(line.split()[0],16) for line in listing.splitlines() if len(line.split())==3 and line.split()[0]!='U'}
     entry=symbols['ap01Register0041'];assert symbols['ap01_native_manifest']==BASE+OFFSET
     abi_file=out/'native-runtime-abi.bin'
-    subprocess.run([str(tool)+'-objcopy.exe','-O','binary','--only-section=.abi',str(out/'ap01-native-0041.elf'),str(abi_file)],check=True)
+    subprocess.run([objcopy,'-O','binary','--only-section=.abi',str(out/'ap01-native-0041.elf'),str(abi_file)],check=True)
     abi_raw=abi_file.read_bytes();abi=struct.unpack('<'+str(len(abi_raw)//4)+'I',abi_raw);assert abi[0]==1 and len(abi) in (17,23)
     length=((OFFSET+len(payload)+15)&~15)+40
     h=bytearray(256);h[:8]=b'AP01APP1';struct.pack_into('<7I',h,8,1,length,OFFSET,len(payload),entry,zlib.crc32(payload[256:]),0)

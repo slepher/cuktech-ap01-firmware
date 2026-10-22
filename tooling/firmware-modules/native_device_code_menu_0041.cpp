@@ -2,6 +2,7 @@
 #include "native_device_code_0041.h"
 #include "native_device_code_font_0041.h"
 #include "native_vfs_0041.h"
+#include "native_io_0041.h"
 #include "native_wifi_profiles_port_0041.h"
 #include "native_wifi_switch_0041.h"
 #include <memory>
@@ -11,6 +12,10 @@
 
 #ifndef AP01_MENU_ROM_FN
 #define AP01_MENU_ROM_FN(address, type) ((type)(uintptr_t)(address))
+#endif
+
+#ifndef AP01_MENU_ACTIVITY
+#define AP01_MENU_ACTIVITY() (*(volatile uint8_t *)(uintptr_t)0x62fc403a = 1)
 #endif
 
 namespace {
@@ -23,13 +28,15 @@ struct Context {
     unsigned selected = 0;
     bool uncertain = false;
     char code[9] = {};
-    bool wifi=false,stockDetail=false,wifiReadError=false,mainUnordered=false;
+    bool wifi=false,stockDetail=false,wifiReadError=false;
     unsigned returnIndex=0,wifiCount=0;
     int wifiPhase=-1;
     Object wifiTimer=nullptr;
     std::unique_ptr<WifiRow[]> networks;
 };
+#if defined(__riscv)
 static_assert(offsetof(Context,code)==17&&offsetof(Context,wifiPhase)==40,"0041 menu probe ABI");
+#endif
 __attribute__((section(".ap01_menu_budget"),used))
 static const uint32_t menuBudget[]={sizeof(Context),sizeof(WifiRow),sizeof(Ap01WifiProfiles0041),9};
 void *&userData(Object object) { return *(void **)((uint8_t *)object + 0x10); }
@@ -76,8 +83,6 @@ void cleanup(void *event) {
         memset(context->code,0,sizeof(context->code));delete context;
     }
 }
-void orderMain(Context &,Object);
-unsigned mainChild(unsigned);
 Object mainList(Object parent, Context *context) {
     Object list = AP01_MENU_ROM_FN(0xa01a2c02, Object (*)(Object))(parent);
     if (!list || !context) return list;
@@ -92,8 +97,8 @@ Object mainList(Object parent, Context *context) {
     Object wifi=AP01_MENU_ROM_FN(0xa019cdc0,Object (*)(Object,const char *,int,int))(list,"",0,0);
     if(!wifi){destroy(list);return nullptr;}
     font(child(wifi,0),false,true);text(child(wifi,0),"Wi-Fi");
-    // Preserve the stock logical row order for Version badge callbacks.
-    context->mainUnordered=true;orderMain(*context,list);
+    // Keep all six stock indices and native flex layout unchanged.
+    AP01_MENU_ROM_FN(0xa00de128,void (*)(Object,int))(wifi,7);
     return list;
 }
 Object codeList(Object parent, Context &context) {
@@ -160,18 +165,6 @@ Object wifiList(Object parent,Context &context) {
     context.networks=std::move(names);context.wifiCount=count;context.wifiPhase=-1;
     return list;
 }
-unsigned mainChild(unsigned visual){return visual<2?visual:visual==2?8:visual-1;}
-void orderMain(Context &context,Object list) {
-    if(!context.mainUnordered||!list||children(list)!=9)return;
-    // Recovered 0041 layout API: a00e6996 writes LAYOUT property22.
-    // Use native absolute row positions while retaining Version's logical3
-    // for its stock badge updater; no inferred translate-style enum.
-    AP01_MENU_ROM_FN(0xa00df94c,void (*)(Object,unsigned,int,unsigned))(list,22,0,0);
-    for(unsigned visual=0;visual<9;++visual)
-        AP01_MENU_ROM_FN(0xa00d92ec,void (*)(Object,unsigned,int,int))
-            (child(list,mainChild(visual)),1,0,int(visual)*73);
-    context.mainUnordered=false;
-}
 void wifiPoll(void *timer) {
     if(!timer)return;
     auto context=*(Context **)((uint8_t *)timer+12);
@@ -197,12 +190,12 @@ void wifiPoll(void *timer) {
     }
 }
 void select(Context &context, Object list, unsigned previous, unsigned next) {
-    Object oldRow=child(list,context.submenu?previous:mainChild(previous)), newRow=child(list,context.submenu?next:mainChild(next));
+    Object oldRow=child(list,previous), newRow=child(list,next);
     background(oldRow, 0x262626); background(newRow, 0x22363d);
     Object oldLabel = child(oldRow, 0), newLabel = child(newRow, 0);
-    if (context.submenu || previous == 2 || previous == 7) font(oldLabel, false, context.wifi ? previous<context.wifiCount : context.submenu ? previous==0 : previous==2);
+    if (context.submenu || previous == 6 || previous == 7) font(oldLabel, false, context.wifi ? previous<context.wifiCount : context.submenu ? previous==0 : previous==7);
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(oldLabel, (void *)0xa025488c);
-    if (context.submenu || next == 2 || next == 7) font(newLabel, true, context.wifi ? next<context.wifiCount : context.submenu ? next==0 : next==2);
+    if (context.submenu || next == 6 || next == 7) font(newLabel, true, context.wifi ? next<context.wifiCount : context.submenu ? next==0 : next==7);
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(newLabel, (void *)0xa055fb7c);
     if(context.wifi) {
         if(previous<context.wifiCount)AP01_MENU_ROM_FN(0xa019d0ae,void (*)(Object,const void *))(oldLabel,ap01WifiSsidFont0041());
@@ -217,18 +210,6 @@ void select(Context &context, Object list, unsigned previous, unsigned next) {
     AP01_MENU_ROM_FN(0xa00de5dc, void (*)(Object, int, unsigned))(list, y, 1);
     context.selected = next;
 }
-bool randomBytes(void *, uint8_t *out, size_t length) {
-    int fd = AP01_MENU_ROM_FN(0xa003f4f6, int (*)(const char *, int, ...))("/dev/urandom", 1);
-    if (fd < 0) return false;
-    size_t done = 0;
-    while (done < length) {
-        int n = AP01_MENU_ROM_FN(0xa003f6a2, int (*)(int, void *, size_t))(fd, out + done, length - done);
-        if (n <= 0 || size_t(n) > length - done) break;
-        done += n;
-    }
-    AP01_MENU_ROM_FN(0xa0026888, int (*)(int))(fd);
-    return done == length;
-}
 void resetTimer(void **data) {
     if (data[3]) {
         AP01_MENU_ROM_FN(0xa008bd70, void (*)(Object))(data[3]);
@@ -241,13 +222,12 @@ bool replaceList(Context &context, bool submenu, bool wifi=false) {
     Object next = wifi ? wifiList(context.page,context) : submenu ? codeList(context.page, context) : mainList(context.page, &context);
     if (!next || children(next) != (wifi ? context.wifiCount+1 : submenu ? 3u : 9u)) { destroy(next); return false; }
     Object previous = data[2]; data[2] = next;
-    unsigned returnIndex=context.wifi?2:7;
+    unsigned returnIndex=context.wifi?7:6;
     context.submenu=submenu;context.wifi=wifi;context.selected=0;
     text(data[0], "");
     if (submenu) AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))
         (data[0], ap01DeviceCodeTitleFont0041());
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(data[0], (void *)0xa02548d4);
-    if(!submenu)orderMain(context,next);
     text(data[0],wifi?"Wi-Fi":submenu?"\u8bbe\u5907\u7801":"\u8bbe\u7f6e");
     select(context,next,0,wifi?0:submenu?1:returnIndex);
     if(!submenu)context.networks.reset();
@@ -265,7 +245,6 @@ void event(void *raw) {
     if (!context) { original(raw); return; }
     unsigned code = words[2] & ~0x8000u;
     if (code != 0x11) { original(raw); return; }
-    orderMain(*context,list);
     auto state = (uint8_t *)userData(context->window);
     if (!state) {original(raw);return;}
     if(state[2]!=0x1a){
@@ -274,7 +253,7 @@ void event(void *raw) {
     if(context->stockDetail){state[1]=uint8_t(0x30+context->returnIndex);context->stockDetail=false;}
     auto data = pageData(*context);
     if (!data || !data[2]) return;
-    *(volatile uint8_t *)(uintptr_t)0x62fc403a = 1;
+    AP01_MENU_ACTIVITY();
     if (AP01_MENU_ROM_FN(0xa00a769a, int (*)())()) return;
     int key = AP01_MENU_ROM_FN(0xa00d8af6, int (*)(void *))(raw);
     if (!context->submenu) context->selected = state[1] >= 0x30 && state[1] <= 0x38 ? state[1] - 0x30 : 0;
@@ -294,22 +273,22 @@ void event(void *raw) {
         *((uint8_t *)context->window + 100) = 0; resetTimer(data); return;
     }
     if (!context->submenu) {
-        if(selected==2){replaceList(*context,true,true);resetTimer(data);return;}
-        if(selected<7){
+        if(selected==7){replaceList(*context,true,true);resetTimer(data);return;}
+        if(selected<6){
             context->stockDetail=true;context->returnIndex=selected;
-            state[1]=uint8_t(0x30+(selected>2?selected-1:selected));original(raw);return;
+            state[1]=uint8_t(0x30+selected);original(raw);return;
         }
         if(selected==8){state[1]=0x36;original(raw);return;}
         auto io = ap01RomVfs();
         int result = context->uncertain ? ap01DeviceCodeLoad0041(io, context->code) :
-            ap01DeviceCodeEnsure0041(io, randomBytes, nullptr, context->code);
+            ap01DeviceCodeEnsure0041(io, ap01_native0041::randomBytes, nullptr, context->code);
         context->uncertain = result == -115 || (context->uncertain && result != 0);
         if (result) memset(context->code, 0, sizeof(context->code));
         replaceList(*context, true); return;
     }
     if(context->wifi){
         if(selected==context->wifiCount){
-            if(replaceList(*context,false))state[1]=0x32;
+            if(replaceList(*context,false))state[1]=0x37;
         }else{
             int result=context->wifiTimer?ap01WifiSelect0041(context->networks[selected].ssid):-12;
             int phase=ap01WifiSelectionState0041();
@@ -320,13 +299,13 @@ void event(void *raw) {
         resetTimer(data);return;
     }
     if (selected == 2) {
-        if (replaceList(*context, false)) state[1] = 0x37;
+        if (replaceList(*context, false)) state[1] = 0x36;
         return;
     }
     if (selected == 1) {
         auto io = ap01RomVfs();
         int result = context->uncertain ? ap01DeviceCodeLoad0041(io, context->code) :
-            ap01DeviceCodeRegenerate0041(io, randomBytes, nullptr, context->code);
+            ap01DeviceCodeRegenerate0041(io, ap01_native0041::randomBytes, nullptr, context->code);
         context->uncertain = result == -115 || (context->uncertain && result != 0);
         if (!result) text(child(child(data[2], 0), 0), context->code);
         else {

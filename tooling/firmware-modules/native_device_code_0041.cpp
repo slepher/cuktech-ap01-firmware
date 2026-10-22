@@ -1,23 +1,16 @@
 #include "native_device_code_0041.h"
 #include "native_filesystem_0041.h"
 #include <string.h>
+#include "native_integrity_0041.h"
 
 namespace {
 constexpr const char *Stored = "/data/ap01_ui.device_code";
 constexpr const char *Temporary = "/data/ap01_ui.device_code.new";
 constexpr unsigned Bytes = 16;
-uint32_t crc(const uint8_t *bytes, unsigned length) {
-    uint32_t value = ~0u;
-    for (unsigned n = 0; n < length; ++n) {
-        value ^= bytes[n];
-        for (unsigned bit = 0; bit < 8; ++bit)
-            value = (value >> 1) ^ (0xedb88320u & (0u - (value & 1)));
-    }
-    return ~value;
-}
+
 void encode(const char code[9], uint8_t (&bytes)[Bytes]) {
     memcpy(bytes, "DVC1", 4); memcpy(bytes + 4, code, 8);
-    uint32_t check = crc(bytes, 12);
+    uint32_t check = ap01_native_crc32(bytes, 12);
     for (unsigned i = 0; i < 4; ++i) bytes[12 + i] = uint8_t(check >> (8 * i));
 }
 int readCode(const Ap01VfsOps &io, const char *path, char code[9]) {
@@ -38,7 +31,7 @@ int readCode(const Ap01VfsOps &io, const char *path, char code[9]) {
     if (result) return result;
     uint32_t check = 0;
     for (unsigned i = 0; i < 4; ++i) check |= uint32_t(bytes[12 + i]) << (8 * i);
-    if (memcmp(bytes, "DVC1", 4) || check != crc(bytes, 12)) return -22;
+    if (memcmp(bytes, "DVC1", 4) || check != ap01_native_crc32(bytes, 12)) return -22;
     for (unsigned i = 4; i < 12; ++i) if (bytes[i] < '0' || bytes[i] > '9') return -22;
     memcpy(code, bytes + 4, 8); code[8] = 0;
     return 0;

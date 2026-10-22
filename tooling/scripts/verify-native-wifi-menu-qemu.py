@@ -115,6 +115,11 @@ replace('    def application_probe(self,info):', '''    def device_code_probe(se
                 if time.monotonic()>until:raise TimeoutError('native frame settle')
                 time.sleep(.05)
             self.action(menu_refresh_default=True,event='wifi_refresh');self.snapshot(name)
+        def choose(index):
+            for _ in range(9):
+                if bytes.fromhex(lookup(9)['state'])[1]==0x30+index:return
+                key(0x13)
+            raise AssertionError('settings selection did not converge')
         def put(rows):
             status,v=self.http(self.port,'GET','/api/wifi/profiles',token=LOCAL_MENU_CODE);assert status==200
             body=json.dumps(dict(device_mac=identity,expected_revision=v['revision'],profiles=rows)).encode()
@@ -145,20 +150,20 @@ replace('    def application_probe(self,info):', '''    def device_code_probe(se
         self.action(onboarded=True)
         self.action(native_page=6,direction=0,event='native_page');settle()
         key(10);lookup(9);capture('wifi-settings')
-        for _ in range(7):key(0x13)
+        choose(6)
         key(10);layout=lookup(3)
         row=self.action(menu_child=layout['list'],key=0)
         LOCAL_MENU_CODE=self.action(menu_read_code=row)
         assert len(LOCAL_MENU_CODE)==8 and LOCAL_MENU_CODE.isdigit()
         protected=fingerprints()
         key(0x13);key(10);lookup(9)
-        key(0x13);key(0x13)
+        choose(0)
         # Parent wrap with new Wi-Fi/device-code indices; real original input.
         key(0x14);assert bytes.fromhex(lookup(9)['state'])[1]==0x38
         key(0x13);assert bytes.fromhex(lookup(9)['state'])[1]==0x30
         self.action(wifi_cache='clear');put([])
-        key(0x13);key(0x13);key(10);lookup(1);capture('wifi-empty')
-        key(0x14);lookup(1);key(10);assert bytes.fromhex(lookup(9)['state'])[1]==0x32,('expected Wi-Fi selection',lookup(9))
+        choose(7);key(10);lookup(1);capture('wifi-empty')
+        key(0x14);lookup(1);key(10);assert bytes.fromhex(lookup(9)['state'])[1]==0x37,('expected Wi-Fi selection',lookup(9))
         self.action(wifi_cache='seed');put([])
         key(10);checks(1,0);capture('wifi-current-only')
         key(0x13);key(0x13);checks(1,0) # list wraps, mark stays independent.
@@ -177,21 +182,20 @@ replace('    def application_probe(self,info):', '''    def device_code_probe(se
         key(0x14);key(10);lookup(9)
         # Recovered stock states: brightness1d/3f -> right3d(Return),
         # Version1e starts43(Return) when original MCU updater returns0.
-        key(0x13);key(10);capture('wifi-stock-brightness')
-        key(0x13);key(10);lookup(9);key(0x14)
+        choose(2);key(10);capture('wifi-stock-brightness')
+        key(0x13);key(10);lookup(9)
         assert bytes.fromhex(lookup(9)['state'])[1]==0x32,'brightness return mapping'
-        key(0x13);key(0x13);key(10);capture('wifi-stock-version')
-        key(10);lookup(9);key(0x14);key(0x14)
-        assert bytes.fromhex(lookup(9)['state'])[1]==0x32,'version return mapping'
+        choose(3);key(10);capture('wifi-stock-version')
+        key(10);lookup(9)
+        assert bytes.fromhex(lookup(9)['state'])[1]==0x33,'version return mapping'
         # The adjacent stock screensaver still opens and returns correctly.
-        key(0x14);key(10);capture('wifi-stock-screensaver')
+        choose(1);key(10);capture('wifi-stock-screensaver')
         # REA a00fd1ac: screensaver starts3b; right3c, right3a(Return).
         key(0x13);key(0x13);key(10);lookup(9)
-        key(0x13);assert bytes.fromhex(lookup(9)['state'])[1]==0x32,('expected Wi-Fi selection',lookup(9))
-        for _ in range(5):key(0x13)
+        choose(6)
         key(10);lookup(3);capture('wifi-device-code-regression')
-        key(0x13);key(10);assert bytes.fromhex(lookup(9)['state'])[1]==0x37
-        key(0x13);key(10);time.sleep(.7)
+        key(0x13);key(10);assert bytes.fromhex(lookup(9)['state'])[1]==0x36
+        choose(8);key(10);time.sleep(.7)
         assert self.action(menu_focus=True)==native_ui_root
         key(10);lookup(9)
         assert fingerprints()==protected,'identity/binding/menu-code changed'
@@ -294,11 +298,18 @@ OriginalProvider=base.Provider""")
         key(10);lookup(9);capture('wifi-settings')""")
     replace("        self.action(wifi_cache='clear');put([])", """        previous=json.loads(resume_report.read_bytes())
         assert fingerprints()==previous['wifi_protected_files_sha256'],'protected state changed across restart'
-        status,saved=self.http(self.port,'GET','/api/wifi/profiles',token=LOCAL_MENU_CODE)
-        assert status==200 and len(saved['profiles'])==9
+        # Maintenance may become ready before the stock network cache restores.
+        until=time.monotonic()+30;polls=0
+        while True:
+            status,saved=self.http(self.port,'GET','/api/wifi/profiles',token=LOCAL_MENU_CODE);polls+=1
+            assert status==200, ('restart profiles HTTP',status)
+            if len(saved['profiles'])==9 and any(p['current'] and p['ssid']=='QEMU-current' for p in saved['profiles']):break
+            if time.monotonic()>=until:raise TimeoutError(('restart profiles',[(p['ssid'],p['current']) for p in saved['profiles']]))
+            time.sleep(.1)
+        self.report['native_wifi_restart_ready_polls']=polls
         assert [p['ssid'] for p in saved['profiles'] if p['current']]==['QEMU-current']
         assert any(p['ssid']=='设备-Y5' for p in saved['profiles'])
-        key(0x13);key(0x13);key(10);checks(9,8);capture('wifi-restart-saved')
+        choose(7);key(10);checks(9,8);capture('wifi-restart-saved')
         for _ in range(3):key(0x13)
         capture('wifi-restart-utf8')
         key(0x14);key(0x14);key(0x14);key(0x14);key(10);lookup(9)

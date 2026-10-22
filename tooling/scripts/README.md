@@ -247,4 +247,4 @@ python tooling/scripts/diagnostic-client-0041.py --host DEVICE_IP:18080 --token-
 
 ### 外部 App 完整 ROM 打包（当前边界）
 
-`build-native-app-rom-0041.py --source-dir <RV32-audit/link-output> --output <new-candidate.bin>` 从相邻 `codex_status` 的真实 audit/link 输出打包，使用本仓库原厂0041；App 外部入口只转调此脚本。该脚本拥有镜像边界/校验、原厂 unsigned OTA、NULL timer guard 和四个 Settings hooks 补丁，保留旧候选重建校验。`enable-device-code-menu-0041.py` 是旧隔离基线的安装器；当前共享模块构建已直接纳入菜单，不再对当前树运行该历史安装器。
+`build-native-app-rom-0041.py --source-dir <RV32-audit/link-output> --tool-prefix <path/to/riscv32-esp-elf-> --output <new-candidate.bin>` 从显式传入的 audit/link 输出打包，默认使用本仓库原厂0041（可用 `--original` 指定）；不依赖业务仓库路径或 USERPROFILE。App 兼容入口提供旧默认目录及工具链发现，并只导出接受器使用的函数。该脚本拥有镜像边界/校验、原厂 unsigned OTA、NULL timer guard 和四个 Settings hooks 补丁，保留旧候选重建校验。`enable-device-code-menu-0041.py` 是旧隔离基线的安装器；当前共享模块构建已直接纳入菜单，不再对当前树运行该历史安装器。

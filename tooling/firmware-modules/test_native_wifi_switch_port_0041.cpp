@@ -33,7 +33,9 @@ static int encryptedSet(const char *space,const char *name,const void *bytes,uin
 }
 static int encryptedGet(const char *space,const char *name,void *out,uint32_t cap){
     auto f=model->files.find(key(space,name));if(f==model->files.end())return -ENOENT;
-    if(f->second.size()>cap)return -E2BIG;memcpy(out,f->second.data(),f->second.size());return f->second.size();
+    if(f->second.size()>cap)return -E2BIG;
+    if(!f->second.empty())memcpy(out,f->second.data(),f->second.size());
+    return f->second.size();
 }
 static int set(const char *space,const char *name,const char *value){
     assert(!strcmp(space,"network")&&(!strcmp(name,"ssid")||!strcmp(name,"password")));

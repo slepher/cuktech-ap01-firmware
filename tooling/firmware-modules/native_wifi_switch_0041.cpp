@@ -42,11 +42,15 @@ void Ap01WifiSwitch0041::tick(uint64_t now){
         active.reset(a);
         std::unique_ptr<Ap01WifiProfiles0041> list(new(std::nothrow) Ap01WifiProfiles0041);
         if(!list||ap01WifiProfilesRead0041(port.profiles,*list)){finish(Failed);return;}
-        bool found=false,previous=false;
+        bool found=false;
         for(unsigned i=0;i<list->count;++i){auto &row=list->profiles[i];
-            if(row.current){active->previous=row;previous=true;}
             if(!strcmp(row.ssid,active->ssid)){active->target=row;found=true;}}
-        if(!found||!previous){finish(Failed);return;}
+        if(!found||!port.profiles.current||
+           port.profiles.current(port.profiles.context,active->previous.ssid,sizeof(active->previous.ssid),
+                                 active->previous.password,sizeof(active->previous.password))||
+           !memchr(active->previous.ssid,0,sizeof(active->previous.ssid))||
+           !memchr(active->previous.password,0,sizeof(active->previous.password))||
+           !active->previous.ssid[0]){finish(Failed);return;}
         // Selecting the current configuration never reconnects or rewrites it.
         if(!strcmp(active->previous.ssid,active->ssid)){finish(Connected);return;}
         if(port.profiles.busy&&port.profiles.busy(port.profiles.context)){finish(Failed);return;}

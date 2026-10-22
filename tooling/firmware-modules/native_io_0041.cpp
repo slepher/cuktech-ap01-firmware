@@ -13,7 +13,7 @@ bool randomBytes(void *,uint8_t *out,size_t length) {
     int fd=ROM_FN(0xa003f4f6,int (*)(const char *,int,...))("/dev/urandom",1);
     if(fd<0)return false;
     size_t done=0;
-    while(done<length) {int n=ROM_FN(0xa003f6a2,int (*)(int,void *,size_t))(fd,out+done,length-done);if(n<=0)break;done+=n;}
+    while(done<length) {int n=ROM_FN(0xa003f6a2,int (*)(int,void *,size_t))(fd,out+done,length-done);if(n<=0||size_t(n)>length-done)break;done+=n;}
     closeFd(fd);return done==length;
 }
 bool wifiMac(char (&text)[13]) {

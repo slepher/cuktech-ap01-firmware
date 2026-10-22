@@ -2,6 +2,7 @@
 #include "native_vfs_0041.h"
 #include "native_wifi_profiles_port_0041.h"
 #include <errno.h>
+#include "native_integrity_0041.h"
 #include <string.h>
 #ifndef AP01_WIFI_SWITCH_ROM_FN
 #define AP01_WIFI_SWITCH_ROM_FN(a,t) ((t)(uintptr_t)(a))
@@ -10,7 +11,7 @@
 namespace {
 constexpr const char *Stored="/data/e#ap01_wifi.rollback";
 constexpr const char *Temporary="/data/e#ap01_wifi.rollback.new";
-uint32_t crc(const uint8_t *p,unsigned n){uint32_t c=~0u;while(n--){c^=*p++;for(unsigned i=0;i<8;++i)c=(c>>1)^(0xedb88320u&(0u-(c&1)));}return ~c;}
+
 int readJournal(void *,Ap01WifiProfile0041 &out){
     auto io=ap01RomVfs();int present=io.exists(io.context,Stored);
     if(!present)return -ENOENT;if(present!=1)return -EIO;
@@ -18,7 +19,7 @@ int readJournal(void *,Ap01WifiProfile0041 &out){
     int n=ROM(0xa005f6d8,int (*)(const char *,const char *,void *,uint32_t))("ap01_wifi","rollback",bytes,sizeof(bytes));
     if(n<10||n>106||memcmp(bytes,"WNR1",4)||!bytes[4]||bytes[4]>32||bytes[5]>64||n!=10+bytes[4]+bytes[5])return -EILSEQ;
     unsigned at=n-4;uint32_t check=0;for(unsigned i=0;i<4;++i)check|=uint32_t(bytes[at+i])<<(8*i);
-    if(check!=crc(bytes,at)||memchr(bytes+6,0,bytes[4]+bytes[5]))return -EILSEQ;
+    if(check!=ap01_native_crc32(bytes,at)||memchr(bytes+6,0,bytes[4]+bytes[5]))return -EILSEQ;
     out=Ap01WifiProfile0041{};memcpy(out.ssid,bytes+6,bytes[4]);memcpy(out.password,bytes+6+bytes[4],bytes[5]);return 0;
 }
 int journal(void *,const Ap01WifiProfile0041 *old){
@@ -27,7 +28,7 @@ int journal(void *,const Ap01WifiProfile0041 *old){
     unsigned sn=strlen(old->ssid),pn=strlen(old->password);if(!sn||sn>32||pn>64)return -EINVAL;
     uint8_t bytes[106]={},check[106]={};unsigned n=10+sn+pn;
     memcpy(bytes,"WNR1",4);bytes[4]=sn;bytes[5]=pn;memcpy(bytes+6,old->ssid,sn);memcpy(bytes+6+sn,old->password,pn);
-    uint32_t value=crc(bytes,n-4);for(unsigned i=0;i<4;++i)bytes[n-4+i]=uint8_t(value>>(8*i));
+    uint32_t value=ap01_native_crc32(bytes,n-4);for(unsigned i=0;i<4;++i)bytes[n-4+i]=uint8_t(value>>(8*i));
     int result=ROM(0xa005f8d8,int (*)(const char *,const char *,const void *,uint32_t))("ap01_wifi","rollback.new",bytes,n);
     if(result!=int((n/16+1)*16)||ROM(0xa005f6d8,int (*)(const char *,const char *,void *,uint32_t))("ap01_wifi","rollback.new",check,sizeof(check))!=int(n)||memcmp(bytes,check,n))return -EIO;
     io.rename(io.context,Temporary,Stored);Ap01WifiProfile0041 actual;
