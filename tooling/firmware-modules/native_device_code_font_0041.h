@@ -7,3 +7,5 @@ const void *ap01DeviceCodeFont0041(bool selected);
 const void *ap01DeviceCodeTitleFont0041();
 // Complete stock 20px digit face for both focused and unfocused code rows.
 const void *ap01DeviceCodeNumberFont0041();
+
+const void *ap01WifiSsidFont0041();

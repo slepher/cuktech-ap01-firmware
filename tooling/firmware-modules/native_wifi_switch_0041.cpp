@@ -2,6 +2,8 @@
 #include <errno.h>
 #include <new>
 #include <string.h>
+__attribute__((section(".ap01_wifi_switch_budget"),used))
+const uint32_t Ap01WifiSwitch0041::budget[2]={sizeof(Ap01WifiSwitch0041),sizeof(Attempt)};
 Ap01WifiSwitch0041::~Ap01WifiSwitch0041(){delete pending.exchange(nullptr);}
 void Ap01WifiSwitch0041::finish(State result){
     if(active){memset(active.get(),0,sizeof(Attempt));active.reset();}

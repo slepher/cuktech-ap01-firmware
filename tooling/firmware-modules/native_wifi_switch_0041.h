@@ -16,6 +16,7 @@ class Ap01WifiSwitch0041 {
 public:
     enum State {Idle, Queued, Connecting, Saving, Restoring, Connected, Failed, RecoveryFailed, Unavailable, ResultUnknown};
 private:
+    static const uint32_t budget[2];
     struct Attempt {char ssid[33]={};Ap01WifiProfile0041 previous,target;};
     Ap01WifiSwitchPort0041 port;
     std::atomic<State> phase{Unavailable};

@@ -6,6 +6,7 @@
 #include "native_wifi_switch_0041.h"
 #include <memory>
 #include <new>
+#include <stddef.h>
 #include <string.h>
 
 #ifndef AP01_MENU_ROM_FN
@@ -28,6 +29,9 @@ struct Context {
     Object wifiTimer=nullptr;
     std::unique_ptr<WifiRow[]> networks;
 };
+static_assert(offsetof(Context,code)==17&&offsetof(Context,wifiPhase)==40,"0041 menu probe ABI");
+__attribute__((section(".ap01_menu_budget"),used))
+static const uint32_t menuBudget[]={sizeof(Context),sizeof(WifiRow),sizeof(Ap01WifiProfiles0041),9};
 void *&userData(Object object) { return *(void **)((uint8_t *)object + 0x10); }
 Object child(Object object, int index) {
     return AP01_MENU_ROM_FN(0xa00dcee4, Object (*)(Object, int))(object, index);
@@ -68,7 +72,7 @@ void cleanup(void *event) {
     if ((words[2] & ~0x8000u) != 0x29) return;
     auto context = (Context *)words[3];
     if (context) {
-        if(context->wifiTimer) AP01_MENU_ROM_FN(0xa008be58,void (*)(void *))(context->wifiTimer);
+        if(context->wifiTimer) AP01_MENU_ROM_FN(0xa008ae58,void (*)(void *))(context->wifiTimer);
         memset(context->code,0,sizeof(context->code));delete context;
     }
 }
@@ -138,8 +142,14 @@ Object wifiList(Object parent,Context &context) {
         userData(row)=&context;
         font(child(row,0),false,i<count);
         if(i<count){
-            text(child(row,0),names[i].ssid);
-            AP01_MENU_ROM_FN(0xa00d8e96,void (*)(Object,int,int))(child(row,0),225,26);
+            Object label=child(row,0);
+            AP01_MENU_ROM_FN(0xa019d0ae,void (*)(Object,const void *))(label,ap01WifiSsidFont0041());
+            // 0041 lv_label_t recovered at a0092022/a0091f8a: mode is
+            // low4 bits at5c, static-text bit4. New labels have no animation
+            // or DOT allocation; CLIP4 gives a bounded single line.
+            auto &mode=*((uint8_t *)label+0x5c);mode=(mode&0xf0)|4;
+            AP01_MENU_ROM_FN(0xa00d8e96,void (*)(Object,int,int))(label,225,26);
+            text(label,names[i].ssid);
             destroy(child(row,1));
             Object mark=AP01_MENU_ROM_FN(0xa00a62ee,Object (*)(Object,Object,const void *,int,int,uint32_t,int,int,int))
                 (row,row,(void *)0x62fc54d0,3,2,0x89d8f3,7,0x101,0);
@@ -153,11 +163,13 @@ Object wifiList(Object parent,Context &context) {
 unsigned mainChild(unsigned visual){return visual<2?visual:visual==2?8:visual-1;}
 void orderMain(Context &context,Object list) {
     if(!context.mainUnordered||!list||children(list)!=9)return;
-    // Keep stock logical indices (Version3 has an OTA badge). Only shift
-    // visual positions; both constructor and later stock updates remain valid.
-    for(unsigned visual=0;visual<9;++visual){unsigned index=mainChild(visual);
-        AP01_MENU_ROM_FN(0xa00df94c,void (*)(Object,unsigned,int,unsigned))
-            (child(list,index),107,(int(visual)-int(index))*73,0);}
+    // Recovered 0041 layout API: a00e6996 writes LAYOUT property22.
+    // Use native absolute row positions while retaining Version's logical3
+    // for its stock badge updater; no inferred translate-style enum.
+    AP01_MENU_ROM_FN(0xa00df94c,void (*)(Object,unsigned,int,unsigned))(list,22,0,0);
+    for(unsigned visual=0;visual<9;++visual)
+        AP01_MENU_ROM_FN(0xa00d92ec,void (*)(Object,unsigned,int,int))
+            (child(list,mainChild(visual)),1,0,int(visual)*73);
     context.mainUnordered=false;
 }
 void wifiPoll(void *timer) {
@@ -192,6 +204,10 @@ void select(Context &context, Object list, unsigned previous, unsigned next) {
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(oldLabel, (void *)0xa025488c);
     if (context.submenu || next == 2 || next == 7) font(newLabel, true, context.wifi ? next<context.wifiCount : context.submenu ? next==0 : next==2);
     else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(newLabel, (void *)0xa055fb7c);
+    if(context.wifi) {
+        if(previous<context.wifiCount)AP01_MENU_ROM_FN(0xa019d0ae,void (*)(Object,const void *))(oldLabel,ap01WifiSsidFont0041());
+        if(next<context.wifiCount)AP01_MENU_ROM_FN(0xa019d0ae,void (*)(Object,const void *))(newLabel,ap01WifiSsidFont0041());
+    }
     Object oldArrow = child(oldRow, 1), newArrow = child(newRow, 1);
     unsigned back = context.wifi ? context.wifiCount : context.submenu ? 2 : 8;
     if (oldArrow) color(oldArrow, previous == back ? 0xffffff : context.wifi ? 0x89d8f3 : 0x808080);
@@ -296,7 +312,9 @@ void event(void *raw) {
             if(replaceList(*context,false))state[1]=0x32;
         }else{
             int result=context->wifiTimer?ap01WifiSelect0041(context->networks[selected].ssid):-12;
-            if(result)text(data[0],"\u5207\u6362\u5931\u8d25");
+            int phase=ap01WifiSelectionState0041();
+            bool inFlight=(phase>=Ap01WifiSwitch0041::Queued&&phase<=Ap01WifiSwitch0041::Restoring)||phase==Ap01WifiSwitch0041::ResultUnknown;
+            if(result&&!(result==-16&&inFlight))text(data[0],"\u5207\u6362\u5931\u8d25");
             else{context->wifiPhase=-1;wifiPoll(context->wifiTimer);}
         }
         resetTimer(data);return;
