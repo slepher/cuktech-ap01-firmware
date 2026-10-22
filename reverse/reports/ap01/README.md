@@ -5,6 +5,9 @@
 | 主题 | 入口 |
 | --- | --- |
 | 范围与证据标准 | [研究需求](requirements.md)、[研究计划](plan.md)、[任务](task.md)、[状态](status.md) |
+| 当前持续目标 | [0041 整 ROM 非开源部分逆向](whole-rom-0041.md)：全局来源与覆盖账本、私有实现和依赖闭包；实验与正式 ROM 隔离 |
+| 底座私有协议续作 | [UART帧、排队、MCU OTA状态机与内嵌固件](usb-interface-ota-0041-20261023.md)、[27份函数摘录](../../analysis/usb-interface-ota-0041-20261023.json) |
+| UART 重试与接收长度 | [耗尽语义、调度门控与长度缺陷回放](uart-retry-receive-0041-20261023.md)、[11份函数摘录及14组回放](../../analysis/uart-retry-receive-0041-20261023.json)；合成内存验证，真实底座可达性待核 |
 | 外部程序编译和打包进 ROM | [打包说明](design.md)、[0041 多屏幕宿主架构](multi-screen-app-host-0041.md)、[宿主实施计划](multi-screen-app-host-implementation-plan-20261020.md)、[codex_status现状](codex-status-host-baseline-20261020.md)、[0031 XIP 实现](app-implementation-20261013.md)、[模块源码](../../../tooling/firmware-modules/README.md) |
 | 0041 屏幕宿主验证与接口 | [共存与窗口热重建](screen-host-lifecycle-20261020.md)、[重构交付与验收](screen-host-refactor-20261020.md)、[追加方案验证](screen-host-append-validation-20261020.md)、[当前接口合同](screen-host-interface-0041.md)、[原件执行检查](../../../tooling/scripts/test-screen-window-0041.py) |
 | 0041 多应用载入、卸载与应用 OTA 设计 | [Astra 详细方案](app-lifecycle-ota-0041-design-20261021.md)；常驻 OTA 不参与卸载，仅限 0041，设计待实施 |
@@ -17,6 +20,7 @@
 | 0041 静态比较与签名 | [版本对比](0041-reverse-20261013.md)、[签名分析](knowledge/0041签名与Bridge接口分析.md)、[下载核验](firmware-download-20261013.md) |
 | REA / RISC-V / Ghidra | [私有分析环境](private-profile-0041-20261017.md)、[RISC-V 实现](rea-riscv-implementation-20261016.md) |
 | QEMU 模型与 OTA | [显示交接](qemu-display-handoff-20261017.md)、[RTC 与显示](qemu-rtc-display-20261017.md)、[0041 OTA](qemu-ota-final-20261017.md)、[0031 OTA](qemu-ota-0031-20261017.md) |
+| 0041 显示链路续作 | [刷新就绪、pan 与 LCD 工作回调](display-chain-0041-20261023.md)、[原字节及局部合同](../../analysis/display-chain-0041-20261023.json)；仅离线研究，未进入正式 ROM |
 | 原厂 UI 重建 / NuttX SIM | [SIM 环境](nuttx-sim-20261016.md)、[静态 UI](ui-reverse-20261016.md)、[重建验收](application-rehost-complete-0041-20261017.md)、[功能矩阵](application-function-matrix-0041.json)、[Wi-Fi 缺口](knowledge/0041-sim-wifi-selection-gaps.md) |
 | 原厂代码、资源与覆盖缺口 | [文件与资源盘点](factory-code-resources-inventory-0041-20261020.md)、[C 文件→函数→资源映射](factory-reference-map-0041-20261020.md)、[机器清单](../../analysis/factory-reference-map-0041.json)、[离线生成器](../../../tooling/scripts/build-factory-reference-map.py)；复核命令 `python tooling/scripts/build-factory-reference-map.py --check`，只重算和比对，不执行固件 |
 | 恢复与限制 | [恢复评估](failure-recovery-20261013.md)、[恢复策略](recovery-policy-20261017.md)、[USB 调查](usb-firmware-check-20261013.md) |

@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "source": "fixed original ROM and static consumer contract",
+  "validation": "host-only table/bitwise comparison and bounded ROM reads; not guest execution",
+  "crc": {
+    "helper": "0xa00ee8fc",
+    "table": "0xa056d058",
+    "polynomial": "0x1021",
+    "table_sha256": "ea5f177f22d32b7e80c132b498ee4b92882484f891f43f1897075f28bb3da4d9",
+    "table_entries_checked": 256,
+    "vectors": [
+      {
+        "data_hex": "313233343536373839",
+        "initial": 0,
+        "result": 12739
+      },
+      {
+        "data_hex": "313233343536373839",
+        "initial": 65535,
+        "result": 10673
+      },
+      {
+        "data_hex": "313233343536373839",
+        "initial": 4660,
+        "result": 60907
+      },
+      {
+        "data_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "initial": 0,
+        "result": 32341
+      },
+      {
+        "data_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "initial": 65535,
+        "result": 16317
+      },
+      {
+        "data_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+        "initial": 4660,
+        "result": 32965
+      },
+      {
+        "data_hex": "a55aaa",
+        "initial": 0,
+        "result": 41912
+      },
+      {
+        "data_hex": "a55aaa",
+        "initial": 65535,
+        "result": 28452
+      },
+      {
+        "data_hex": "a55aaa",
+        "initial": 4660,
+        "result": 18410
+      },
+      {
+        "data_hex": "00",
+        "initial": 0,
+        "result": 0
+      },
+      {
+        "data_hex": "00",
+        "initial": 65535,
+        "result": 57840
+      },
+      {
+        "data_hex": "00",
+        "initial": 4660,
+        "result": 1651
+      }
+    ],
+    "decompiler_return_type": "void is contradicted by assembly a0 result and caller use"
+  },
+  "embedded_payloads": [
+    {
+      "address": "0xa026adb0",
+      "file_offset": 2538928,
+      "target": "shared-selector-1",
+      "header_hex": "4649540100c000001201a39fe010000c0000",
+      "header_words_u16": [
+        18758,
+        340,
+        49152,
+        0,
+        274,
+        40867,
+        4320,
+        3072,
+        0
+      ],
+      "block_count": 3072,
+      "block_stream_bytes": 49152,
+      "header_and_stream_bytes": 49170,
+      "sha256": "82938204c1b0299ed7a1fe865346b8a111fb10a259a41d82d9854fa06992c6a3",
+      "architecture": "unknown; not established by the AP01 RV32 mapping"
+    },
+    {
+      "address": "0xa0276dc4",
+      "file_offset": 2588100,
+      "target": "TA1208-selector-0",
+      "header_hex": "627570016ca600000a03be1b449f680a0000",
+      "header_words_u16": [
+        30050,
+        368,
+        42604,
+        0,
+        778,
+        7102,
+        40772,
+        2664,
+        0
+      ],
+      "block_count": 2664,
+      "block_stream_bytes": 42624,
+      "header_and_stream_bytes": 42642,
+      "sha256": "6f8425cc26e6071e2d9ac6b5e2bbe086b8d3c4c1d681021efcc6eca978dd0abb",
+      "architecture": "unknown; not established by the AP01 RV32 mapping"
+    },
+    {
+      "address": "0xa0281458",
+      "file_offset": 2630744,
+      "target": "TA1408-selector-0",
+      "header_hex": "6275700170c300000402f5a2cd9a380c0000",
+      "header_words_u16": [
+        30050,
+        368,
+        50032,
+        0,
+        516,
+        41717,
+        39629,
+        3128,
+        0
+      ],
+      "block_count": 3128,
+      "block_stream_bytes": 50048,
+      "header_and_stream_bytes": 50066,
+      "sha256": "1e2098a397ca5dcfba68816de393d0f65e8e84bf857f4bd18b1f6520f37e8e04",
+      "architecture": "unknown; not established by the AP01 RV32 mapping"
+    }
+  ],
+  "complete_module": false
+}
