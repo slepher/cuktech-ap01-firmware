@@ -1893,3 +1893,37 @@ REA skill与共同/复用/静态安全规则适用，四分报告、新增功能
 
 
 J01 8674205已整合，复用盘点/新增0；B22已接唯一真实分类种子；I04接替独立复核I03。
+
+
+## 当前完整任务书 A55（前置已整合，立即接替）
+
+独占reverse/reports/ap01/photo-reader-source-review-a55-0041-20261024.md及reverse/analysis/photo-reader-source-review-a55-0041-20261024/。
+
+待A54整合后，新独立agent只核reader前缀/open/close/注册槽/缓存布局候选映射与配置条件，callback(D,H)以A47/A49 ROM为据；A50内部read消费/A52复核直接继承，不扩全部文件系统/具体D实例，无精确版本/整库排除，新功能0。
+
+仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
+
+
+
+## 当前完整任务书 J02（2026-10-24，复用检索接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-j02；分支codex/re-0041-j02；基线本任务书启动提交。独占reverse/reports/ap01/calendar-time-reuse-gap-j02-0041-20261024.md及reverse/analysis/calendar-time-reuse-gap-j02-0041-20261024/。
+
+仅检索既有材料，不新增ROM反编译/字节导出。优先application-rehost-complete/function-matrix/factory-reference-map/weather-calendar-complete，再按函数地址/callback/字段/资源/state检索page-logic/旧pass3/近期日历和time/charge数值handler复核/父级验收/ZIP必要成员。只日历与时间数值/转换/显示接入的证据范围，不重做天气分类/显示，也不重复H13-H18/E16-E19已核counter/ID0/ID1/固定分母或无种子writer/offset搜索。
+
+形成短已有出处→行为→局限→精确缺口表，原字节合同/旧反编译需局核/SIM照片安全替代/未检到种子分别列。旧weather complete remaining的parent X11和time数字handler应先核父级complete与charge-owned后续，不能因pending重开。旧safe lunar bounds、defaultUTC0、hostRTC等仅说明SIM替代，仍要查旧ROM证据是否已解释相应行为。必要ZIP只读成员不执行/全解包/复制。最多提出少量有真实调用/extent/字段/资源种子的增量建议；主体已覆盖就收缩，没有种子不全ROM/全日历库扩扫。此为复用盘点、新功能0，主窗口负责最终范围派发，不自行接题。
+
+REA skill与共同/复用/静态安全规则全适用，四分报告；不重建整分类表/矩阵/源码/资源/机械账，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。必要JSON/链接/差异检查，独占精确提交commit/验证/未知/clean，接近提交提前给种子/重叠。
+
+
+
+## 当前完整任务书 I02（前置已整合，立即接替）
+
+独占reverse/reports/ap01/boot-ready-review-i02-0041-20261024.md及reverse/analysis/boot-ready-review-i02-0041-20261024/。
+
+待I01整合后，新独立agent只核其实际补充或覆盖结论：旧guide/system已有启动timer/计数/结束/configured/index8直接引用，SIM固定2s不等于原ROM条件；只核实际新增接入ABI/条件/原字/次序或旧证据范围，不扩驱动/设备初始化，不把没执行等于未分析，新功能0。
+
+仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
+
+
+A55 516dbc0、J02 c68f75e、I02 85b5491已整合，新功能0；J03/T01/J04三席立即接替，不重复已闭来源与日历/boot主体。

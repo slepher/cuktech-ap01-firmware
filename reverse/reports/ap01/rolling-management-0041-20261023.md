@@ -25,9 +25,9 @@
 |I04|/root/e17_uv_time_review（派发中）|本次启动提交|独立复核I03同Time2对象旧覆盖/清理精度|
 |I05|/root/g16_fb_file_review（运行）|10bc8b8|既有round3配置cache写入种子的正常接入合同|
 |B22|/root/h16_clock_source_review（运行）|33a77be|cmd51写item+0e前正常类型决策，继承既有所有权链|
-|A55|/root/a46_cache_drop（运行）|46fa469|独立复核A54 reader局部来源与gifdec整文件不同边界|
-|J02|/root/a47_reader_mode（运行）|34ff6ba|日历/时间旧complete与近期复核去重/真实缺口种子|
-|I02|/root/d19_backlight_animation（运行）|46fa469|独立复核I01旧启动证据范围与精度|
+|J03|/root/a46_cache_drop（派发中）|本次启动提交|正常设置持久化旧成果复用/精确缺口种子|
+|T01|/root/a47_reader_mode（派发中）|本次启动提交|repeat_count0的正常timer归还接入|
+|J04|/root/d19_backlight_animation（派发中）|本次启动提交|工厂正常UI/资源生命周期旧证据复用与真实种子|
 
 ## 派发规则（本次用户调整优先）
 
@@ -62,35 +62,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 ## 本批继承与增量快照（df35f44启动）
 
 A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode0合同，只独立复核，新增0；D20继承settings-round2b清理接线与D19，只独立复核，新增0。E18只补实际固定分母除法返回合同，不重做时间上层；G17只补NuttX fb候选来源认证，不用LVGL认证替代；H17只找计数writer正常连接，不重搜offset未知。六个agent已由实时状态确认全部running；管理窗口另计。
-
-
-## 当前完整任务书 A55（前置已整合，立即接替）
-
-独占reverse/reports/ap01/photo-reader-source-review-a55-0041-20261024.md及reverse/analysis/photo-reader-source-review-a55-0041-20261024/。
-
-待A54整合后，新独立agent只核reader前缀/open/close/注册槽/缓存布局候选映射与配置条件，callback(D,H)以A47/A49 ROM为据；A50内部read消费/A52复核直接继承，不扩全部文件系统/具体D实例，无精确版本/整库排除，新功能0。
-
-仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
-
-
-## 当前完整任务书 I02（前置已整合，立即接替）
-
-独占reverse/reports/ap01/boot-ready-review-i02-0041-20261024.md及reverse/analysis/boot-ready-review-i02-0041-20261024/。
-
-待I01整合后，新独立agent只核其实际补充或覆盖结论：旧guide/system已有启动timer/计数/结束/configured/index8直接引用，SIM固定2s不等于原ROM条件；只核实际新增接入ABI/条件/原字/次序或旧证据范围，不扩驱动/设备初始化，不把没执行等于未分析，新功能0。
-
-仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
-
-
-## 当前完整任务书 J02（2026-10-24，复用检索接替）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-j02；分支codex/re-0041-j02；基线本任务书启动提交。独占reverse/reports/ap01/calendar-time-reuse-gap-j02-0041-20261024.md及reverse/analysis/calendar-time-reuse-gap-j02-0041-20261024/。
-
-仅检索既有材料，不新增ROM反编译/字节导出。优先application-rehost-complete/function-matrix/factory-reference-map/weather-calendar-complete，再按函数地址/callback/字段/资源/state检索page-logic/旧pass3/近期日历和time/charge数值handler复核/父级验收/ZIP必要成员。只日历与时间数值/转换/显示接入的证据范围，不重做天气分类/显示，也不重复H13-H18/E16-E19已核counter/ID0/ID1/固定分母或无种子writer/offset搜索。
-
-形成短已有出处→行为→局限→精确缺口表，原字节合同/旧反编译需局核/SIM照片安全替代/未检到种子分别列。旧weather complete remaining的parent X11和time数字handler应先核父级complete与charge-owned后续，不能因pending重开。旧safe lunar bounds、defaultUTC0、hostRTC等仅说明SIM替代，仍要查旧ROM证据是否已解释相应行为。必要ZIP只读成员不执行/全解包/复制。最多提出少量有真实调用/extent/字段/资源种子的增量建议；主体已覆盖就收缩，没有种子不全ROM/全日历库扩扫。此为复用盘点、新功能0，主窗口负责最终范围派发，不自行接题。
-
-REA skill与共同/复用/静态安全规则全适用，四分报告；不重建整分类表/矩阵/源码/资源/机械账，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。必要JSON/链接/差异检查，独占精确提交commit/验证/未知/clean，接近提交提前给种子/重叠。
 
 
 ## 当前完整任务书 B22（旧种子已在主仓，J01去重支持，立即接替）
@@ -129,10 +100,28 @@ I01复用盘点给出真实旧种子：round3 records[5] a005acf0参数→a005ad
 仅准备不计运行，派发前整合前置并核重叠。最新管理HEAD独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告；不改共享/主树/生产ROM配置模型，不创建下级agent，其他agent同时工作勿撤销；精确独占提交commit/验证/未知/clean，接近提交提前报种子。
 
 
-## 预备完整任务书 J03（有前置，未启动）
+## 当前完整任务书 J03（先行复用盘点，立即接替）
 
 独占reverse/reports/ap01/settings-persistence-reuse-gap-j03-0041-20261024.md及reverse/analysis/settings-persistence-reuse-gap-j03-0041-20261024/。
 
 仅既有证据检索不新增ROM字节/反编译。先application最终SIM验收/matrix/reference-map/system-complete与settings-round2各批，再按地址/字段/callback/state检索近期settings/backlight/theme/miio/config专项及独立复核/父级结论/ZIP必要成员。只正常设置值的读取/保存/持有原ROM合同与SIM持久本地服务替代的证据范围，给短已有→行为→局限→真实缺口/可靠种子表，不重复D19/D22动画/背光、I01/I02启动、I05特定wifi-cache更新。旧pending须核较晚complete，已有回调/写值不因报告标题缺失当未分析；SIM服务源码/截图不证明ROM存储ABI。不重建整矩阵/分类资源表/源码/机械账，不扩OTA安全/异常或全driver/NVS扫描。少量真实调用/extent/字段种子才建议后继，无必要增量直接覆盖结论，新功能0；主窗口决定派发，不自行接题。
 
 仅准备不计运行，派发前整合前置并核重叠。最新管理HEAD独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告；不改共享/主树/生产ROM配置模型，不创建下级agent，其他agent同时工作勿撤销；精确独占提交commit/验证/未知/clean，接近提交提前报种子。
+
+
+## 当前完整任务书 T01（2026-10-24立即接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-t01；分支codex/re-0041-t01；基线本次启动提交。独占reverse/reports/ap01/timer-repeat-release-t01-0041-20261024.md及reverse/analysis/timer-repeat-release-t01-0041-20261024/。
+
+I01/I02明确repeat_count0只置timer+10，不直接free timer；G05/G06已恢复a008ae58摘链→写删除标志→free，旧timer API/资源边直接继承。只补同正常repeat_count=0 callback返回到scheduler的实际执行/删除接入和auto-delete门是否存在。先检索旧system/guide complete、buzzer-backlight、whole-ROM留存symbol/dossier/caller/xref及本地LVGL9.2.1 lv_timer候选定位，不用候选代替ROM。仅有真实留存caller/定址种子才补必要窗口；无种子有界交付，不能全ROM搜全部timer/IRQ或扩完整调度器。timer userdata与timer对象责任分开，不重复boot/private callback，不做异常/并发/缺陷测试。
+
+REA skill、本文共同/复用/静态安全规则全适用；独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。先已有→行为→局限→精确缺口，四分报告，只必要稀疏证据；已覆盖直接收缩，无可靠种子不扩扫。必要JSON/链接/差异检查、精确独占提交commit/验证/未知/clean，接近提交提前报重叠/种子。
+
+
+## 当前完整任务书 J04（2026-10-24立即接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-j04；分支codex/re-0041-j04；基线本次启动提交。独占reverse/reports/ap01/factory-reuse-gap-j04-0041-20261024.md及reverse/analysis/factory-reuse-gap-j04-0041-20261024/。
+
+仅既有证据检索，不新增ROM字节/反编译。先reference-map/application最终SIM范围与factory-test、factory-active B16/B17、buzzer两轮、settings/system complete、近期对应专项/复核，按地址/字段/callback/state核工厂正常UI/入口/资源生命周期已覆盖范围。B16外部active reader有界未知与搜索边界直接继承，不重复全ROM字段扫；factory-test启动门、GPIO三轮保持、fd取得等已有合同不得新发现。只表列旧出处→行为→局限→真实精确缺口，有真实extent/caller/对象种子才给少量后继；无种子不派stop/close/根析构/全driver扫描，不将物理极性/设备效果视为静态已恢复。不执行工厂命令/设备，不扩安全/缺陷/异常或重建整分类资源表；主窗口决定后继，不自行接题，新功能0。
+
+REA skill、本文共同/复用/静态安全规则全适用；独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。先已有→行为→局限→精确缺口，四分报告，只必要稀疏证据；已覆盖直接收缩，无可靠种子不扩扫。必要JSON/链接/差异检查、精确独占提交commit/验证/未知/clean，接近提交提前报重叠/种子。
