@@ -283,3 +283,7 @@ A13 7f44b57→77d4336已整合，范围/差异通过，技术待A14；A14从77d4
 ## 预备任务 B16：工厂active一个外部读者
 
 分支 codex/re-0041-b16；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b16。须B15验收完成整合后，从最新管理提交启动。只恢复FactoryTestMode active byte62fc92b8在已解initializer和a009f178 callback之外的一个直接读取者合同，最多3核心函数；入口factory-test报告/既有inventory与留存引用。可以针对该byte一次有界静态引用定位，不重复蜂鸣全ROM扫描，不扩整个工厂UI或销毁；无法定位给明确搜索界限/未知。独占 reverse/reports/ap01/factory-active-reader-b16-0041-20261023.md、reverse/analysis/factory-active-reader-b16-0041-20261023/。核原指令宽度/调用/事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 A15：一个天气订阅消费点
+
+分支 codex/re-0041-a15；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a15。须A14验收完成整合后，从最新管理提交启动。转weather-dataflow已知五槽订阅缺口，只恢复a00b3a68一个具体注册调用者及其callback首个天气数据消费点，最多3核心函数/少量直接依赖；先核后续报告避免重复。入口weather-dataflow报告的callback(data,user_arg)合同、保留inventory/调用者引用。先选有明确证据的小注册点，不接管全部天气UI/图标转换/生命周期。独占 reverse/reports/ap01/weather-subscriber-a15-0041-20261023.md、reverse/analysis/weather-subscriber-a15-0041-20261023/。核原指令及间接ABI、参数/数据宽度/借用与复制边界，事实推断未知、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
