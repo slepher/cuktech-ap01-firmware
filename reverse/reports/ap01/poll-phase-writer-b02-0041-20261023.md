@@ -6,7 +6,7 @@
 
 确认 timer 之外一个直接写入者：响应 callback `a00a8582` 的 **cmd=0x58** 分支，在 `a00a878e` 对 RAM `62fc4b35` 执行 `sb zero`，只清 phase 的一个 byte。触发条件是调用缓存更新辅助函数 `a0191652(62fcb504,4,&response_view)` **返回之后**，32-bit `*(62fcb504)` 非零。值为0时跳过写入；两条路径都立即调用轮询选择器 `a0191746`。
 
-因此不能表述为“收到0x58总清phase”，也不能把条件改为“payload第一个byte非零”“数据有变化”或“缓存函数返回成功”。这条分支没有重置各组 sent，也没有清 round_done。直接 helper 的同步 handler 调用发生在条件读取之前，故本报告保留后调用读取语义，不将它替换成读取原 payload。
+因此不能表述为“收到0x58总清phase”，也不能把条件改为“payload第一个byte非零”“数据有变化”或“缓存函数返回成功”。这条分支没有直接重置各组 sent，也没有直接清 round_done；按[B03复核](poll-phase-review-b03-0041-20261023.md)，此负结论仅限局部直接写入，不推广到选择器或间接 handler 的副作用。直接 helper 的同步 handler 调用发生在条件读取之前，故本报告保留后调用读取语义，不将它替换成读取原 payload。
 
 本次只恢复此分支、直接缓存依赖和直接间接调用点，不展开整个响应分派、USB状态机或0x58字段的业务含义。已知存在的 phase=1 分支留作后续小任务；其余写入者集合不宣称完备。
 
@@ -70,7 +70,7 @@ void response_58_local(uint32_t command, uint32_t length, const void *payload) {
 | `a00a878a/8e` | `lui a5,0x62fc5`；`sb zero,-0x4cb(a5)`，地址`62fc5000-4cb=62fc4b35` |
 | `a00a8792`及`a00a8aae` | 汇合后调用`a0191746`，随后到共同返回尾部；不检查选择器返回值 |
 
-helper清传输状态、检查旧phase及组sent/limit，必要时先写round_done=1；随后比较/复制4 B缓存。比较相等不会复制/通知，但并不阻止调用者读取现有非零缓存并清phase。不同则复制，槽非NULL时同步调用handler `((view.command+0x20)&255,0,NULL)`；本调用得到0x78通知。**这些操作发生在调用者phase写入之前**，本分支没有倒回helper重算round_done，也没有重置sent。选择器的详细规则沿用B01，不补造发送成功确认。
+helper清传输状态、检查旧phase及组sent/limit，必要时先写round_done=1；随后比较/复制4 B缓存。比较相等不会复制/通知，但并不阻止调用者读取现有非零缓存并清phase。不同则复制，槽非NULL时同步调用handler `((view.command+0x20)&255,0,NULL)`；本调用得到0x78通知。**这些操作发生在调用者phase写入之前**，本分支没有倒回helper重算round_done，也没有直接重置sent；不据此排除后续选择器或间接handler的副作用（见B03复核）。选择器的详细规则沿用B01，不补造发送成功确认。
 
 事实：上述地址、读写宽度、常量、先后顺序与分支均由原字节/指令支持。推断：称该字段为轮询phase沿用静态表及选择器合同；“恢复起始轮询相位”是描述性命名，并不证明重新执行完整初始化。未知：0x58四字节缓存的业务含义、实际回调时序、完整slot写入者、其他phase写入者、基础信息phase=1的完整触发条件。
 
