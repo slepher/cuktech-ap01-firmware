@@ -259,3 +259,11 @@ A12 79e7dc3→2b0c716已整合，限定接受A11，无纠正；248B/91指令/66�
 ## 预备任务 C15：文本入口前置helper
 
 分支 codex/re-0041-c15；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c15。须C14验收允许后，从最新管理提交启动。仅恢复C13/C14文本入口直接调用的a00dddf4前置helper正常参数/返回/门控合同及最多两个直接依赖，不扩完整GUI/断言系统，不做诊断/缺陷触发。先核本地已恢复成果避免重复；来源未知不得自动称私有或开源排除。暂不重复泛搜LVGL源码（C13已核sdk/tooling文件名未找到可靠版本）；若已有参考源明确可用可记录，但不外连。独占 reverse/reports/ap01/text-precondition-c15-0041-20261023.md、reverse/analysis/text-precondition-c15-0041-20261023/。核原指令/ABI/事实推断未知、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## C14/C15交接更新
+
+C14 867810f→c021206已整合，限定接受C13，无纠正；306B/101条、51字段/15全部直接控制目标核验通过。C15从c021206运行，agent /root/c15_text_precondition。C14工作树干净且整合可回收保留分支。当前A13/B14/C15三任务。
+
+## 预备任务 C16：前置helper独立复核
+
+分支 codex/re-0041-c16；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c16。须C15成果提交整合后，从最新管理提交启动。仅复核C15最终实际范围正常参数/返回门控合同及最多两个直接依赖，不扩GUI/断言系统或诊断触发。独占 reverse/reports/ap01/text-precondition-review-c16-0041-20261023.md、reverse/analysis/text-precondition-review-c16-0041-20261023/；必要精确纠正C15。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
