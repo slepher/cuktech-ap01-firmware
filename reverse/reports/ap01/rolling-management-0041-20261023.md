@@ -24,7 +24,7 @@
 |---|---|---|---|
 |C25|/root/e17_uv_time_review（运行）|29002d0|既有区域变换的局部候选来源认证|
 |D22|/root/g16_fb_file_review（运行）|9f76584|独立核D21属性映射与四项来源差异|
-|C23|/root/h16_clock_source_review（运行）|0a1cf0a|C13/C14正常格式化入口局部候选认证|
+|A52|/root/h16_clock_source_review（派发中）|本次启动提交|独立复核A50 reader read/seek/缓存持有ABI|
 |I01|/root/a46_cache_drop（运行）|92e733a|启动就绪分支旧成果→实际缺口与必要接入核实|
 |A53|/root/a47_reader_mode（运行）|85cf93c|独立复核A51 drop/drop_all局部候选映射|
 |A54|/root/d19_backlight_animation（运行）|aabdfcd|reader前缀及open/close局部候选认证，不接A50内部消费|
@@ -64,7 +64,7 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode0合同，只独立复核，新增0；D20继承settings-round2b清理接线与D19，只独立复核，新增0。E18只补实际固定分母除法返回合同，不重做时间上层；G17只补NuttX fb候选来源认证，不用LVGL认证替代；H17只找计数writer正常连接，不重搜offset未知。六个agent已由实时状态确认全部running；管理窗口另计。
 
 
-## 预备完整任务书 A52（有前置，未启动）
+## 当前完整任务书 A52（A50已整合，立即接替）
 
 独占reverse/reports/ap01/photo-reader-consumer-review-a52-0041-20261024.md及reverse/analysis/photo-reader-consumer-review-a52-0041-20261024/。
 
@@ -87,15 +87,6 @@ A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode
 独占reverse/reports/ap01/backlight-animation-source-review-d22-0041-20261024.md及reverse/analysis/backlight-animation-source-review-d22-0041-20261024/。
 
 待D21整合后，新独立agent只核property3e/selector20000的候选定义与ROMwrapper、动画descriptor size/early_apply/start顺序/repeat超期余时四项来源差异及其证据强度。D19/D20继承；不能候选覆盖ROM/推断真实视觉效果、控件类型或ctx free，不扩style引擎，新功能0。
-
-仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
-
-
-## 当前完整任务书 C23（已有合同已整合，立即接替）
-
-独占reverse/reports/ap01/text-entry-source-c23-0041-20261024.md及reverse/analysis/text-entry-source-c23-0041-20261024/。
-
-C13/C14已恢复a0091ee4格式化入口及a008bbd8分配helper并建议仅可靠本地候选存在时作来源认证；现有明确LVGL9.2.1本地候选可用。先按地址/字段核C15至后续报告和F07/F08是否已解决来源，旧合同直接引用。只比对应lv_label/lv_text正常格式化入口/申请/所有权及必要字段/候选定义，候选位置由研究者确认，不预命名函数；无匹配就精确差异/未知交付。不重做完整printf/字体/GUI/ROM函数，不复制全源码、不将局部匹配等同精确版本。
 
 仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
 
