@@ -113,3 +113,11 @@
 问题：A19的ROM PNG源在info dispatcher a0082c8c正常class0分支怎样匹配注册decoder、调用哪个确切info callback、向image setter返回哪些宽高/格式/状态，decoder对象注册及注销/生命周期如何衔接？入口A19/A20及a0082e32/a0082c8c/a00ed560合同，具体PNG注册/callback地址目前未知，agent须据原证据定位，不以PNG header/CRC代替执行路径身份。约5–12核心及必要依赖，注册→选择/间接ABI→正常PNG信息读取→结果返回→注册对象回收或已知常驻边界；不恢复完整像素解码/压缩通用算法/所有image格式。
 
 A20对add_flag callee/字段谓词纠正须作为既有合同，不能沿用A19旧误名。PNG容器格式静态证据可用于参数界限，不进行畸形输入/漏洞/错误触发测试。恢复函数地址/布局/所有权/返回分支/原指令、事实推断未知、准确来源/版本或未认证状态、必要静态验证；精确decoder或注销未能定位时列断边与有界检索，不外连下载，不修改分析模型。标准实现只有可核实来源才排除，厂商注册/回调恢复。排除全GUI/最终显示、固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 H02（待H01整合）
+
+任务ID H02，新agent独立复核H01另一天气订阅者完整生命周期闭包。分支codex/re-0041-h02；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h02；基线含H01最新管理提交，派发补commit。独占reverse/reports/ap01/weather-lifecycle-review-h02-0041-20261023.md及reverse/analysis/weather-lifecycle-review-h02-0041-20261023/。
+
+问题：a00b821e构造注册点a00b8bc2→callback a00b5cd4→a00b5b58拆156B天气视图→a00b564e主要当前指标/七行消费→DELETE事件a00b3b26注销/清理是否由原指令成立？具体核心范围以H01正式函数清单为准，约5–12核心及必要依赖，已验收五槽双参分发/图标/arc只针对核合同。重点callback(data,page) ABI、page+0x10 wrapper与context区别、栈视图借用、LHU图标第二参及湿度零扩展、正常失败分支、先清context28word再注销再free(wrapper)的顺序与context最终释放断边。不能把a00b8bc2当新函数入口，不能把free(wrapper)写成free(ctx)。
+
+独立原字节、间接/调用ABI、厂商字与宽度/返回覆盖核验，逐项接受/纠正/未核，纠正只独占报告不改H01；交付伪代码/布局/状态/所有权、事实推断未知、来源、实际静态验证和断边。已有图标/通用格式化等保留明确合同，精确来源未认证不得排除。constructor只核该type分支与必要失败清理，不扩全页面/所有天气格式/最终物理显示。ctx最终所有权和离页DELETE触发可留后继，不为关闭断边拼造理想销毁链。禁止固件执行/外连/漏洞/畸形输入/历史回放/ROM生产模型修改；共同规则适用。
