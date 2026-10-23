@@ -1807,3 +1807,25 @@ G01/G02已经恢复a00dca48四点变换/父链/包围区域和相关缩放旋转
 
 
 C25 f4e5330已整合，待C26独立复核；J01复用检索接替，为下一批业务增量提供可靠种子。
+
+
+## 当前完整任务书 A52（A50已整合，立即接替）
+
+独占reverse/reports/ap01/photo-reader-consumer-review-a52-0041-20261024.md及reverse/analysis/photo-reader-consumer-review-a52-0041-20261024/。
+
+待A50整合后，新独立agent只复核同reader进入a008b888的ABI、D+14 read(D,H,dst,want,&count)、必要seek/config/C持有/游标和A47归还连接。具体D实例/真实mode1照片仍未知；继承A47/A49构造析构，不扩解码/所有失败/文件系统，新功能0。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+
+## 当前完整任务书 C24（C23已整合，立即接替）
+
+独占reverse/reports/ap01/text-entry-source-review-c24-0041-20261024.md及reverse/analysis/text-entry-source-review-c24-0041-20261024/。
+
+待C23整合后，新独立agent只核正常格式化入口/两遍格式化/len+1申请/label持有/static标记与本地LVGL候选映射；核va_copy及配置/布局解释强度，尤其ROM+5c mask10与候选bitfield差异不能覆盖。不重做C13/C14字节/完整printf或GUI，新功能0。
+
+仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
+
+
+A52 0108ef6、C24 f19cf22已整合，分别接受A50/C23限定合同，新功能0；C26/J02立即补位。
