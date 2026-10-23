@@ -18,16 +18,16 @@
 
 ## 实际运行快照
 
-六个subagent已真实启动且均运行中，主窗口另计。维持六路，完成即整合补位；scope去重不作为空席理由。
+以下六项真实运行，已结束任务即时补位，主窗口另计；不创建下级agent。
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A33|照片新源ABI缺口|准备补位|
-|A32|独立技术复核|待启动，完整任务书已就绪|
-|D13|Pixel/raw候选来源认证|准备补位|
-|E11|独立技术复核|待启动，完整任务书已就绪|
-|G10|独立技术复核|待启动，完整任务书已就绪|
-|H09|独立复核type2 DELETE真实增量|待启动，任务书就绪|
+|A33|/root/a33_photo_source|b673714|照片新源接入ABI|
+|A32|/root/a32_accounting_review|3ba6b96|计量合同独立复核|
+|D13|/root/d13_pixel_source|b673714|Pixel候选来源比对|
+|E11|/root/e11_round3_review|3ba6b96|较晚round3覆盖独立复核|
+|G10|/root/g10_ready_review|3ba6b96|ready接入独立复核|
+|H10|type2 timer创建/更新实际缺口|准备立即补位|
 
 ## 派发规则（本次用户调整优先）
 
@@ -65,7 +65,7 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 
 以上需据正式报告收缩为完整独占任务书；若任务已覆盖且无必要技术增量，则从其他已定位缺口换题，不递归复核纯重复材料。主窗口在每项提交前准备具体任务，保持六路。
 
-## 当前完整任务书 A32（待启动，正式前序已整合）
+## 当前完整任务书 A32（已启动，基线3ba6b96）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a32；分支codex/re-0041-a32；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/image-cache-accounting-review-a32-0041-20261024.md及reverse/analysis/image-cache-accounting-review-a32-0041-20261024/。
 
@@ -73,13 +73,13 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 
 正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
 
-## 当前完整任务书 E11（待启动，正式前序已整合）
+## 当前完整任务书 E11（已启动，基线3ba6b96）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e11；分支codex/re-0041-e11；基线为启动时最新整合提交。独占reverse/reports/ap01/ctk-round3-coverage-review-e11-0041-20261024.md及reverse/analysis/ctk-round3-coverage-review-e11-0041-20261024/。
 
 E10现已确认其候选为旧导航覆盖，后继不再重复根退出搜索；E11改为尚未经独立技术复核的E09纠正。只核round3 Evidence ev_dac9ee80…15c3确属同ROM与profile/函数完整body a00a12d0..a00a24a5、a00a1aa8调用/s0-e4保存槽读取+0xa/+0x12链早已有留存、旧二轮截断在a00a1450既有SUB64，及E07/E08仅retained body边界结论不能外推此前分析缺失。E01–E08消费者合同直接引用，不重做CTK/全字节扫描/整函数导出，不将未发现+34/+38等同不存在。重点是技术证据范围/身份与局部厂商字校核，不再制作旧函数清单。先已有→复核缺口，四分类报告、逐项接受纠正未核、新增功能0，必要静态验证与独占提交，报告commit/验证/未知/clean。共同安全/隔离规则适用，不创建下级agent、不改主树共享/ROM生产配置模型，无SIM/构建/回放/设备/外网。
 
-## 当前完整任务书 G10（待启动，正式前序已整合）
+## 当前完整任务书 G10（已启动，基线3ba6b96）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g10；分支codex/re-0041-g10；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/display-ready-review-g10-0041-20261024.md及reverse/analysis/display-ready-review-g10-0041-20261024/。
 
@@ -87,15 +87,7 @@ E10现已确认其候选为旧导航覆盖，后继不再重复根退出搜索�
 
 正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
 
-## 当前完整任务书 H09（待启动，H08已整合）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h09；分支codex/re-0041-h09；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/weather-type2-review-h09-0041-20261024.md及reverse/analysis/weather-type2-review-h09-0041-20261024/。
-
-新agent独立技术复核：H08真正补充的type2 ctx/wrapper与a00aba9c DELETE/注销原序；a00ab754完整callback、pass3 type2登记挂接及分类显示全继承，不跨用type4 68B或type19 116B，不重导整callback。
-
-正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
-
-## 当前完整任务书 A33（准备，2026-10-24）
+## 当前完整任务书 A33（已启动，基线b673714）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a33；分支codex/re-0041-a33；基线为本任务书提交。独占reverse/reports/ap01/photo-source-abi-a33-0041-20261024.md及reverse/analysis/photo-source-abi-a33-0041-20261024/。
 
@@ -103,10 +95,16 @@ A29/A31明确留存照片主旋钮调用a00ed7f4的新源实参custom0未可信�
 
 先已有→解释行为→局限→精确缺口，四分类交付，必要局部静态验证，不重复整函数/源码/资源/哈希账。无增量报覆盖不擅自换题，完成及时提交供立即补位。共同安全/隔离/独占输出规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网。提交明确独占文件，报告commit/验证/未知/clean后结束。
 
-## 当前完整任务书 D13（准备，2026-10-24）
+## 当前完整任务书 D13（已启动，基线b673714）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d13；分支codex/re-0041-d13；基线为本任务书提交。独占reverse/reports/ap01/pixel-source-auth-d13-0041-20261024.md及reverse/analysis/pixel-source-auth-d13-0041-20261024/。
 
 A25/A26默认raw/free/独立align表绑定与Pixel/raw析构、A30计量字段已有ROM合同，准确库来源匹配尚未认证；F07/F08只认证候选显示/list差异，不等于draw-buffer来源。仅将这些已知draw-buffer默认handler/字段/对齐/清理合同与本地WSL Ubuntu-24.04候选/home/slepher/nuttx-ap01-sim/apps/graphics/lvgl/lvgl的LVGL9.2.1实现逐项比对，复用候选身份，不重做display/list认证或整库排除。候选根只读（WSL访问必要时require_escalated，已有静态读取授权），禁止启动SIM/构建/网络/修配置。源码不能覆盖ROM差异；不匹配明确字段/ABI差异，不重读完整ROM函数或复制整源码。
 
 先已有→解释行为→局限→精确缺口，四分类交付，必要局部静态验证，不重复整函数/源码/资源/哈希账。无增量报覆盖不擅自换题，完成及时提交供立即补位。共同安全/隔离/独占输出规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网。提交明确独占文件，报告commit/验证/未知/clean后结束。
+
+## 当前完整任务书 H10（待启动，H09已整合）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h10；分支codex/re-0041-h10；基线为启动时最新整合提交。独占reverse/reports/ap01/time1-timer-lifecycle-h10-0041-20261024.md及reverse/analysis/time1-timer-lifecycle-h10-0041-20261024/。
+
+H08/H09 type2/time1的136B ctx与20B wrapper以及DELETE先借ctx+78再timer_delete已闭；真正未核为ctx+78 timer的实际创建安装、callback主要正常更新与page/ctx身份。本题只补这条timer创建→正常callback/数据使用→既有删除借用连接。先查pass3 type2构造附近、weather-calendar-complete、page-logic-evidence/asset-index的lv_ui_time1_update_wx_data_cb、最终ZIP及较晚round3，已有登记/天气callback a00ab754全继承，不重做分类显示/资源/DELETE。不套用type4/type19，正常主app teardown触发仍归共同未知，不再搜天气DELETE上层。若创建/更新旧证据已解释，只局部核ABI/厂商字/字段接入；若无真实callback种子有界交付，不泛扫所有timer。四分类报告、必要静态验证、独占提交并报告commit/验证/未知/clean。共同安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/回放/设备/网络，不重复整函数导出/复制资源或源码。
