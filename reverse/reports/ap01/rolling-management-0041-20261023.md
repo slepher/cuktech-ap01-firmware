@@ -84,7 +84,7 @@ D07/D08已覆盖描述符持有/提交/IRQ合同，继承不重做。精确种�
 
 问题：event array维护与重入精确断边。
 
-继承F05/F06/G05/G06事件注册/分发合同及F07/F08来源差异。只追F06明确未展开的array容量/变更/重入维护实际helper；种子a01b93b4/a008acfa与既有callee证据。先检查近期报告是否已覆盖，仅补前缀之外list+14状态、扩容/删除/重入清理尚缺连接；不要重新恢复descriptor安装、filter匹配或整个事件库。候选源码不能替代ROM事实，20B不是完整list尺寸。
+继承F05/F06/G05/G06事件注册/分发合同及F07/F08来源差异。派发后交叉检索确认G03/G04已留ac38/acc6快照清理，G05/G06已恢复dirty/busy、压紧/free及capacity=count+4调用，全部继承。实际范围收缩为a00ecc68容量helper内部owned门、大小计算/realloc/回写/限幅与caller返回消费；只补未解释语义窗口，不再恢复重入/删除，不重导已有原指令。候选源码不能替代ROM事实，20B不是完整list尺寸。
 
 分支codex/re-0041-f09；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f09。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/event-array-maintenance-f09-0041-20261023.md及reverse/analysis/event-array-maintenance-f09-0041-20261023/。
 
@@ -94,7 +94,7 @@ D07/D08已覆盖描述符持有/提交/IRQ合同，继承不重做。精确种�
 
 问题：event38替代work调度与状态归还。
 
-继承G05/G06已知主路径和三项纠正，旧system/settings timer/SIM调度不再恢复。仅a008335e→a00806f8→a009f9b6→a00806d0的替代38 work去重、调度、对象身份、正常回调后状态归还。优先材料按4地址无精确命中仅为检索范围事实，须再核字段/调用者/旧Evidence。未安装的hook不假定已运行，不扩所有poll/event。
+继承G05/G06已知主路径和三项纠正，旧system/settings timer/SIM调度不再恢复。派发后交叉检索确认G05已有替代38注册/去重/clear窗口，C03/C04已有a009e4f6→a009f9b6成组初始化/启动合同，全部继承；实际范围收缩为display state+58/+60对象身份、a009f9b6到实际消费及正常归还/退出连接。优先材料按4地址无精确命中仅为检索范围事实，须再核字段/调用者/旧Evidence。未安装的hook不假定已运行，不扩所有poll/event。
 
 分支codex/re-0041-g07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g07。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/display-alternate-work-g07-0041-20261023.md及reverse/analysis/display-alternate-work-g07-0041-20261023/。
 
