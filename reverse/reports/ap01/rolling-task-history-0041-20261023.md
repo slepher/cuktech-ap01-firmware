@@ -1949,3 +1949,25 @@ J01去重后唯一有原留存种子的增量：a00a8582 cmd0x51正常设备类�
 
 
 I05 73ed140、B22 4f6c46f已整合；I05新功能0，B22只新增既有素材中的正常分类解释，二者均待新独立复核；B23/I06交叉接替。
+
+
+## 当前完整任务书 I04（I03已整合，立即接替）
+
+独占reverse/reports/ap01/saver-time2-lifetime-review-i04-0041-20261024.md及reverse/analysis/saver-time2-lifetime-review-i04-0041-20261024/。
+
+待I03整合后，新独立agent只复核同Time2 type2f creator/callback/DELETE的旧覆盖范围与本轮必要ABI/清理精度；旧guide creator与weather evidence[22] DELETE已留，A15/A16已有登记，不算新恢复。ctx40/wrapper20按同对象证据核，不套H08 type2/H05 type4/H01 type19释放。ctx最终free或上层leave连接无种子保持未知，不扩根析构全扫，新功能0。
+
+仅准备不计运行，派发前整合前置/再核重叠。最新管理HEAD新建独占树re0041-ID小写、分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告、最小稀疏取证；不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，精确独占提交commit/验证/未知/clean，接近提交提前报后继种子。
+
+
+
+## 当前完整任务书 T01（2026-10-24立即接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-t01；分支codex/re-0041-t01；基线本次启动提交。独占reverse/reports/ap01/timer-repeat-release-t01-0041-20261024.md及reverse/analysis/timer-repeat-release-t01-0041-20261024/。
+
+I01/I02明确repeat_count0只置timer+10，不直接free timer；G05/G06已恢复a008ae58摘链→写删除标志→free，旧timer API/资源边直接继承。只补同正常repeat_count=0 callback返回到scheduler的实际执行/删除接入和auto-delete门是否存在。先检索旧system/guide complete、buzzer-backlight、whole-ROM留存symbol/dossier/caller/xref及本地LVGL9.2.1 lv_timer候选定位，不用候选代替ROM。仅有真实留存caller/定址种子才补必要窗口；无种子有界交付，不能全ROM搜全部timer/IRQ或扩完整调度器。timer userdata与timer对象责任分开，不重复boot/private callback，不做异常/并发/缺陷测试。
+
+REA skill、本文共同/复用/静态安全规则全适用；独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。先已有→行为→局限→精确缺口，四分报告，只必要稀疏证据；已覆盖直接收缩，无可靠种子不扩扫。必要JSON/链接/差异检查、精确独占提交commit/验证/未知/clean，接近提交提前报重叠/种子。
+
+
+I04 5391bf4、T01 b5b5bdb已整合，新功能0；T02/L01立即接替，不重开无种子生命周期。

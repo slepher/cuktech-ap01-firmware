@@ -22,11 +22,11 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|I04|/root/e17_uv_time_review（派发中）|本次启动提交|独立复核I03同Time2对象旧覆盖/清理精度|
-|B23|/root/g16_fb_file_review（派发中）|本次启动提交|独立核B22 cmd51真正新增分类合同|
-|I06|/root/h16_clock_source_review（派发中）|本次启动提交|独立核I05旧配置read/cache合同衔接|
+|T02|/root/e17_uv_time_review（派发中）|本次启动提交|独立核T01复用接入/运行时限定|
+|B23|/root/g16_fb_file_review（运行）|14e7291|独立核B22 cmd51真正新增分类合同|
+|I06|/root/h16_clock_source_review（运行）|14e7291|独立核I05旧配置read/cache合同衔接|
 |J03|/root/a46_cache_drop（运行）|09e11d0|正常设置持久化旧成果复用/精确缺口种子|
-|T01|/root/a47_reader_mode（运行）|09e11d0|repeat_count0的正常timer归还接入|
+|L01|/root/a47_reader_mode（派发中）|本次启动提交|设置UI两caller到a00ab478的必要接入合同|
 |J04|/root/d19_backlight_animation（运行）|09e11d0|工厂正常UI/资源生命周期旧证据复用与真实种子|
 
 ## 派发规则（本次用户调整优先）
@@ -64,15 +64,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode0合同，只独立复核，新增0；D20继承settings-round2b清理接线与D19，只独立复核，新增0。E18只补实际固定分母除法返回合同，不重做时间上层；G17只补NuttX fb候选来源认证，不用LVGL认证替代；H17只找计数writer正常连接，不重搜offset未知。六个agent已由实时状态确认全部running；管理窗口另计。
 
 
-## 当前完整任务书 I04（I03已整合，立即接替）
-
-独占reverse/reports/ap01/saver-time2-lifetime-review-i04-0041-20261024.md及reverse/analysis/saver-time2-lifetime-review-i04-0041-20261024/。
-
-待I03整合后，新独立agent只复核同Time2 type2f creator/callback/DELETE的旧覆盖范围与本轮必要ABI/清理精度；旧guide creator与weather evidence[22] DELETE已留，A15/A16已有登记，不算新恢复。ctx40/wrapper20按同对象证据核，不套H08 type2/H05 type4/H01 type19释放。ctx最终free或上层leave连接无种子保持未知，不扩根析构全扫，新功能0。
-
-仅准备不计运行，派发前整合前置/再核重叠。最新管理HEAD新建独占树re0041-ID小写、分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告、最小稀疏取证；不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，精确独占提交commit/验证/未知/clean，接近提交提前报后继种子。
-
-
 ## 当前完整任务书 B23（前置已整合，立即接替）
 
 独占reverse/reports/ap01/cmd51-device-type-review-b23-0041-20261024.md及reverse/analysis/cmd51-device-type-review-b23-0041-20261024/。
@@ -89,15 +80,6 @@ A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode
 仅既有证据检索不新增ROM字节/反编译。先application最终SIM验收/matrix/reference-map/system-complete与settings-round2各批，再按地址/字段/callback/state检索近期settings/backlight/theme/miio/config专项及独立复核/父级结论/ZIP必要成员。只正常设置值的读取/保存/持有原ROM合同与SIM持久本地服务替代的证据范围，给短已有→行为→局限→真实缺口/可靠种子表，不重复D19/D22动画/背光、I01/I02启动、I05特定wifi-cache更新。旧pending须核较晚complete，已有回调/写值不因报告标题缺失当未分析；SIM服务源码/截图不证明ROM存储ABI。不重建整矩阵/分类资源表/源码/机械账，不扩OTA安全/异常或全driver/NVS扫描。少量真实调用/extent/字段种子才建议后继，无必要增量直接覆盖结论，新功能0；主窗口决定派发，不自行接题。
 
 仅准备不计运行，派发前整合前置并核重叠。最新管理HEAD独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告；不改共享/主树/生产ROM配置模型，不创建下级agent，其他agent同时工作勿撤销；精确独占提交commit/验证/未知/clean，接近提交提前报种子。
-
-
-## 当前完整任务书 T01（2026-10-24立即接替）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-t01；分支codex/re-0041-t01；基线本次启动提交。独占reverse/reports/ap01/timer-repeat-release-t01-0041-20261024.md及reverse/analysis/timer-repeat-release-t01-0041-20261024/。
-
-I01/I02明确repeat_count0只置timer+10，不直接free timer；G05/G06已恢复a008ae58摘链→写删除标志→free，旧timer API/资源边直接继承。只补同正常repeat_count=0 callback返回到scheduler的实际执行/删除接入和auto-delete门是否存在。先检索旧system/guide complete、buzzer-backlight、whole-ROM留存symbol/dossier/caller/xref及本地LVGL9.2.1 lv_timer候选定位，不用候选代替ROM。仅有真实留存caller/定址种子才补必要窗口；无种子有界交付，不能全ROM搜全部timer/IRQ或扩完整调度器。timer userdata与timer对象责任分开，不重复boot/private callback，不做异常/并发/缺陷测试。
-
-REA skill、本文共同/复用/静态安全规则全适用；独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。先已有→行为→局限→精确缺口，四分报告，只必要稀疏证据；已覆盖直接收缩，无可靠种子不扩扫。必要JSON/链接/差异检查、精确独占提交commit/验证/未知/clean，接近提交提前报重叠/种子。
 
 
 ## 当前完整任务书 J04（2026-10-24立即接替）
@@ -118,10 +100,21 @@ REA skill、本文共同/复用/静态安全规则全适用；独占树/输出�
 仅准备不计运行，派发前整合前置核重叠，最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则全适用，已有→实际缺口与四分报告、最小稀疏验证，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，独占提交commit/验证/未知/clean，接近提交先报后继种子。
 
 
-## 预备完整任务书 T02（有前置，未启动）
+## 当前完整任务书 T02（T01已整合，立即接替）
 
 独占reverse/reports/ap01/timer-repeat-release-review-t02-0041-20261024.md及reverse/analysis/timer-repeat-release-review-t02-0041-20261024/。
 
 待T01整合后，新独立agent只核其实际正常repeat_count0 callback后scheduler/auto-delete/归还接入或有界无种子结论。G05/G06已核a008ae58合同与I01/I02 callback直接引用，不重导旧函数或全timer/IRQ扫描，不用候选当ROM；userdata和timer分开。只核实际新增，不递归扩库，新功能0。
 
 仅准备不计运行，派发前整合前置核重叠，最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则全适用，已有→实际缺口与四分报告、最小稀疏验证，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，独占提交commit/验证/未知/clean，接近提交先报后继种子。
+
+
+## 当前完整任务书 L01（2026-10-24，立即接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-l01；分支codex/re-0041-l01；基线本次启动提交。独占reverse/reports/ap01/settings-mode-entry-l01-0041-20261024.md及reverse/analysis/settings-mode-entry-l01-0041-20261024/。
+
+J03复用盘点给旧真实call种子：settings-round2b records[10] a00feac8(a0从s4+1 LBU)/a00feade(a0=3)→a00ab478，旧extent48B ev_5334e642…；不能仅按报告无标题认缺失。先查system/guide complete父级cached settings、page-logic/较晚round3/pass3/近期settings/saver/mode专报告及ZIP必要成员，按callee/字段/state交叉核是否早已解释。
+
+只核这两正常UI调用进入同48B helper的参数宽度/返回消费、所写字段或下层服务接入；不能先将其命名持久保存或推全设置行为。旧设置状态、重绘、D19/D22背光动画、I01/I05配置和J03盘点均继承，不接管其主题。主体已覆盖则直接引用结束，只补实际不可信/缺接入窗口，不重导完整设置大函数/分类表/源码/全资源；不扩NVS/驱动/网络/异常/安全/全GUI。
+
+REA skill与本文共同/复用/静态安全规则适用，先已有→行为→局限→精确缺口和四分报告；独占树/输出，不改共享/主树/生产ROM配置模型，不创建下级agent，其他agent同时工作勿撤销。必要静态验证、精确路径提交commit/验证/未知/clean，接近提交先报重叠与真实种子。
