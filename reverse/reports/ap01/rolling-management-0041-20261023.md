@@ -24,7 +24,7 @@
 |---|---|---|
 |A26|仅A25新增绑定与raw/align合同的独立复核|运行中：/root/a26_pixel_memory_review|
 |D09|既有DMA合同之外的channel分配/正常close/槽归还|运行中：/root/d09_dma_channel|
-|E08|E07有界检索与调用边界结论独立复核|运行中：/root/e08_ctk_review|
+|E09|a00a1aa8真实正常函数边界与保存槽别名|准备（E08已整合08dfc7c）|
 |F09|既有event合同之外的array维护/重入断边|运行中：/root/f09_event_array|
 |G07|event38替代work调度/归还断边|运行中：/root/g07_alternate_work|
 |H07|type4 weather1正常上层离页→已知DELETE连接|运行中：/root/h07_weather1_navigation|
@@ -70,16 +70,6 @@ D07/D08已覆盖描述符持有/提交/IRQ合同，继承不重做。精确种�
 
 先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
 
-## 当前完整任务书 E08（已启动，基线fca1d5e）
-
-问题：独立复核E07边界与增量口径。
-
-继承charge-complete records[8]/[9]/[19]、round4及E07复用对照。只复核a00a1aa8→a00a53c0不能归属最近a00a12d0 retained body的证据，以及14 getter/3注册候选有界检索能支持的结论。未找到item+34/+38读者不能宣称恢复。不要重扫CTK/全部消费者；已有充分证据可短报告结束，新增功能0。
-
-分支codex/re-0041-e08；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e08。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/ctk-extra-review-e08-0041-20261023.md及reverse/analysis/ctk-extra-review-e08-0041-20261023/。
-
-先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
-
 ## 当前完整任务书 F09（已启动，基线fca1d5e）
 
 问题：event array维护与重入精确断边。
@@ -109,3 +99,11 @@ D07/D08已覆盖描述符持有/提交/IRQ合同，继承不重做。精确种�
 分支codex/re-0041-h07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h07。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/weather1-navigation-h07-0041-20261023.md及reverse/analysis/weather1-navigation-h07-0041-20261023/。
 
 先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
+
+## 当前完整任务书 E09（准备）
+
+独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e09；分支codex/re-0041-e09；基线为本任务书提交，启动记实际SHA。独占reverse/reports/ap01/ctk-caller-alias-e09-0041-20261023.md及reverse/analysis/ctk-caller-alias-e09-0041-20261023/。
+
+先继承charge-complete records[8]/[9]/[19]及E01–E08，尤其E07继承对照与E08限定结论。旧消费者/SOC/时间合同不重做，14/3候选不是全集。真正问题仅为a00a1aa8→a00a53c0这个已知调用点的正常函数边界、传入索引/返回item及s0-e4保存槽身份；再判断本已知数据链是否真读item+34/+38。无法连到这两字段即保留精确断边，不继续泛扫CTK。不能以最近旧反编译入口或owner=null认证真实函数边界。
+
+先按地址/字段/调用者/旧Evidence检索完整阶段与近期留存，给已有出处→解释行为→局限→实际缺口。已有原指令直接引用，仅补边界/ABI不可信窗口，不整函数重导、不重跑全ROM扫描，不复制源ZIP。无必要增量即报已覆盖结束，不凑闭包。报告分继承、复核纠正、真正新增、精确未闭边。完成后必要静态验证、明确独占路径提交、报告commit/未知/clean；共同安全、隔离和不创建下级agent规则适用。

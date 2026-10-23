@@ -897,3 +897,16 @@ E06 b5e53e4→0724167限定接受E05局部合同、完整退出注销仍未闭�
 
 
 整合：A25→3ed71d2；D08→26f1f4f；E07→bcfcb63；F08→3569ab7；G06→6c11f60/064320f；H06→7a8f3bc/52e61b9。复核不重复记新增。
+
+
+## 当前完整任务书 E08（已启动，基线fca1d5e）
+
+问题：独立复核E07边界与增量口径。
+
+继承charge-complete records[8]/[9]/[19]、round4及E07复用对照。只复核a00a1aa8→a00a53c0不能归属最近a00a12d0 retained body的证据，以及14 getter/3注册候选有界检索能支持的结论。未找到item+34/+38读者不能宣称恢复。不要重扫CTK/全部消费者；已有充分证据可短报告结束，新增功能0。
+
+分支codex/re-0041-e08；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e08。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/ctk-extra-review-e08-0041-20261023.md及reverse/analysis/ctk-extra-review-e08-0041-20261023/。
+
+先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
+
+E08 208dcc7→08dfc7c：限定接受E07候选/retained body结论，真实函数归属未知；新增功能0。
