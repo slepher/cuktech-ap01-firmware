@@ -25,9 +25,9 @@
 |I04|/root/e17_uv_time_review（派发中）|本次启动提交|独立复核I03同Time2对象旧覆盖/清理精度|
 |I05|/root/g16_fb_file_review（运行）|10bc8b8|既有round3配置cache写入种子的正常接入合同|
 |B22|/root/h16_clock_source_review（运行）|33a77be|cmd51写item+0e前正常类型决策，继承既有所有权链|
-|J03|/root/a46_cache_drop（派发中）|本次启动提交|正常设置持久化旧成果复用/精确缺口种子|
-|T01|/root/a47_reader_mode（派发中）|本次启动提交|repeat_count0的正常timer归还接入|
-|J04|/root/d19_backlight_animation（派发中）|本次启动提交|工厂正常UI/资源生命周期旧证据复用与真实种子|
+|J03|/root/a46_cache_drop（运行）|09e11d0|正常设置持久化旧成果复用/精确缺口种子|
+|T01|/root/a47_reader_mode（运行）|09e11d0|repeat_count0的正常timer归还接入|
+|J04|/root/d19_backlight_animation（运行）|09e11d0|工厂正常UI/资源生命周期旧证据复用与真实种子|
 
 ## 派发规则（本次用户调整优先）
 
@@ -125,3 +125,21 @@ REA skill、本文共同/复用/静态安全规则全适用；独占树/输出�
 仅既有证据检索，不新增ROM字节/反编译。先reference-map/application最终SIM范围与factory-test、factory-active B16/B17、buzzer两轮、settings/system complete、近期对应专项/复核，按地址/字段/callback/state核工厂正常UI/入口/资源生命周期已覆盖范围。B16外部active reader有界未知与搜索边界直接继承，不重复全ROM字段扫；factory-test启动门、GPIO三轮保持、fd取得等已有合同不得新发现。只表列旧出处→行为→局限→真实精确缺口，有真实extent/caller/对象种子才给少量后继；无种子不派stop/close/根析构/全driver扫描，不将物理极性/设备效果视为静态已恢复。不执行工厂命令/设备，不扩安全/缺陷/异常或重建整分类资源表；主窗口决定后继，不自行接题，新功能0。
 
 REA skill、本文共同/复用/静态安全规则全适用；独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。先已有→行为→局限→精确缺口，四分报告，只必要稀疏证据；已覆盖直接收缩，无可靠种子不扩扫。必要JSON/链接/差异检查、精确独占提交commit/验证/未知/clean，接近提交提前报重叠/种子。
+
+
+## 预备完整任务书 I06（有前置，未启动）
+
+独占reverse/reports/ap01/wifi-config-cache-review-i06-0041-20261024.md及reverse/analysis/wifi-config-cache-review-i06-0041-20261024/。
+
+待I05整合后，新独立agent只复核旧a005a736内联初始化配置read a0060946参数/精确rc1/62fc919c字节失败清0成功读取及同I01 getter关系；PSM旧static/原字/flags覆盖必须继承，不当新的setter/持久写，不扩事件writer/网络或底层NVS。主体已有新功能0，必要稀疏锚点标复核。
+
+仅准备不计运行，派发前整合前置核重叠，最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则全适用，已有→实际缺口与四分报告、最小稀疏验证，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，独占提交commit/验证/未知/clean，接近提交先报后继种子。
+
+
+## 预备完整任务书 T02（有前置，未启动）
+
+独占reverse/reports/ap01/timer-repeat-release-review-t02-0041-20261024.md及reverse/analysis/timer-repeat-release-review-t02-0041-20261024/。
+
+待T01整合后，新独立agent只核其实际正常repeat_count0 callback后scheduler/auto-delete/归还接入或有界无种子结论。G05/G06已核a008ae58合同与I01/I02 callback直接引用，不重导旧函数或全timer/IRQ扫描，不用候选当ROM；userdata和timer分开。只核实际新增，不递归扩库，新功能0。
+
+仅准备不计运行，派发前整合前置核重叠，最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则全适用，已有→实际缺口与四分报告、最小稀疏验证，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，独占提交commit/验证/未知/clean，接近提交先报后继种子。
