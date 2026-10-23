@@ -22,12 +22,12 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A37|任务书已就绪|准备立即补位|
-|A36|任务书已就绪|准备立即补位|
-|D15|任务书已就绪|准备立即补位|
-|E13|CTK offline状态变化分支|准备立即补位|
-|G12|任务书已就绪|准备立即补位|
-|H12|type19派生链范围/ABI独立复核|准备立即补位|
+|A38|任务书已就绪|准备立即补位|
+|A37|/root/a37_photo_decoder_owner|f17c7d7|照片构造器持有/复制接入|
+|D15|/root/d15_pwm_arithmetic|f312a1a|PWM分频/阈值厂商算术|
+|E14|任务书已就绪|准备立即补位|
+|G12|/root/g12_producer_review|f312a1a|ready producer独立复核|
+|H12|/root/h12_row_owner_review|0df1b44|type19有界派生链独立复核|
 
 ## 派发规则（本次用户调整优先）
 
@@ -65,21 +65,7 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 
 以上需据正式报告收缩为完整独占任务书；若任务已覆盖且无必要技术增量，则从其他已定位缺口换题，不递归复核纯重复材料。主窗口在每项提交前准备具体任务，保持六路。
 
-## 当前完整任务书 E13（待启动，E04未闭分支）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e13；分支codex/re-0041-e13；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/ctk-offline-transition-e13-0041-20261024.md及reverse/analysis/ctk-offline-transition-e13-0041-20261024/。
-
-E03/E04明确没有恢复完整offline/状态变化分支与a00ef1d4全实现。只沿a00adabc中的a00ae238第三转换调用及a00ef1d4→a00ef2da，恢复这一正常离线/状态变化的panel复位/显示切换与stack view数据合同。转换后不检查返回的旧事实、端口互斥与主要标量消费者全继承；先查charge-complete/round4、page-logic、旧报告与较晚round3按地址/字段，避免把旧业务和原汇编重记为新增。只补未覆盖分支/实际callee，不重做在线port1/2、item+34/+38寻找、DELETE/全CTK。
-
-先已有→行为→局限→实际缺口，报告分继承、复核纠正、真正新增、精确断边；复核新增功能0，可靠合同直接引用，不重复整函数/源码/资源导出或机械账。无增量及时报覆盖由主窗口补位，不凑时长/函数。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
-
-## 当前完整任务书 A36（待启动，A34已整合）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a36；分支codex/re-0041-a36；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/image-cache-order-review-a36-0041-20261024.md及reverse/analysis/image-cache-order-review-a36-0041-20261024/。
-
-新agent独立复核A34真正新增cache双链节点布局/方向、插入头、命中提升a00eb9c0、victim尾沿prev跳过非零ref的默认实例优先级合同。A23/A27/A30/A32容量/计量/cleanup已验收直接引用，不扩完整排序树或所有cache、动态重配/并发。只必要别名/厂商字段/调用ABI与重读原序，复核新增功能0，四分报告逐项接受纠正未核、必要锚点验证，独占提交报告commit/验证/未知/clean。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网，不整函数重复导出。
-
-## 当前完整任务书 A37（准备，2026-10-24）
+## 当前完整任务书 A37（已启动，基线f17c7d7）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a37；分支codex/re-0041-a37；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/photo-decoder-owner-a37-0041-20261024.md及reverse/analysis/photo-decoder-owner-a37-0041-20261024/。
 
@@ -87,7 +73,7 @@ A33/A35新源ABI与descriptor+10→a0107dea工作区+c handoff已闭；真正未
 
 先已有→行为→局限→实际缺口，四分类报告，只补必要原字节，不重复整函数/全资源/源码复制/机械哈希账；无增量及时覆盖交付由主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
 
-## 当前完整任务书 D15（准备立即补位）
+## 当前完整任务书 D15（已启动，基线f312a1a）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d15；分支codex/re-0041-d15；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/pwm-arithmetic-d15-0041-20261024.md及reverse/analysis/pwm-arithmetic-d15-0041-20261024/。
 
@@ -95,7 +81,7 @@ buzzer-backlight-round2明确lower ops+8=a0136762范围a0136762..a0136997中PWM�
 
 先已有→行为→局限→实际缺口，四分类报告，只补必要原字节，不重复整函数/全资源/源码复制/机械哈希账；无增量及时覆盖交付由主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
 
-## 当前完整任务书 G12（准备，2026-10-24）
+## 当前完整任务书 G12（已启动，基线f312a1a）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g12；分支codex/re-0041-g12；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/display-producer-review-g12-0041-20261024.md及reverse/analysis/display-producer-review-g12-0041-20261024/。
 
@@ -103,10 +89,26 @@ buzzer-backlight-round2明确lower ops+8=a0136762范围a0136762..a0136997中PWM�
 
 先已有→复核缺口，四分类报告逐项接受纠正未核，必要稀疏旧字节验证，不重复整函数/源码/资源导出。可靠合同直接引用，未知保留范围，无增量及时交付主窗口补位。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
 
-## 当前完整任务书 H12（待启动，H11已整合）
+## 当前完整任务书 H12（已启动，基线0df1b44）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h12；分支codex/re-0041-h12；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/weather-row-owner-review-h12-0041-20261024.md及reverse/analysis/weather-row-owner-review-h12-0041-20261024/。
 
 新agent独立复核H11 C+54派生行指针有界链及无第二根的范围：s3游标的实际读写/调用参数、正常循环退出后被新bar对象覆盖，以及既有a00b564e从C+54取R0再作父对象的ABI。旧H01/H03/H04构造/DELETE清零及root wrapper+4合同直接引用，不重导全部构造。结论只限所核派生链不能升级全ROM没有别名/free，116B ctx最终free保持未知；不跨用type2/type4，不扩全ROM负搜索。复核新增功能0。
 
 先已有→复核缺口，四分类报告逐项接受纠正未核，必要稀疏旧字节验证，不重复整函数/源码/资源导出。可靠合同直接引用，未知保留范围，无增量及时交付主窗口补位。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
+
+## 当前完整任务书 A38（准备，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a38；分支codex/re-0041-a38；基线为本任务书提交。独占reverse/reports/ap01/image-cache-key-a38-0041-20261024.md及reverse/analysis/image-cache-key-a38-0041-20261024/。
+
+A34/A36明确cache+10 comparator全部key等价语义尚未认证；lookup a00eb9c0头快路径用(payload,key)，后由a00ea832(cache+24,key)查树。本题仅恢复同image-cache比较器实际安装身份、source/class字段/宽度/返回、头快路径与树查询使用相同匹配合同，及已知PNG normal key协议。先查A23初始化/A27/A30/A34和旧complete/较晚round3，已留key布局/计量/排序/cleanup直接引用；只补未核比较接入，不扩平衡树全集，不凭名字假定字符串/指针比较，不研究任意重复insert或异常状态。
+
+先已有→行为→局限→实际缺口，四分类报告，只补必要原字节，旧结论复核不算新增。若已覆盖及时引用结束由管理者补位，不凑时长/函数，不重复整函数/源码/资源/哈希机械账。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网。必要验证后独占提交，报告commit/验证/未知/clean结束。
+
+## 当前完整任务书 E14（准备，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e14；分支codex/re-0041-e14；基线为本任务书提交。独占reverse/reports/ap01/uv-timer-deadline-e14-0041-20261024.md及reverse/analysis/uv-timer-deadline-e14-0041-20261024/。
+
+F01/F02保留a009d146 start中a009d18c字节7715aac0与a009d1bc字节7716c5c0厂商64位算术UNKNOWN，未认证正常deadline/到期算术。本题先核较晚round3及ap01thead3现有条款/留存是否已解释，直接继承修复不重记；仅补这些不可信窗口的寄存器对/宽度/符号/回写及正常期限设置→a009d304到期消费的参数/比较合同。已有start flags/heap登记/repeat/活动计数、callback kind0..6与close walker全部继承，不再扫提交者/销毁，不恢复整个heap，不改/运行模型，不做异常/溢出输入测试。
+
+先已有→行为→局限→实际缺口，四分类报告，只补必要原字节，旧结论复核不算新增。若已覆盖及时引用结束由管理者补位，不凑时长/函数，不重复整函数/源码/资源/哈希机械账。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网。必要验证后独占提交，报告commit/验证/未知/clean结束。
