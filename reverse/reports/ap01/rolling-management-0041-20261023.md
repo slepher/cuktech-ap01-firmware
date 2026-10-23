@@ -22,9 +22,9 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A51|/root/e17_uv_time_review（运行）|1edfc57|drop/drop_all局部来源认证|
+|C25|/root/e17_uv_time_review（派发中）|本次启动提交|既有区域变换的局部候选来源认证|
 |E19|/root/g16_fb_file_review（运行）|809b5cd|独立复核E18实际固定分母商合同|
-|C23|/root/h16_clock_source_review（派发中）|本次启动提交|C13/C14正常格式化入口局部候选认证|
+|C23|/root/h16_clock_source_review（运行）|0a1cf0a|C13/C14正常格式化入口局部候选认证|
 |A50|/root/a46_cache_drop（运行）|1edfc57|真实reader消费端a008b888局部合同|
 |H18|/root/a47_reader_mode（运行）|ed4735b|独立复核H17有界搜索与未知结论|
 |G18|/root/d19_backlight_animation（运行）|ed4735b|独立复核G17候选映射/差异/配置条件|
@@ -69,15 +69,6 @@ A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode
 独占reverse/reports/ap01/photo-reader-consumer-a50-0041-20261024.md及reverse/analysis/photo-reader-consumer-a50-0041-20261024/。
 
 A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5d6非零mode→a008b888种子，whole-ROM round1已有a008b888 extent(ev_0cf7b05a…/544B)；并非此前未分析。只补同reader前缀进入此callee的ABI、D读取/reader回调槽、缓存持有连接；先核旧complete内部与A47/A49覆盖，若已覆盖直接收缩交付。具体D实例/真实mode1 source仍未知，不扩全部文件系统/所有解码算法/失败分支，不重导544B全函数。
-
-准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
-
-
-## 当前完整任务书 A51（前置已整合，立即接替）
-
-独占reverse/reports/ap01/image-cache-drop-source-a51-0041-20261024.md及reverse/analysis/image-cache-drop-source-a51-0041-20261024/。
-
-待A48独立复核整合后，只补A43/A44当时未展开、现A46/A48新核backend drop/drop_all的局部来源认证。候选沿用本地LVGL9.2.1 lv_cache_lru_rb.c及必要邻接接口，旧key/meter/LRU/source家族匹配全继承不重复。分匹配/差异/配置条件/未知，尊重非零ref原序与单drop实际门，候选不覆盖ROM、不证明精确版本、不整库排除。不复制整源码、不重导ROM或全库版本搜索。
 
 准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
 
@@ -145,7 +136,7 @@ C13/C14已恢复a0091ee4格式化入口及a008bbd8分配helper并建议仅可靠
 仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
 
 
-## 预备完整任务书 C25（有前置，未启动）
+## 当前完整任务书 C25（已有行为验收已整合，立即接替）
 
 独占reverse/reports/ap01/region-transform-source-c25-0041-20261024.md及reverse/analysis/region-transform-source-c25-0041-20261024/。
 

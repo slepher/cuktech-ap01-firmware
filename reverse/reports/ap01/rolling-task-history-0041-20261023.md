@@ -1699,3 +1699,15 @@ H17 b08566c已整合，有界未知/新增0；H18独立核边界；G18独立核G
 
 
 D21 6db872f已整合，待D22独立核四项来源差异；C23立即接替。
+
+
+## 当前完整任务书 A51（前置已整合，立即接替）
+
+独占reverse/reports/ap01/image-cache-drop-source-a51-0041-20261024.md及reverse/analysis/image-cache-drop-source-a51-0041-20261024/。
+
+待A48独立复核整合后，只补A43/A44当时未展开、现A46/A48新核backend drop/drop_all的局部来源认证。候选沿用本地LVGL9.2.1 lv_cache_lru_rb.c及必要邻接接口，旧key/meter/LRU/source家族匹配全继承不重复。分匹配/差异/配置条件/未知，尊重非零ref原序与单drop实际门，候选不覆盖ROM、不证明精确版本、不整库排除。不复制整源码、不重导ROM或全库版本搜索。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+A51 d4828fb已整合，待A53独立复核；C25立即接替。
