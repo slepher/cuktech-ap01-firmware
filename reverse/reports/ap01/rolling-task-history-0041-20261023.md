@@ -1771,3 +1771,15 @@ C13/C14已恢复a0091ee4格式化入口及a008bbd8分配helper并建议仅可靠
 
 
 C23 503611d已整合，待C24独立复核；A52立即接替复核A50。
+
+
+## 当前完整任务书 A53（A51已整合，立即接替）
+
+独占reverse/reports/ap01/image-cache-drop-source-review-a53-0041-20261024.md及reverse/analysis/image-cache-drop-source-review-a53-0041-20261024/。
+
+待A51整合后，新独立agent只核backend drop/drop_all候选3文件必要行映射、warning与整树/链释放责任及来源强度；A46/A48原行为继承，不重核整函数/复制全源码，不扩版本或无xref消费者。新功能0/整库排除0。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+A53 e515a53已整合，A51局部来源接受/新增0；C24立即接替。
