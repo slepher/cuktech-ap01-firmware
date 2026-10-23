@@ -26,8 +26,8 @@
 |E19|/root/g16_fb_file_review（运行）|809b5cd|独立复核E18实际固定分母商合同|
 |D21|/root/h16_clock_source_review（运行）|24c7b3d|背光动画具体属性/selector及局部来源认证|
 |A50|/root/a46_cache_drop（运行）|1edfc57|真实reader消费端a008b888局部合同|
-|H18|/root/a47_reader_mode（派发中）|本次启动提交|独立复核H17有界搜索与未知结论|
-|G18|/root/d19_backlight_animation（派发中）|本次启动提交|独立复核G17候选映射/差异/配置条件|
+|H18|/root/a47_reader_mode（运行）|ed4735b|独立复核H17有界搜索与未知结论|
+|G18|/root/d19_backlight_animation（运行）|ed4735b|独立复核G17候选映射/差异/配置条件|
 
 ## 派发规则（本次用户调整优先）
 
@@ -116,3 +116,57 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 待H17整合后，新独立agent只复核H17实际增量或有界负结论。只核其真实writer种子、必要字段/原字节/周期连接与解释强度；若无种子则核搜索边界，不重复全ROM搜索，不将未找到等于不存在，不再搜offset writer。H15/H16既有读者继承，新增功能0。
 
 准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+## 预备完整任务书 A52（有前置，未启动）
+
+独占reverse/reports/ap01/photo-reader-consumer-review-a52-0041-20261024.md及reverse/analysis/photo-reader-consumer-review-a52-0041-20261024/。
+
+待A50整合后，新独立agent只复核同reader进入a008b888的ABI、D+14 read(D,H,dst,want,&count)、必要seek/config/C持有/游标和A47归还连接。具体D实例/真实mode1照片仍未知；继承A47/A49构造析构，不扩解码/所有失败/文件系统，新功能0。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+## 预备完整任务书 A53（有前置，未启动）
+
+独占reverse/reports/ap01/image-cache-drop-source-review-a53-0041-20261024.md及reverse/analysis/image-cache-drop-source-review-a53-0041-20261024/。
+
+待A51整合后，新独立agent只核backend drop/drop_all候选3文件必要行映射、warning与整树/链释放责任及来源强度；A46/A48原行为继承，不重核整函数/复制全源码，不扩版本或无xref消费者。新功能0/整库排除0。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+## 预备完整任务书 D22（有前置，未启动）
+
+独占reverse/reports/ap01/backlight-animation-source-review-d22-0041-20261024.md及reverse/analysis/backlight-animation-source-review-d22-0041-20261024/。
+
+待D21整合后，新独立agent只核property3e/selector20000的候选定义与ROMwrapper、动画descriptor size/early_apply/start顺序三项来源差异及其证据强度。D19/D20继承；不能候选覆盖ROM/推断真实视觉效果、控件类型或ctx free，不扩style引擎，新功能0。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+## 预备完整任务书 C23（有前置，未启动）
+
+独占reverse/reports/ap01/text-entry-source-c23-0041-20261024.md及reverse/analysis/text-entry-source-c23-0041-20261024/。
+
+C13/C14已恢复a0091ee4格式化入口及a008bbd8分配helper并建议仅可靠本地候选存在时作来源认证；现有明确LVGL9.2.1本地候选可用。先按地址/字段核C15至后续报告和F07/F08是否已解决来源，旧合同直接引用。只比对应lv_label/lv_text正常格式化入口/申请/所有权及必要字段/候选定义，候选位置由研究者确认，不预命名函数；无匹配就精确差异/未知交付。不重做完整printf/字体/GUI/ROM函数，不复制全源码、不将局部匹配等同精确版本。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+## 预备完整任务书 C25（有前置，未启动）
+
+独占reverse/reports/ap01/region-transform-source-c25-0041-20261024.md及reverse/analysis/region-transform-source-c25-0041-20261024/。
+
+G01/G02已经恢复a00dca48四点变换/父链/包围区域和相关缩放旋转，旧C22未知已解决，不能再当新增功能。只核本地LVGL9.2.1对应区域变换家族必要源码/属性定义，认证四word区域/旗标1/右下+1无减1/运算宽度与候选差异及配置条件。先查近期来源报告，已有匹配引用；不重做11函数/厂商字/物理刷新、无整源码复制/整库排除。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+## 预备完整任务书 A54（有前置，未启动）
+
+独占reverse/reports/ap01/photo-reader-source-a54-0041-20261024.md及reverse/analysis/photo-reader-source-a54-0041-20261024/。
+
+A47/A49已恢复reader前缀构造/归还，A50/A52若尚运行则其内部消费不重复接管。只作本地LVGL9.2.1 lv_fs相关前缀/driver注册槽/open/close/缓存布局到A47/A49可靠ROM合同的局部来源认证；先查旧complete/ZIP/近期source报告。候选名/ABI不能代替ROM实参callback(D,H)，具体实例/精确版本仍未知；不全文件系统/所有缓存算法/全源码复制/ROM重导。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
