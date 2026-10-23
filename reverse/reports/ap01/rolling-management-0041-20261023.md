@@ -26,7 +26,7 @@
 |A41|完整任务书已就绪|准备立即补位|
 |D16|完整任务书已就绪|准备立即补位|
 |E15|完整任务书已就绪|准备立即补位|
-|G13|/root/g13_device_poll|db28e99|具体设备poll/revents接入|
+|G14|设备poll条件链独立复核|准备立即补位|
 |H13|/root/h13_weather_clock|bdc139a|天气时钟返回ABI|
 
 ## 派发规则（本次用户调整优先）
@@ -57,14 +57,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 ## 后继队列规则
 
 后继以文件内仍标“预备完整任务书”的章节为准；移入当前任务书或历史后即不再计排队。不得从旧静态ID列表重复派发。
-
-## 当前完整任务书 G13（已启动，基线db28e99）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g13；分支codex/re-0041-g13；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/display-device-poll-g13-0041-20261024.md及reverse/analysis/display-device-poll-g13-0041-20261024/。
-
-G11/G12已闭a003e674(fd,node+14,1)→a003e344登记与a0109b8e通知flag，但设备实际写node+1c/revents未闭。只沿同一显示poll fd的构造/对象ops定位一个具体设备poll方法及其正常revents写入/已安装callback接入。先复用G07/G09/G11、F05/F07及旧initializer真实fd来源与retained ops，不能把backend_fd当目标设备fd或把返回>=0当ready。已闭注册/materializer/consumer直接引用不重导；若设备不能唯一静态定位给候选/精确间接边，不扩所有VFS/设备/IRQ/网络或运行时驱动实验。
-
-先已有→行为→局限→精确缺口，四分类报告；独立复核新增功能0，可靠合同引用，只补必要原字节，不重复整函数/源码/资源导出或机械账。无增量及时交付主窗口补位，不凑时长/函数。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
 
 ## 当前完整任务书 H13（已启动，基线bdc139a）
 
@@ -106,7 +98,7 @@ A37/A39已闭O构造/原ROM输入持有→owner+5c/+74；本题只补已知sette
 
 正式报告后据其继承/真正新增/未知清单收缩，先已有→精确缺口，四分类报告。独立复核新增功能0，仅必要旧字节/源行锚点，不重复整函数/资源源码复制/机械账；研究无增量及时覆盖交付主窗口换题补位，不凑时长函数。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证后独占提交报告commit/验证/未知/clean。
 
-## 预备完整任务书 G14（待G13正式报告整合，不计运行）
+## 当前完整任务书 G14（准备立即补位，G13已整合）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g14；分支codex/re-0041-g14；基线为启动时最新整合任务书提交，届时记录SHA，不提前建旧基线树。独占reverse/reports/ap01/display-device-poll-review-g14-0041-20261024.md及reverse/analysis/display-device-poll-review-g14-0041-20261024/。
 

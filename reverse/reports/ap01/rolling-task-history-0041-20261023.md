@@ -1377,3 +1377,14 @@ buzzer-backlight-round2明确lower ops+8=a0136762范围a0136762..a0136997中PWM�
 
 以上需据正式报告收缩为完整独占任务书；若任务已覆盖且无必要技术增量，则从其他已定位缺口换题，不递归复核纯重复材料。主窗口在每项提交前准备具体任务，保持六路。
 
+
+
+## 当前完整任务书 G13（已启动，基线db28e99）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g13；分支codex/re-0041-g13；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/display-device-poll-g13-0041-20261024.md及reverse/analysis/display-device-poll-g13-0041-20261024/。
+
+G11/G12已闭a003e674(fd,node+14,1)→a003e344登记与a0109b8e通知flag，但设备实际写node+1c/revents未闭。只沿同一显示poll fd的构造/对象ops定位一个具体设备poll方法及其正常revents写入/已安装callback接入。先复用G07/G09/G11、F05/F07及旧initializer真实fd来源与retained ops，不能把backend_fd当目标设备fd或把返回>=0当ready。已闭注册/materializer/consumer直接引用不重导；若设备不能唯一静态定位给候选/精确间接边，不扩所有VFS/设备/IRQ/网络或运行时驱动实验。
+
+先已有→行为→局限→精确缺口，四分类报告；独立复核新增功能0，可靠合同引用，只补必要原字节，不重复整函数/源码/资源导出或机械账。无增量及时交付主窗口补位，不凑时长/函数。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
+
+G13 9616781已整合：fb0条件静态poll/revents连接待G14，通知flag不等于非零revents或实际硬件ready。
