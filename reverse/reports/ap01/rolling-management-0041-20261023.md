@@ -18,15 +18,15 @@
 
 ## 实际运行快照
 
-上一批A25/D08/E07/F08/G06/H06均已整合结束。当前E09/D10/G08运行，A28准备；H07/F10已结束，不计运行。空席不用于重复天气或填配额。实际基线逐项记录；主窗口另计，无下级agent。
+上一批A25/D08/E07/F08/G06/H06均已整合结束。当前A28运行；A29准备。D10/E09/G08/H07/F10均已整合结束，不计运行。空席不用于重复扫描或填配额；主窗口另计，无下级agent。
 
 |任务|范围|状态|
 |---|---|---|
-|A28|独立复核A27 cache release/victim到cleanup连接|准备|
-|D10|独立复核D09三槽busy及最后close增量|运行中：/root/d10_dma_channel_review，基线a825ac8|
-|E09|a00a1aa8真实正常函数边界与保存槽别名|运行中：/root/e09_ctk_caller_alias，基线3f0a7e0|
+|A28|独立复核A27 cache连接|运行中：/root/a28_cache_review，基线6eec181|
+|D10|已整合限定结论，见历史映射|结束；无必要重复取证|
+|E09|已整合限定结论，见历史映射|结束；无必要重复取证|
 |F10|已限定接受容量helper合同|已整合2052338，无必要重复扩扫|
-|G08|独立复核G07 poll身份/消费/归还增量|运行中：/root/g08_alternate_review，基线a825ac8|
+|G08|已整合限定结论，见历史映射|结束；无必要重复取证|
 |H07|普通主浏览切出已有覆盖；teardown断边并入E05/E06|已整合89875e2，无独立天气增量；空席待实际缺口|
 
 ## 派发规则（本次用户调整优先）
@@ -43,41 +43,25 @@
 |---|---|---|
 |A25：A23/A24；pass3第1931/2048行；旧complete/ZIP复用对照|PNG session/pixel所有权及旧init调用已知|3ed71d2仅新增默认raw/free/align实际表绑定与实现；动态替换、heap/cache仍未知；A26只审新增|
 |D08：D03–D07；charge/system complete服务替代|UART/DMA提交、持久描述符持有与归还合同|26f1f4f独立复核，新增功能0；channel分配到close及pool复用未闭|
-|E07：charge-complete records[8]/[9]/[19]、round4、ZIP charge.h|a00f4610/a00f44e8/a00f5288旧原指令及SOC/时间/消费者已留存|bcfcb63仅补a00a1aa8调用边界；item+34/+38实际读者仍未找到，不计消费闭包恢复|
+|E07：charge-complete records[8]/[9]/[19]、round4、ZIP charge.h|a00f4610/a00f44e8/a00f5288旧原指令及SOC/时间/消费者已留存|bcfcb63仅为旧body边界信息；719b38d确认round3早已完整留存该函数与保存槽，E07/E08不可外推此前分析缺失；item+34/+38读者仍未知|
 |F08：旧SIM最终验收、F07、ZIP来源|候选LVGL9.2.1匹配与差异已确认|3569ab7精度纠正：20B仅array前缀，另有list+14；enum packing不能覆盖ROM差异；新增功能/整库排除均0|
 |G06：G05/G04/F06；system/settings round2b/c、page-logic[15]、ZIP timer|timer/create/resume和已恢复event主路径可继承|6c11f60/064320f仅3项尺寸/原序纠正；新增功能0；替代38 work生命周期未闭|
 |H06：pass3第2653–2657行、weather-calendar-complete、H05|a00abed2/type4/ctx挂接/DELETE a00abb62早已有；文字/分类/arc/tiny消费者继承|7a8f3bc/52e61b9独立复核新增0；H05只增ABI/direct a019cbc0/显式free原序；正常离页连接仍缺|
 
 H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释放另有断边，不套用。a019cbc0不得混同a0198946。旧SIM已覆盖weather分类/显示，不再重新恢复。
 
-## 当前完整任务书 E09（已启动，基线3f0a7e0）
-
-独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e09；分支codex/re-0041-e09；基线为本任务书提交，启动记实际SHA。独占reverse/reports/ap01/ctk-caller-alias-e09-0041-20261023.md及reverse/analysis/ctk-caller-alias-e09-0041-20261023/。
-
-先继承charge-complete records[8]/[9]/[19]及E01–E08，尤其E07继承对照与E08限定结论。旧消费者/SOC/时间合同不重做，14/3候选不是全集。真正问题仅为a00a1aa8→a00a53c0这个已知调用点的正常函数边界、传入索引/返回item及s0-e4保存槽身份；再判断本已知数据链是否真读item+34/+38。无法连到这两字段即保留精确断边，不继续泛扫CTK。不能以最近旧反编译入口或owner=null认证真实函数边界。
-
-先按地址/字段/调用者/旧Evidence检索完整阶段与近期留存，给已有出处→解释行为→局限→实际缺口。已有原指令直接引用，仅补边界/ABI不可信窗口，不整函数重导、不重跑全ROM扫描，不复制源ZIP。无必要增量即报已覆盖结束，不凑闭包。报告分继承、复核纠正、真正新增、精确未闭边。完成后必要静态验证、明确独占路径提交、报告commit/未知/clean；共同安全、隔离和不创建下级agent规则适用。
-
-## 当前完整任务书 D10（已启动，基线a825ac8）
-
-独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d10，分支codex/re-0041-d10；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/uart-dma-channel-review-d10-0041-20261023.md及reverse/analysis/uart-dma-channel-review-d10-0041-20261023/。
-
-独立复核D09三槽busy选择/占用/归还与最后open close→lower shutdown→stop→busy归还→channel=0x0f真实连接。继承D03–D08及D09复用对照，不重做descriptor/IRQ/ring。只局部核0x0f非0xff、sign8 stop/U8 free实参、type/channel重读、free返回消费及实际ops身份。callback pair释放/pool跨设备/硬件排空可保留未知，不扩RX/全部IRQ。
-
-先给已有→实际复核缺口对照，必要原字节复核不计新增功能；已有合同直接引用，不整函数重复导出。逐项接受/纠正/未核，技术纠正只写独占报告。四分类交付与必要静态验证，无额外增量可短报告结束，不凑时长/函数。共同安全/隔离/独占规则适用，不创建下级agent；完成提交明确文件并报告commit/验证/未知/clean。
-
-## 当前完整任务书 G08（已启动，基线a825ac8）
-
-独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g08，分支codex/re-0041-g08；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/display-alternate-review-g08-0041-20261023.md及reverse/analysis/display-alternate-review-g08-0041-20261023/。
-
-独立复核G07真正新增的state+58/+60对象身份、poll callback adapter→stop→刷新默认display→清pending以及a007ff54 owner计数归还合同。factory-test initializer/notify、C03/C04/C05/C06/F03/F04与G05/G06全部继承，不再恢复安装/通用poll。只核必要ABI/对象别名/宽度/原序，后端ready间接分发及退出后drain时序保留未知，不扩后端/整个libuv。
-
-先给已有→实际复核缺口对照，必要原字节复核不计新增功能；已有合同直接引用，不整函数重复导出。逐项接受/纠正/未核，技术纠正只写独占报告。四分类交付与必要静态验证，无额外增量可短报告结束，不凑时长/函数。共同安全/隔离/独占规则适用，不创建下级agent；完成提交明确文件并报告commit/验证/未知/clean。
-
-## 当前完整任务书 A28（准备，2026-10-24）
+## 当前完整任务书 A28（已启动，基线6eec181，2026-10-24）
 
 独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a28；分支codex/re-0041-a28；基线为本任务书提交，启动另记实际SHA。独占reverse/reports/ap01/image-cache-review-a28-0041-20261024.md及reverse/analysis/image-cache-review-a28-0041-20261024/。
 
 独立复核A27新增release引用减一/重读、失效门→cache+18(payload,NULL)→基址free与容量/victim移出→同cleanup连接。A23–A26已恢复cleanup内部和Pixel/raw析构、默认表与PNG session，直接引用不重做；旧SIM/cache配置不能证明ROM实际时序。仅核本轮新增窗口的宽度/对象别名/ABI/厂商lrw/返回和清理原序。完整排序、失效API上层业务调用者、计量单位/heap可保留精确未知，不扩全cache或PNG。
 
 先已有→复核缺口对照，四分类交付、逐项接受纠正未核；原字节复核不计新增功能，不整函数重复导出，不凑时长/函数。技术纠正只独占报告，不改原成果。共同安全/静态/隔离/独占输出规则适用，不创建下级agent，无SIM/构建/回放。必要验证提交明确独占路径，报告commit/验证/未知/clean后结束。
+
+## 当前完整任务书 A29（准备，2026-10-24）
+
+独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a29；分支codex/re-0041-a29；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/image-cache-invalidation-a29-0041-20261024.md及reverse/analysis/image-cache-invalidation-a29-0041-20261024/。
+
+问题仅为A27未追的a019cfbe失效API：其正常调用者/业务触发是否实际标记同一image cache entry，及该标记如何接到既有release/cleanup合同。A23–A27 session/构造/raw/cleanup/release内部直接继承；A28在独立复核这些合同，不重叠。管理窗口已在reverse/reports/ap01、reverse/rehost、tooling和ZIP按精确地址检索，仅A27报告命中；这不代表此前未分析。执行者先查既存whole-ROM retained caller/Evidence和较晚round3、字段/调用者/别名，给已有→实际缺口。旧caller若已留存直接引用，只核不可信接入ABI/身份/门；无可靠caller种子就有界报告，不做全ROM字节incoming重扫。
+
+只选本已知API的一条正常image-cache失效业务连接；不预设照片退出/主页面切换一定标记，不扩所有invalidate/全cache/PNG/heap，不重导整函数或复制源码。计量/排序算法及运行时实际时序保留未知。若已有可靠合同覆盖即报已覆盖结束，不凑时长/函数/闭包。报告分继承、复核纠正、真正新增、未闭精确边；必要静态验证后提交独占成果并报告commit/验证/未知/clean。共同安全/独占/隔离规则适用，不创建下级agent，无SIM/构建/历史回放/生产ROM配置模型修改。

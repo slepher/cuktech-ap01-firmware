@@ -997,3 +997,36 @@ A23/A24/A25/A26已恢复session、PNG构造、默认表与raw/Pixel析构，全�
 先交简短已有出处→解释行为→证据局限→实际缺口；只补未覆盖/不可信窗口，重读bytes标旧结论复核。报告分继承、复核纠正、真正新增、未闭精确边。无必要增量即报告覆盖，不凑时长/函数。共同规则全部适用，仅静态/独占输出，无SIM/构建/回放/生产ROM配置模型修改，不创建下级agent。必要验证后提交独占路径，报告commit/未知/clean并结束。
 
 A27 aaf8c40→83883eb：cache release/victim到既有cleanup连接增量，待A28。原批次文件名保留，不因跨日重命名。
+
+
+## 当前完整任务书 E09（已启动，基线3f0a7e0）
+
+独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e09；分支codex/re-0041-e09；基线为本任务书提交，启动记实际SHA。独占reverse/reports/ap01/ctk-caller-alias-e09-0041-20261023.md及reverse/analysis/ctk-caller-alias-e09-0041-20261023/。
+
+先继承charge-complete records[8]/[9]/[19]及E01–E08，尤其E07继承对照与E08限定结论。旧消费者/SOC/时间合同不重做，14/3候选不是全集。真正问题仅为a00a1aa8→a00a53c0这个已知调用点的正常函数边界、传入索引/返回item及s0-e4保存槽身份；再判断本已知数据链是否真读item+34/+38。无法连到这两字段即保留精确断边，不继续泛扫CTK。不能以最近旧反编译入口或owner=null认证真实函数边界。
+
+先按地址/字段/调用者/旧Evidence检索完整阶段与近期留存，给已有出处→解释行为→局限→实际缺口。已有原指令直接引用，仅补边界/ABI不可信窗口，不整函数重导、不重跑全ROM扫描，不复制源ZIP。无必要增量即报已覆盖结束，不凑闭包。报告分继承、复核纠正、真正新增、精确未闭边。完成后必要静态验证、明确独占路径提交、报告commit/未知/clean；共同安全、隔离和不创建下级agent规则适用。
+
+bf95f1e→719b38d：round3完整留存已覆盖，新增功能/导出0；+34/+38读者仍未知。
+
+
+## 当前完整任务书 D10（已启动，基线a825ac8）
+
+独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d10，分支codex/re-0041-d10；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/uart-dma-channel-review-d10-0041-20261023.md及reverse/analysis/uart-dma-channel-review-d10-0041-20261023/。
+
+独立复核D09三槽busy选择/占用/归还与最后open close→lower shutdown→stop→busy归还→channel=0x0f真实连接。继承D03–D08及D09复用对照，不重做descriptor/IRQ/ring。只局部核0x0f非0xff、sign8 stop/U8 free实参、type/channel重读、free返回消费及实际ops身份。callback pair释放/pool跨设备/硬件排空可保留未知，不扩RX/全部IRQ。
+
+先给已有→实际复核缺口对照，必要原字节复核不计新增功能；已有合同直接引用，不整函数重复导出。逐项接受/纠正/未核，技术纠正只写独占报告。四分类交付与必要静态验证，无额外增量可短报告结束，不凑时长/函数。共同安全/隔离/独占规则适用，不创建下级agent；完成提交明确文件并报告commit/验证/未知/clean。
+
+26d1e93→86c296f：限定接受D09，type三读/channel四读纠正；没有新正常种子，不重复负搜索。
+
+
+## 当前完整任务书 G08（已启动，基线a825ac8）
+
+独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g08，分支codex/re-0041-g08；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/display-alternate-review-g08-0041-20261023.md及reverse/analysis/display-alternate-review-g08-0041-20261023/。
+
+独立复核G07真正新增的state+58/+60对象身份、poll callback adapter→stop→刷新默认display→清pending以及a007ff54 owner计数归还合同。factory-test initializer/notify、C03/C04/C05/C06/F03/F04与G05/G06全部继承，不再恢复安装/通用poll。只核必要ABI/对象别名/宽度/原序，后端ready间接分发及退出后drain时序保留未知，不扩后端/整个libuv。
+
+先给已有→实际复核缺口对照，必要原字节复核不计新增功能；已有合同直接引用，不整函数重复导出。逐项接受/纠正/未核，技术纠正只写独占报告。四分类交付与必要静态验证，无额外增量可短报告结束，不凑时长/函数。共同安全/隔离/独占规则适用，不创建下级agent；完成提交明确文件并报告commit/验证/未知/clean。
+
+7fc0fd0→0d836f7：限定接受G07，新增功能0；ready/drain与默认display身份未知。
