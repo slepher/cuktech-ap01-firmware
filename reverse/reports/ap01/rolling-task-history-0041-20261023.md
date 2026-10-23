@@ -1865,3 +1865,17 @@ I01 083ea25、A54 a0514a3已整合，新功能0；A55/I02交叉补位新独立�
 
 
 C26 2588a65已整合，C25限定来源接受/新增0；B22接替J01筛出的唯一真实种子。
+
+
+## 当前完整任务书 I03（2026-10-24，立即接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-i03；分支codex/re-0041-i03；基线本任务书启动提交。独占reverse/reports/ap01/saver-time2-lifetime-i03-0041-20261024.md及reverse/analysis/saver-time2-lifetime-i03-0041-20261024/。
+
+先guide-complete/system-complete、ui-total-consumers/theme-total-state及其近期复核、page-logic/较晚round3/pass3/最终ZIP相应成员。旧guide已解释mode2/type0x2f与a00ac4c2两种活动布局；ui-total-consumers已恢复a00ac54e callback、ctx+24严格0/1、功率除10/格式布局，且theme-total-state是后续，不得按旧剩余重复。上述业务/活动setter全继承，不重做分类/显示语义。
+
+只核同一屏保Time2 type0x2f的creator/context/page/callback/DELETE所有权已有证据范围，先交已有→行为→局限→精确缺口；只有实际尚未闭的正常DELETE接入、callback注销/ctx/wrapper释放原序或必要ABI才补稀疏窗口。主体已覆盖则直接引用并结束，不用凑函数/全页/整GUI。type0x2f对象不能套用H08/H09 type2 time1 136B或H05 type4 weather1 68B、H01 type19 116B的清理结论。正常上层离页→DELETE无种子不重复全ROM根析构搜索。
+
+REA skill与本文共同/复用/静态安全规则适用，四分报告；不重导整函数/全资源/PNG/源码/机械账，不执行SIM/构建/回放/固件/设备/外网。独占worktree/输出，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。必要验证、精确路径提交commit/验证/未知/clean；接近提交先报重叠/真实增量/后继种子。
+
+
+I03 ef2bd51已整合，待I04独立复核；旧覆盖/新增0；I05接替。

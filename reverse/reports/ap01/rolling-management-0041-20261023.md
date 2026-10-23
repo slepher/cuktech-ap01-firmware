@@ -23,7 +23,7 @@
 |任务|agent|基线|实际范围|
 |---|---|---|---|
 |J01|/root/e17_uv_time_review（运行）|7119b59|充电领域旧complete与近期复核交叉去重/实际缺口种子|
-|I03|/root/g16_fb_file_review（运行）|472f076|屏保Time2 type2f已有成果→正常DELETE/ctx责任缺口|
+|I05|/root/g16_fb_file_review（派发中）|本次启动提交|既有round3配置cache写入种子的正常接入合同|
 |B22|/root/h16_clock_source_review（运行）|33a77be|cmd51写item+0e前正常类型决策，继承既有所有权链|
 |A55|/root/a46_cache_drop（运行）|46fa469|独立复核A54 reader局部来源与gifdec整文件不同边界|
 |J02|/root/a47_reader_mode（运行）|34ff6ba|日历/时间旧complete与近期复核去重/真实缺口种子|
@@ -82,17 +82,6 @@ A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode
 仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
 
 
-## 当前完整任务书 I03（2026-10-24，立即接替）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-i03；分支codex/re-0041-i03；基线本任务书启动提交。独占reverse/reports/ap01/saver-time2-lifetime-i03-0041-20261024.md及reverse/analysis/saver-time2-lifetime-i03-0041-20261024/。
-
-先guide-complete/system-complete、ui-total-consumers/theme-total-state及其近期复核、page-logic/较晚round3/pass3/最终ZIP相应成员。旧guide已解释mode2/type0x2f与a00ac4c2两种活动布局；ui-total-consumers已恢复a00ac54e callback、ctx+24严格0/1、功率除10/格式布局，且theme-total-state是后续，不得按旧剩余重复。上述业务/活动setter全继承，不重做分类/显示语义。
-
-只核同一屏保Time2 type0x2f的creator/context/page/callback/DELETE所有权已有证据范围，先交已有→行为→局限→精确缺口；只有实际尚未闭的正常DELETE接入、callback注销/ctx/wrapper释放原序或必要ABI才补稀疏窗口。主体已覆盖则直接引用并结束，不用凑函数/全页/整GUI。type0x2f对象不能套用H08/H09 type2 time1 136B或H05 type4 weather1 68B、H01 type19 116B的清理结论。正常上层离页→DELETE无种子不重复全ROM根析构搜索。
-
-REA skill与本文共同/复用/静态安全规则适用，四分报告；不重导整函数/全资源/PNG/源码/机械账，不执行SIM/构建/回放/固件/设备/外网。独占worktree/输出，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。必要验证、精确路径提交commit/验证/未知/clean；接近提交先报重叠/真实增量/后继种子。
-
-
 ## 当前完整任务书 J01（2026-10-24，复用检索接替）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-j01；分支codex/re-0041-j01；基线本任务书启动提交。独占reverse/reports/ap01/charge-reuse-gap-j01-0041-20261024.md及reverse/analysis/charge-reuse-gap-j01-0041-20261024/。
@@ -133,7 +122,7 @@ J01去重后唯一有原留存种子的增量：a00a8582 cmd0x51正常设备类�
 仅准备不计运行，派发前整合前置/再核重叠。最新管理HEAD新建独占树re0041-ID小写、分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告、最小稀疏取证；不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，精确独占提交commit/验证/未知/clean，接近提交提前报后继种子。
 
 
-## 预备完整任务书 I05（有前置，未启动）
+## 当前完整任务书 I05（I01旧writer种子已整合，立即接替）
 
 独占reverse/reports/ap01/wifi-config-cache-i05-0041-20261024.md及reverse/analysis/wifi-config-cache-i05-0041-20261024/。
 
