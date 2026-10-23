@@ -490,3 +490,30 @@ D01 475b43a→919051d；F01 3df638e→4a897ee。管理范围/差异/JSON/链接�
 - 独占报告：reverse/reports/ap01/miio-deferred-lifecycle-f01-0041-20261023.md
 - 独占分析目录：reverse/analysis/miio-deferred-lifecycle-f01-0041-20261023/
 - 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
+
+
+## A19/E01整合并转独立复核
+
+A19 e601fbd→f40ea13；E01 8e2c319→0ff74d9。独占范围/差异/交付/JSON/本地链接通过，技术待A20/E02。A19两个JSON、E01五个JSON解析与报告链接均通过；已确认原树干净，分支保留。
+
+### A19：天气订阅 callback 到图标与控件更新的数据流
+
+- 分支：codex/re-0041-a19
+- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a19
+- 业务问题/证据入口：weather-subscriber-a15、weather-subscriber-review-a16、weather-current-consumer-a17、weather-current-review-a18；入口 a00ab6b0/a00ab6ea、a0198946(load32(context+0x20),icon)
+- 闭包、包含/排除、可保留合同和断边：核实图标值的生产、传递、资源选择与控件消费者如何衔接；以图标 callee 及必要更新/资源选择依赖组成约5–12核心函数闭包，针对已验收callback只核合同。保留已知arc范围/current合同。排除全部天气UI、网络请求、重复getter和全量源码搜索。无法闭合时列资源身份、更新副作用、销毁断边。
+- 独占报告：reverse/reports/ap01/weather-icon-flow-a19-0041-20261023.md
+- 独占分析目录：reverse/analysis/weather-icon-flow-a19-0041-20261023/
+- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
+
+
+
+### E01：UiIFace端口项嵌套资源生产消费与清理
+
+- 分支：codex/re-0041-e01
+- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e01
+- 业务问题/证据入口：uiiface-lifecycle、ui-total-consumers、theme-total-state、mode-control；入口 a00a3d80、a00a8582 的cmd55初始化片段，总对象62fcb2cc，item步长0x1a8，指针+0x28/+0x2c/+0x30/+0x34/+0x38
+- 闭包、包含/排除、可保留合同和断边：恢复一组端口项嵌套字段的分配/替换→业务消费→清零/释放闭包，约5–12核心函数及必要直接依赖，避免重新恢复全局快照getter和已验收订阅链。可在该字段族内调整函数集合，不接管独立页面。保留allocator/链表合同；排除全UI/全响应/全销毁扫描。无法证实连接到全局deinit时明确断边，不拼造释放链。
+- 独占报告：reverse/reports/ap01/uiiface-item-ownership-e01-0041-20261023.md
+- 独占分析目录：reverse/analysis/uiiface-item-ownership-e01-0041-20261023/
+- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。

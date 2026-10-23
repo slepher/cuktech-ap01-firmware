@@ -14,37 +14,17 @@
 
 ## 当前任务书
 
-### A19：天气订阅 callback 到图标与控件更新的数据流
-
-- 分支：codex/re-0041-a19
-- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a19
-- 业务问题/证据入口：weather-subscriber-a15、weather-subscriber-review-a16、weather-current-consumer-a17、weather-current-review-a18；入口 a00ab6b0/a00ab6ea、a0198946(load32(context+0x20),icon)
-- 闭包、包含/排除、可保留合同和断边：核实图标值的生产、传递、资源选择与控件消费者如何衔接；以图标 callee 及必要更新/资源选择依赖组成约5–12核心函数闭包，针对已验收callback只核合同。保留已知arc范围/current合同。排除全部天气UI、网络请求、重复getter和全量源码搜索。无法闭合时列资源身份、更新副作用、销毁断边。
-- 独占报告：reverse/reports/ap01/weather-icon-flow-a19-0041-20261023.md
-- 独占分析目录：reverse/analysis/weather-icon-flow-a19-0041-20261023/
-- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
-
-
-### E01：UiIFace端口项嵌套资源生产消费与清理
-
-- 分支：codex/re-0041-e01
-- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e01
-- 业务问题/证据入口：uiiface-lifecycle、ui-total-consumers、theme-total-state、mode-control；入口 a00a3d80、a00a8582 的cmd55初始化片段，总对象62fcb2cc，item步长0x1a8，指针+0x28/+0x2c/+0x30/+0x34/+0x38
-- 闭包、包含/排除、可保留合同和断边：恢复一组端口项嵌套字段的分配/替换→业务消费→清零/释放闭包，约5–12核心函数及必要直接依赖，避免重新恢复全局快照getter和已验收订阅链。可在该字段族内调整函数集合，不接管独立页面。保留allocator/链表合同；排除全UI/全响应/全销毁扫描。无法证实连接到全局deinit时明确断边，不拼造释放链。
-- 独占报告：reverse/reports/ap01/uiiface-item-ownership-e01-0041-20261023.md
-- 独占分析目录：reverse/analysis/uiiface-item-ownership-e01-0041-20261023/
-- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
 
 
 ## 实际运行快照
 
-当前6个运行任务：A19/E01/G01/H01/D02/F02；B21/C22/D01/F01已结束并整合，不计运行。主窗口另计。
+当前6个运行任务：G01/H01/A20/E02/D02/F02；B21/C22/D01/F01/A19/E01已结束并整合，不计运行。主窗口另计。
 
 |任务|agent|启动基线|状态|
 |---|---|---|---|
-|A19|/root/a19_weather_flow|2ee39b3|运行中|
+|A20|/root/a20_weather_review|f40ea13|运行中|
 |D02|/root/d02_uart_review|919051d|运行中|
-|E01|/root/e01_ui_ownership|2ee39b3|运行中|
+|E02|/root/e02_ui_review|0ff74d9|运行中|
 |F02|/root/f02_miio_review|4a897ee|运行中|
 |G01|/root/g01_region_transform|004ff56|运行中|
 |H01|/root/h01_weather_lifecycle|99c02ab|运行中|
@@ -53,9 +33,9 @@
 
 ## 近期滚动候选（未启动）
 
-- A20：A19图标数据流完整闭包独立复核；依赖A19先整合，不重复A18已验收arc合同。核心集合和断边以A19实际交付为准。
+- A21：A20复核后，PNG decoder注册→info callback→正常图标描述符信息提取小闭包，先按A20建议圈范围，不扩完整图像库。A20已启动。
 - D03：D02复核后恢复write对象取得/操作表安装→具体write→归还小闭包；先核D02断边，再写完整任务书。D02已启动。
-- E02：E01嵌套字段生产消费清理闭包独立复核；依赖E01整合，不把独立清理器自动并入全局deinit。
+- E03：E02复核后，a00f4740调用者→dst消费/借用寿命小闭包，先按E02实际断边圈定。E02已启动。
 - F03：F02复核后聚焦loop注册链关闭walker与9428/data清理连接；仅采用可定位边，不扩通用heap全算法。F02已启动。
 - G02：G01区域变换完整闭包独立复核，待G01整合；当前G01已启动。
 - H02：H01另一天气订阅者完整闭包独立复核，待H01整合；当前H01已启动。
@@ -92,7 +72,7 @@
 
 近期恢复整合：D01 475b43a→919051d、F01 3df638e→4a897ee；均待独立技术复核，不能标为验收通过。
 
-## 预备完整任务书 A20（待A19整合后立即启动）
+## 当前完整任务书 A20（已启动，基线f40ea13）
 
 任务ID A20，新agent独立复核A19天气图标条件闭包。分支codex/re-0041-a20；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a20；启动基线为含A19的最新管理提交，派发补确切commit。独占reverse/reports/ap01/weather-icon-review-a20-0041-20261023.md及reverse/analysis/weather-icon-review-a20-0041-20261023/。先读A19及A15/A16/A18、weather-dataflow；旧arc/getter合同仅针对核。
 
@@ -100,10 +80,12 @@
 
 逐项接受/纠正/未核，独立原字节证据与必要伪代码结构状态所有权、事实推断未知、来源、实际静态验证与断边。decoder注册/info callback真实身份、全局byte生产者、widget/context销毁和物理绘制可保留断边，不恢复完整decoder库。必要纠正仅独占报告，不改A19。禁止固件执行/外连/漏洞/历史回放/ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 E02（待E01整合后立即启动）
+## 当前完整任务书 E02（已启动，基线0ff74d9）
 
 任务ID E02，新agent独立复核E01端口项嵌套字段完整闭包。分支codex/re-0041-e02；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e02；启动基线为含E01最新管理提交，派发补确切commit。独占reverse/reports/ap01/uiiface-ownership-review-e02-0041-20261023.md及reverse/analysis/uiiface-ownership-review-e02-0041-20261023/。
 
 业务问题：cmd51类型变化→五指针清理/分配→cmd52原位覆盖→a00f4740字段转换借用→失活/类型变化清零释放是否由指令成立？入口E01报告及21窗口、uiiface-lifecycle/ui-total-consumers/mode-control；核心从a00a8582相关cmd50/51/52片段、a00a3d80/a00a53ee/a00f4740及E01列必要依赖圈定约5–12合同，不把大dispatcher全函数算已恢复。已验收快照/订阅/总对象接口针对核。重点分配尺寸/布局、类型和mask、指针持有与dst所有权、写宽/符号/原调用顺序、清理时点与多个入口一致性；来源未认证不得排除。
 
 逐项接受/纠正/未核，独立原字节核验、必要伪代码布局状态所有权、事实推断未知、来源、实际静态验证和断边；必要纠正只独占报告不改E01。+34/+38实际UI读者、a00f4740调用者及dst消费、全局deinit连接可保留明确断边，不拼造释放链、不扩全页面或所有响应。标准allocator合同可保留并明示来源认证缺口。禁止固件执行/外连/漏洞/异常验证/历史回放/ROM生产模型修改；共同规则适用。
+
+近期恢复整合：A19 e601fbd→f40ea13、E01 8e2c319→0ff74d9均待独立复核。当前因四恢复成果集中交付，暂为两恢复四复核；复核席位释放后优先业务断边，不等待整批结束。
