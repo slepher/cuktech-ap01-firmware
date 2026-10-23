@@ -155,3 +155,7 @@ C09从efefd4a启动，agent /root/c09_detail_gate。启动核对发现62fc4034 g
 ## 预备任务 A10：线程适配入口独立复核
 
 分支 codex/re-0041-a10；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a10。须A09成果提交整合后，从最新管理提交启动。仅复核A09 a012f946及最多两个直接依赖的entry/userdata读取、调用参数与返回边界，原指令未知不能以伪代码填补，不扩调度/运行时可达性。独占 reverse/reports/ap01/thread-adapter-review-a10-0041-20261023.md、reverse/analysis/thread-adapter-review-a10-0041-20261023/；必要可精确纠正A09。逐项接受/纠正/未核、来源、实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 B10：一个基础信息分派调用者
+
+分支 codex/re-0041-b10；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b10。须B09验收允许后，从最新管理提交启动。只恢复a00a389c的一个直接调用者，确认index实参来源和局部触发条件；最多调用者及两个直接依赖，不扩全部生产者/基础信息状态机。入口B08/B09及既有inventory，先选有明确ROM证据的小调用点。独占 reverse/reports/ap01/basic-info-dispatch-caller-b10-0041-20261023.md、reverse/analysis/basic-info-dispatch-caller-b10-0041-20261023/。核原指令、参数宽度与间接ABI边界、事实推断未知、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
