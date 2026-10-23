@@ -54,38 +54,22 @@
 - 独占分析目录：reverse/analysis/miio-deferred-lifecycle-f01-0041-20261023/
 - 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
 
-### B21：包含B20的命令生产、固定槽消费与发送启动闭包独立复核
 
-- 分支：codex/re-0041-b21
-- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-b21
-- 业务问题/证据入口：queued-command-consume-b20、usb-interface-ota、dock-presence-polling、uart-normal-parser-b18/b19；a01951e2/a01915bc/a00ee9ce和正常0x24通知调用者
-- 闭包、包含/排除、可保留合同和断边：新的独立agent复核B20结论及生产者→槽→活动副本→发送启动→完成通知衔接，约5–12函数合同范围。已验收部分只针对必要合同核对；重点ABI、重读、宽度、清槽时点、返回覆盖、所有权和状态一致性。逐项接受/纠正/未核；必要纠正写独占报告，不改原报告。排除超时异常/漏洞/完整OTA/重复历史回放，发送内部留已知合同及未认证边界。
-- 独占报告：reverse/reports/ap01/queued-command-review-b21-0041-20261023.md
-- 独占分析目录：reverse/analysis/queued-command-review-b21-0041-20261023/
-- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
-
-### C22：包含C21的区域门控、祖先谓词与调用者闭包独立复核
-
-- 分支：codex/re-0041-c22
-- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-c22
-- 业务问题/证据入口：transform-predicate-c21、invalidation-third-gate-c19/review-c20、invalidation-gates-c17/review-c18、text-precondition-c15/review-c16；a00dbff4/a00ddab4/a00ddbf6/a00dddf4及a00dca48边界
-- 闭包、包含/排除、可保留合同和断边：新的独立agent复核区域失效请求→前置门→对象/祖先判定→区域处理→caller消费闭包，约5–12函数合同范围，已验收部分针对性核合同。重点C21只读/掩码/返回、ABI、区域局部写与失败路径、调用顺序、原谓词和实际刷新界限。a00dca48内部可保留不透明合同，不接管完整变换库。逐项接受/纠正/未核，必要纠正独占报告；排除全GUI/最终物理刷新/异常验证。
-- 独占报告：reverse/reports/ap01/region-gating-review-c22-0041-20261023.md
-- 独占分析目录：reverse/analysis/region-gating-review-c22-0041-20261023/
-- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
 
 ## 实际运行快照
 
-已调用agent工具核实：主窗口1个与下列6个subagent均running。各任务真实启动基线均为 `2ee39b3`，当前未提交/未整合/未技术验收；启动时独立worktree创建成功。此为启动快照，完成状态由后续更新覆盖。
+当前6个运行任务：A19/D01/E01/F01/G01/H01；B21/C22已结束并整合，不计运行。主窗口另计。
 
-| 任务 | agent | 基线 | 状态 |
-| --- | --- | --- | --- |
-| A19 | /root/a19_weather_flow | 2ee39b3 | 运行中 |
-| D01 | /root/d01_uart_send | 2ee39b3 | 运行中 |
-| E01 | /root/e01_ui_ownership | 2ee39b3 | 运行中 |
-| F01 | /root/f01_miio_timer | 2ee39b3 | 运行中 |
-| B21 | /root/b21_queue_review | 2ee39b3 | 运行中 |
-| C22 | /root/c22_region_review | 2ee39b3 | 运行中 |
+|任务|agent|启动基线|状态|
+|---|---|---|---|
+|A19|/root/a19_weather_flow|2ee39b3|运行中|
+|D01|/root/d01_uart_send|2ee39b3|运行中|
+|E01|/root/e01_ui_ownership|2ee39b3|运行中|
+|F01|/root/f01_miio_timer|2ee39b3|运行中|
+|G01|/root/g01_region_transform|004ff56|运行中|
+|H01|/root/h01_weather_lifecycle|99c02ab|运行中|
+
+近期整合：C22 3d59b72→004ff56限定接受C21；B21 d461760→99c02ab限定接受B20。无语义纠正，具体技术边界见独立报告，任务书归档历史交接。
 
 ## 近期滚动候选（未启动）
 
@@ -93,18 +77,18 @@
 - D02：D01提交/构帧/部分写/正常完成闭包独立复核；依赖D01整合，复用B21已验收槽合同，避免重复全解。
 - E02：E01嵌套字段生产消费清理闭包独立复核；依赖E01整合，不把独立清理器自动并入全局deinit。
 - F02：F01共享timer及私有data所有权闭包独立复核；依赖F01整合，库层通用算法保留明确合同。
-- G01：区域门控到实际变换区域的生产/消费小闭包；先由C22明确a00dca48及其必要依赖是否仍未解，若已有覆盖则改选其证实的断边。不得自动扩大为全变换库或最终物理刷新。
-- H01：另一个天气订阅者的注册→callback消费→注销/页面清理小闭包；先据A19实际发现选取未覆盖注册点a005e1fc/a005e8dc/a00b8bc2之一，不重复已恢复屏保分支。
+- G02：G01区域变换完整闭包独立复核，待G01整合；当前G01已启动。
+- H02：H01另一天气订阅者完整闭包独立复核，待H01整合；当前H01已启动。
 
 以上只是预备问题，不冒称已派发。每次空位时依据最新整合和agent建议确定完整任务书、基线及独占输出，再启动新agent；独立技术复核须换新agent。
 
-## 预备完整任务书 G01（未启动）
+## 当前完整任务书 G01（已启动，基线004ff56）
 
 任务ID G01；业务问题：a00dca48(obj,area,1)如何读取对象属性、形成区域变换、写回区域并返回给失效裁剪调用者？需恢复它与必要直接依赖的完整小闭包，参考约5–12函数，不以一个helper结束，也不扩展整个变换库。入口为C19/C20、C21与C22两处caller合同；C22建议只核此边，未读取内部callee，核心依赖清单当前未知，须执行agent自行按原证据定位。拟分支codex/re-0041-g01；拟worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g01。基线为C22整合后启动时最新管理提交，启动记录补确切commit。独占reverse/reports/ap01/region-transform-flow-g01-0041-20261023.md与reverse/analysis/region-transform-flow-g01-0041-20261023/。
 
 包含对象→参数提取→局部坐标/区域处理→写回与caller消费；针对C22已验收部分仅核接口，不重做全失效门控。完成标准为参数/返回、调用顺序、字段宽度/符号、区域每次读写、局部副本和所有权清楚，提供正常路径伪代码/布局/转换、原指令证据与必要静态核验。数学/标准库只有来源认证可作为排除，未认证不得静默跳过；底层算术可作明确合同边界但列证据与限制。未知厂商字不修改模型、不靠反编译补语义。排除全GUI、最终物理刷新、异常坐标/畸形输入/漏洞、执行固件或历史回放。闭合失败要列具体callee/坐标字段/浮点ABI/实际显示断边及一个后继闭包。共同规则全部适用。
 
-## 预备完整任务书 H01（未启动）
+## 当前完整任务书 H01（已启动，基线99c02ab）
 
 任务ID H01；业务问题：a00b8bc2调用a00b3a68的另一天气订阅者，如何注册callback/userdata、消费天气字段，并在页面或对象退出时注销/清理？a00b8bc2是已知调用点，不能先当函数入口；准确包含函数、callback地址和清理入口均须由执行agent据指令定位。A19只确认该incoming ref，未扩扫，故这些不是既有结论。参考weather-dataflow、A15/A16已验收五槽/双参callback合同及A19天气图标数据流。拟分支codex/re-0041-h01；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h01；实际基线为启动时最新整合管理提交。独占reverse/reports/ap01/weather-subscriber-lifecycle-h01-0041-20261023.md和reverse/analysis/weather-subscriber-lifecycle-h01-0041-20261023/。
 

@@ -438,3 +438,29 @@ C21 9c4ef73→dcda887：44B谓词及调用切片自验82B/33条/70检查，已�
 ## 预备任务 C22：变换前置callee独立复核
 
 分支 codex/re-0041-c22；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c22。须C21提交整合后，从最新管理提交启动。只复核C21正常参数/返回/是否写区域及必要直接依赖，最多3核心函数，不扩完整变换库或GUI。独占 reverse/reports/ap01/transform-predicate-review-c22-0041-20261023.md、reverse/analysis/transform-predicate-review-c22-0041-20261023/；必要精确纠正C21。原指令逐项接受/纠正/未核、来源及实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
+
+
+## 六路恢复首批复核已整合
+
+C22：3d59b72→004ff56；B21：d461760→99c02ab。两任务独占范围、差异、报告完整性、JSON及本地链接检查通过。技术判断由独立agent作出：均限定接受，无语义纠正。原worktree干净，待管理者回收，分支保留。
+
+### B21：包含B20的命令生产、固定槽消费与发送启动闭包独立复核
+
+- 分支：codex/re-0041-b21
+- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-b21
+- 业务问题/证据入口：queued-command-consume-b20、usb-interface-ota、dock-presence-polling、uart-normal-parser-b18/b19；a01951e2/a01915bc/a00ee9ce和正常0x24通知调用者
+- 闭包、包含/排除、可保留合同和断边：新的独立agent复核B20结论及生产者→槽→活动副本→发送启动→完成通知衔接，约5–12函数合同范围。已验收部分只针对必要合同核对；重点ABI、重读、宽度、清槽时点、返回覆盖、所有权和状态一致性。逐项接受/纠正/未核；必要纠正写独占报告，不改原报告。排除超时异常/漏洞/完整OTA/重复历史回放，发送内部留已知合同及未认证边界。
+- 独占报告：reverse/reports/ap01/queued-command-review-b21-0041-20261023.md
+- 独占分析目录：reverse/analysis/queued-command-review-b21-0041-20261023/
+- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
+
+
+### C22：包含C21的区域门控、祖先谓词与调用者闭包独立复核
+
+- 分支：codex/re-0041-c22
+- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-c22
+- 业务问题/证据入口：transform-predicate-c21、invalidation-third-gate-c19/review-c20、invalidation-gates-c17/review-c18、text-precondition-c15/review-c16；a00dbff4/a00ddab4/a00ddbf6/a00dddf4及a00dca48边界
+- 闭包、包含/排除、可保留合同和断边：新的独立agent复核区域失效请求→前置门→对象/祖先判定→区域处理→caller消费闭包，约5–12函数合同范围，已验收部分针对性核合同。重点C21只读/掩码/返回、ABI、区域局部写与失败路径、调用顺序、原谓词和实际刷新界限。a00dca48内部可保留不透明合同，不接管完整变换库。逐项接受/纠正/未核，必要纠正独占报告；排除全GUI/最终物理刷新/异常验证。
+- 独占报告：reverse/reports/ap01/region-gating-review-c22-0041-20261023.md
+- 独占分析目录：reverse/analysis/region-gating-review-c22-0041-20261023/
+- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
