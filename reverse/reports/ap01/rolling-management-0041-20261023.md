@@ -93,3 +93,11 @@
 任务ID H01；业务问题：a00b8bc2调用a00b3a68的另一天气订阅者，如何注册callback/userdata、消费天气字段，并在页面或对象退出时注销/清理？a00b8bc2是已知调用点，不能先当函数入口；准确包含函数、callback地址和清理入口均须由执行agent据指令定位。A19只确认该incoming ref，未扩扫，故这些不是既有结论。参考weather-dataflow、A15/A16已验收五槽/双参callback合同及A19天气图标数据流。拟分支codex/re-0041-h01；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h01；实际基线为启动时最新整合管理提交。独占reverse/reports/ap01/weather-subscriber-lifecycle-h01-0041-20261023.md和reverse/analysis/weather-subscriber-lifecycle-h01-0041-20261023/。
 
 功能范围是该一个订阅者正常注册→主要callback分支/字段消费→注销或对象清理闭包，参考5–12核心函数及必要短依赖，不以单一注册点草草完成。已验收五槽分发/arc/图标消费者只核相关合同；不恢复完整构造大函数、不重复a00a7766屏保分支、不扫描所有天气订阅者。callback与userdata须从原指令确认，保留宽度、借用/复制、重读和清理顺序；标准库只在来源可核实时排除。完成需交付原指令与地址、正常数据流/伪代码/结构、实际静态验证、事实推断未知和来源。无法证明清理或注销时给出明确断边及检索边界，不编造生命周期，不改模型或正式代码。排除网络请求、全UI、异常输入/缺陷/漏洞、固件执行/历史回放。共同规则适用。
+
+## 预备完整任务书 F02（待F01整合后立即启动）
+
+任务ID F02，独立技术复核F01共享延后设置timer完整小闭包；新agent承担，非原作者。分支codex/re-0041-f02；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f02；基线为启动时含F01的最新管理提交，派发记录补确切commit。独占reverse/reports/ap01/miio-deferred-review-f02-0041-20261023.md和reverse/analysis/miio-deferred-review-f02-0041-20261023/。
+
+问题：F01所述loop/timer初始化→三个已知属性提交→8B请求/data交接→到期stop与callback ABI→业务清理→deinit断边是否由指令成立？入口F01报告及instruction-evidence.json、miio-deferred-settings、weather-scheduling；核心a005a736相关片段/a009d106/a009d146/a009d286/a009d304/a009d8bc/a00a0e78/a00a0bd8/a00a5b90/a01b2b5c前缀，约5–12合同。已验收kind0..6仅针对核接口，不重做通用heap或全MiIO。重点初始化不清data、data与req.kind不同重读、64位参数ABI、callback寄存器/间接重读、free后清data与不同timer对象，两个UNKNOWN厂商算术不得默认为已认证；其未覆盖部分须明确影响边界。不开展异常重复提交实验，不借此修复原程序。
+
+完成逐项接受/纠正/未核，独立核原字节及关键厂商/调用/宽度，必要伪代码布局状态所有权、来源、实际验证与断边；原作者验证不能替代独立复核。准确区分局部片段与全容器、stop与最终close，以及有界负结果。必要纠正写独占报告不改F01原文，不扩loop关闭walker恢复；可将其作为后继。allocator/已验收天气重排与业务kind保留明确合同。排除固件执行、外连、漏洞、历史回放、正式ROM/生产/模型修改；共同规则适用。
