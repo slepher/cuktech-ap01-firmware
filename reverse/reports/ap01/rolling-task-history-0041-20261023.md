@@ -1041,3 +1041,25 @@ bf95f1e→719b38d：round3完整留存已覆盖，新增功能/导出0；+34/+38
 先已有→复核缺口对照，四分类交付、逐项接受纠正未核；原字节复核不计新增功能，不整函数重复导出，不凑时长/函数。技术纠正只独占报告，不改原成果。共同安全/静态/隔离/独占输出规则适用，不创建下级agent，无SIM/构建/回放。必要验证提交明确独占路径，报告commit/验证/未知/clean后结束。
 
 A28 b1994e1→dab524c：限定接受A27，新增功能0，113检查/98锚点通过。
+
+
+## 当前完整任务书 A29（已启动，基线ecfe6dd）
+
+独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a29；分支codex/re-0041-a29；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/image-cache-invalidation-a29-0041-20261024.md及reverse/analysis/image-cache-invalidation-a29-0041-20261024/。
+
+问题仅为A27未追的a019cfbe失效API：其正常调用者/业务触发是否实际标记同一image cache entry，及该标记如何接到既有release/cleanup合同。A23–A27 session/构造/raw/cleanup/release内部直接继承；A28在独立复核这些合同，不重叠。管理窗口已在reverse/reports/ap01、reverse/rehost、tooling和ZIP按精确地址检索，仅A27报告命中；这不代表此前未分析。执行者先查既存whole-ROM retained caller/Evidence和较晚round3、字段/调用者/别名，给已有→实际缺口。旧caller若已留存直接引用，只核不可信接入ABI/身份/门；无可靠caller种子就有界报告，不做全ROM字节incoming重扫。
+
+只选本已知API的一条正常image-cache失效业务连接；不预设照片退出/主页面切换一定标记，不扩所有invalidate/全cache/PNG/heap，不重导整函数或复制源码。计量/排序算法及运行时实际时序保留未知。若已有可靠合同覆盖即报已覆盖结束，不凑时长/函数/闭包。报告分继承、复核纠正、真正新增、未闭精确边；必要静态验证后提交独占成果并报告commit/验证/未知/clean。共同安全/独占/隔离规则适用，不创建下级agent，无SIM/构建/历史回放/生产ROM配置模型修改。
+
+caa64c6→7bc4119，新增同cache旧源连接待A31。
+
+
+## 当前完整任务书 D11（已启动，基线bccdd65）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d11；分支codex/re-0041-d11；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/uart-channel-source-d11-0041-20261024.md及reverse/analysis/uart-channel-source-d11-0041-20261024/。
+
+D09/D10已确认三槽busy分配a00288de、释放a01b5c48与lower shutdown a00198bc，D07/D08已核本地SDK身份；ROM这些新增合同的准确来源匹配仍未认证。仅对本地D:/Documents/PlatformIO/Projects/bouffalo_sdk候选HEAD41bf338a57be53919d99f6c6715a96100428c97d/version2.3.36的对应UART/DMA channel分配、归还、shutdown实现做源-ROM调用顺序/字段/返回匹配与差异认证。先查D03–D10旧认证范围，不重新逆向三槽/IRQ，不默认版本相同、不整库排除。若候选无对应实现给明确来源缺口；不扩其他驱动、不下载/构建。
+
+先给已有出处→解释行为→局限→实际缺口对照；按地址/调用点/字段/状态/Evidence检索complete与较晚留存，不把未命中/旧pending当从未恢复。已有可靠合同直接引用，仅补接入ABI/身份/厂商字/清理次序等必要窗口。无增量报覆盖结束，不擅自换题，管理者立即补位。四分报告，必要静态验证后提交独占路径，报告commit/验证/未知/clean。共同规则全部适用：不创建下级agent，不改他人/共享/生产ROM配置模型，无SIM/构建/回放/设备/外网；不重复整函数导出、全资源或源复制。
+
+1ccc973→292e15d，来源未认证/层次差异结论待D12。

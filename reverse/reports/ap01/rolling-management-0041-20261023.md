@@ -22,9 +22,9 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A29|/root/a29_cache_invalidation|ecfe6dd|失效API上层正常调用|
+|A31|独立复核A29真正新增连接|待启动，任务书就绪|
 |A30|/root/a30_cache_accounting|bccdd65|计量callback/预算数据合同|
-|D11|/root/d11_uart_source|bccdd65|新增channel合同的本地候选来源认证|
+|D12|独立复核D11认证范围|待启动，任务书就绪|
 |E10|/root/e10_app_root_exit|bccdd65|主app正常root退出连接|
 |G09|/root/g09_ready_dispatch|bccdd65|实际backend ready到watcher分发|
 |H08|/root/h08_type2_lifecycle|bccdd65|旧type2页ABI/DELETE未认证窗口|
@@ -50,25 +50,9 @@
 
 H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释放另有断边，不套用。a019cbc0不得混同a0198946。旧SIM已覆盖weather分类/显示，不再重新恢复。
 
-## 当前完整任务书 A29（已启动，基线ecfe6dd）
-
-独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a29；分支codex/re-0041-a29；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/image-cache-invalidation-a29-0041-20261024.md及reverse/analysis/image-cache-invalidation-a29-0041-20261024/。
-
-问题仅为A27未追的a019cfbe失效API：其正常调用者/业务触发是否实际标记同一image cache entry，及该标记如何接到既有release/cleanup合同。A23–A27 session/构造/raw/cleanup/release内部直接继承；A28在独立复核这些合同，不重叠。管理窗口已在reverse/reports/ap01、reverse/rehost、tooling和ZIP按精确地址检索，仅A27报告命中；这不代表此前未分析。执行者先查既存whole-ROM retained caller/Evidence和较晚round3、字段/调用者/别名，给已有→实际缺口。旧caller若已留存直接引用，只核不可信接入ABI/身份/门；无可靠caller种子就有界报告，不做全ROM字节incoming重扫。
-
-只选本已知API的一条正常image-cache失效业务连接；不预设照片退出/主页面切换一定标记，不扩所有invalidate/全cache/PNG/heap，不重导整函数或复制源码。计量/排序算法及运行时实际时序保留未知。若已有可靠合同覆盖即报已覆盖结束，不凑时长/函数/闭包。报告分继承、复核纠正、真正新增、未闭精确边；必要静态验证后提交独占成果并报告commit/验证/未知/clean。共同安全/独占/隔离规则适用，不创建下级agent，无SIM/构建/历史回放/生产ROM配置模型修改。
-
 ## 并发纠正（2026-10-24用户最新要求）
 
 必须维持六个实际运行的独立worktree subagent；完成即补位。范围去重用于换题/收缩，不能作为长时间空席理由。主窗口维护准备队列；不为数量重复恢复已有成果。以下四项均以已定位断边或来源认证缺口为题。
-
-## 当前完整任务书 D11（已启动，基线bccdd65）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d11；分支codex/re-0041-d11；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/uart-channel-source-d11-0041-20261024.md及reverse/analysis/uart-channel-source-d11-0041-20261024/。
-
-D09/D10已确认三槽busy分配a00288de、释放a01b5c48与lower shutdown a00198bc，D07/D08已核本地SDK身份；ROM这些新增合同的准确来源匹配仍未认证。仅对本地D:/Documents/PlatformIO/Projects/bouffalo_sdk候选HEAD41bf338a57be53919d99f6c6715a96100428c97d/version2.3.36的对应UART/DMA channel分配、归还、shutdown实现做源-ROM调用顺序/字段/返回匹配与差异认证。先查D03–D10旧认证范围，不重新逆向三槽/IRQ，不默认版本相同、不整库排除。若候选无对应实现给明确来源缺口；不扩其他驱动、不下载/构建。
-
-先给已有出处→解释行为→局限→实际缺口对照；按地址/调用点/字段/状态/Evidence检索complete与较晚留存，不把未命中/旧pending当从未恢复。已有可靠合同直接引用，仅补接入ABI/身份/厂商字/清理次序等必要窗口。无增量报覆盖结束，不擅自换题，管理者立即补位。四分报告，必要静态验证后提交独占路径，报告commit/验证/未知/clean。共同规则全部适用：不创建下级agent，不改他人/共享/生产ROM配置模型，无SIM/构建/回放/设备/外网；不重复整函数导出、全资源或源复制。
 
 ## 当前完整任务书 G09（已启动，基线bccdd65）
 
@@ -110,3 +94,51 @@ A27/A28已闭release/victim→cleanup，A29只追失效API上层调用。本题�
 - H09：H08交付后，独立复核旧type2未认证ABI/清理合同，分类/资源不重做。
 
 以上需据正式报告收缩为完整独占任务书；若任务已覆盖且无必要技术增量，则从其他已定位缺口换题，不递归复核纯重复材料。主窗口在每项提交前准备具体任务，保持六路。
+
+## 当前完整任务书 A31（待启动，原报告7bc4119已整合）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a31；分支codex/re-0041-a31；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/image-cache-invalidation-review-a31-0041-20261024.md及reverse/analysis/image-cache-invalidation-review-a31-0041-20261024/。
+
+新agent独立技术复核：A29的a00ed7f4 +5c门→getter对象+2c旧源→a00890e8→G+11c image-cache source/class key→a019cfbe连接；G+120另一cache必须分开，旧photo调用/custom0新源实参继承且不补成每次切页必失效。A27/A28内部失效/release/cleanup不重做。
+
+正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
+
+## 预备完整任务书 A32（待A30正式提交整合，不计运行）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a32；分支codex/re-0041-a32；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/image-cache-accounting-review-a32-0041-20261024.md及reverse/analysis/image-cache-accounting-review-a32-0041-20261024/。
+
+新agent独立技术复核：A30真正新增计量callback安装身份、参数返回单位、占用增减到容量预算门数据合同；A23/A27/A28 cleanup及A29失效调用链直接继承。不扩排序/heap或重导已有窗口。
+
+正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
+
+## 当前完整任务书 D12（待启动，原报告292e15d已整合）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d12；分支codex/re-0041-d12；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/uart-channel-source-review-d12-0041-20261024.md及reverse/analysis/uart-channel-source-review-d12-0041-20261024/。
+
+新agent独立技术复核：D11候选SDK分层/具体匹配差异和未认证范围，区分低层deinit/irq_detach与NuttX channel allocator/free/shutdown。候选SDK HEAD/version与D07/D08旧认证直接引用，不拿候选detach填ROM未知，不重读三槽全部原字节或重新扫描所有候选源码。
+
+正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
+
+## 预备完整任务书 E11（待E10正式提交整合，不计运行）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e11；分支codex/re-0041-e11；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/main-app-root-exit-review-e11-0041-20261024.md及reverse/analysis/main-app-root-exit-review-e11-0041-20261024/。
+
+新agent独立技术复核：E10正式报告实际正常业务动作、root/window身份与真实callee边；后加host探针的两轮删除及按窗口解除订阅属于SIM替代，必须继承这种证据局限。仅核真正新增连接，不重做E05/E06 DELETE内部或H07滑动/type19页清理。
+
+正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
+
+## 预备完整任务书 G10（待G09正式提交整合，不计运行）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g10；分支codex/re-0041-g10；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/display-ready-review-g10-0041-20261024.md及reverse/analysis/display-ready-review-g10-0041-20261024/。
+
+新agent独立技术复核：G09把a009ec98 watcher+14 fd-bucket注册与factory-test旧initializer a005c704..c780 ready消费者的绑定；旧ev_dc0e汇编已留存不算发现后端，只核未认证对象身份、th.addsl/th.lrw与callback ABI。G07/G08 poll业务callback和退出合同继承，不扩所有fd或运行时ready。
+
+正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
+
+## 预备完整任务书 H09（待H08正式提交整合，不计运行）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h09；分支codex/re-0041-h09；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/weather-type2-review-h09-0041-20261024.md及reverse/analysis/weather-type2-review-h09-0041-20261024/。
+
+新agent独立技术复核：H08真正补充的type2 ctx/wrapper与a00aba9c DELETE/注销原序；a00ab754完整callback、pass3 type2登记挂接及分类显示全继承，不跨用type4 68B或type19 116B，不重导整callback。
+
+正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
