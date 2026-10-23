@@ -175,3 +175,7 @@ B09完成b4e50b3→446cfec，限定接受B08，无核心纠正；190B/68普通�
 ## 预备任务 B11：分派调用者独立复核
 
 分支 codex/re-0041-b11；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b11。须B10成果提交整合后，从最新管理提交启动。只复核B10一个直接调用者的index来源、触发条件及局部调用链，不扩全部生产者/状态机。独占 reverse/reports/ap01/basic-info-dispatch-review-b11-0041-20261023.md、reverse/analysis/basic-info-dispatch-review-b11-0041-20261023/；必要可精确纠正B10。原指令逐项接受/纠正/未核/来源及实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 当前交接更新：A10 / B10 / C11
+
+A09 a5671ad→4359c0b已整合，技术待A10；A10从4359c0b运行，agent /root/a10_adapter_review。C10 872ac72→57abfb4已整合，限定接受C09，无纠正；C11从57abfb4运行，agent /root/c11_mode_update，按已预备模式控件helper任务，不扩formatter。B10仍基线446cfec，agent /root/b10_dispatch_caller。后继A11（A10建议待定）、B11已预备、C12应为C11独立复核。A09/C10工作树干净且整合，可回收保留分支。
