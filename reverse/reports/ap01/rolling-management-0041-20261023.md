@@ -179,3 +179,7 @@ B09完成b4e50b3→446cfec，限定接受B08，无核心纠正；190B/68普通�
 ## 当前交接更新：A10 / B10 / C11
 
 A09 a5671ad→4359c0b已整合，技术待A10；A10从4359c0b运行，agent /root/a10_adapter_review。C10 872ac72→57abfb4已整合，限定接受C09，无纠正；C11从57abfb4运行，agent /root/c11_mode_update，按已预备模式控件helper任务，不扩formatter。B10仍基线446cfec，agent /root/b10_dispatch_caller。后继A11（A10建议待定）、B11已预备、C12应为C11独立复核。A09/C10工作树干净且整合，可回收保留分支。
+
+## 预备任务 C12：详情模式更新独立复核
+
+分支 codex/re-0041-c12；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c12。须C11成果提交整合后，从最新管理提交启动。只复核C11 a00f388c及最多两个直接依赖的控件字段/参数/模式更新合同，不扩完整UI生命周期。独占 reverse/reports/ap01/detail-mode-update-review-c12-0041-20261023.md、reverse/analysis/detail-mode-update-review-c12-0041-20261023/；必要可精确纠正C11。原指令逐项接受/纠正/未核、来源/实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
