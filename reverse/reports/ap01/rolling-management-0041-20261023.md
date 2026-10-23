@@ -18,16 +18,16 @@
 
 ## 实际运行快照
 
-当前3恢复3独立复核共6个运行subagent，主窗口另计；已结束任务不计运行。
+当前4恢复/来源认证与2独立复核共6个运行subagent，主窗口另计；已结束任务不计运行。
 
 |任务|agent|启动基线|状态|
 |---|---|---|---|
 |A23|/root/a23_png_session|a295c3a|运行中|
-|E05|/root/e05_ctk_close|f31a27a|运行中|
+|E06|/root/e06_ctk_close_review|26fc8d7|运行中|
 |D06|/root/d06_uart_ring_review|1c79f0d|运行中|
-|F06|/root/f06_display_exit_review|a1a40f5|运行中|
+|F07|/root/f07_source_auth|f22ec27|运行中，只读本地候选来源认证|
 |G05|/root/g05_display_events|7c3a3cf|运行中|
-|H04|/root/h04_weather_close_review|2ac1fd0|运行中|
+|H05|/root/h05_weather_subscriber|8a7807e|运行中|
 
 整合及限定验收映射见历史交接与覆盖记录，每项完成即检查整合补位。
 
@@ -35,10 +35,10 @@
 
 - A24：A23正常PNG session完整闭包独立复核，待A23整合；A23已启动。
 - D07：D06验收后按其建议圈a01b554e本地DMA描述符消费/归还小闭包；D06已启动。
-- E06：E05 app注销/归还完整闭包独立复核，待E05整合；E05已启动。
-- F07：F06验收后选择显示对象字段生产/后端资源小闭包，不重复+2b8普通SW有界搜索，具体入口待F06建议。F06已启动。
+- E07：E06后转CTK剩余item+34/+38字段的真实数值消费者闭包，不重复root DELETE负搜索；E05真实退出/注销另留候选。E06已启动。
+- F08：F07本地显示来源映射/厂商差异结论独立复核，待F07整合；F07已启动。
 - G06：G05真实事件安装/param/调度完整闭包独立复核，待G05整合；G05已启动。
-- H05：H04验收后转一个未恢复天气订阅者完整数据流，不重复ctx free有界检索；优先候选a005e8dc注册点，准确callback未知，启动前任务书细化。H04已启动。
+- H06：H05另一天气订阅者数据流/显式ctx释放完整闭包独立复核，待H05整合。H05已证callback=a00abed2、DELETE=a00abb62；正式范围待其报告。
 
 以上只是预备问题，不冒称已派发。每次空位时依据最新整合和agent建议确定完整任务书、基线及独占输出，再启动新agent；独立技术复核须换新agent。
 
@@ -56,23 +56,7 @@
 
 
 
-## 当前完整任务书 E05（已启动，基线f31a27a）
 
-任务ID E05，业务恢复CTK app订阅与正常离页注销/对象归还闭包。分支codex/re-0041-e05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e05；基线含E04最新管理提交。独占reverse/reports/ap01/ctk-app-close-e05-0041-20261023.md及reverse/analysis/ctk-app-close-e05-0041-20261023/。
-
-业务问题：a005d142注册的a00adabc(app,item)与app由谁持有、正常退出如何停止回调/注销62fcb530节点、先后归还哪些app/page资源？先读E03/E04已验收注册/触发/栈消费链，E04对port1/port2互斥与栈布局措辞纠正须沿用。选择一个实际app退出/DELETE触发者→注销→节点/app清理闭包，约5–12核心和必要短依赖；具体退出callback/注销器地址目前未知，须据注册caller、app挂接和保留incoming refs定位，不凭同名GUI函数拼链。
-
-包含真实callback键/userdata、注销是否仅摘链或还free、app/页面/上下文分配与清理顺序、回调期间可达性；不重复a00f4740内部或port1数值显示，既有订阅链/allocator合同针对核。未能证明节点回收/退出触发时给有界检索与精确断边，不把注销等同释放，不扩大所有UI/所有订阅者/全局deinit。完成伪代码结构状态生命周期、原指令/地址/ABI/写宽/返回覆盖、事实推断未知、来源、实际静态验证和一个后继闭包。来源未认证不排除标准实现/厂商修改。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
-
-## 当前完整任务书 H04（已启动，基线2ac1fd0）
-
-任务ID H04，新agent独立复核H03真实按键离页→父/子DELETE→递归析构与context断边闭包。分支codex/re-0041-h04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h04；基线含H03最新管理提交。独占reverse/reports/ap01/weather-page-close-review-h04-0041-20261023.md及reverse/analysis/weather-page-close-review-h04-0041-20261023/。
-
-问题：a00afc88天气子页创建片段及8B父state(type19)→输入hook a00b35ee event11/key10/窗口64零门→恢复主页面/删除a00ded6c(window)→父DELETE a00b1a02→子天气DELETE a00b3b26→控件递归/类析构摘链free的原序与所有权是否成立？核心以H03正式清单约5–12函数为准，只核该正常type19路径，不复核全GUI删除系统。已验收H02子hook/重排/注销只针对核。重点父8B state、20B wrapper、116B ctx三者区分，父stop timer/free state与子清28word/unregister/free wrapper排序、事件mask/vendor条件/返回门、对象递归/类析构前后指针持有及ctx最终free未证的有界范围。
-
-独立原指令/厂商字/事件ABI/宽度/调用重读/失败分支，逐项接受纠正未核；必要纠正仅独占报告不改H03。不要把构造直接引用搜索变穷尽别名、不要把对象free拼成ctx free、不引入缺陷判断。交付伪代码布局状态生命周期、事实推断未知、来源、实际独立静态验证和断边；标准库仅来源认证可排除，私有胶合保留恢复。排除全导航/其他窗口类型、固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
-
-最新整合：E04→f31a27a范围措辞纠正后限定接受E03；A21→875f762、G03→f82380b为待独立复核恢复，A22/G04运行中。
 
 ## 当前完整任务书 A23（已启动，基线a295c3a）
 
@@ -100,17 +84,8 @@
 
 逐项接受纠正未核，必要纠正只独占报告不改D05；保留动态private/ops写者、完整中断优先级/硬件交付、final close及未解同步内部断边，不扩全IRQ/DMA/UART或异常超时。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证及一个后继闭包。来源未认证不排除。禁止固件执行/设备/外连/漏洞/历史回放/ROM生产模型修改；共同规则适用。
 
-## 当前完整任务书 F06（已启动，基线a1a40f5）
 
-任务ID F06，新agent独立复核F05显示对象来源/DELETE清理与可选callback断边闭包。分支codex/re-0041-f06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f06；基线含F05最新管理提交。独占reverse/reports/ap01/display-exit-review-f06-0041-20261023.md及reverse/analysis/display-exit-review-f06-0041-20261023/。
-
-问题：a005ccc6→a0084b96→a008aec0分配zero324对象/58B payload→a00873ea写out，配置/dev/fb0与/dev/input0，是否确为返回后a0081554显示清理对象，而不是loop walker？真实DELETE注册a0086cd4→a007ffa0→a01b93b4(obj+2e8 event list,cb=a00800b4,filter29,userdata=obj)及a008acfa分发event+c userdata→callback后端归还→后续可选obj+2b8/payload/obj清理顺序是否成立？按F05正式约5–12核心与必要片段；F03/F04栈loop/关闭合同只针对核，不重新扫timer。
-
-重点+2b8仅可证构造zero初值，非NULL安装/真实callback未定位，普通SW立即数有界搜索不涵盖别名/批量/厂商store，不能推返回时必NULL；backend=obj+2e0清理、fd>=0 close wrapper/free backend+34/backend与对象资源顺序、callback返回后字段重读须原指令核。显示闭包无已证loop9428连接但opaque callee不能作全局否定。独立核ABI/厂商字/写宽/返回分支/所有权，逐项接受纠正未核，纠正只独占报告不改F05。不扩全部显示/输入或obj+2b8后继恢复，保留来源认证和上层loop断边。交付必要伪代码结构状态生命周期、事实推断未知、来源、实际静态验证与一个后继闭包；禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
-
-H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达及不同bit0检查位置需精确纠正/补充，正式报告待提交，不提前标无纠正接受。
-
-## 预备完整任务书 E06（待E05整合）
+## 当前完整任务书 E06（已启动，基线26fc8d7）
 
 任务ID E06，新agent独立复核E05 CTK app所有权/DELETE清理与注销断边闭包。分支codex/re-0041-e06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e06；基线含E05最新管理提交。独占reverse/reports/ap01/ctk-app-close-review-e06-0041-20261023.md及reverse/analysis/ctk-app-close-review-e06-0041-20261023/。
 
@@ -118,7 +93,7 @@ H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达
 
 逐项接受纠正未核，原指令/间接ABI/厂商字/宽度/返回与重读、伪代码结构状态所有权，事实推断未知/来源/实际独立静态验证/精确断边。真实a00adabc注销、订阅节点回收、app root正常退出触发未证须保留；不能将window对象free或另一个callback移除拼成此订阅销毁。必要纠正只独占报告不改E05，不接管root删除incoming或全registry teardown后继，不扩全UI。来源未认证不排除；禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 H05（待H04整合）
+## 当前完整任务书 H05（已启动，基线8a7807e）
 
 任务ID H05，业务恢复另一个未覆盖天气订阅点a005e8dc的注册→callback主要消费→页面/对象退出闭包。分支codex/re-0041-h05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h05；基线含H04最新管理提交。独占reverse/reports/ap01/weather-subscriber-h05-0041-20261023.md及reverse/analysis/weather-subscriber-h05-0041-20261023/。
 
@@ -128,7 +103,7 @@ H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达
 
 最新整合：A22→a295c3a限定验收；G04→7c3a3cf两处事件表达纠正后限定验收；D05→1c79f0d与F05→a1a40f5待D06/F06。F06运行中已报告F05通用filter描述也需按mask ffff7fff收紧，正式报告待提交。E05作者已纠正即时摘要中62fc95bc身份，正式报告待交付；不得当app根引用。
 
-## 预备完整任务书 F07（待F06纠正报告整合）
+## 当前完整任务书 F07（已启动，基线f22ec27）
 
 任务ID F07，技术来源认证：F05显示对象/DELETE后端闭包与本地LVGL候选源码的可核实匹配及厂商差异。分支codex/re-0041-f07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f07；基线含F06最新管理提交。独占reverse/reports/ap01/display-source-auth-f07-0041-20261023.md及reverse/analysis/display-source-auth-f07-0041-20261023/。
 
@@ -145,3 +120,5 @@ H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达
 问题：a00e5c78的s0-7c 76B栈session→a00e5d32/a019b168 open清session/cache miss/info/decoder+4→PNG a00eb7b6像素包装/session+2c→a018f9e8消费者→a00e5d8c/a00828d6 close→a00eab9a及cache/非cache归还，是否符合原字节和所有权？核心以A23正式清单约5–12函数及必要短依赖，已验收A22 registry/info/header只针对核，不重做全PNG或像素压缩算法。重点严格1门、src借用/像素byte0/2交换、normal options+4/+5零使a00829e4对象直返、非cache a0081f26先可选handler+4(raw+14)再free、cache启用PNG close跳过销毁/session仅a019d9f6 release、初始化a008abb0 payload清理与驱逐/引用内部断边，不能把release称实际像素free。
 
 独立原指令/ABI/厂商字/宽度/重读/返回覆盖及失败清理原序，逐项接受纠正未核，必要纠正只独占报告不改A23。通用解压算法保留明示未恢复/来源未认证合同，实际cache驱逐与像素handler安装未解精确保留，不扩全部cache/图像/物理绘制。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证和一个后继闭包。禁止固件执行/外连/漏洞/错误输入/历史回放/ROM生产模型修改；共同规则适用。
+
+最新：E05→26fc8d7待E06且仅部分生命周期；H04→8a7807e限定接受H03；F06→f22ec27 filter表达纠正后接受F05。F07已只读定位本地候选实际路径/home/slepher/nuttx-ap01-sim/apps/graphics/lvgl/lvgl（lv_display.c/lv_version.h），尚未认证ROM来源/排除；未启动SIM或构建联网。
