@@ -1233,3 +1233,25 @@ A27明确尚缺cache+38/+30全链排序/victim优先级，A30/A32仅计量合同
 先已有→行为→局限→实际缺口，报告分继承、复核纠正、真正新增、精确断边；复核新增功能0，可靠合同直接引用，不重复整函数/源码/资源导出或机械账。无增量及时报覆盖由主窗口补位，不凑时长/函数。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
 
 已整合：A34链排序新增待A36；A35限定接受A33无纠正/新增功能。
+
+
+## 当前完整任务书 D14（准备，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d14；分支codex/re-0041-d14；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/pixel-source-review-d14-0041-20261024.md及reverse/analysis/pixel-source-review-d14-0041-20261024/。
+
+新agent独立复核D13局部draw-buffer候选匹配与差异：表角色命名强度、默认align独立调用、28B字段、raw→对象归还、size首word计量；候选显式NULL return不能替ROM diagnostic路径补门。复用F07/F08本地9.2.1候选身份与A25/A26/A30合同，只核D13具体10成员/对应源行，不扫描整库、复制源码或重读完整ROM函数。版本/编译输入/allocator/assert实现仍未知，不作未改或整库排除。
+
+先已有→行为→局限→实际缺口，报告分继承、复核纠正、真正新增、精确断边；复核新增功能0，可靠合同直接引用，不重复整函数/源码/资源导出或机械账。无增量及时报覆盖由主窗口补位，不凑时长/函数。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
+
+已整合；D14限定接受D13并收紧malloc槽空表述，新增0；G11 producer连接增量待G12。
+
+
+## 当前完整任务书 G11（准备，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g11；分支codex/re-0041-g11；基线为本任务书提交。独占reverse/reports/ap01/display-ready-producer-g11-0041-20261024.md及reverse/analysis/display-ready-producer-g11-0041-20261024/。
+
+G09/G10已闭ready消费者→fd bucket/watcher callback；真正未核是底层a010d7da记录生产与所需登记提交。本题只恢复该正常producer参数、返回count/记录布局(fd/events与步长)、实际写入与旧消费者连接；沿已有retained调用/较晚round3核一个实际后端，不假定epoll/驱动已ready。不重导旧initializer消费或公共poll/start/stop，不扩全部fd/libuv/驱动/网络。系统调用/硬件实际时序可精确未知，源码候选须有范围证明不能默认同ROM。
+
+先给已有出处→行为→局限→精确缺口，按地址/字段/callback/Evidence检索完整阶段与较晚留存，旧pending/未命中不等于未分析。可靠合同直接引用，仅补必要原字节窗口；无增量报覆盖由管理者立即补位，不凑时长/函数。报告分继承、复核纠正、真正新增、精确断边。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络，不整函数重复导出/资源源码复制。必要验证独占提交，报告commit/验证/未知/clean结束。
+
+已整合；D14限定接受D13并收紧malloc槽空表述，新增0；G11 producer连接增量待G12。
