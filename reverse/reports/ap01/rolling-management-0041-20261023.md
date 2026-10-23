@@ -114,3 +114,19 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 已验收type13关闭/摘链/callback合同只针对核，避免重复timer扫描；未知间接目标保留候选和有界引用搜索，不凭日志/名字补清理。完成原指令/地址/ABI/写宽/返回覆盖、伪代码结构状态所有权、事实推断未知、来源、实际静态验证和一个后继闭包。普通库认证来源版本才可排除，厂商注册适配继续恢复；排除全loop/heap、漏洞/异常输入、固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
 
 最新：E03 b0c4ea8→85c61e2待E04；F04 1a100d8→3aba13a通过限定复核。D04已报告D03 optional_mark非空分支伪代码需纠正；实际acquire参数a3=0主链未受影响，正式报告待提交，不冒称无纠正接受。
+
+## 预备完整任务书 G04（待G03整合）
+
+任务ID G04，新agent独立复核G03失效提交/记录合并/直接消费完整闭包。分支codex/re-0041-g04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g04；基线含G03最新管理提交。独占reverse/reports/ap01/invalidation-submit-review-g04-0041-20261023.md及reverse/analysis/invalidation-submit-review-g04-0041-20261023/。
+
+业务问题：a00ddbf6成功后段a00ddc7e怎样把区域写入display内嵌记录、何时事件门控/省略/退化全屏，a00e0ac8怎样合并、消费并清空？按G03正式核心清单约5–12函数及必要短依赖，已验收C22/G02数学/门控只针对核。已定位display+44的32×16B记录、+244的32B标记、+264的word count，a00e0ac8消费者/a00e082e边界。重点无动态节点队列、mode2全屏置1、普通event35恰1门及调用后重读count、完全包含省略、满32回退、event38(param0)、unsigned低32位面积和严格小于合并、标记顺序、mode1借记录与mode0栈分行、最后512B→32B→count0清理原序。
+
+独立核原字节/厂商字、宽度符号/返回/ABI/原调用重读、记录与栈指针所有权。逐项接受纠正未核，必要纠正仅独占报告不改G03。事件callback未知可能持有param、a00e082e后具体绘制与物理完成保留断边，不追完整绘制/事件注册后继。交付可读伪代码结构状态生命周期、事实推断未知、来源、实际独立静态核验及一个后继闭包；标准库来源未认证不排除，已验收复制/面积/allocator可作明确合同。排除异常区域/漏洞/固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 A22（待A21整合）
+
+任务ID A22，新agent独立复核A21 PNG decoder注册/info/注销条件闭包。分支codex/re-0041-a22；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a22；基线含A21最新管理提交。独占reverse/reports/ap01/png-info-review-a22-0041-20261023.md及reverse/analysis/png-info-review-a22-0041-20261023/。
+
+问题：a008e3ac初始化片段→a0082914创建/registry插入→a0082c8c class0匹配a00eb6fe PNG info→descriptor/header输出→registry deinit回收是否可由真实注册写入/间接ABI连接？具体核心以A21正式清单为准约5–12函数。已知registry base62fc957c、+110 payload28B、+114/+118 head/tail；创建36B头插、PNG最后注册优先BIN；a008e82c创建/a008e838写callback，close字段真实地址a00eab9a，不能沿用A21早期临时误报a00eb39a；deinit a008be06在a008bed2清registry。重点PNG signature实际data前8B与data+10取低16位宽高、format0x10/返回1、info只借decoder、list unlink/free、构造/注销所有权及顺序，header认证不等于像素/物理绘制执行。
+
+独立原指令/厂商字/函数边界/间接ABI/返回覆盖/资源宽度、逐项接受纠正未核，必要纠正只独占报告不改A21；source classifier/image setter及A20纠正后的flag合同仅针对核，不重复整个image链。完整open/decode/压缩算法、其他格式、动态注册全集及最终显示保留边界，不扩完整图像库。来源版本可核实才排除标准实现，厂商注册适配恢复。交付伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证和断边；排除固件执行/外连/漏洞/畸形输入/历史回放/ROM生产模型修改；共同规则适用。
