@@ -127,3 +127,21 @@ H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达
 保留callback(data,userdata)顺序、原宽度符号/重读/返回门、借用与复制、注册/注销键和资源持有；不能把清字段/摘链/删除widget等同释放ctx。未定位退出时给精确字段/入口与有界搜索，不重复H03 ctx free检索，不扩所有天气订阅者/全UI或网络。交付原指令/证据、可读伪代码布局状态生命周期、事实推断未知、来源、实际静态验证及一个后继闭包。源码来源未认证不排除，标准调用保留明确合同。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
 
 最新整合：A22→a295c3a限定验收；G04→7c3a3cf两处事件表达纠正后限定验收；D05→1c79f0d与F05→a1a40f5待D06/F06。F06运行中已报告F05通用filter描述也需按mask ffff7fff收紧，正式报告待提交。E05作者已纠正即时摘要中62fc95bc身份，正式报告待交付；不得当app根引用。
+
+## 预备完整任务书 F07（待F06纠正报告整合）
+
+任务ID F07，技术来源认证：F05显示对象/DELETE后端闭包与本地LVGL候选源码的可核实匹配及厂商差异。分支codex/re-0041-f07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f07；基线含F06最新管理提交。独占reverse/reports/ap01/display-source-auth-f07-0041-20261023.md及reverse/analysis/display-source-auth-f07-0041-20261023/。
+
+问题：此前按来源未知恢复的显示create/delete/list/event/backend适配约5–12函数，哪些可与本地可核实上游源码一致识别，哪些存在厂商包装/修改/配置差异，哪些仍不能排除？入口F05/F06正式核心表、ROM路径lv_display.c/lv_nuttx_entry.c、0041-handoff.md中本地候选根。已知本地WSL Ubuntu-24.04根/home/slepher/nuttx-ap01-sim，历史报告候选NuttX12.10/LVGL9.2.1，apps固定提交8ff533beb37eeef1f288c467acd7c50b542464eb；这只是本地SIM候选，绝不是ROM准确版本。先在该明确根内只读定位实际LVGL源码/版本元数据（可经WSL本地文件路径），不可启动SIM/QEMU/固件、构建、网络或下载，不改候选树。不存在或不可读则记录实际界限，不另装软件/修复权限/全盘扫库。
+
+以F05显示create a0084b96/list a008aec0/publish a00873ea/delete a0081554/事件注册分发/后端DELETE a00800b4等约5–12核心选择完整小功能闭包，已有ROM合同只核来源所需证据，不重做指令全量复制。逐函数比较源码调用顺序、字段布局/编译结构、返回与清理分支、资源所有权、callback ABI及适配路径；记录实际源码绝对路径与Git/版本/包来源依据，不新增哈希清单。仅算法同形/字符串不能认证未修改实现；明确区分候选相符、来源可识别但版本未知、确证未改可排除、厂商修改/封装仍须恢复、未匹配。
+
+不得凭相似性把整LVGL/图像/事件库一并排除，不例行重扫+2b8普通SW。F06 filter mask纠正为既有合同。交付源-ROM函数映射表、具体匹配/差异证据和未认证边界、事实推断未知、实际只读验证、可复用的认证范围与一个后继闭包；不写参考实现、不编译或修原程序。仅静态、不外连/漏洞/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 A24（待A23整合）
+
+任务ID A24，新agent独立复核A23 PNG真实session owner/open/close/缓存持有转移闭包。分支codex/re-0041-a24；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a24；基线含A23最新管理提交。独占reverse/reports/ap01/png-session-review-a24-0041-20261023.md及reverse/analysis/png-session-review-a24-0041-20261023/。
+
+问题：a00e5c78的s0-7c 76B栈session→a00e5d32/a019b168 open清session/cache miss/info/decoder+4→PNG a00eb7b6像素包装/session+2c→a018f9e8消费者→a00e5d8c/a00828d6 close→a00eab9a及cache/非cache归还，是否符合原字节和所有权？核心以A23正式清单约5–12函数及必要短依赖，已验收A22 registry/info/header只针对核，不重做全PNG或像素压缩算法。重点严格1门、src借用/像素byte0/2交换、normal options+4/+5零使a00829e4对象直返、非cache a0081f26先可选handler+4(raw+14)再free、cache启用PNG close跳过销毁/session仅a019d9f6 release、初始化a008abb0 payload清理与驱逐/引用内部断边，不能把release称实际像素free。
+
+独立原指令/ABI/厂商字/宽度/重读/返回覆盖及失败清理原序，逐项接受纠正未核，必要纠正只独占报告不改A23。通用解压算法保留明示未恢复/来源未认证合同，实际cache驱逐与像素handler安装未解精确保留，不扩全部cache/图像/物理绘制。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证和一个后继闭包。禁止固件执行/外连/漏洞/错误输入/历史回放/ROM生产模型修改；共同规则适用。
