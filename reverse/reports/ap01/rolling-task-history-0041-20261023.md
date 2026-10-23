@@ -1853,3 +1853,15 @@ A47/A49已恢复reader前缀构造/归还，A50/A52若尚运行则其内部消�
 
 
 I01 083ea25、A54 a0514a3已整合，新功能0；A55/I02交叉补位新独立复核。
+
+
+## 当前完整任务书 C26（C25已整合，立即接替）
+
+独占reverse/reports/ap01/region-transform-source-review-c26-0041-20261024.md及reverse/analysis/region-transform-source-review-c26-0041-20261024/。
+
+待C25整合后，新独立agent只核G01/G02可靠行为到本地候选必要行/属性/flags/坐标与宽度映射及差异强度，不重复11函数与厂商字恢复，不认证精确版本或整库排除，新功能0。
+
+仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
+
+
+C26 2588a65已整合，C25限定来源接受/新增0；B22接替J01筛出的唯一真实种子。

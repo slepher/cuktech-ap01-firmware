@@ -24,7 +24,7 @@
 |---|---|---|---|
 |J01|/root/e17_uv_time_review（运行）|7119b59|充电领域旧complete与近期复核交叉去重/实际缺口种子|
 |I03|/root/g16_fb_file_review（运行）|472f076|屏保Time2 type2f已有成果→正常DELETE/ctx责任缺口|
-|C26|/root/h16_clock_source_review（运行）|34ff6ba|独立复核C25区域变换候选映射及五属性+2差异|
+|B22|/root/h16_clock_source_review（派发中）|本次启动提交|cmd51写item+0e前正常类型决策，继承既有所有权链|
 |A55|/root/a46_cache_drop（运行）|46fa469|独立复核A54 reader局部来源与gifdec整文件不同边界|
 |J02|/root/a47_reader_mode（运行）|34ff6ba|日历/时间旧complete与近期复核去重/真实缺口种子|
 |I02|/root/d19_backlight_animation（运行）|46fa469|独立复核I01旧启动证据范围与精度|
@@ -62,15 +62,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 ## 本批继承与增量快照（df35f44启动）
 
 A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode0合同，只独立复核，新增0；D20继承settings-round2b清理接线与D19，只独立复核，新增0。E18只补实际固定分母除法返回合同，不重做时间上层；G17只补NuttX fb候选来源认证，不用LVGL认证替代；H17只找计数writer正常连接，不重搜offset未知。六个agent已由实时状态确认全部running；管理窗口另计。
-
-
-## 当前完整任务书 C26（C25已整合，立即接替）
-
-独占reverse/reports/ap01/region-transform-source-review-c26-0041-20261024.md及reverse/analysis/region-transform-source-review-c26-0041-20261024/。
-
-待C25整合后，新独立agent只核G01/G02可靠行为到本地候选必要行/属性/flags/坐标与宽度映射及差异强度，不重复11函数与厂商字恢复，不认证精确版本或整库排除，新功能0。
-
-仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
 
 
 ## 当前完整任务书 A55（前置已整合，立即接替）
@@ -124,7 +115,7 @@ REA skill与共同/复用/静态安全规则适用，四分报告、新增功能
 REA skill与共同/复用/静态安全规则全适用，四分报告；不重建整分类表/矩阵/源码/资源/机械账，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。必要JSON/链接/差异检查，独占精确提交commit/验证/未知/clean，接近提交提前给种子/重叠。
 
 
-## 预备完整任务书 B22（有前置，未启动）
+## 当前完整任务书 B22（旧种子已在主仓，J01去重支持，立即接替）
 
 独占reverse/reports/ap01/cmd51-device-type-b22-0041-20261024.md及reverse/analysis/cmd51-device-type-b22-0041-20261024/。
 
