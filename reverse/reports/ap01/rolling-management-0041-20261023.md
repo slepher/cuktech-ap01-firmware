@@ -235,3 +235,7 @@ A11 4d4d5ed→139d994已整合，范围/差异通过，待A12；A12从139d994运
 ## 预备任务 B14：数字位置setter
 
 分支 codex/re-0041-b14；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b14。须B13验收允许后，从最新管理提交启动。仅恢复a009c5fc数字位置setter正常参数/字段/返回合同及最多两个直接依赖；入口miio-deferred-settings中3/8与kind5调用、天气位置报告及既存inventory，先查已有后续成果避免重复。不要重新扫描kind2全部直接提交者（旧扫描已覆盖3个标准直接点），不扩完整MiIO/天气状态机。独占 reverse/reports/ap01/numeric-location-setter-b14-0041-20261023.md、reverse/analysis/numeric-location-setter-b14-0041-20261023/。核原指令参数宽度/返回分支/持久化边界，事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 A13：两个函数本地来源识别
+
+分支 codex/re-0041-a13；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a13。须A12验收允许后，从最新管理提交启动。仅核a0027340/a00272d4两个NuttX形状函数的本地源码候选、可验证版本/识别依据、语义差异及厂商修改边界；入口A11/A12的源路径/结构与本地既有SDK/参考源码，不访问外部服务或下载。没有可靠候选则明确保留来源未知，不凭sched路径或算法同形排除，不扩大调度器或运行时对象同一性。独占 reverse/reports/ap01/scheduler-source-a13-0041-20261023.md、reverse/analysis/scheduler-source-a13-0041-20261023/。已有ROM指令事实与参考源码匹配/差异要分别标识，无法证明未修改实现不得排除；引用准确本地路径和版本依据，不新建哈希清单。实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
