@@ -936,3 +936,16 @@ A23/A24、A25及其reuse-crosscheck；旧pass3初始化调用已知。只核a008
 先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
 
 f166c84→e0e357d：仅容量helper局部合同，新增业务0，待F10。
+
+
+## 当前完整任务书 H07（已启动，基线fca1d5e）
+
+问题：type4 weather1正常上层离页到DELETE连接。
+
+继承pass3第2653–2657行注册a00abed2/type4/context/DELETE a00abb62，weather-calendar-complete全部分类文字图标合同及H05/H06。仅补H05明确缺的正常上层离页动作→本页DELETE连接，先查page-logic/knob/system/guide和ZIP现有导航证据，SIM导航不等于ROM连接。目标对象type4/68B；type19/116B不在本题，不套用释放结论。若已有足够证据仅报告覆盖；不得改题为另一个旧订阅者或全UI。
+
+分支codex/re-0041-h07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h07。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/weather1-navigation-h07-0041-20261023.md及reverse/analysis/weather1-navigation-h07-0041-20261023/。
+
+先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
+
+H07 69ee808→89875e2：普通切出旧成果覆盖，新增业务0；实际teardown断边与E05/E06同源，合并归属，不另派天气DELETE负搜索。

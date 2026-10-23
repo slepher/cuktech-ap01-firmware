@@ -18,16 +18,16 @@
 
 ## 实际运行快照
 
-上一批A25/D08/E07/F08/G06/H06均已整合结束。以下六项已真实启动，独立worktree基线均为fca1d5e；主窗口另计，无下级agent。
+上一批A25/D08/E07/F08/G06/H06均已整合结束。当前A27/D09/E09/F10/G07五项运行，H07已结束，不计运行；D09/G07/H07基线fca1d5e，E09基线3f0a7e0，A27/F10基线f2d4bc9；主窗口另计，无下级agent。
 
 |任务|范围|状态|
 |---|---|---|
-|A27|cache release到payload cleanup的既有断边|准备（A26已整合872972c）|
+|A27|cache release到payload cleanup的既有断边|运行中：/root/a27_cache_cleanup，基线f2d4bc9|
 |D09|既有DMA合同之外的channel分配/正常close/槽归还|运行中：/root/d09_dma_channel|
 |E09|a00a1aa8真实正常函数边界与保存槽别名|运行中：/root/e09_ctk_caller_alias，基线3f0a7e0|
-|F10|独立复核F09容量helper局部合同|准备（F09已整合e0e357d）|
+|F10|独立复核F09容量helper局部合同|运行中：/root/f10_event_array_review，基线f2d4bc9|
 |G07|event38替代work调度/归还断边|运行中：/root/g07_alternate_work|
-|H07|type4 weather1正常上层离页→已知DELETE连接|运行中：/root/h07_weather1_navigation|
+|H07|普通主浏览切出已有覆盖；teardown断边并入E05/E06|已整合89875e2，无独立天气增量；空席待实际缺口|
 
 ## 派发规则（本次用户调整优先）
 
@@ -70,16 +70,6 @@ D07/D08已覆盖描述符持有/提交/IRQ合同，继承不重做。精确种�
 
 先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
 
-## 当前完整任务书 H07（已启动，基线fca1d5e）
-
-问题：type4 weather1正常上层离页到DELETE连接。
-
-继承pass3第2653–2657行注册a00abed2/type4/context/DELETE a00abb62，weather-calendar-complete全部分类文字图标合同及H05/H06。仅补H05明确缺的正常上层离页动作→本页DELETE连接，先查page-logic/knob/system/guide和ZIP现有导航证据，SIM导航不等于ROM连接。目标对象type4/68B；type19/116B不在本题，不套用释放结论。若已有足够证据仅报告覆盖；不得改题为另一个旧订阅者或全UI。
-
-分支codex/re-0041-h07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h07。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/weather1-navigation-h07-0041-20261023.md及reverse/analysis/weather1-navigation-h07-0041-20261023/。
-
-先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
-
 ## 当前完整任务书 E09（已启动，基线3f0a7e0）
 
 独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e09；分支codex/re-0041-e09；基线为本任务书提交，启动记实际SHA。独占reverse/reports/ap01/ctk-caller-alias-e09-0041-20261023.md及reverse/analysis/ctk-caller-alias-e09-0041-20261023/。
@@ -88,7 +78,7 @@ D07/D08已覆盖描述符持有/提交/IRQ合同，继承不重做。精确种�
 
 先按地址/字段/调用者/旧Evidence检索完整阶段与近期留存，给已有出处→解释行为→局限→实际缺口。已有原指令直接引用，仅补边界/ABI不可信窗口，不整函数重导、不重跑全ROM扫描，不复制源ZIP。无必要增量即报已覆盖结束，不凑闭包。报告分继承、复核纠正、真正新增、精确未闭边。完成后必要静态验证、明确独占路径提交、报告commit/未知/clean；共同安全、隔离和不创建下级agent规则适用。
 
-## 当前完整任务书 A27（准备）
+## 当前完整任务书 A27（已启动，基线f2d4bc9）
 
 独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a27，分支codex/re-0041-a27；基线为本任务书提交，启动时另记SHA。独占reverse/reports/ap01/image-cache-cleanup-a27-0041-20261023.md及reverse/analysis/image-cache-cleanup-a27-0041-20261023/。
 
@@ -96,7 +86,7 @@ A23/A24/A25/A26已恢复session、PNG构造、默认表与raw/Pixel析构，全�
 
 先交简短已有出处→解释行为→证据局限→实际缺口；只补未覆盖/不可信窗口，重读bytes标旧结论复核。报告分继承、复核纠正、真正新增、未闭精确边。无必要增量即报告覆盖，不凑时长/函数。共同规则全部适用，仅静态/独占输出，无SIM/构建/回放/生产ROM配置模型修改，不创建下级agent。必要验证后提交独占路径，报告commit/未知/clean并结束。
 
-## 当前完整任务书 F10（准备）
+## 当前完整任务书 F10（已启动，基线f2d4bc9）
 
 独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f10，分支codex/re-0041-f10；基线为本任务书提交，启动时另记SHA。独占reverse/reports/ap01/event-array-review-f10-0041-20261023.md及reverse/analysis/event-array-review-f10-0041-20261023/。
 
