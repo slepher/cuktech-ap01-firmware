@@ -1619,3 +1619,15 @@ A41/A42留下非零O+10 mode分支callee a01b2e3a内部未核，memory mode0已�
 
 
 整合：E17 bf07de2；G16 3024fec；H16 fb50710；A46→7262a82、A47→bc29f08、D19→ce42ce1；后继独立复核A48/A49/D20。
+
+
+## 当前完整任务书 D20（2026-10-24立即补位）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d20；分支codex/re-0041-d20；启动基线为本任务书最新整合提交。独占reverse/reports/ap01/backlight-animation-review-d20-0041-20261024.md及reverse/analysis/backlight-animation-review-d20-0041-20261024/。
+
+独立复核D19动画descriptor96B、2000ms无限repeat单周期、完成/删除回调0、target=ctx+10而非ctx、exec/path和结束编辑删除身份。settings-round2b records[10]已有清理接线必须继承；完整离页析构/ctx释放不作补全。新功能0。
+
+先读REA skill C:/Users/cogic/.agents/skills/reverse-engineer-anything/SKILL.md及本文共同规则/复用规则。先检索优先complete、最终验收及近期对应报告/独立复核，按地址字段交叉检索；表列已有出处→行为→局限→实际缺口。报告四分：继承、本轮复核纠正、真正新增、精确未闭；旧字节复核不算新增功能。只必要稀疏窗口/ABI，不全导出/复制/机械记账。独占输出、独占worktree，不改共享文档/主树/生产ROM配置模型，不创建下级agent；其他agent同时工作勿撤销。静态安全边界全适用。必要验证、精确路径提交、报告commit/clean/未知；接近提交先给后继建议。
+
+
+D20 9cea052 已整合；D21立即接替。

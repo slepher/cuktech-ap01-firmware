@@ -24,7 +24,7 @@
 |---|---|---|---|
 |A48|/root/e17_uv_time_review（运行）|df35f44|独立复核A46|
 |A49|/root/g16_fb_file_review（运行）|df35f44|独立复核A47分类1→a0107d8e→mode1 W→既有O复制；a01b2e3a实参callback(D,H)、条件缓存归还和O前三word清零，不能直接命名fclose|
-|D20|/root/h16_clock_source_review（运行）|df35f44|独立复核D19动画descriptor96B、2000ms无限repeat单周期、完成/删除回调0、target=ctx+10而非ctx、exec/path和结束编辑删除身份|
+|D21|/root/h16_clock_source_review（派发中）|本次启动提交|背光动画具体属性/selector及局部来源认证|
 |E18|/root/a46_cache_drop（运行）|df35f44|只补E16/E17调用a001b302的正常unsigned64除法合同：实际分母0:0xf4240、分子构造、返回pair及必要carry/归一化路径|
 |G17|/root/a47_reader_mode（运行）|df35f44|只认证G13/G15/G16具体fb open/close/poll/notify与本地NuttX12.10候选对应关系|
 |H17|/root/d19_backlight_animation（运行）|df35f44|只补H15/H16读者62fc6c64的真实writer/正常计数更新连接|
@@ -73,15 +73,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a49；分支codex/re-0041-a49；启动基线为本任务书最新整合提交。独占reverse/reports/ap01/photo-reader-mode-review-a49-0041-20261024.md及reverse/analysis/photo-reader-mode-review-a49-0041-20261024/。
 
 独立复核A47分类1→a0107d8e→mode1 W→既有O复制；a01b2e3a实参callback(D,H)、条件缓存归还和O前三word清零，不能直接命名fclose。继承A37/A39/A41/A42 mode0；具体D/open/close与默认五照片实际mode1仍未知。新功能0。
-
-先读REA skill C:/Users/cogic/.agents/skills/reverse-engineer-anything/SKILL.md及本文共同规则/复用规则。先检索优先complete、最终验收及近期对应报告/独立复核，按地址字段交叉检索；表列已有出处→行为→局限→实际缺口。报告四分：继承、本轮复核纠正、真正新增、精确未闭；旧字节复核不算新增功能。只必要稀疏窗口/ABI，不全导出/复制/机械记账。独占输出、独占worktree，不改共享文档/主树/生产ROM配置模型，不创建下级agent；其他agent同时工作勿撤销。静态安全边界全适用。必要验证、精确路径提交、报告commit/clean/未知；接近提交先给后继建议。
-
-
-## 当前完整任务书 D20（2026-10-24立即补位）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d20；分支codex/re-0041-d20；启动基线为本任务书最新整合提交。独占reverse/reports/ap01/backlight-animation-review-d20-0041-20261024.md及reverse/analysis/backlight-animation-review-d20-0041-20261024/。
-
-独立复核D19动画descriptor96B、2000ms无限repeat单周期、完成/删除回调0、target=ctx+10而非ctx、exec/path和结束编辑删除身份。settings-round2b records[10]已有清理接线必须继承；完整离页析构/ctx释放不作补全。新功能0。
 
 先读REA skill C:/Users/cogic/.agents/skills/reverse-engineer-anything/SKILL.md及本文共同规则/复用规则。先检索优先complete、最终验收及近期对应报告/独立复核，按地址字段交叉检索；表列已有出处→行为→局限→实际缺口。报告四分：继承、本轮复核纠正、真正新增、精确未闭；旧字节复核不算新增功能。只必要稀疏窗口/ABI，不全导出/复制/机械记账。独占输出、独占worktree，不改共享文档/主树/生产ROM配置模型，不创建下级agent；其他agent同时工作勿撤销。静态安全边界全适用。必要验证、精确路径提交、报告commit/clean/未知；接近提交先给后继建议。
 
@@ -136,7 +127,7 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
 
 
-## 预备完整任务书 D21（有前置，未启动）
+## 当前完整任务书 D21（D20已整合，立即接替）
 
 独占reverse/reports/ap01/backlight-animation-source-d21-0041-20261024.md及reverse/analysis/backlight-animation-source-d21-0041-20261024/。
 
