@@ -20,9 +20,9 @@
 | --- | --- | --- | --- | --- |
 | A16 | /root/a16_weather_review | f966a5e | 天气订阅三核心独立复核 | 按验收建议选小缺口 |
 | B18 | /root/b18_normal_parser | 319dbdf | 正常接收阶段/转义标志 | B19独立复核 |
-| C18 | /root/c18_gates_review | e29de84 | 失效入口两门复核 | C19第三门 |
+| C19 | /root/c19_third_gate | dde1cfd | 第三门参数/返回及直接消费 | C20独立复核 |
 
-最新已整合：A15 5f3f3db→f966a5e（技术待A16）；B17 bd7747d→319dbdf（限定接受B16并精确纠正检索描述，外部读者仍未知）；C17 3920202→e29de84（技术待C18）。旧工作树仅在确认干净并整合后回收，任务分支保留。
+最新已整合：A15 5f3f3db→f966a5e（技术待A16）；B17 bd7747d→319dbdf（限定接受B16并精确纠正检索描述，外部读者仍未知）；C18 41ab2b2→dde1cfd（限定接受C17，第三门/最终提交仍未知）。旧工作树仅在确认干净并整合后回收，任务分支保留。
 
 ## 已整合概况与开放缺口
 
@@ -33,10 +33,6 @@
 ## 预备任务 A16：天气订阅消费独立复核
 
 分支 codex/re-0041-a16；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a16。须A15成果提交整合后，从最新管理提交启动。仅复核A15一个注册点及callback首个数据消费合同、间接ABI/借用复制边界，最多3核心函数，不扩全部天气UI。独占 reverse/reports/ap01/weather-subscriber-review-a16-0041-20261023.md、reverse/analysis/weather-subscriber-review-a16-0041-20261023/；必要精确纠正A15。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
-
-## 预备任务 C18：下游门控独立复核
-
-分支 codex/re-0041-c18；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c18。须C17成果提交整合后，从最新管理提交启动。仅复核C17入口两个正常返回门/必要字段和参数，最多3核心函数及已给局部，不扩失效队列/GUI全集。独占 reverse/reports/ap01/invalidation-gates-review-c18-0041-20261023.md、reverse/analysis/invalidation-gates-review-c18-0041-20261023/；必要精确纠正C17。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
 
 ## 预备任务 B18：正常接收阶段与转义标志
 
@@ -49,3 +45,7 @@
 ## 预备任务 B19：正常接收状态独立复核
 
 分支 codex/re-0041-b19；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b19。须B18提交整合后，从最新管理提交启动。只复核B18正常接收stage/escape生产消费及直接依赖，最多3核心函数，不做长度审计/异常回放/缺陷验证/OTA扩展。独占 reverse/reports/ap01/uart-normal-parser-review-b19-0041-20261023.md、reverse/analysis/uart-normal-parser-review-b19-0041-20261023/；必要精确纠正B18。原指令逐项接受/纠正/未核、来源/实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
+
+## 预备任务 C20：第三门独立复核
+
+分支 codex/re-0041-c20；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c20。须C19提交整合后，从最新管理提交启动。仅复核C19第三门参数/局部读写/返回与直接消费条件，最多3核心函数，不扩失效队列/GUI全集。独占 reverse/reports/ap01/invalidation-third-gate-review-c20-0041-20261023.md、reverse/analysis/invalidation-third-gate-review-c20-0041-20261023/；必要精确纠正C19。逐项接受/纠正/未核/来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
