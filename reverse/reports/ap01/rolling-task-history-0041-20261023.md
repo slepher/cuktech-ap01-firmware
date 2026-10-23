@@ -1200,3 +1200,14 @@ A25/A26默认raw/free/独立align表绑定与Pixel/raw析构、A30计量字段�
 H08/H09 type2/time1的136B ctx与20B wrapper以及DELETE先借ctx+78再timer_delete已闭；真正未核为ctx+78 timer的实际创建安装、callback主要正常更新与page/ctx身份。本题只补这条timer创建→正常callback/数据使用→既有删除借用连接。先查pass3 type2构造附近、weather-calendar-complete、page-logic-evidence/asset-index的lv_ui_time1_update_wx_data_cb、最终ZIP及较晚round3，已有登记/天气callback a00ab754全继承，不重做分类显示/资源/DELETE。不套用type4/type19，正常主app teardown触发仍归共同未知，不再搜天气DELETE上层。若创建/更新旧证据已解释，只局部核ABI/厂商字/字段接入；若无真实callback种子有界交付，不泛扫所有timer。四分类报告、必要静态验证、独占提交并报告commit/验证/未知/clean。共同安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/回放/设备/网络，不重复整函数导出/复制资源或源码。
 
 H10 c1d5873已整合：timer创建无种子，有界交付，helper直接字段写不含ctx78；不继续泛扫。
+
+
+## 当前完整任务书 E12（准备，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e12；分支codex/re-0041-e12；基线为本任务书提交。独占reverse/reports/ap01/ctk-snapshot-consumer-e12-0041-20261024.md及reverse/analysis/ctk-snapshot-consumer-e12-0041-20261024/。
+
+E01/E02明确尚缺a00f4740实际caller与dst消费；E07/E09/E11已核另一getter槽链，不再重复。a00f4740只前三组，不得称+34/+38读者恢复。本题仅沿已留incoming/较晚round3定位一个真实正常caller、目标快照身份与后续字段使用/寿命。charge-complete旧值/时间/SOC/详情消费者、details/charge round4、旧knob/ZIP先交叉查，已覆盖直接引用。无可靠caller种子则有界报告，不重跑全ROMgetter/字段扫描，不扩全部CTK或误套其他对象同偏移。
+
+先给已有出处→行为→局限→精确缺口，按地址/字段/callback/Evidence检索完整阶段与较晚留存，旧pending/未命中不等于未分析。可靠合同直接引用，仅补必要原字节窗口；无增量报覆盖由管理者立即补位，不凑时长/函数。报告分继承、复核纠正、真正新增、精确断边。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络，不整函数重复导出/资源源码复制。必要验证独占提交，报告commit/验证/未知/clean结束。
+
+E12 eb1f8a4整合：E03/E04已覆盖旧E01/E02 remaining，本轮新增/导出/ROM窗口0。
