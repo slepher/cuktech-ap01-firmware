@@ -27,7 +27,7 @@
 |D15|/root/d15_pwm_arithmetic|f312a1a|PWM分频/阈值厂商算术|
 |E14|任务书已就绪|准备立即补位|
 |G13|任务书已就绪|准备立即补位|
-|H12|/root/h12_row_owner_review|0df1b44|type19有界派生链独立复核|
+|H13|天气时钟ABI实际窗口|准备立即补位|
 
 ## 派发规则（本次用户调整优先）
 
@@ -73,14 +73,6 @@ buzzer-backlight-round2明确lower ops+8=a0136762范围a0136762..a0136997中PWM�
 
 先已有→行为→局限→实际缺口，四分类报告，只补必要原字节，不重复整函数/全资源/源码复制/机械哈希账；无增量及时覆盖交付由主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
 
-## 当前完整任务书 H12（已启动，基线0df1b44）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h12；分支codex/re-0041-h12；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/weather-row-owner-review-h12-0041-20261024.md及reverse/analysis/weather-row-owner-review-h12-0041-20261024/。
-
-新agent独立复核H11 C+54派生行指针有界链及无第二根的范围：s3游标的实际读写/调用参数、正常循环退出后被新bar对象覆盖，以及既有a00b564e从C+54取R0再作父对象的ABI。旧H01/H03/H04构造/DELETE清零及root wrapper+4合同直接引用，不重导全部构造。结论只限所核派生链不能升级全ROM没有别名/free，116B ctx最终free保持未知；不跨用type2/type4，不扩全ROM负搜索。复核新增功能0。
-
-先已有→复核缺口，四分类报告逐项接受纠正未核，必要稀疏旧字节验证，不重复整函数/源码/资源导出。可靠合同直接引用，未知保留范围，无增量及时交付主窗口补位。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
-
 ## 当前完整任务书 A38（准备，2026-10-24）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a38；分支codex/re-0041-a38；基线为本任务书提交。独占reverse/reports/ap01/image-cache-key-a38-0041-20261024.md及reverse/analysis/image-cache-key-a38-0041-20261024/。
@@ -113,7 +105,7 @@ G11/G12已闭a003e674(fd,node+14,1)→a003e344登记与a0109b8e通知flag，但�
 
 先已有→行为→局限→精确缺口，四分类报告；独立复核新增功能0，可靠合同引用，只补必要原字节，不重复整函数/源码/资源导出或机械账。无增量及时交付主窗口补位，不凑时长/函数。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
 
-## 预备完整任务书 H13（准备，2026-10-24）
+## 当前完整任务书 H13（待启动，实际时钟UNKNOWN窗口）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h13；分支codex/re-0041-h13；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/weather-clock-abi-h13-0041-20261024.md及reverse/analysis/weather-clock-abi-h13-0041-20261024/。
 
