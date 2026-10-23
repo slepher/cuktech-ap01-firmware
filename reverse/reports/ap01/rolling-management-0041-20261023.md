@@ -183,3 +183,11 @@ A09 a5671ad→4359c0b已整合，技术待A10；A10从4359c0b运行，agent /roo
 ## 预备任务 C12：详情模式更新独立复核
 
 分支 codex/re-0041-c12；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c12。须C11成果提交整合后，从最新管理提交启动。只复核C11 a00f388c及最多两个直接依赖的控件字段/参数/模式更新合同，不扩完整UI生命周期。独占 reverse/reports/ap01/detail-mode-update-review-c12-0041-20261023.md、reverse/analysis/detail-mode-update-review-c12-0041-20261023/；必要可精确纠正C11。原指令逐项接受/纠正/未核、来源/实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 当前交接更新：A10 / B11 / C11
+
+B10 d870680→aabf574已整合，技术待B11；B11从aabf574运行，agent /root/b11_caller_review。A10接近提交，限定验收支持A09，保留跨厂商word/当前对象/运行时未知；C11接近提交，C12已预备。B10工作树干净且整合可回收保留分支。
+
+## 预备任务 A11：当前对象指针一个写入者
+
+分支 codex/re-0041-a11；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a11。须A10验收完成整合后，从最新管理提交启动。只从已有inventory/留存引用恢复62fc6c18一个直接写者的局部合同（入参来源、写条件、word宽度），最多3核心函数；单写者不证明当前对象同一性/运行时调度。不全ROM重复扫描，不扩调度；无明确证据给有界未知。独占 reverse/reports/ap01/current-object-writer-a11-0041-20261023.md、reverse/analysis/current-object-writer-a11-0041-20261023/。原指令/事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
