@@ -23,8 +23,8 @@
 |任务|agent|基线|实际范围|
 |---|---|---|---|
 |I04|/root/e17_uv_time_review（派发中）|本次启动提交|独立复核I03同Time2对象旧覆盖/清理精度|
-|I05|/root/g16_fb_file_review（运行）|10bc8b8|既有round3配置cache写入种子的正常接入合同|
-|B22|/root/h16_clock_source_review（运行）|33a77be|cmd51写item+0e前正常类型决策，继承既有所有权链|
+|B23|/root/g16_fb_file_review（派发中）|本次启动提交|独立核B22 cmd51真正新增分类合同|
+|I06|/root/h16_clock_source_review（派发中）|本次启动提交|独立核I05旧配置read/cache合同衔接|
 |J03|/root/a46_cache_drop（运行）|09e11d0|正常设置持久化旧成果复用/精确缺口种子|
 |T01|/root/a47_reader_mode（运行）|09e11d0|repeat_count0的正常timer归还接入|
 |J04|/root/d19_backlight_animation（运行）|09e11d0|工厂正常UI/资源生命周期旧证据复用与真实种子|
@@ -64,15 +64,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode0合同，只独立复核，新增0；D20继承settings-round2b清理接线与D19，只独立复核，新增0。E18只补实际固定分母除法返回合同，不重做时间上层；G17只补NuttX fb候选来源认证，不用LVGL认证替代；H17只找计数writer正常连接，不重搜offset未知。六个agent已由实时状态确认全部running；管理窗口另计。
 
 
-## 当前完整任务书 B22（旧种子已在主仓，J01去重支持，立即接替）
-
-独占reverse/reports/ap01/cmd51-device-type-b22-0041-20261024.md及reverse/analysis/cmd51-device-type-b22-0041-20261024/。
-
-J01去重后唯一有原留存种子的增量：a00a8582 cmd0x51正常设备类型决策→item+0e写入前new_type。E01明确未认证完整分类树、E02仅接受9504后类型变化/分配；旧UiIFace lifecycle/charge/details完整原分类或较晚成果若已有必须直接引用。种子a00a93a4..940c、9454..947c、9504边，buzzer-backlight retained extent8582..9d1d / Evidence ev_6f9f82e5daf0540a1c24a0b85daa2e394785391692765e5e3e100eb7b37ed94c。只补此正常分类实参/记录宽度符号/分支条件/返回或new_type→既有item+0e接入；旧fallback0x15及五指针清理分配原位覆盖全继承，不重导整个dispatcher、不重复全分类目录/资源表、不扩OTA/帧解析/异常输入/长度审计/完整driver。报告区分旧证据存在与本轮解释增量，厂商字/错误反编译只补必要窗口。
-
-仅准备不计运行，派发前整合前置/再核重叠。最新管理HEAD新建独占树re0041-ID小写、分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告、最小稀疏取证；不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，精确独占提交commit/验证/未知/clean，接近提交提前报后继种子。
-
-
 ## 当前完整任务书 I04（I03已整合，立即接替）
 
 独占reverse/reports/ap01/saver-time2-lifetime-review-i04-0041-20261024.md及reverse/analysis/saver-time2-lifetime-review-i04-0041-20261024/。
@@ -82,16 +73,7 @@ J01去重后唯一有原留存种子的增量：a00a8582 cmd0x51正常设备类�
 仅准备不计运行，派发前整合前置/再核重叠。最新管理HEAD新建独占树re0041-ID小写、分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告、最小稀疏取证；不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，精确独占提交commit/验证/未知/clean，接近提交提前报后继种子。
 
 
-## 当前完整任务书 I05（I01旧writer种子已整合，立即接替）
-
-独占reverse/reports/ap01/wifi-config-cache-i05-0041-20261024.md及reverse/analysis/wifi-config-cache-i05-0041-20261024/。
-
-I01复用盘点给出真实旧种子：round3 records[5] a005acf0参数→a005ad28写62fc919c；I01/I02的getter a009d7b4读取此U8并以配置rc==1门更新已知。先核system/guide complete、settings/page-logic、近期miio/config/binding报告与同round3，原字节是否已经解释setter/caller则直接继承。只补正常配置cache更新的实际参数宽度/写入条件/持久配置接口接入与旧getter关系，不把该U8命名硬件ready、不外推同步/生命周期。无真实直接调用种子不扩全初始化/云端/网络/配网/安全/失败路径；不执行服务或设备。不重导整round3/完整大函数，旧timer/boot全继承。
-
-仅准备不计运行，派发前整合前置并核重叠。最新管理HEAD独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告；不改共享/主树/生产ROM配置模型，不创建下级agent，其他agent同时工作勿撤销；精确独占提交commit/验证/未知/clean，接近提交提前报种子。
-
-
-## 预备完整任务书 B23（有前置，未启动）
+## 当前完整任务书 B23（前置已整合，立即接替）
 
 独占reverse/reports/ap01/cmd51-device-type-review-b23-0041-20261024.md及reverse/analysis/cmd51-device-type-review-b23-0041-20261024/。
 
@@ -127,7 +109,7 @@ REA skill、本文共同/复用/静态安全规则全适用；独占树/输出�
 REA skill、本文共同/复用/静态安全规则全适用；独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。先已有→行为→局限→精确缺口，四分报告，只必要稀疏证据；已覆盖直接收缩，无可靠种子不扩扫。必要JSON/链接/差异检查、精确独占提交commit/验证/未知/clean，接近提交提前报重叠/种子。
 
 
-## 预备完整任务书 I06（有前置，未启动）
+## 当前完整任务书 I06（前置已整合，立即接替）
 
 独占reverse/reports/ap01/wifi-config-cache-review-i06-0041-20261024.md及reverse/analysis/wifi-config-cache-review-i06-0041-20261024/。
 
