@@ -25,9 +25,9 @@
 |J01|/root/e17_uv_time_review（运行）|7119b59|充电领域旧complete与近期复核交叉去重/实际缺口种子|
 |I03|/root/g16_fb_file_review（运行）|472f076|屏保Time2 type2f已有成果→正常DELETE/ctx责任缺口|
 |C26|/root/h16_clock_source_review（运行）|34ff6ba|独立复核C25区域变换候选映射及五属性+2差异|
-|A55|/root/a46_cache_drop（派发中）|本次启动提交|独立复核A54 reader局部来源与gifdec整文件不同边界|
+|A55|/root/a46_cache_drop（运行）|46fa469|独立复核A54 reader局部来源与gifdec整文件不同边界|
 |J02|/root/a47_reader_mode（运行）|34ff6ba|日历/时间旧complete与近期复核去重/真实缺口种子|
-|I02|/root/d19_backlight_animation（派发中）|本次启动提交|独立复核I01旧启动证据范围与精度|
+|I02|/root/d19_backlight_animation（运行）|46fa469|独立复核I01旧启动证据范围与精度|
 
 ## 派发规则（本次用户调整优先）
 
@@ -122,3 +122,21 @@ REA skill与共同/复用/静态安全规则适用，四分报告、新增功能
 形成短已有出处→行为→局限→精确缺口表，原字节合同/旧反编译需局核/SIM照片安全替代/未检到种子分别列。旧weather complete remaining的parent X11和time数字handler应先核父级complete与charge-owned后续，不能因pending重开。旧safe lunar bounds、defaultUTC0、hostRTC等仅说明SIM替代，仍要查旧ROM证据是否已解释相应行为。必要ZIP只读成员不执行/全解包/复制。最多提出少量有真实调用/extent/字段/资源种子的增量建议；主体已覆盖就收缩，没有种子不全ROM/全日历库扩扫。此为复用盘点、新功能0，主窗口负责最终范围派发，不自行接题。
 
 REA skill与共同/复用/静态安全规则全适用，四分报告；不重建整分类表/矩阵/源码/资源/机械账，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。必要JSON/链接/差异检查，独占精确提交commit/验证/未知/clean，接近提交提前给种子/重叠。
+
+
+## 预备完整任务书 B22（有前置，未启动）
+
+独占reverse/reports/ap01/cmd51-device-type-b22-0041-20261024.md及reverse/analysis/cmd51-device-type-b22-0041-20261024/。
+
+J01去重后唯一有原留存种子的增量：a00a8582 cmd0x51正常设备类型决策→item+0e写入前new_type。E01明确未认证完整分类树、E02仅接受9504后类型变化/分配；旧UiIFace lifecycle/charge/details完整原分类或较晚成果若已有必须直接引用。种子a00a93a4..940c、9454..947c、9504边，buzzer-backlight retained extent8582..9d1d / Evidence ev_6f9f82e5daf0540a1c24a0b85daa2e394785391692765e5e3e100eb7b37ed94c。只补此正常分类实参/记录宽度符号/分支条件/返回或new_type→既有item+0e接入；旧fallback0x15及五指针清理分配原位覆盖全继承，不重导整个dispatcher、不重复全分类目录/资源表、不扩OTA/帧解析/异常输入/长度审计/完整driver。报告区分旧证据存在与本轮解释增量，厂商字/错误反编译只补必要窗口。
+
+仅准备不计运行，派发前整合前置/再核重叠。最新管理HEAD新建独占树re0041-ID小写、分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告、最小稀疏取证；不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，精确独占提交commit/验证/未知/clean，接近提交提前报后继种子。
+
+
+## 预备完整任务书 I04（有前置，未启动）
+
+独占reverse/reports/ap01/saver-time2-lifetime-review-i04-0041-20261024.md及reverse/analysis/saver-time2-lifetime-review-i04-0041-20261024/。
+
+待I03整合后，新独立agent只复核同Time2 type2f creator/callback/DELETE的旧覆盖范围与本轮必要ABI/清理精度；旧guide creator与weather evidence[22] DELETE已留，A15/A16已有登记，不算新恢复。ctx40/wrapper20按同对象证据核，不套H08 type2/H05 type4/H01 type19释放。ctx最终free或上层leave连接无种子保持未知，不扩根析构全扫，新功能0。
+
+仅准备不计运行，派发前整合前置/再核重叠。最新管理HEAD新建独占树re0041-ID小写、分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告、最小稀疏取证；不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，精确独占提交commit/验证/未知/clean，接近提交提前报后继种子。
