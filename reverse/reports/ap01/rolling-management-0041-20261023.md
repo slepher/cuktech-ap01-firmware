@@ -121,3 +121,19 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 独立原指令/厂商字/函数边界/间接ABI/返回覆盖/资源宽度、逐项接受纠正未核，必要纠正只独占报告不改A21；source classifier/image setter及A20纠正后的flag合同仅针对核，不重复整个image链。完整open/decode/压缩算法、其他格式、动态注册全集及最终显示保留边界，不扩完整图像库。来源版本可核实才排除标准实现，厂商注册适配恢复。交付伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证和断边；排除固件执行/外连/漏洞/畸形输入/历史回放/ROM生产模型修改；共同规则适用。
 
 D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠正为准，正常acquire a3=0闭包限定接受。E04运行中报告port1/port2栈复用措辞需收紧：同布局不等于同次通知执行两支，待正式报告提交。
+
+## 预备完整任务书 E05（待E04纠正报告整合）
+
+任务ID E05，业务恢复CTK app订阅与正常离页注销/对象归还闭包。分支codex/re-0041-e05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e05；基线含E04最新管理提交。独占reverse/reports/ap01/ctk-app-close-e05-0041-20261023.md及reverse/analysis/ctk-app-close-e05-0041-20261023/。
+
+业务问题：a005d142注册的a00adabc(app,item)与app由谁持有、正常退出如何停止回调/注销62fcb530节点、先后归还哪些app/page资源？先读E03/E04已验收注册/触发/栈消费链，E04对port1/port2互斥与栈布局措辞纠正须沿用。选择一个实际app退出/DELETE触发者→注销→节点/app清理闭包，约5–12核心和必要短依赖；具体退出callback/注销器地址目前未知，须据注册caller、app挂接和保留incoming refs定位，不凭同名GUI函数拼链。
+
+包含真实callback键/userdata、注销是否仅摘链或还free、app/页面/上下文分配与清理顺序、回调期间可达性；不重复a00f4740内部或port1数值显示，既有订阅链/allocator合同针对核。未能证明节点回收/退出触发时给有界检索与精确断边，不把注销等同释放，不扩大所有UI/所有订阅者/全局deinit。完成伪代码结构状态生命周期、原指令/地址/ABI/写宽/返回覆盖、事实推断未知、来源、实际静态验证和一个后继闭包。来源未认证不排除标准实现/厂商修改。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 H04（待H03整合）
+
+任务ID H04，新agent独立复核H03真实按键离页→父/子DELETE→递归析构与context断边闭包。分支codex/re-0041-h04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h04；基线含H03最新管理提交。独占reverse/reports/ap01/weather-page-close-review-h04-0041-20261023.md及reverse/analysis/weather-page-close-review-h04-0041-20261023/。
+
+问题：a00afc88天气子页创建片段及8B父state(type19)→输入hook a00b35ee event11/key10/窗口64零门→恢复主页面/删除a00ded6c(window)→父DELETE a00b1a02→子天气DELETE a00b3b26→控件递归/类析构摘链free的原序与所有权是否成立？核心以H03正式清单约5–12函数为准，只核该正常type19路径，不复核全GUI删除系统。已验收H02子hook/重排/注销只针对核。重点父8B state、20B wrapper、116B ctx三者区分，父stop timer/free state与子清28word/unregister/free wrapper排序、事件mask/vendor条件/返回门、对象递归/类析构前后指针持有及ctx最终free未证的有界范围。
+
+独立原指令/厂商字/事件ABI/宽度/调用重读/失败分支，逐项接受纠正未核；必要纠正仅独占报告不改H03。不要把构造直接引用搜索变穷尽别名、不要把对象free拼成ctx free、不引入缺陷判断。交付伪代码布局状态生命周期、事实推断未知、来源、实际独立静态验证和断边；标准库仅来源认证可排除，私有胶合保留恢复。排除全导航/其他窗口类型、固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
