@@ -116,3 +116,57 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 ## 本批继承与增量快照（df35f44启动）
 
 A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode0合同，只独立复核，新增0；D20继承settings-round2b清理接线与D19，只独立复核，新增0。E18只补实际固定分母除法返回合同，不重做时间上层；G17只补NuttX fb候选来源认证，不用LVGL认证替代；H17只找计数writer正常连接，不重搜offset未知。六个agent已由实时状态确认全部running；管理窗口另计。
+
+
+## 预备完整任务书 A50（有前置，未启动）
+
+独占reverse/reports/ap01/photo-reader-consumer-a50-0041-20261024.md及reverse/analysis/photo-reader-consumer-a50-0041-20261024/。
+
+A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5d6非零mode→a008b888种子，whole-ROM round1已有a008b888 extent(ev_0cf7b05a…/544B)；并非此前未分析。只补同reader前缀进入此callee的ABI、D读取/reader回调槽、缓存持有连接；先核旧complete内部与A47/A49覆盖，若已覆盖直接收缩交付。具体D实例/真实mode1 source仍未知，不扩全部文件系统/所有解码算法/失败分支，不重导544B全函数。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+## 预备完整任务书 A51（有前置，未启动）
+
+独占reverse/reports/ap01/image-cache-drop-source-a51-0041-20261024.md及reverse/analysis/image-cache-drop-source-a51-0041-20261024/。
+
+待A48独立复核整合后，只补A43/A44当时未展开、现A46/A48新核backend drop/drop_all的局部来源认证。候选沿用本地LVGL9.2.1 lv_cache_lru_rb.c及必要邻接接口，旧key/meter/LRU/source家族匹配全继承不重复。分匹配/差异/配置条件/未知，尊重非零ref原序与单drop实际门，候选不覆盖ROM、不证明精确版本、不整库排除。不复制整源码、不重导ROM或全库版本搜索。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+## 预备完整任务书 D21（有前置，未启动）
+
+独占reverse/reports/ap01/backlight-animation-source-d21-0041-20261024.md及reverse/analysis/backlight-animation-source-d21-0041-20261024/。
+
+待D20整合后，只认证D19/D20的96B descriptor必要字段与start/get/delete/target/exec/path合同到本地LVGL9.2.1 lv_anim.c/lv_anim.h相应行。先核F07/F08等旧来源报告有无已覆盖，匹配直接引用；对未核字段/删除callback与ROM差异给局部答案。厂商遍历字未认证不能用候选替代；不扩完整动画调度/GUI/生命周期，也不假定ctx最终释放。候选精确ROM版本未知。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+## 预备完整任务书 E19（有前置，未启动）
+
+独占reverse/reports/ap01/uv-time-division-review-e19-0041-20261024.md及reverse/analysis/uv-time-division-review-e19-0041-20261024/。
+
+待E18整合后，新独立agent只复核固定分母1M正常路径、H15/H16已证t范围下返回商及高word、分支范围/必要table/厂商字/ABI和静态代数。E16/E17接线继承，不复核整个数值库/计数cadence/epoch，不执行输入或异常测试。新增功能0。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+## 预备完整任务书 G18（有前置，未启动）
+
+独占reverse/reports/ap01/fb-source-review-g18-0041-20261024.md及reverse/analysis/fb-source-review-g18-0041-20261024/。
+
+待G17整合后，新独立agent只复核具体fb open/close/poll/notify候选映射、ROM字段与CONFIG条件边界；G13–G16行为继承，不重导ROM。精确版本与配置不能由候选自动认证；不整库排除，新增功能0。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+## 预备完整任务书 H18（有前置，未启动）
+
+独占reverse/reports/ap01/clock-counter-review-h18-0041-20261024.md及reverse/analysis/clock-counter-review-h18-0041-20261024/。
+
+待H17整合后，新独立agent只复核H17实际增量或有界负结论。只核其真实writer种子、必要字段/原字节/周期连接与解释强度；若无种子则核搜索边界，不重复全ROM搜索，不将未找到等于不存在，不再搜offset writer。H15/H16既有读者继承，新增功能0。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
