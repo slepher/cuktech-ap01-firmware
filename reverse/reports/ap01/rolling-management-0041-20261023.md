@@ -23,10 +23,10 @@
 |任务|agent|基线|实际范围|
 |---|---|---|---|
 |C25|/root/e17_uv_time_review（运行）|29002d0|既有区域变换的局部候选来源认证|
-|D22|/root/g16_fb_file_review（运行）|9f76584|独立核D21属性映射与四项来源差异|
+|I03|/root/g16_fb_file_review（派发中）|本次启动提交|屏保Time2 type2f已有成果→正常DELETE/ctx责任缺口|
 |A52|/root/h16_clock_source_review（运行）|ef05f68|独立复核A50 reader read/seek/缓存持有ABI|
 |I01|/root/a46_cache_drop（运行）|92e733a|启动就绪分支旧成果→实际缺口与必要接入核实|
-|C24|/root/a47_reader_mode（派发中）|本次启动提交|独立复核C23格式化入口局部来源|
+|C24|/root/a47_reader_mode（运行）|c44f3bf|独立复核C23格式化入口局部来源|
 |A54|/root/d19_backlight_animation（运行）|aabdfcd|reader前缀及open/close局部候选认证，不接A50内部消费|
 
 ## 派发规则（本次用户调整优先）
@@ -69,15 +69,6 @@ A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode
 独占reverse/reports/ap01/photo-reader-consumer-review-a52-0041-20261024.md及reverse/analysis/photo-reader-consumer-review-a52-0041-20261024/。
 
 待A50整合后，新独立agent只复核同reader进入a008b888的ABI、D+14 read(D,H,dst,want,&count)、必要seek/config/C持有/游标和A47归还连接。具体D实例/真实mode1照片仍未知；继承A47/A49构造析构，不扩解码/所有失败/文件系统，新功能0。
-
-仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
-
-
-## 当前完整任务书 D22（D21已整合，立即接替）
-
-独占reverse/reports/ap01/backlight-animation-source-review-d22-0041-20261024.md及reverse/analysis/backlight-animation-source-review-d22-0041-20261024/。
-
-待D21整合后，新独立agent只核property3e/selector20000的候选定义与ROMwrapper、动画descriptor size/early_apply/start顺序/repeat超期余时四项来源差异及其证据强度。D19/D20继承；不能候选覆盖ROM/推断真实视觉效果、控件类型或ctx free，不扩style引擎，新功能0。
 
 仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
 
@@ -145,3 +136,14 @@ REA skill及本文共同/复用规则全适用，四分报告；旧字节重核�
 待I01整合后，新独立agent只核其实际补充或覆盖结论：旧guide/system已有启动timer/计数/结束/configured/index8直接引用，SIM固定2s不等于原ROM条件；只核实际新增接入ABI/条件/原字/次序或旧证据范围，不扩驱动/设备初始化，不把没执行等于未分析，新功能0。
 
 仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
+
+
+## 当前完整任务书 I03（2026-10-24，立即接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-i03；分支codex/re-0041-i03；基线本任务书启动提交。独占reverse/reports/ap01/saver-time2-lifetime-i03-0041-20261024.md及reverse/analysis/saver-time2-lifetime-i03-0041-20261024/。
+
+先guide-complete/system-complete、ui-total-consumers/theme-total-state及其近期复核、page-logic/较晚round3/pass3/最终ZIP相应成员。旧guide已解释mode2/type0x2f与a00ac4c2两种活动布局；ui-total-consumers已恢复a00ac54e callback、ctx+24严格0/1、功率除10/格式布局，且theme-total-state是后续，不得按旧剩余重复。上述业务/活动setter全继承，不重做分类/显示语义。
+
+只核同一屏保Time2 type0x2f的creator/context/page/callback/DELETE所有权已有证据范围，先交已有→行为→局限→精确缺口；只有实际尚未闭的正常DELETE接入、callback注销/ctx/wrapper释放原序或必要ABI才补稀疏窗口。主体已覆盖则直接引用并结束，不用凑函数/全页/整GUI。type0x2f对象不能套用H08/H09 type2 time1 136B或H05 type4 weather1 68B、H01 type19 116B的清理结论。正常上层离页→DELETE无种子不重复全ROM根析构搜索。
+
+REA skill与本文共同/复用/静态安全规则适用，四分报告；不重导整函数/全资源/PNG/源码/机械账，不执行SIM/构建/回放/固件/设备/外网。独占worktree/输出，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。必要验证、精确路径提交commit/验证/未知/clean；接近提交先报重叠/真实增量/后继种子。

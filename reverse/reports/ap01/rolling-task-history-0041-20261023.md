@@ -1783,3 +1783,15 @@ C23 503611d已整合，待C24独立复核；A52立即接替复核A50。
 
 
 A53 e515a53已整合，A51局部来源接受/新增0；C24立即接替。
+
+
+## 当前完整任务书 D22（D21已整合，立即接替）
+
+独占reverse/reports/ap01/backlight-animation-source-review-d22-0041-20261024.md及reverse/analysis/backlight-animation-source-review-d22-0041-20261024/。
+
+待D21整合后，新独立agent只核property3e/selector20000的候选定义与ROMwrapper、动画descriptor size/early_apply/start顺序/repeat超期余时四项来源差异及其证据强度。D19/D20继承；不能候选覆盖ROM/推断真实视觉效果、控件类型或ctx free，不扩style引擎，新功能0。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+D22 0993567已整合，D21限定来源接受/新增0；I03接替。
