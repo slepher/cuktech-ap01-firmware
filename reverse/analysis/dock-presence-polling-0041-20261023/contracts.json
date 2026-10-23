@@ -47,7 +47,7 @@
       "sent@6",
       "unknown@7"
     ],
-    "selection": "first group phase%period==0 and sent<limit; others sent=limit; send commands[sent],len0,NULL then sent++",
+    "selection": "first group phase%period==0 and sent<limit; phase mismatch writes sent=limit; exhausted matching-phase group leaves sent unchanged; send commands[sent],len0,NULL then sent++",
     "cycle": "if controller.done: clear done, bytephase++, clear sent, select next",
     "copy": "clear transportstate; set done when no eligible group remains; compare/copy n; if changed activehandler((cmd+0x20)&255,0,NULL)"
   },
