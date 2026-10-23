@@ -1879,3 +1879,17 @@ REA skill与本文共同/复用/静态安全规则适用，四分报告；不重
 
 
 I03 ef2bd51已整合，待I04独立复核；旧覆盖/新增0；I05接替。
+
+
+## 当前完整任务书 J01（2026-10-24，复用检索接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-j01；分支codex/re-0041-j01；基线本任务书启动提交。独占reverse/reports/ap01/charge-reuse-gap-j01-0041-20261024.md及reverse/analysis/charge-reuse-gap-j01-0041-20261024/。
+
+本题是已有证据检索/范围收缩，不作新增ROM反编译或字节取证。先application-rehost-complete、function-matrix、factory-reference-map与charge-complete，再按地址/callback/字段/state查charge/details round4、page-logic、近期charging/UiIFace/total/theme/E01-E19/C09-C12专项及独立复核/父级验收，必要ZIP只读成员。只针对充电业务原ROM合同与SIM服务替代之间尚有证据不足之处，形成短表：旧出处→解释行为→局限→真实精确缺口/可靠种子。新标题/旧工具入口失识/旧pending不当缺失；特别E07/E08 body边界后被E09/E11 round3纠正、E12/E13已覆盖消费者不得重开。
+
+不重建整分类表/矩阵/资源/源码或机械记账，不重新导出已有函数/全证据，不做新的技术语义裁决。只将已有可靠原字节/旧反编译需局核/SIM照片替代/未检到的精确边分开。可提出少量实际有调用点/extent/字段种子的后继，已无必要增量则明确已覆盖；无种子不提全ROM/heap/driver搜索。主窗口最终决定派发；不自行接题、不创建下级agent。不要与运行I01启动/I03屏保/A54reader争同范围。
+
+REA skill与共同/复用/静态安全规则适用，四分报告、新增功能0；独占worktree/输出，不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销；必要JSON/链接/差异检查、精确路径提交并回报commit/clean，接近提交提前给种子与重叠。
+
+
+J01 8674205已整合，复用盘点/新增0；B22已接唯一真实分类种子；I04接替独立复核I03。
