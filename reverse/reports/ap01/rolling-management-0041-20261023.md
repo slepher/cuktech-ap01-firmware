@@ -159,3 +159,11 @@ C09从efefd4a启动，agent /root/c09_detail_gate。启动核对发现62fc4034 g
 ## 预备任务 B10：一个基础信息分派调用者
 
 分支 codex/re-0041-b10；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b10。须B09验收允许后，从最新管理提交启动。只恢复a00a389c的一个直接调用者，确认index实参来源和局部触发条件；最多调用者及两个直接依赖，不扩全部生产者/基础信息状态机。入口B08/B09及既有inventory，先选有明确ROM证据的小调用点。独占 reverse/reports/ap01/basic-info-dispatch-caller-b10-0041-20261023.md、reverse/analysis/basic-info-dispatch-caller-b10-0041-20261023/。核原指令、参数宽度与间接ABI边界、事实推断未知、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## C09/C10交接更新
+
+C09实际detail-summary任务完成7c30064→b885567，范围/差异检查通过，技术待C10。只交detail-summary独占文件，gate旧缺口未重复交付。C10已从b885567启动，agent /root/c10_summary_review；C09工作树干净且成果整合，可回收并保留分支。C09据指令报告global mode重读，不能推断与callback snapshot一致。
+
+## 预备任务 C11：详情模式控件更新
+
+分支 codex/re-0041-c11；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c11。须C10验收允许后，从最新管理提交启动。只恢复 a00f388c(ctx,0,mode) 的局部控件更新合同及最多两个直接依赖；入口ui-total-consumers报告中详情页bit2消费者、C09/C10与已有inventory。若已有后续报告解决则先报告证据，再选同量级未完成helper，不重复交付。排除完整页面构造/销毁/所有订阅。独占 reverse/reports/ap01/detail-mode-update-c11-0041-20261023.md、reverse/analysis/detail-mode-update-c11-0041-20261023/。原指令参数/字段/分支及事实推断未知、来源/相称验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
