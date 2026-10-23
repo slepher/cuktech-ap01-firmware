@@ -713,3 +713,47 @@ H03 beeca33→2ac1fd0待H04独立技术复核。管理范围/差异/JSON/本地�
 包含必要导航注册/触发、事件ABI、页面/ctx/wrapper/子控件所有权，既验收天气重排/主要显示/五槽注销只针对核，不重复全天气数据流。若无法证实最终free(ctx)，给明确正常路径、引用搜索边界和精确断边，不扩所有GUI删除、不作缺陷判断。完成需生命周期/状态伪代码结构、原指令/返回/宽度/顺序、事实推断未知、来源、实际静态核验与一个后继闭包。通用事件/allocator库仅来源认证才排除，厂商适配仍恢复。排除全UI/所有导航、固件执行/外连/漏洞/历史回放/正式ROM生产模型修改；共同规则适用。
 
 A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后限定接受A19，原add_flag状态门说明以A20为准。旧待正式报告仅为历史记录，本状态覆盖。
+
+
+## A22验收、D05/F05恢复、G04纠正验收与补位
+
+A22 c32fc41→a295c3a限定接受A21，无实质纠正，补class0公共cache元数据读取；D05 8204cbe→1c79f0d、F05 f699ea0→a1a40f5待D06/F06；G04 926f1a5→7c3a3cf两处事件机器表达纠正后限定接受G03（filter仅清bit15，bit0按检查位置不同返回），主提交消费合同接受。四项管理范围/差异/JSON/链接通过，旧树均干净，成果已整合，保留分支。A23/D06/F06/G05从各自最新管理提交新树新agent补位。
+
+## 当前完整任务书 D05（已启动，基线59d81c2）
+
+任务ID D05，业务恢复UART TX ring启动→正常完成callback→tail推进/等待者通知。分支codex/re-0041-d05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d05；基线含D04最新管理提交。独占reverse/reports/ap01/uart-ring-drain-d05-0041-20261023.md及reverse/analysis/uart-ring-drain-d05-0041-20261023/。
+
+业务问题：D03已恢复a002c206把frame byte同步放dev TX ring；从a001a70a(dev)传输启动，哪个正常完成callback推进dev+0x50/+0x52 head/tail、何时使等待write继续，缓冲所有权/忙标志及唤醒怎样衔接？先读D03/D04，D04的optional_mark分支纠正为既有合同，不重复文件页表/引用/帧编码。具体DMA/中断callback身份与安装者目前未知，执行agent从实际lower表/初始化和a001a70a直接依赖定位，约5–12函数组成启动→完成→归还/唤醒闭包，只此TX ring不扩全UART或DMA框架。
+
+完成需原指令调用/间接ABI、head/tail宽度/重读/截断、分段/回绕、计数与状态发布顺序、资源持有、正常返回/清理/唤醒、伪代码布局状态和所有权。硬件最终发出无运行证据，不能由回调命名证明对端交付；无法定位真实安装给候选/精确断边，不连接设备验证。不做异常/超时/长度审计或缺陷。来源只有可核实版本/未修改比对才能排除，厂商适配保持恢复。事实推断未知、实际静态验证及一个后继闭包；禁止固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
+
+
+## 当前完整任务书 F05（已启动，基线3aba13a）
+
+任务ID F05，业务恢复a0081554对象来源→obj+0x2b8安装→实际返回后callback及loop连接。分支codex/re-0041-f05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f05；基线含F04最新管理提交。独占reverse/reports/ap01/miio-exit-callback-f05-0041-20261023.md及reverse/analysis/miio-exit-callback-f05-0041-20261023/。
+
+问题：a005cc1e调用容器a005cec6返回后，将s0-314内容交给a0081554；a00815f4读取obj+2b8间接callback，这个对象/回调由谁安装、参数与资源归还合同是什么、是否实际触及本loop(s0-240)/timer9428或其data？F03/F04明确这只是精确断边，不能预命名walker。沿其对象创建/字段安装→正常消费→回调/释放形成约5–12核心函数，必要短依赖允许，若回调是另一业务且无loop连接，按实际命名并结束在有证据边，不扩大全MiIO或全进程退出。
+
+已验收type13关闭/摘链/callback合同只针对核，避免重复timer扫描；未知间接目标保留候选和有界引用搜索，不凭日志/名字补清理。完成原指令/地址/ABI/写宽/返回覆盖、伪代码结构状态所有权、事实推断未知、来源、实际静态验证和一个后继闭包。普通库认证来源版本才可排除，厂商注册适配继续恢复；排除全loop/heap、漏洞/异常输入、固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
+
+最新：E03 b0c4ea8→85c61e2待E04；F04 1a100d8→3aba13a通过限定复核。D04已报告D03 optional_mark非空分支伪代码需纠正；实际acquire参数a3=0主链未受影响，正式报告待提交，不冒称无纠正接受。
+
+
+## 当前完整任务书 G04（已启动，基线f82380b）
+
+任务ID G04，新agent独立复核G03失效提交/记录合并/直接消费完整闭包。分支codex/re-0041-g04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g04；基线含G03最新管理提交。独占reverse/reports/ap01/invalidation-submit-review-g04-0041-20261023.md及reverse/analysis/invalidation-submit-review-g04-0041-20261023/。
+
+业务问题：a00ddbf6成功后段a00ddc7e怎样把区域写入display内嵌记录、何时事件门控/省略/退化全屏，a00e0ac8怎样合并、消费并清空？按G03正式核心清单约5–12函数及必要短依赖，已验收C22/G02数学/门控只针对核。已定位display+44的32×16B记录、+244的32B标记、+264的word count，a00e0ac8消费者/a00e082e边界。重点无动态节点队列、mode2全屏置1、普通event35恰1门及调用后重读count、完全包含省略、满32回退、event38(param0)、unsigned低32位面积和严格小于合并、标记顺序、mode1借记录与mode0栈分行、最后512B→32B→count0清理原序。
+
+独立核原字节/厂商字、宽度符号/返回/ABI/原调用重读、记录与栈指针所有权。逐项接受纠正未核，必要纠正仅独占报告不改G03。事件callback未知可能持有param、a00e082e后具体绘制与物理完成保留断边，不追完整绘制/事件注册后继。交付可读伪代码结构状态生命周期、事实推断未知、来源、实际独立静态核验及一个后继闭包；标准库来源未认证不排除，已验收复制/面积/allocator可作明确合同。排除异常区域/漏洞/固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
+
+
+## 当前完整任务书 A22（已启动，基线875f762）
+
+任务ID A22，新agent独立复核A21 PNG decoder注册/info/注销条件闭包。分支codex/re-0041-a22；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a22；基线含A21最新管理提交。独占reverse/reports/ap01/png-info-review-a22-0041-20261023.md及reverse/analysis/png-info-review-a22-0041-20261023/。
+
+问题：a008e3ac初始化片段→a0082914创建/registry插入→a0082c8c class0匹配a00eb6fe PNG info→descriptor/header输出→registry deinit回收是否可由真实注册写入/间接ABI连接？具体核心以A21正式清单为准约5–12函数。已知registry base62fc957c、+110 payload28B、+114/+118 head/tail；创建36B头插、PNG最后注册优先BIN；a008e82c创建/a008e838写callback，close字段真实地址a00eab9a，不能沿用A21早期临时误报a00eb39a；deinit a008be06在a008bed2清registry。重点PNG signature实际data前8B与data+10取低16位宽高、format0x10/返回1、info只借decoder、list unlink/free、构造/注销所有权及顺序，header认证不等于像素/物理绘制执行。
+
+独立原指令/厂商字/函数边界/间接ABI/返回覆盖/资源宽度、逐项接受纠正未核，必要纠正只独占报告不改A21；source classifier/image setter及A20纠正后的flag合同仅针对核，不重复整个image链。完整open/decode/压缩算法、其他格式、动态注册全集及最终显示保留边界，不扩完整图像库。来源版本可核实才排除标准实现，厂商注册适配恢复。交付伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证和断边；排除固件执行/外连/漏洞/畸形输入/历史回放/ROM生产模型修改；共同规则适用。
+
+D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠正为准，正常acquire a3=0闭包限定接受。E04运行中报告port1/port2栈复用措辞需收紧：同布局不等于同次通知执行两支，待正式报告提交。

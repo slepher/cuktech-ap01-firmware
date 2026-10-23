@@ -22,22 +22,22 @@
 
 |任务|agent|启动基线|状态|
 |---|---|---|---|
-|A22|/root/a22_png_review|875f762|运行中|
+|A23|/root/a23_png_session|a295c3a|运行中|
 |E05|/root/e05_ctk_close|f31a27a|运行中|
-|D05|/root/d05_uart_drain|59d81c2|运行中|
-|F05|/root/f05_exit_callback|3aba13a|运行中|
-|G04|/root/g04_submit_review|f82380b|运行中|
+|D06|/root/d06_uart_ring_review|1c79f0d|运行中|
+|F06|/root/f06_display_exit_review|a1a40f5|运行中|
+|G05|/root/g05_display_events|7c3a3cf|运行中|
 |H04|/root/h04_weather_close_review|2ac1fd0|运行中|
 
 整合及限定验收映射见历史交接与覆盖记录，每项完成即检查整合补位。
 
 ## 近期滚动候选（未启动）
 
-- A23：A22验收后，PNG class0 open→会话像素对象→注册close归还的小闭包，不扩通用解压算法；A22已启动。
-- D06：D05 TX ring正常启动/完成/唤醒闭包独立复核，待D05整合；D05已启动。
+- A24：A23正常PNG session完整闭包独立复核，待A23整合；A23已启动。
+- D07：D06验收后按其建议圈a01b554e本地DMA描述符消费/归还小闭包；D06已启动。
 - E06：E05 app注销/归还完整闭包独立复核，待E05整合；E05已启动。
-- F06：F05返回后对象callback完整闭包独立复核，待F05整合；F05已启动。
-- G05：G04验收后恢复display event35/38实际descriptor注册→callback/param消费→38调度连接闭包；G04已启动。
+- F07：F06验收后选择显示对象字段生产/后端资源小闭包，不重复+2b8普通SW有界搜索，具体入口待F06建议。F06已启动。
+- G06：G05真实事件安装/param/调度完整闭包独立复核，待G05整合；G05已启动。
 - H05：H04验收后转一个未恢复天气订阅者完整数据流，不重复ctx free有界检索；优先候选a005e8dc注册点，准确callback未知，启动前任务书细化。H04已启动。
 
 以上只是预备问题，不冒称已派发。每次空位时依据最新整合和agent建议确定完整任务书、基线及独占输出，再启动新agent；独立技术复核须换新agent。
@@ -52,41 +52,9 @@
 
 
 
-## 当前完整任务书 D05（已启动，基线59d81c2）
 
-任务ID D05，业务恢复UART TX ring启动→正常完成callback→tail推进/等待者通知。分支codex/re-0041-d05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d05；基线含D04最新管理提交。独占reverse/reports/ap01/uart-ring-drain-d05-0041-20261023.md及reverse/analysis/uart-ring-drain-d05-0041-20261023/。
 
-业务问题：D03已恢复a002c206把frame byte同步放dev TX ring；从a001a70a(dev)传输启动，哪个正常完成callback推进dev+0x50/+0x52 head/tail、何时使等待write继续，缓冲所有权/忙标志及唤醒怎样衔接？先读D03/D04，D04的optional_mark分支纠正为既有合同，不重复文件页表/引用/帧编码。具体DMA/中断callback身份与安装者目前未知，执行agent从实际lower表/初始化和a001a70a直接依赖定位，约5–12函数组成启动→完成→归还/唤醒闭包，只此TX ring不扩全UART或DMA框架。
 
-完成需原指令调用/间接ABI、head/tail宽度/重读/截断、分段/回绕、计数与状态发布顺序、资源持有、正常返回/清理/唤醒、伪代码布局状态和所有权。硬件最终发出无运行证据，不能由回调命名证明对端交付；无法定位真实安装给候选/精确断边，不连接设备验证。不做异常/超时/长度审计或缺陷。来源只有可核实版本/未修改比对才能排除，厂商适配保持恢复。事实推断未知、实际静态验证及一个后继闭包；禁止固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
-
-## 当前完整任务书 F05（已启动，基线3aba13a）
-
-任务ID F05，业务恢复a0081554对象来源→obj+0x2b8安装→实际返回后callback及loop连接。分支codex/re-0041-f05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f05；基线含F04最新管理提交。独占reverse/reports/ap01/miio-exit-callback-f05-0041-20261023.md及reverse/analysis/miio-exit-callback-f05-0041-20261023/。
-
-问题：a005cc1e调用容器a005cec6返回后，将s0-314内容交给a0081554；a00815f4读取obj+2b8间接callback，这个对象/回调由谁安装、参数与资源归还合同是什么、是否实际触及本loop(s0-240)/timer9428或其data？F03/F04明确这只是精确断边，不能预命名walker。沿其对象创建/字段安装→正常消费→回调/释放形成约5–12核心函数，必要短依赖允许，若回调是另一业务且无loop连接，按实际命名并结束在有证据边，不扩大全MiIO或全进程退出。
-
-已验收type13关闭/摘链/callback合同只针对核，避免重复timer扫描；未知间接目标保留候选和有界引用搜索，不凭日志/名字补清理。完成原指令/地址/ABI/写宽/返回覆盖、伪代码结构状态所有权、事实推断未知、来源、实际静态验证和一个后继闭包。普通库认证来源版本才可排除，厂商注册适配继续恢复；排除全loop/heap、漏洞/异常输入、固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
-
-最新：E03 b0c4ea8→85c61e2待E04；F04 1a100d8→3aba13a通过限定复核。D04已报告D03 optional_mark非空分支伪代码需纠正；实际acquire参数a3=0主链未受影响，正式报告待提交，不冒称无纠正接受。
-
-## 当前完整任务书 G04（已启动，基线f82380b）
-
-任务ID G04，新agent独立复核G03失效提交/记录合并/直接消费完整闭包。分支codex/re-0041-g04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g04；基线含G03最新管理提交。独占reverse/reports/ap01/invalidation-submit-review-g04-0041-20261023.md及reverse/analysis/invalidation-submit-review-g04-0041-20261023/。
-
-业务问题：a00ddbf6成功后段a00ddc7e怎样把区域写入display内嵌记录、何时事件门控/省略/退化全屏，a00e0ac8怎样合并、消费并清空？按G03正式核心清单约5–12函数及必要短依赖，已验收C22/G02数学/门控只针对核。已定位display+44的32×16B记录、+244的32B标记、+264的word count，a00e0ac8消费者/a00e082e边界。重点无动态节点队列、mode2全屏置1、普通event35恰1门及调用后重读count、完全包含省略、满32回退、event38(param0)、unsigned低32位面积和严格小于合并、标记顺序、mode1借记录与mode0栈分行、最后512B→32B→count0清理原序。
-
-独立核原字节/厂商字、宽度符号/返回/ABI/原调用重读、记录与栈指针所有权。逐项接受纠正未核，必要纠正仅独占报告不改G03。事件callback未知可能持有param、a00e082e后具体绘制与物理完成保留断边，不追完整绘制/事件注册后继。交付可读伪代码结构状态生命周期、事实推断未知、来源、实际独立静态核验及一个后继闭包；标准库来源未认证不排除，已验收复制/面积/allocator可作明确合同。排除异常区域/漏洞/固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
-
-## 当前完整任务书 A22（已启动，基线875f762）
-
-任务ID A22，新agent独立复核A21 PNG decoder注册/info/注销条件闭包。分支codex/re-0041-a22；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a22；基线含A21最新管理提交。独占reverse/reports/ap01/png-info-review-a22-0041-20261023.md及reverse/analysis/png-info-review-a22-0041-20261023/。
-
-问题：a008e3ac初始化片段→a0082914创建/registry插入→a0082c8c class0匹配a00eb6fe PNG info→descriptor/header输出→registry deinit回收是否可由真实注册写入/间接ABI连接？具体核心以A21正式清单为准约5–12函数。已知registry base62fc957c、+110 payload28B、+114/+118 head/tail；创建36B头插、PNG最后注册优先BIN；a008e82c创建/a008e838写callback，close字段真实地址a00eab9a，不能沿用A21早期临时误报a00eb39a；deinit a008be06在a008bed2清registry。重点PNG signature实际data前8B与data+10取低16位宽高、format0x10/返回1、info只借decoder、list unlink/free、构造/注销所有权及顺序，header认证不等于像素/物理绘制执行。
-
-独立原指令/厂商字/函数边界/间接ABI/返回覆盖/资源宽度、逐项接受纠正未核，必要纠正只独占报告不改A21；source classifier/image setter及A20纠正后的flag合同仅针对核，不重复整个image链。完整open/decode/压缩算法、其他格式、动态注册全集及最终显示保留边界，不扩完整图像库。来源版本可核实才排除标准实现，厂商注册适配恢复。交付伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证和断边；排除固件执行/外连/漏洞/畸形输入/历史回放/ROM生产模型修改；共同规则适用。
-
-D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠正为准，正常acquire a3=0闭包限定接受。E04运行中报告port1/port2栈复用措辞需收紧：同布局不等于同次通知执行两支，待正式报告提交。
 
 ## 当前完整任务书 E05（已启动，基线f31a27a）
 
@@ -106,7 +74,7 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 
 最新整合：E04→f31a27a范围措辞纠正后限定接受E03；A21→875f762、G03→f82380b为待独立复核恢复，A22/G04运行中。
 
-## 预备完整任务书 A23（待A22整合）
+## 当前完整任务书 A23（已启动，基线a295c3a）
 
 任务ID A23，业务恢复PNG class0 open→decoder-session资源→已注册close归还闭包。分支codex/re-0041-a23；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a23；基线含A22最新管理提交。独占reverse/reports/ap01/png-session-lifecycle-a23-0041-20261023.md及reverse/analysis/png-session-lifecycle-a23-0041-20261023/。
 
@@ -114,7 +82,7 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 
 既验收registry/info/header和A20状态门只针对核，不重复整个image setter、其他image class或完整压缩算法。对象/内存分配/所有权、decoded指针与src借用、返回值和清理顺序、间接open/close ABI必须原字节核，失败分支不能擅自修正，不做错误输入测试。若session owner或最终close调用者未连上，列实际字段/调用入口与精确断边，不以注册存在推成功执行。交付伪代码结构状态生命周期、原指令证据/厂商字/宽度、事实推断未知、来源、实际静态验证和一个后继闭包。排除像素执行/渲染观察、固件执行/外连/漏洞/历史回放、ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 G05（待G04整合）
+## 当前完整任务书 G05（已启动，基线7c3a3cf）
 
 任务ID G05，业务恢复display事件35/38 descriptor注册→callback/param消费→刷新调度通知闭包。分支codex/re-0041-g05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g05；基线含G04最新管理提交。独占reverse/reports/ap01/display-event-flow-g05-0041-20261023.md及reverse/analysis/display-event-flow-g05-0041-20261023/。
 
@@ -122,7 +90,7 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 
 范围约5–12核心及必要短依赖，选择同一display正常注册/回调/直接调度消费小闭包，明确callback同步返回/bit0/bit1归一门、param持有/复制、生命周期与注销；已验收区域记录合并/复位只针对核，不重做全部数学。若多个独立callback并存，选实际必要目标，其他列候选/断边，不接管整个GUI事件系统或最终绘制。完成原字节/间接ABI/厂商字/宽度返回/顺序、伪代码结构状态与所有权、事实推断未知、来源、实际静态验证和一个后继闭包。来源未认证不排除，标准list/timer合同可保留并说明认证缺口。排除物理刷新/DMA/LCD、异常param/漏洞、固件执行/外连/历史回放、ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 D06（待D05整合）
+## 当前完整任务书 D06（已启动，基线1c79f0d）
 
 任务ID D06，新agent独立复核D05 UART TX ring实际IRQ主路径与条件DMA的消费/通知闭包。分支codex/re-0041-d06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d06；基线含D05最新管理提交。独占reverse/reports/ap01/uart-ring-review-d06-0041-20261023.md及reverse/analysis/uart-ring-review-d06-0041-20261023/。
 
@@ -132,7 +100,7 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 
 逐项接受纠正未核，必要纠正只独占报告不改D05；保留动态private/ops写者、完整中断优先级/硬件交付、final close及未解同步内部断边，不扩全IRQ/DMA/UART或异常超时。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证及一个后继闭包。来源未认证不排除。禁止固件执行/设备/外连/漏洞/历史回放/ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 F06（待F05整合）
+## 当前完整任务书 F06（已启动，基线a1a40f5）
 
 任务ID F06，新agent独立复核F05显示对象来源/DELETE清理与可选callback断边闭包。分支codex/re-0041-f06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f06；基线含F05最新管理提交。独占reverse/reports/ap01/display-exit-review-f06-0041-20261023.md及reverse/analysis/display-exit-review-f06-0041-20261023/。
 
@@ -146,7 +114,7 @@ H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达
 
 任务ID E06，新agent独立复核E05 CTK app所有权/DELETE清理与注销断边闭包。分支codex/re-0041-e06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e06；基线含E05最新管理提交。独占reverse/reports/ap01/ctk-app-close-review-e06-0041-20261023.md及reverse/analysis/ctk-app-close-review-e06-0041-20261023/。
 
-问题：a00b2f6c创建0x68B app window、父子数组/62fc95bc持有、app+10单独8B state、a005d142注册a00adabc，以及DELETE a00ab8ec的1s timer删除/free state/清挂接，是否符合原字节和生命周期？核心以E05正式约5–12函数清单/必要片段为准，E04数据消费与互斥谓词只针对核。重点真实DELETE注册参数/timer userdata/实际free、window析构及公共删除原序、同头62fcb530的a00f2f98内联移除器固定键a00f5288与a00adabc不能混同、a0089d02仅摘链不free的证据与有界搜索范围。
+问题：a00b2f6c创建0x68B app window、parent child array持有、app+10单独8B state；62fc95bc实际为独立组/输入关联句柄而非app根，app+2c/+30分别保存旧/新句柄、a005d142注册a00adabc，以及DELETE a00ab8ec的1s timer删除/free state/清挂接，是否符合原字节和生命周期？核心以E05正式约5–12函数清单/必要片段为准，E04数据消费与互斥谓词只针对核。重点真实DELETE注册参数/timer userdata/实际free、window析构及公共删除原序、同头62fcb530的a00f2f98内联移除器固定键a00f5288与a00adabc不能混同、a0089d02仅摘链不free的证据与有界搜索范围。
 
 逐项接受纠正未核，原指令/间接ABI/厂商字/宽度/返回与重读、伪代码结构状态所有权，事实推断未知/来源/实际独立静态验证/精确断边。真实a00adabc注销、订阅节点回收、app root正常退出触发未证须保留；不能将window对象free或另一个callback移除拼成此订阅销毁。必要纠正只独占报告不改E05，不接管root删除incoming或全registry teardown后继，不扩全UI。来源未认证不排除；禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
 
@@ -157,3 +125,5 @@ H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达
 问题：五槽注册器a00b3a68既有incoming ref之一a005e8dc对应哪一个真实调用者、callback/userdata、它怎样消费天气字段/触发显示或业务状态、何时注销/对象归还？准确包含函数/callback和退出入口当前未知；a005e8dc是调用点不是函数入口。先核已有A15/H01及后续报告是否已恢复此点，若已覆盖则给证据报告管理者，不擅自领取其他独立业务。以一个真实订阅者注册/主要callback分支/直接字段消费者/注销或清理形成约5–12核心，不重做既验收五槽分发、arc/图标/PNG info与H03页面删除全套证据。
 
 保留callback(data,userdata)顺序、原宽度符号/重读/返回门、借用与复制、注册/注销键和资源持有；不能把清字段/摘链/删除widget等同释放ctx。未定位退出时给精确字段/入口与有界搜索，不重复H03 ctx free检索，不扩所有天气订阅者/全UI或网络。交付原指令/证据、可读伪代码布局状态生命周期、事实推断未知、来源、实际静态验证及一个后继闭包。源码来源未认证不排除，标准调用保留明确合同。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
+
+最新整合：A22→a295c3a限定验收；G04→7c3a3cf两处事件表达纠正后限定验收；D05→1c79f0d与F05→a1a40f5待D06/F06。F06运行中已报告F05通用filter描述也需按mask ffff7fff收紧，正式报告待提交。E05作者已纠正即时摘要中62fc95bc身份，正式报告待交付；不得当app根引用。
