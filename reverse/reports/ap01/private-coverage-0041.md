@@ -1,6 +1,6 @@
 # 0041 私有功能恢复覆盖记录
 
-当前滚动状态（2026-10-23恢复）：A23/F07/G05/H05恢复或来源认证与D06/E06独立复核六路运行。H04→8a7807e限定接受H03；F06→f22ec27纠正filter表达后接受F05；E05→26fc8d7局部恢复待E06（完整注销未闭合）。F07只读本地LVGL候选来源比较进行中，无新增认证排除。既有纠正/验收保持；完整目标未完成、不计算百分比、不推送。详见[管理队列](rolling-management-0041-20261023.md)。
+当前滚动状态（2026-10-23恢复）：D07/E07/F07/H05恢复或来源认证与A24/G06独立复核六路运行。E06→0724167限定接受E05局部合同；D06→e8ce444纠正型号发布次数并补IRQ ABI后接受D05。A23→5e0da7b待A24（对齐回调槽归属发现待报告纠正），G05→a6a4e7c待G06。来源认证尚未新增排除；完整目标未完成、不计算百分比、不推送。详见[管理队列](rolling-management-0041-20261023.md)。
 
 更新：2026-10-23。原件 SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。目标仍为全部非开源程序逻辑；本表是功能导航，不是完整函数认证清单。历史缺陷调查不作为默认续作。
 
@@ -69,3 +69,5 @@
 新增：[A22](png-info-review-a22-0041-20261023.md)限定接受A21并明确class0公共cache元数据读取边界；[G04](invalidation-submit-review-g04-0041-20261023.md)对G03两处事件表达纠正后限定接受，filter仅清bit15及bit0按位置不同返回须以G04为准。[D05](uart-ring-drain-d05-0041-20261023.md)真实IRQ/条件DMA闭包与[F05](miio-exit-callback-f05-0041-20261023.md)显示DELETE/后端清理闭包已整合待独立复核，不认证硬件交付或完整MiIO退出。
 
 新增：[H04](weather-page-close-review-h04-0041-20261023.md)限定接受H03实际离页/DELETE合同，无核心纠正但ctx最终free仍未证；[F06](display-exit-review-f06-0041-20261023.md)纠正F05通用filter掩码为仅清bit15后限定接受，实际filter29闭包不变。[E05](ctk-app-close-e05-0041-20261023.md)是局部构造/DELETE合同与目标订阅注销精确断边，待E06，未认证完整app退出归还。
+
+新增验收：[E06](ctk-app-close-review-e06-0041-20261023.md)限定接受E05局部DELETE/持有与有界注销断边，不认证完整退出；[D06](uart-ring-review-d06-0041-20261023.md)纠正D05 type>1计数发布次数、补DMA IRQ trampoline/pair实参后限定接受，相关替换段以D06为准。[A23](png-session-lifecycle-a23-0041-20261023.md)与[G05](display-event-flow-g05-0041-20261023.md)恢复成果已整合待A24/G06；硬件、cache驱逐、所有动态handler及完整资源归还仍未闭合。
