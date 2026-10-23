@@ -133,3 +133,21 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 业务问题：G03提交过程借用clipped栈矩形发0x35，新增记录后发0x38 param0，display+2e8的事件descriptor由谁安装、真实callback怎样读/改/保存param及0x38如何触发a00e0ac8消费者？入口G03/G04合同、a00814f4、a008ad80..ad98过滤/userdata/callback(event*)、提交a00ddd90/ddd76和event timer消费者a00e0ac8。安装callback身份/调度连接当前未知，须先定位真实descriptor写入及参数，不猜timer回调，不把event38默认当唤醒。
 
 范围约5–12核心及必要短依赖，选择同一display正常注册/回调/直接调度消费小闭包，明确callback同步返回/bit0/bit1归一门、param持有/复制、生命周期与注销；已验收区域记录合并/复位只针对核，不重做全部数学。若多个独立callback并存，选实际必要目标，其他列候选/断边，不接管整个GUI事件系统或最终绘制。完成原字节/间接ABI/厂商字/宽度返回/顺序、伪代码结构状态与所有权、事实推断未知、来源、实际静态验证和一个后继闭包。来源未认证不排除，标准list/timer合同可保留并说明认证缺口。排除物理刷新/DMA/LCD、异常param/漏洞、固件执行/外连/历史回放、ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 D06（待D05整合）
+
+任务ID D06，新agent独立复核D05 UART TX ring实际IRQ主路径与条件DMA的消费/通知闭包。分支codex/re-0041-d06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d06；基线含D05最新管理提交。独占reverse/reports/ap01/uart-ring-review-d06-0041-20261023.md及reverse/analysis/uart-ring-review-d06-0041-20261023/。
+
+业务问题：已知设备private+e初值0怎样使a001a70a DMA入口早退，而真实open的lower+8→a001a1d8安装IRQ3d/a0019ae0(dev)，common dispatcher a0001012..1046把arg装a2，status门→a002d36a消费ring→tail/等待者通知，条件+e非零又怎样经DMA安装/回调归还？按D05正式核心清单，约5–12核心及必要短IRQ/安装片段；重点私有初值与运行时写者未知的区别，不把初值当永恒配置、不省实际IRQ以DMA替代。
+
+原指令独立核halfword tail先发布再读取ring及按值lower发送、回绕/重读、lower+48=0/ready恒1的条件、空环txint0、有进度a002be92先poll通知再唤醒dev+18；条件DMA lower+20=a001a240、a001a3f6..a400注册a0019d9a/a00264ec、dev+88累计与a002d5d8清+88/+84/+80后的通知，具体边以最终报告为准。先发布tail不等同硬件发送完成。已验收D04 source复制/引用和帧队列只针对核，厂商字/间接ABI/写宽符号/返回覆盖须原编码核。
+
+逐项接受纠正未核，必要纠正只独占报告不改D05；保留动态private/ops写者、完整中断优先级/硬件交付、final close及未解同步内部断边，不扩全IRQ/DMA/UART或异常超时。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证及一个后继闭包。来源未认证不排除。禁止固件执行/设备/外连/漏洞/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 F06（待F05整合）
+
+任务ID F06，新agent独立复核F05显示对象来源/DELETE清理与可选callback断边闭包。分支codex/re-0041-f06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f06；基线含F05最新管理提交。独占reverse/reports/ap01/display-exit-review-f06-0041-20261023.md及reverse/analysis/display-exit-review-f06-0041-20261023/。
+
+问题：a005ccc6→a0084b96→a008aec0分配zero324对象/58B payload→a00873ea写out，配置/dev/fb0与/dev/input0，是否确为返回后a0081554显示清理对象，而不是loop walker？真实DELETE注册a0086cd4→a007ffa0→a01b93b4(obj+2e8 event list,cb=a00800b4,filter29,userdata=obj)及a008acfa分发event+c userdata→callback后端归还→后续可选obj+2b8/payload/obj清理顺序是否成立？按F05正式约5–12核心与必要片段；F03/F04栈loop/关闭合同只针对核，不重新扫timer。
+
+重点+2b8仅可证构造zero初值，非NULL安装/真实callback未定位，普通SW立即数有界搜索不涵盖别名/批量/厂商store，不能推返回时必NULL；backend=obj+2e0清理、fd>=0 close wrapper/free backend+34/backend与对象资源顺序、callback返回后字段重读须原指令核。显示闭包无已证loop9428连接但opaque callee不能作全局否定。独立核ABI/厂商字/写宽/返回分支/所有权，逐项接受纠正未核，纠正只独占报告不改F05。不扩全部显示/输入或obj+2b8后继恢复，保留来源认证和上层loop断边。交付必要伪代码结构状态生命周期、事实推断未知、来源、实际静态验证与一个后继闭包；禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
