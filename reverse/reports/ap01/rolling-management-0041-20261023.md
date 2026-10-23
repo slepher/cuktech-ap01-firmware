@@ -112,3 +112,11 @@ A20对add_flag callee/字段谓词纠正须作为既有合同，不能沿用A19�
 包含必要导航注册/触发、事件ABI、页面/ctx/wrapper/子控件所有权，既验收天气重排/主要显示/五槽注销只针对核，不重复全天气数据流。若无法证实最终free(ctx)，给明确正常路径、引用搜索边界和精确断边，不扩所有GUI删除、不作缺陷判断。完成需生命周期/状态伪代码结构、原指令/返回/宽度/顺序、事实推断未知、来源、实际静态核验与一个后继闭包。通用事件/allocator库仅来源认证才排除，厂商适配仍恢复。排除全UI/所有导航、固件执行/外连/漏洞/历史回放/正式ROM生产模型修改；共同规则适用。
 
 A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后限定接受A19，原add_flag状态门说明以A20为准。旧待正式报告仅为历史记录，本状态覆盖。
+
+## 预备完整任务书 F04（待F03整合后立即启动）
+
+任务ID F04，新agent独立复核F03条件关闭链与真实loop退出断边。分支codex/re-0041-f04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f04；基线含F03最新管理提交。独占reverse/reports/ap01/miio-loop-close-review-f04-0041-20261023.md及reverse/analysis/miio-loop-close-review-f04-0041-20261023/。
+
+问题：F03 type13 close→stop→pending→完成分派摘链→handle+0xc回调是否成立，是否足以连接9428共享timer与data归还，caller栈loop和返回后间接callback边证据范围是否准确？入口F03正式报告/21窗口1428B、F01/F02合同；已知a009fb96/a009fc50/a009fd94/a009c228/a009f524/a0098b4a及a005cc1e→a005cec6、a0081554/a00815f4 obj+0x2b8。具体完整核心以F03表为准，约5–12函数合同。已验收stop/data callback只针对核，关闭dispatcher完整正常type13和链表字段/回调ABI/写宽/顺序需独立原指令核。
+
+逐项接受纠正未核；重点注册节点+0x10与close callback+0xc、到期callback+0x30区别，不自动调用业务data清理，caller loop参数身份/局部栈区和返回后对象参数不能混同。9428实际close登记/walker及obj+0x2b8安装/身份未解须保留精确断边，有界负搜索不得变不存在。必要纠正只独占报告不改F03。完成原字节/厂商编码/间接ABI、伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证及一个后继闭包；不接管obj+2b8恢复或全loop/heap。排除异常提交/漏洞/固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
