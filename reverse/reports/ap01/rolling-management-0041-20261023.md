@@ -141,3 +141,19 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 重点+2b8仅可证构造zero初值，非NULL安装/真实callback未定位，普通SW立即数有界搜索不涵盖别名/批量/厂商store，不能推返回时必NULL；backend=obj+2e0清理、fd>=0 close wrapper/free backend+34/backend与对象资源顺序、callback返回后字段重读须原指令核。显示闭包无已证loop9428连接但opaque callee不能作全局否定。独立核ABI/厂商字/写宽/返回分支/所有权，逐项接受纠正未核，纠正只独占报告不改F05。不扩全部显示/输入或obj+2b8后继恢复，保留来源认证和上层loop断边。交付必要伪代码结构状态生命周期、事实推断未知、来源、实际静态验证与一个后继闭包；禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
 
 H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达及不同bit0检查位置需精确纠正/补充，正式报告待提交，不提前标无纠正接受。
+
+## 预备完整任务书 E06（待E05整合）
+
+任务ID E06，新agent独立复核E05 CTK app所有权/DELETE清理与注销断边闭包。分支codex/re-0041-e06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e06；基线含E05最新管理提交。独占reverse/reports/ap01/ctk-app-close-review-e06-0041-20261023.md及reverse/analysis/ctk-app-close-review-e06-0041-20261023/。
+
+问题：a00b2f6c创建0x68B app window、父子数组/62fc95bc持有、app+10单独8B state、a005d142注册a00adabc，以及DELETE a00ab8ec的1s timer删除/free state/清挂接，是否符合原字节和生命周期？核心以E05正式约5–12函数清单/必要片段为准，E04数据消费与互斥谓词只针对核。重点真实DELETE注册参数/timer userdata/实际free、window析构及公共删除原序、同头62fcb530的a00f2f98内联移除器固定键a00f5288与a00adabc不能混同、a0089d02仅摘链不free的证据与有界搜索范围。
+
+逐项接受纠正未核，原指令/间接ABI/厂商字/宽度/返回与重读、伪代码结构状态所有权，事实推断未知/来源/实际独立静态验证/精确断边。真实a00adabc注销、订阅节点回收、app root正常退出触发未证须保留；不能将window对象free或另一个callback移除拼成此订阅销毁。必要纠正只独占报告不改E05，不接管root删除incoming或全registry teardown后继，不扩全UI。来源未认证不排除；禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 H05（待H04整合）
+
+任务ID H05，业务恢复另一个未覆盖天气订阅点a005e8dc的注册→callback主要消费→页面/对象退出闭包。分支codex/re-0041-h05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h05；基线含H04最新管理提交。独占reverse/reports/ap01/weather-subscriber-h05-0041-20261023.md及reverse/analysis/weather-subscriber-h05-0041-20261023/。
+
+问题：五槽注册器a00b3a68既有incoming ref之一a005e8dc对应哪一个真实调用者、callback/userdata、它怎样消费天气字段/触发显示或业务状态、何时注销/对象归还？准确包含函数/callback和退出入口当前未知；a005e8dc是调用点不是函数入口。先核已有A15/H01及后续报告是否已恢复此点，若已覆盖则给证据报告管理者，不擅自领取其他独立业务。以一个真实订阅者注册/主要callback分支/直接字段消费者/注销或清理形成约5–12核心，不重做既验收五槽分发、arc/图标/PNG info与H03页面删除全套证据。
+
+保留callback(data,userdata)顺序、原宽度符号/重读/返回门、借用与复制、注册/注销键和资源持有；不能把清字段/摘链/删除widget等同释放ctx。未定位退出时给精确字段/入口与有界搜索，不重复H03 ctx free检索，不扩所有天气订阅者/全UI或网络。交付原指令/证据、可读伪代码布局状态生命周期、事实推断未知、来源、实际静态验证及一个后继闭包。源码来源未认证不排除，标准调用保留明确合同。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
