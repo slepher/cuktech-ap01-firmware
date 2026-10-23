@@ -207,3 +207,11 @@ A10 3b6e270→f712c40已整合，限定接受A09，无纠正；672B/223槽/60项
 ## C11/C12交接更新
 
 C11 0e5c123→cb16c11已整合，范围/差异通过，技术待C12；C12从cb16c11运行，agent /root/c12_mode_review。C11工作树干净且整合可回收保留分支。当前A11/B11/C12三任务；A12/B12预备，C13按C12建议选新小缺口。
+
+## B11/B12交接更新
+
+B11 07d454b→5cabca7已整合，限定接受B10，无纠正；490B/157普通指令/1厂商word/64项原编码检查通过。B12从5cabca7运行，agent /root/b12_compare_contract。B11工作树干净且整合可回收保留分支。A11仍固定f712c40，C12固定cb16c11。
+
+## 预备任务 B13：比较合同独立复核
+
+分支 codex/re-0041-b13；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b13。须B12成果提交整合后，从最新管理提交启动。只复核B12最终实际范围的正常参数/返回合同及最多两个直接依赖、来源识别与未认证边界，不扩响应或异常验证。独占 reverse/reports/ap01/compare-contract-review-b13-0041-20261023.md、reverse/analysis/compare-contract-review-b13-0041-20261023/；必要精确纠正B12。原指令逐项接受/纠正/未核/来源及实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
