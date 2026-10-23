@@ -23,9 +23,9 @@
 |任务|agent|启动基线|状态|
 |---|---|---|---|
 |A21|/root/a21_png_info|ab67c6f|运行中|
-|E03|/root/e03_ctk_dataflow|78b8a5d|运行中|
+|E04|/root/e04_ctk_review|85c61e2|运行中|
 |D04|/root/d04_write_review|d07ed94|运行中|
-|F04|/root/f04_loop_review|48af5ae|运行中|
+|F05|/root/f05_exit_callback|3aba13a|运行中|
 |G03|/root/g03_invalidation_submit|da4c9dc|运行中|
 |H03|/root/h03_weather_close|dcc2a08|运行中|
 
@@ -35,8 +35,8 @@
 
 - A22：A21 PNG registry/info完整闭包独立复核，待A21整合；A21已启动。
 - D05：D04验收后恢复a001a70a传输启动→正常完成callback→ring tail/等待者通知小闭包；D04已启动。
-- E03：E02复核后，a00f4740调用者→dst消费/借用寿命小闭包，先按E02实际断边圈定。E02已启动。
-- F05：F04验收后恢复a0081554对象来源→obj+2b8安装→实际callback及loop连接边；F04已启动。
+- E05：E04验收后，app订阅节点/页面正常注销销毁小闭包，先据E04正式建议选一条真实退出边；E04已启动。
+- F06：F05返回后对象callback完整闭包独立复核，待F05整合；F05已启动。
 - G04：G03提交/直接消费完整小闭包独立复核，待G03整合；G03已启动。
 - H04：H03页面context/离页触发完整小闭包独立复核，待H03整合；H03已启动。
 
@@ -48,13 +48,6 @@
 
 
 
-## 当前完整任务书 E03（已启动，基线78b8a5d）
-
-任务ID E03，业务恢复a00f4740调用者→CTK数值dst消费及借用寿命小闭包。分支codex/re-0041-e03；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e03；基线E02整合后最新管理提交。独占reverse/reports/ap01/ctk-view-dataflow-e03-0041-20261023.md及reverse/analysis/ctk-view-dataflow-e03-0041-20261023/。
-
-业务问题：E01字段转换消费者a00f4740由哪个实际caller触发、如何取得端口号和dst、返回0/1怎样门控显示/数据更新、dst何时消费与归还？先读E01/E02及retained-consumer/dossier/incoming refs，只选一条有证据的真实caller和必要注册/清理片段，约5–12函数组成注册或触发→转换→主要dst消费者→释放/复用闭包。a00a389c的callback(userdata,item)已知，但E01明确它与a00f4740的直接关系未证实，不能直接拼成call chain。a00f4740内部转换与五资源生产/释放作为已验收合同针对核，不重复所有cmd50/51/52字节。
-
-完成需准确ABI/端口索引/结构/返回分支/借用与复制/原顺序、伪代码状态与所有权、原指令证据/事实推断未知/来源/实际静态验证。未定位直接或间接caller则给明确引用搜索范围和候选断边，不将单helper认闭包完成。排除全CTK页面/全UI、+34/+38独立读者、全局deinit、异常输入/漏洞/固件执行/外连/历史回放、正式ROM生产模型修改；allocator/已有转换与订阅链保留明确合同。共同规则适用。
 
 ## 当前完整任务书 A21（已启动，基线ab67c6f）
 
@@ -83,13 +76,6 @@ A20对add_flag callee/字段谓词纠正须作为既有合同，不能沿用A19�
 
 A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后限定接受A19，原add_flag状态门说明以A20为准。旧待正式报告仅为历史记录，本状态覆盖。
 
-## 当前完整任务书 F04（已启动，基线48af5ae）
-
-任务ID F04，新agent独立复核F03条件关闭链与真实loop退出断边。分支codex/re-0041-f04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f04；基线含F03最新管理提交。独占reverse/reports/ap01/miio-loop-close-review-f04-0041-20261023.md及reverse/analysis/miio-loop-close-review-f04-0041-20261023/。
-
-问题：F03 type13 close→stop→pending→完成分派摘链→handle+0xc回调是否成立，是否足以连接9428共享timer与data归还，caller栈loop和返回后间接callback边证据范围是否准确？入口F03正式报告/21窗口1428B、F01/F02合同；已知a009fb96/a009fc50/a009fd94/a009c228/a009f524/a0098b4a及a005cc1e→a005cec6、a0081554/a00815f4 obj+0x2b8。具体完整核心以F03表为准，约5–12函数合同。已验收stop/data callback只针对核，关闭dispatcher完整正常type13和链表字段/回调ABI/写宽/顺序需独立原指令核。
-
-逐项接受纠正未核；重点注册节点+0x10与close callback+0xc、到期callback+0x30区别，不自动调用业务data清理，caller loop参数身份/局部栈区和返回后对象参数不能混同。9428实际close登记/walker及obj+0x2b8安装/身份未解须保留精确断边，有界负搜索不得变不存在。必要纠正只独占报告不改F03。完成原字节/厂商编码/间接ABI、伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证及一个后继闭包；不接管obj+2b8恢复或全loop/heap。排除异常提交/漏洞/固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
 
 ## 当前完整任务书 D04（已启动，基线d07ed94）
 
@@ -103,7 +89,7 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 
 最新：G02→da4c9dc、H02→dcc2a08限定验收通过；D03→d07ed94、F03→48af5ae已整合待独立复核。旧动态快照仅记录当时，本表覆盖。
 
-## 预备完整任务书 E04（待E03整合）
+## 当前完整任务书 E04（已启动，基线85c61e2）
 
 任务ID E04，新agent独立复核E03真实CTK callback→栈dst→主消费闭包。分支codex/re-0041-e04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e04；基线含E03最新管理提交。独占reverse/reports/ap01/ctk-view-review-e04-0041-20261023.md及reverse/analysis/ctk-view-review-e04-0041-20261023/。
 
@@ -119,10 +105,12 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 
 完成需原指令调用/间接ABI、head/tail宽度/重读/截断、分段/回绕、计数与状态发布顺序、资源持有、正常返回/清理/唤醒、伪代码布局状态和所有权。硬件最终发出无运行证据，不能由回调命名证明对端交付；无法定位真实安装给候选/精确断边，不连接设备验证。不做异常/超时/长度审计或缺陷。来源只有可核实版本/未修改比对才能排除，厂商适配保持恢复。事实推断未知、实际静态验证及一个后继闭包；禁止固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 F05（待F04整合）
+## 当前完整任务书 F05（已启动，基线3aba13a）
 
 任务ID F05，业务恢复a0081554对象来源→obj+0x2b8安装→实际返回后callback及loop连接。分支codex/re-0041-f05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f05；基线含F04最新管理提交。独占reverse/reports/ap01/miio-exit-callback-f05-0041-20261023.md及reverse/analysis/miio-exit-callback-f05-0041-20261023/。
 
 问题：a005cc1e调用容器a005cec6返回后，将s0-314内容交给a0081554；a00815f4读取obj+2b8间接callback，这个对象/回调由谁安装、参数与资源归还合同是什么、是否实际触及本loop(s0-240)/timer9428或其data？F03/F04明确这只是精确断边，不能预命名walker。沿其对象创建/字段安装→正常消费→回调/释放形成约5–12核心函数，必要短依赖允许，若回调是另一业务且无loop连接，按实际命名并结束在有证据边，不扩大全MiIO或全进程退出。
 
 已验收type13关闭/摘链/callback合同只针对核，避免重复timer扫描；未知间接目标保留候选和有界引用搜索，不凭日志/名字补清理。完成原指令/地址/ABI/写宽/返回覆盖、伪代码结构状态所有权、事实推断未知、来源、实际静态验证和一个后继闭包。普通库认证来源版本才可排除，厂商注册适配继续恢复；排除全loop/heap、漏洞/异常输入、固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
+
+最新：E03 b0c4ea8→85c61e2待E04；F04 1a100d8→3aba13a通过限定复核。D04已报告D03 optional_mark非空分支伪代码需纠正；实际acquire参数a3=0主链未受影响，正式报告待提交，不冒称无纠正接受。

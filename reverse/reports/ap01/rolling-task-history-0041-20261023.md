@@ -627,3 +627,25 @@ G02 a579bc9→da4c9dc限定接受G01；H02 f47434d→dcc2a08限定接受H01，�
 独立原字节、间接/调用ABI、厂商字与宽度/返回覆盖核验，逐项接受/纠正/未核，纠正只独占报告不改H01；交付伪代码/布局/状态/所有权、事实推断未知、来源、实际静态验证和断边。已有图标/通用格式化等保留明确合同，精确来源未认证不得排除。constructor只核该type分支与必要失败清理，不扩全页面/所有天气格式/最终物理显示。ctx最终所有权和离页DELETE触发可留后继，不为关闭断边拼造理想销毁链。禁止固件执行/外连/漏洞/畸形输入/历史回放/ROM生产模型修改；共同规则适用。
 
 最新整合：E02 e9f1fe4→78b8a5d通过限定复核；G01 4a695ed→41046d1、H01 ec61679→c9336de待独立复核。
+
+
+## E03恢复与F04限定复核整合
+
+E03 b0c4ea8→85c61e2待E04独立复核；F04 1a100d8→3aba13a限定接受F03，语义纠正0。管理范围/差异/JSON/链接检查通过，原树干净、提交已整合、分支保留。E04/F05新树新agent补位。
+
+## 当前完整任务书 E03（已启动，基线78b8a5d）
+
+任务ID E03，业务恢复a00f4740调用者→CTK数值dst消费及借用寿命小闭包。分支codex/re-0041-e03；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e03；基线E02整合后最新管理提交。独占reverse/reports/ap01/ctk-view-dataflow-e03-0041-20261023.md及reverse/analysis/ctk-view-dataflow-e03-0041-20261023/。
+
+业务问题：E01字段转换消费者a00f4740由哪个实际caller触发、如何取得端口号和dst、返回0/1怎样门控显示/数据更新、dst何时消费与归还？先读E01/E02及retained-consumer/dossier/incoming refs，只选一条有证据的真实caller和必要注册/清理片段，约5–12函数组成注册或触发→转换→主要dst消费者→释放/复用闭包。a00a389c的callback(userdata,item)已知，但E01明确它与a00f4740的直接关系未证实，不能直接拼成call chain。a00f4740内部转换与五资源生产/释放作为已验收合同针对核，不重复所有cmd50/51/52字节。
+
+完成需准确ABI/端口索引/结构/返回分支/借用与复制/原顺序、伪代码状态与所有权、原指令证据/事实推断未知/来源/实际静态验证。未定位直接或间接caller则给明确引用搜索范围和候选断边，不将单helper认闭包完成。排除全CTK页面/全UI、+34/+38独立读者、全局deinit、异常输入/漏洞/固件执行/外连/历史回放、正式ROM生产模型修改；allocator/已有转换与订阅链保留明确合同。共同规则适用。
+
+
+## 当前完整任务书 F04（已启动，基线48af5ae）
+
+任务ID F04，新agent独立复核F03条件关闭链与真实loop退出断边。分支codex/re-0041-f04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f04；基线含F03最新管理提交。独占reverse/reports/ap01/miio-loop-close-review-f04-0041-20261023.md及reverse/analysis/miio-loop-close-review-f04-0041-20261023/。
+
+问题：F03 type13 close→stop→pending→完成分派摘链→handle+0xc回调是否成立，是否足以连接9428共享timer与data归还，caller栈loop和返回后间接callback边证据范围是否准确？入口F03正式报告/21窗口1428B、F01/F02合同；已知a009fb96/a009fc50/a009fd94/a009c228/a009f524/a0098b4a及a005cc1e→a005cec6、a0081554/a00815f4 obj+0x2b8。具体完整核心以F03表为准，约5–12函数合同。已验收stop/data callback只针对核，关闭dispatcher完整正常type13和链表字段/回调ABI/写宽/顺序需独立原指令核。
+
+逐项接受纠正未核；重点注册节点+0x10与close callback+0xc、到期callback+0x30区别，不自动调用业务data清理，caller loop参数身份/局部栈区和返回后对象参数不能混同。9428实际close登记/walker及obj+0x2b8安装/身份未解须保留精确断边，有界负搜索不得变不存在。必要纠正只独占报告不改F03。完成原字节/厂商编码/间接ABI、伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证及一个后继闭包；不接管obj+2b8恢复或全loop/heap。排除异常提交/漏洞/固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
