@@ -490,5 +490,3 @@ D01 475b43a→919051d；F01 3df638e→4a897ee。管理范围/差异/JSON/链接�
 - 独占报告：reverse/reports/ap01/miio-deferred-lifecycle-f01-0041-20261023.md
 - 独占分析目录：reverse/analysis/miio-deferred-lifecycle-f01-0041-20261023/
 - 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
-
-
