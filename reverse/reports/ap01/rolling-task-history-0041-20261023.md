@@ -986,3 +986,14 @@ e85bf9a→1b0cd8c：channel busy/最后close增量待D10。
 先交简短已有出处→解释行为→证据局限→实际缺口；只补未覆盖/不可信窗口，重读bytes标旧结论复核。报告分继承、复核纠正、真正新增、未闭精确边。无必要增量即报告覆盖，不凑时长/函数。共同规则全部适用，仅静态/独占输出，无SIM/构建/回放/生产ROM配置模型修改，不创建下级agent。必要验证后提交独占路径，报告commit/未知/clean并结束。
 
 F10 6c61383→2052338：限定接受F09，无语义纠正/新增功能，无必要继续扩扫。
+
+
+## 当前完整任务书 A27（已启动，基线f2d4bc9）
+
+独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a27，分支codex/re-0041-a27；基线为本任务书提交，启动时另记SHA。独占reverse/reports/ap01/image-cache-cleanup-a27-0041-20261023.md及reverse/analysis/image-cache-cleanup-a27-0041-20261023/。
+
+A23/A24/A25/A26已恢复session、PNG构造、默认表与raw/Pixel析构，全部直接引用；本轮只补cache release a019d9f6→引用/驱逐决策→实际payload cleanup a008abb0安装目标连接。先查A23留存及字段/回调身份，旧complete/pass3/ZIP按三地址的主窗口有界检索无精确命中，不表示此前未分析。仅追一个已知cache entry正常释放与cleanup触发条件，区分release与真实Pixel/raw free；不扩全cache/heap/PNG或解码资源。若旧留存已足则报告覆盖，不重复导出整函数。
+
+先交简短已有出处→解释行为→证据局限→实际缺口；只补未覆盖/不可信窗口，重读bytes标旧结论复核。报告分继承、复核纠正、真正新增、未闭精确边。无必要增量即报告覆盖，不凑时长/函数。共同规则全部适用，仅静态/独占输出，无SIM/构建/回放/生产ROM配置模型修改，不创建下级agent。必要验证后提交独占路径，报告commit/未知/clean并结束。
+
+A27 aaf8c40→83883eb：cache release/victim到既有cleanup连接增量，待A28。原批次文件名保留，不因跨日重命名。

@@ -18,11 +18,11 @@
 
 ## 实际运行快照
 
-上一批A25/D08/E07/F08/G06/H06均已整合结束。当前A27/E09/D10/G08四项运行；H07/F10已结束，不计运行。空席不用于重复天气或填配额。实际基线逐项记录；主窗口另计，无下级agent。
+上一批A25/D08/E07/F08/G06/H06均已整合结束。当前E09/D10/G08运行，A28准备；H07/F10已结束，不计运行。空席不用于重复天气或填配额。实际基线逐项记录；主窗口另计，无下级agent。
 
 |任务|范围|状态|
 |---|---|---|
-|A27|cache release到payload cleanup的既有断边|运行中：/root/a27_cache_cleanup，基线f2d4bc9|
+|A28|独立复核A27 cache release/victim到cleanup连接|准备|
 |D10|独立复核D09三槽busy及最后close增量|运行中：/root/d10_dma_channel_review，基线a825ac8|
 |E09|a00a1aa8真实正常函数边界与保存槽别名|运行中：/root/e09_ctk_caller_alias，基线3f0a7e0|
 |F10|已限定接受容量helper合同|已整合2052338，无必要重复扩扫|
@@ -58,14 +58,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 
 先按地址/字段/调用者/旧Evidence检索完整阶段与近期留存，给已有出处→解释行为→局限→实际缺口。已有原指令直接引用，仅补边界/ABI不可信窗口，不整函数重导、不重跑全ROM扫描，不复制源ZIP。无必要增量即报已覆盖结束，不凑闭包。报告分继承、复核纠正、真正新增、精确未闭边。完成后必要静态验证、明确独占路径提交、报告commit/未知/clean；共同安全、隔离和不创建下级agent规则适用。
 
-## 当前完整任务书 A27（已启动，基线f2d4bc9）
-
-独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a27，分支codex/re-0041-a27；基线为本任务书提交，启动时另记SHA。独占reverse/reports/ap01/image-cache-cleanup-a27-0041-20261023.md及reverse/analysis/image-cache-cleanup-a27-0041-20261023/。
-
-A23/A24/A25/A26已恢复session、PNG构造、默认表与raw/Pixel析构，全部直接引用；本轮只补cache release a019d9f6→引用/驱逐决策→实际payload cleanup a008abb0安装目标连接。先查A23留存及字段/回调身份，旧complete/pass3/ZIP按三地址的主窗口有界检索无精确命中，不表示此前未分析。仅追一个已知cache entry正常释放与cleanup触发条件，区分release与真实Pixel/raw free；不扩全cache/heap/PNG或解码资源。若旧留存已足则报告覆盖，不重复导出整函数。
-
-先交简短已有出处→解释行为→证据局限→实际缺口；只补未覆盖/不可信窗口，重读bytes标旧结论复核。报告分继承、复核纠正、真正新增、未闭精确边。无必要增量即报告覆盖，不凑时长/函数。共同规则全部适用，仅静态/独占输出，无SIM/构建/回放/生产ROM配置模型修改，不创建下级agent。必要验证后提交独占路径，报告commit/未知/clean并结束。
-
 ## 当前完整任务书 D10（已启动，基线a825ac8）
 
 独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d10，分支codex/re-0041-d10；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/uart-dma-channel-review-d10-0041-20261023.md及reverse/analysis/uart-dma-channel-review-d10-0041-20261023/。
@@ -81,3 +73,11 @@ A23/A24/A25/A26已恢复session、PNG构造、默认表与raw/Pixel析构，全�
 独立复核G07真正新增的state+58/+60对象身份、poll callback adapter→stop→刷新默认display→清pending以及a007ff54 owner计数归还合同。factory-test initializer/notify、C03/C04/C05/C06/F03/F04与G05/G06全部继承，不再恢复安装/通用poll。只核必要ABI/对象别名/宽度/原序，后端ready间接分发及退出后drain时序保留未知，不扩后端/整个libuv。
 
 先给已有→实际复核缺口对照，必要原字节复核不计新增功能；已有合同直接引用，不整函数重复导出。逐项接受/纠正/未核，技术纠正只写独占报告。四分类交付与必要静态验证，无额外增量可短报告结束，不凑时长/函数。共同安全/隔离/独占规则适用，不创建下级agent；完成提交明确文件并报告commit/验证/未知/clean。
+
+## 当前完整任务书 A28（准备，2026-10-24）
+
+独立树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a28；分支codex/re-0041-a28；基线为本任务书提交，启动另记实际SHA。独占reverse/reports/ap01/image-cache-review-a28-0041-20261024.md及reverse/analysis/image-cache-review-a28-0041-20261024/。
+
+独立复核A27新增release引用减一/重读、失效门→cache+18(payload,NULL)→基址free与容量/victim移出→同cleanup连接。A23–A26已恢复cleanup内部和Pixel/raw析构、默认表与PNG session，直接引用不重做；旧SIM/cache配置不能证明ROM实际时序。仅核本轮新增窗口的宽度/对象别名/ABI/厂商lrw/返回和清理原序。完整排序、失效API上层业务调用者、计量单位/heap可保留精确未知，不扩全cache或PNG。
+
+先已有→复核缺口对照，四分类交付、逐项接受纠正未核；原字节复核不计新增功能，不整函数重复导出，不凑时长/函数。技术纠正只独占报告，不改原成果。共同安全/静态/隔离/独占输出规则适用，不创建下级agent，无SIM/构建/回放。必要验证提交明确独占路径，报告commit/验证/未知/clean后结束。
