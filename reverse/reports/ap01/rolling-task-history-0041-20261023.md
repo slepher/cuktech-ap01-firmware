@@ -517,3 +517,27 @@ A19 e601fbd→f40ea13；E01 8e2c319→0ff74d9。独占范围/差异/交付/JSON/
 - 独占报告：reverse/reports/ap01/uiiface-item-ownership-e01-0041-20261023.md
 - 独占分析目录：reverse/analysis/uiiface-item-ownership-e01-0041-20261023/
 - 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
+
+
+## D02/F02限定技术验收与补位
+
+D02 9357e0e→1a80623限定接受D01，无纠正；F02 a2626c8→17a125f限定接受F01，无纠正。管理独占范围/差异/JSON/链接检查通过；未知驱动、cursor、两个厂商算术、loop最终销毁/串行化等继续保留。已确认两旧树干净，分支保留。
+
+## 当前完整任务书 F02（已启动，基线4a897ee）
+
+任务ID F02，独立技术复核F01共享延后设置timer完整小闭包；新agent承担，非原作者。分支codex/re-0041-f02；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f02；基线为启动时含F01的最新管理提交，派发记录补确切commit。独占reverse/reports/ap01/miio-deferred-review-f02-0041-20261023.md和reverse/analysis/miio-deferred-review-f02-0041-20261023/。
+
+问题：F01所述loop/timer初始化→三个已知属性提交→8B请求/data交接→到期stop与callback ABI→业务清理→deinit断边是否由指令成立？入口F01报告及instruction-evidence.json、miio-deferred-settings、weather-scheduling；核心a005a736相关片段/a009d106/a009d146/a009d286/a009d304/a009d8bc/a00a0e78/a00a0bd8/a00a5b90/a01b2b5c前缀，约5–12合同。已验收kind0..6仅针对核接口，不重做通用heap或全MiIO。重点初始化不清data、data与req.kind不同重读、64位参数ABI、callback寄存器/间接重读、free后清data与不同timer对象，两个UNKNOWN厂商算术不得默认为已认证；其未覆盖部分须明确影响边界。不开展异常重复提交实验，不借此修复原程序。
+
+完成逐项接受/纠正/未核，独立核原字节及关键厂商/调用/宽度，必要伪代码布局状态所有权、来源、实际验证与断边；原作者验证不能替代独立复核。准确区分局部片段与全容器、stop与最终close，以及有界负结果。必要纠正写独占报告不改F01原文，不扩loop关闭walker恢复；可将其作为后继。allocator/已验收天气重排与业务kind保留明确合同。排除固件执行、外连、漏洞、历史回放、正式ROM/生产/模型修改；共同规则适用。
+
+
+## 当前完整任务书 D02（已启动，基线919051d）
+
+任务ID D02，新agent独立技术复核D01正常发送完整闭包。分支codex/re-0041-d02；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d02；基线启动时含D01的最新管理提交，派发补确切commit。独占reverse/reports/ap01/uart-send-review-d02-0041-20261023.md及reverse/analysis/uart-send-review-d02-0041-20261023/。
+
+业务问题：D01新增构帧、部分write、操作表ABI和正常完成责任边是否符合指令？核心D01报告10函数身份：a01951e2/a01915bc/a00ee9ce/a01a4ff8/a00ee96c/a0027e94/a0025874、a00a8330正常响应窗口/a00a8582 cmd58与0x24/a0191652。先读最新B21独立验收，槽、提交、解析/缓存等既验收合同针对性核对，不复制全套B21证据。重点新增CRC/转义次序、frame_len/cursor初始化及重读/写宽、精确相等完成门、两层write操作表ABI与对象取得/归还边界，厂商字须原指令核。正常cmd58返回空闲/后继提交/0x24门控仅核串接一致性，不能外推所有命令。
+
+逐项接受/纠正/未核；交付可读伪代码/结构/状态所有权、原字节及地址证据、事实推断未知、来源、实际独立静态验证与断边。保留驱动/冷启动cursor/回调寿命/最终销毁边界，不扩实际驱动恢复、超时、异常输入或长度审计。必要纠正只写独占报告，不改D01/B21原文。复制/比较/已验收CRC/轮询可保留明确合同，来源未知不排除。只静态，不固件执行/外连/漏洞/历史回放，不改ROM生产模型；共同规则适用。
+
+近期恢复整合：D01 475b43a→919051d、F01 3df638e→4a897ee；均待独立技术复核，不能标为验收通过。
