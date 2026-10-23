@@ -133,3 +133,11 @@
 问题：F07源-ROM约11项映射、候选LVGL9.2.1元数据、13源文件与本地v9.2.1.zip成员相等、DELETE enum 0x26对ROM0x29、event list16B对ROM20B/+14状态、bit16/deleted门、layer默认初始化和早期hook布局差异，是否有独立可定位证据、哪些只是候选命名而非ROM认证？候选实际只读根/home/slepher/nuttx-ap01-sim/apps/graphics/lvgl/lvgl；zip精确位置/文件清单以F07正式报告为准，不猜新版本。apps固定commit仅认证父仓，解包LVGL树被Git忽略且无独立.git，不能认证其未改；包成员相等也不等ROM来源。
 
 独立重读指定源/zip并核版本、enum逐项计数/条件编译、struct对RV32及enum packing/配置的影响、关键ROM锚点/已验收合同；重点+2b8候选layer_deinit仅由顺序/邻接/(disp,layer*)ABI支持，安装/运行值仍未知，+2c与候选flush_cb+28的布局差异不得定成已证原名。逐项接受纠正未核，不凭匹配扩大整库排除或把差异自动归因厂商；确证可排除范围若无则明确0。只保存必要差异/映射证据，不重复整源码、哈希清单/旧全指令证据，不扩版本搜寻/+2b8扫描。伪代码/映射为分析表达非原源码；交付来源可信度分层、实际独立只读验证、剩余认证缺口和一个后继闭包。必要纠正仅独占报告不改F07。WSL仅已授权本地文件只读，可必要require_escalated读权限，不启动SIM/构建/网络、不改候选树/ACL；禁止固件执行/漏洞/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 A25（待A24纠正报告整合后立即启动）
+
+任务ID A25，业务恢复像素raw handler与独立data对齐回调的真实安装→raw申请/包装→析构归还闭包。分支codex/re-0041-a25；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a25；基线含A24最新管理提交。独占reverse/reports/ap01/pixel-memory-contract-a25-0041-20261023.md及reverse/analysis/pixel-memory-contract-a25-0041-20261023/。
+
+问题：62fc9674 handler表+0 raw申请、+4 raw归还由谁安装，a0081d90对象data对齐实际来自独立全局62fc964c，正常图像/PNG像素对象怎样调用这些回调、持有raw/data并在a0081f26归还？先读A23/A24，A24原LW算式及两槽区别为既有合同，不能沿用A23错归handler+8。围绕一个真实正常pixel对象的handler设置/默认配置→raw申请/对齐→对象发布→raw析构组成约5–12核心及必要短依赖；准确安装函数/callback身份目前未知，须从实际槽写入/初始化和被调用者定位，不凭函数名补。
+
+包含default/可选handler及空槽原分支、raw指针与aligned data区别、参数/返回/宽度/偏移/重读、包装对象和raw双层归还顺序；已验收session open/close/cache转持有只针对核，不恢复全cache/完整PNG解压/通用heap。若静态配置没有非NULL安装证据，给实际初值/写者候选/精确断边，不能把候选allocator身份当运行绑定。必要只读来源比较可复用已有本地LVGL候选，但来源版本/未改范围未认证不排除。交付原字节/厂商编码/间接ABI、可读伪代码结构状态所有权、事实推断未知、来源、实际静态验证及一个后继闭包。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
