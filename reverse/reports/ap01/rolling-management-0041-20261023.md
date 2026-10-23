@@ -22,11 +22,11 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A51|/root/e17_uv_time_review（派发中）|本次启动提交|drop/drop_all局部来源认证|
-|A49|/root/g16_fb_file_review（运行）|df35f44|独立复核A47分类1→a0107d8e→mode1 W→既有O复制；a01b2e3a实参callback(D,H)、条件缓存归还和O前三word清零，不能直接命名fclose|
+|A51|/root/e17_uv_time_review（运行）|1edfc57|drop/drop_all局部来源认证|
+|E19|/root/g16_fb_file_review（派发中）|本次启动提交|独立复核E18实际固定分母商合同|
 |D21|/root/h16_clock_source_review（运行）|24c7b3d|背光动画具体属性/selector及局部来源认证|
-|A50|/root/a46_cache_drop（派发中）|本次启动提交|真实reader消费端a008b888局部合同|
-|G17|/root/a47_reader_mode（运行）|df35f44|只认证G13/G15/G16具体fb open/close/poll/notify与本地NuttX12.10候选对应关系|
+|A50|/root/a46_cache_drop（运行）|1edfc57|真实reader消费端a008b888局部合同|
+|G17→H18|/root/a47_reader_mode（交付完成，等待H17提交后立即补位）|df35f44|G17已整合，H18任务书已备|
 |H17|/root/d19_backlight_animation（运行）|df35f44|只补H15/H16读者62fc6c64的真实writer/正常计数更新连接|
 
 ## 派发规则（本次用户调整优先）
@@ -57,15 +57,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 ## 后继队列规则
 
 后继以文件内仍标“预备完整任务书”的章节为准；移入当前任务书或历史后即不再计排队。不得从旧静态ID列表重复派发。
-
-
-## 当前完整任务书 A49（2026-10-24立即补位）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a49；分支codex/re-0041-a49；启动基线为本任务书最新整合提交。独占reverse/reports/ap01/photo-reader-mode-review-a49-0041-20261024.md及reverse/analysis/photo-reader-mode-review-a49-0041-20261024/。
-
-独立复核A47分类1→a0107d8e→mode1 W→既有O复制；a01b2e3a实参callback(D,H)、条件缓存归还和O前三word清零，不能直接命名fclose。继承A37/A39/A41/A42 mode0；具体D/open/close与默认五照片实际mode1仍未知。新功能0。
-
-先读REA skill C:/Users/cogic/.agents/skills/reverse-engineer-anything/SKILL.md及本文共同规则/复用规则。先检索优先complete、最终验收及近期对应报告/独立复核，按地址字段交叉检索；表列已有出处→行为→局限→实际缺口。报告四分：继承、本轮复核纠正、真正新增、精确未闭；旧字节复核不算新增功能。只必要稀疏窗口/ABI，不全导出/复制/机械记账。独占输出、独占worktree，不改共享文档/主树/生产ROM配置模型，不创建下级agent；其他agent同时工作勿撤销。静态安全边界全适用。必要验证、精确路径提交、报告commit/clean/未知；接近提交先给后继建议。
 
 
 ## 当前完整任务书 G17（2026-10-24立即补位）
@@ -118,7 +109,7 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
 
 
-## 预备完整任务书 E19（有前置，未启动）
+## 当前完整任务书 E19（E18已整合，立即接替）
 
 独占reverse/reports/ap01/uv-time-division-review-e19-0041-20261024.md及reverse/analysis/uv-time-division-review-e19-0041-20261024/。
 
