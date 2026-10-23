@@ -1,6 +1,6 @@
 # 0041 六路滚动管理（2026-10-23恢复）
 
-用户最新授权恢复持续六路推进，取代历史收尾暂停与三路上限。原管理交接已归档至 rolling-task-history-0041-20261023.md。主窗口只管理，不作函数逆向或技术语义判断。环境共7席，主窗口1席，研究/复核6席。前批六项均已整合；六个后继立即补位，真实状态见运行快照。
+用户最新指令（2026-10-24）：快速结束当前任务。停止派发与六席补位，已有成果保留；只整合现有提交并收尾未完成任务，不声称整个ROM恢复完成。历史六路要求由本次收尾指令取代。
 
 ## 共同规则
 
@@ -18,16 +18,16 @@
 
 ## 实际运行快照
 
-以下六项真实运行，已结束任务即时补位，主窗口另计；不创建下级agent。
+用户已要求快速结束：停止补位。全部研究/复核席位已停止；无继续运行或待自动派发任务。
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|T02|/root/e17_uv_time_review（运行）|75f977a|独立核T01复用接入/运行时限定|
-|B23|/root/g16_fb_file_review（运行）|14e7291|独立核B22 cmd51真正新增分类合同|
-|B24|/root/h16_clock_source_review（派发中）|本次启动提交|同item+18生产者旧记录局部检索/必要接入|
-|K01|/root/a46_cache_drop（运行）|bd7b344|a00a4cac正常UI动作入口至同组件callee接入|
-|L01|/root/a47_reader_mode（运行）|75f977a|设置UI两caller到a00ab478的必要接入合同|
-|J04|/root/d19_backlight_animation（运行）|09e11d0|工厂正常UI/资源生命周期旧证据复用与真实种子|
+|T02|已停止；独立复核完成|52ccc51|接受T01限定复用接入，新增0|
+|B23|已停止；独立复核完成|0d98345|接受B22限定分类合同，新增0|
+|B24|已停止；线索未复核|0f9957e|cmd56候选写入线索保留，不认证生产者|
+|K01|已停止；部分/待复核|934c176|最小报告与入口锚点保留，未完成边明确|
+|L01|已中断；草稿未验证|e792632|仅保存脚本草稿及状态，未运行/未验收|
+|J04|已停止；纯盘点已整合|2237f36|唯一UI动作种子已交K01；定位支持完成|
 
 ## 派发规则（本次用户调整优先）
 
@@ -64,55 +64,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode0合同，只独立复核，新增0；D20继承settings-round2b清理接线与D19，只独立复核，新增0。E18只补实际固定分母除法返回合同，不重做时间上层；G17只补NuttX fb候选来源认证，不用LVGL认证替代；H17只找计数writer正常连接，不重搜offset未知。六个agent已由实时状态确认全部running；管理窗口另计。
 
 
-## 当前完整任务书 B23（前置已整合，立即接替）
-
-独占reverse/reports/ap01/cmd51-device-type-review-b23-0041-20261024.md及reverse/analysis/cmd51-device-type-review-b23-0041-20261024/。
-
-待B22整合后，新独立agent只核cmd51写item+0e前本轮实际新增分类条件/输入记录宽度/厂商字/new_type接入。E01/E02既有五指针生命周期/类型变化与fallback继承，不能算新发现或整dispatcher验收；不扩cmd52/帧/OTA/异常输入/driver。若B22为已覆盖结论则只核证据范围，新功能0。
-
-仅准备不计运行，派发前整合前置并核重叠。最新管理HEAD独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告；不改共享/主树/生产ROM配置模型，不创建下级agent，其他agent同时工作勿撤销；精确独占提交commit/验证/未知/clean，接近提交提前报种子。
-
-
-## 当前完整任务书 J04（2026-10-24立即接替）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-j04；分支codex/re-0041-j04；基线本次启动提交。独占reverse/reports/ap01/factory-reuse-gap-j04-0041-20261024.md及reverse/analysis/factory-reuse-gap-j04-0041-20261024/。
-
-仅既有证据检索，不新增ROM字节/反编译。先reference-map/application最终SIM范围与factory-test、factory-active B16/B17、buzzer两轮、settings/system complete、近期对应专项/复核，按地址/字段/callback/state核工厂正常UI/入口/资源生命周期已覆盖范围。B16外部active reader有界未知与搜索边界直接继承，不重复全ROM字段扫；factory-test启动门、GPIO三轮保持、fd取得等已有合同不得新发现。只表列旧出处→行为→局限→真实精确缺口，有真实extent/caller/对象种子才给少量后继；无种子不派stop/close/根析构/全driver扫描，不将物理极性/设备效果视为静态已恢复。不执行工厂命令/设备，不扩安全/缺陷/异常或重建整分类资源表；主窗口决定后继，不自行接题，新功能0。
-
-REA skill、本文共同/复用/静态安全规则全适用；独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。先已有→行为→局限→精确缺口，四分报告，只必要稀疏证据；已覆盖直接收缩，无可靠种子不扩扫。必要JSON/链接/差异检查、精确独占提交commit/验证/未知/clean，接近提交提前报重叠/种子。
-
-
-## 当前完整任务书 T02（T01已整合，立即接替）
-
-独占reverse/reports/ap01/timer-repeat-release-review-t02-0041-20261024.md及reverse/analysis/timer-repeat-release-review-t02-0041-20261024/。
-
-待T01整合后，新独立agent只核其实际正常repeat_count0 callback后scheduler/auto-delete/归还接入或有界无种子结论。G05/G06已核a008ae58合同与I01/I02 callback直接引用，不重导旧函数或全timer/IRQ扫描，不用候选当ROM；userdata和timer分开。只核实际新增，不递归扩库，新功能0。
-
-仅准备不计运行，派发前整合前置核重叠，最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则全适用，已有→实际缺口与四分报告、最小稀疏验证，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，独占提交commit/验证/未知/clean，接近提交先报后继种子。
-
-
-## 当前完整任务书 L01（2026-10-24，立即接替）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-l01；分支codex/re-0041-l01；基线本次启动提交。独占reverse/reports/ap01/settings-mode-entry-l01-0041-20261024.md及reverse/analysis/settings-mode-entry-l01-0041-20261024/。
-
-J03复用盘点给旧真实call种子：settings-round2b records[10] a00feac8(a0从s4+1 LBU)/a00feade(a0=3)→a00ab478，旧extent48B ev_5334e642…；不能仅按报告无标题认缺失。先查system/guide complete父级cached settings、page-logic/较晚round3/pass3/近期settings/saver/mode专报告及ZIP必要成员，按callee/字段/state交叉核是否早已解释。
-
-只核这两正常UI调用进入同48B helper的参数宽度/返回消费、所写字段或下层服务接入；不能先将其命名持久保存或推全设置行为。旧设置状态、重绘、D19/D22背光动画、I01/I05配置和J03盘点均继承，不接管其主题。主体已覆盖则直接引用结束，只补实际不可信/缺接入窗口，不重导完整设置大函数/分类表/源码/全资源；不扩NVS/驱动/网络/异常/安全/全GUI。
-
-REA skill与本文共同/复用/静态安全规则适用，先已有→行为→局限→精确缺口和四分报告；独占树/输出，不改共享/主树/生产ROM配置模型，不创建下级agent，其他agent同时工作勿撤销。必要静态验证、精确路径提交commit/验证/未知/clean，接近提交先报重叠与真实种子。
-
-
-## 当前完整任务书 K01（2026-10-24，立即接替）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-k01；分支codex/re-0041-k01；基线本次启动提交。独占reverse/reports/ap01/window-slider-entry-k01-0041-20261024.md及reverse/analysis/window-slider-entry-k01-0041-20261024/。
-
-J04旧元数据种子：whole-ROM round1 a00a4cac..4d71/198B，direct calls a00a4116/a00a491c/a00a4aa0，三份callee dossier caller交叉一致，source-xrefs给factory_ui/lv_window_slider.c。J04已按callee核guide/page-logic/H07/screen-host，日常主界面是a00b2ff4/a00b3106等不同组件；multi-screen-app-host-0041.md第79行已有两家族区别。仍须先按地址/callback/字段/旧basename核完整留存/较晚报告，不能因无报告标题说首次发现。
-
-只补此正常UI动作入口实际参数/索引条件/状态转换与三个既有callee接入，必要依赖有证才局核。不能先把其动作叫创建/切换/删除或FactoryTestMode UI，更不能关联GPIO stop/close/根析构。先引用组件旧合同，不扩全slider/GUI/所有页面/驱动；若已有主体覆盖直接收缩，只补具体不可信窗口/ABI。新功能恢复按实际解释范围计，不把旧extent/原字存在当新增发现。
-
-REA skill及本文共同/复用/静态安全规则全适用；先已有→行为→局限→精确缺口，四分报告，必要稀疏窗口而非重复整函数/资源/源码/机械账。独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。精确路径提交commit/验证/未知/clean，接近提交先报重叠与真实种子。
-
-
 ## 预备完整任务书 L02（有前置，未启动）
 
 独占reverse/reports/ap01/settings-mode-entry-review-l02-0041-20261024.md及reverse/analysis/settings-mode-entry-review-l02-0041-20261024/。
@@ -122,15 +73,6 @@ REA skill及本文共同/复用/静态安全规则全适用；先已有→行为
 最新管理HEAD新建独占树re0041-l02，分支codex/re-0041-l02，根同K01。REA skill及本文共同/复用/静态安全规则全适用；先已有→行为→局限→精确缺口，四分报告，必要稀疏窗口而非重复整函数/资源/源码/机械账。独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。精确路径提交commit/验证/未知/clean，接近提交先报重叠与真实种子。
 
 
-## 当前完整任务书 B24（B22旧读者合同已整合，立即接替）
-
-独占reverse/reports/ap01/cmd51-item-field-producer-b24-0041-20261024.md及reverse/analysis/cmd51-item-field-producer-b24-0041-20261024/。
-
-B22/B23分类读取同item+18 U16的生产者/单位仍未核。仅在已留存a00a8582/既有cmd50/51/52及E01/E02对象身份范围中检索同一item的真实写入种子（可含覆盖halfword的word写，须核对象别名/顺序），先核旧complete/较晚原字段合同，不能仅按+18字面匹配。可靠oldseed存在才补正常写入参数/位宽/写条件→分类读者必要接入；没有非零writer种子则明确只知零初始化等旧合同，不能把memset算新恢复。不全ROM字段扫、不重导dispatcher/五指针生命周期/分类资源目录，不与B23只读分类复核争scope，不扩异常/帧长度/OTA/driver。
-
-最新管理HEAD新建独占树re0041-b24，分支codex/re-0041-b24，根同K01。REA skill及本文共同/复用/静态安全规则全适用；先已有→行为→局限→精确缺口，四分报告，必要稀疏窗口而非重复整函数/资源/源码/机械账。独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。精确路径提交commit/验证/未知/clean，接近提交先报重叠与真实种子。
-
-
 ## 预备完整任务书 K02（有前置，未启动）
 
 独占reverse/reports/ap01/window-slider-entry-review-k02-0041-20261024.md及reverse/analysis/window-slider-entry-review-k02-0041-20261024/。
@@ -138,3 +80,13 @@ B22/B23分类读取同item+18 U16的生产者/单位仍未核。仅在已留存a
 待K01整合后，新独立agent只核其实际新增UI动作入口/实参/索引门与组件身份，不把factory_ui目录等同GPIO FactoryTestMode关系；已有callee合同直接继承，不扩根析构/全GUI，新功能0。
 
 最新管理HEAD新建独占树re0041-k02，分支codex/re-0041-k02，根同K01。REA skill及本文共同/复用/静态安全规则全适用；先已有→行为→局限→精确缺口，四分报告，必要稀疏窗口而非重复整函数/资源/源码/机械账。独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。精确路径提交commit/验证/未知/clean，接近提交先报重叠与真实种子。
+
+
+## 用户要求快速收尾（2026-10-24）
+
+不再创建新worktree、不再补位、不再开取证窗口。B23/J04/T02已整合；K01/L01/B24已保存已有证据、草稿与明确断边，均未独立验收。已备未派任务全部冻结，不视为待自动启动。最终验收只报告实际完成与待复核，不把部分报告算闭包。
+
+
+## 最终收尾状态（2026-10-24）
+
+运行研究席位0；停止派发与自动补位。B23/J04/T02已整合，K01为部分待复核，B24只保留未复核生产者线索，L01由管理窗口中断并保存未验证草稿。未派任务书冻结；需用户明确恢复才重新评估范围。未重置任何旧进度，未声称原ROM完整恢复。没有生产/ROM/配置/模型变更，没有SIM、构建、历史回放、设备或外部服务执行。
