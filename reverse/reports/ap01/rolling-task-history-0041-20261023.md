@@ -325,3 +325,11 @@ bd7747d→319dbdf；范围/差异通过，原编码/引用边界限定验收。�
 ## A16整合记录
 
 b8614d5→ae3956f；8窗口420B/140指令/40编码提取核验通过。限定接受A15三核心合同，精确纠正图标边界首参为load32(context+0x20)，不扩图标内部。生命周期、插槽实际成功、源码版本仍未知。
+
+## 预备任务 B18：正常接收阶段与转义标志
+
+分支 codex/re-0041-b18；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b18。须B17验收完成整合后，从最新管理提交启动。转正常EsUnitProtocol私有协议：只恢复a00a8330内接收stage取值和escape标志的生产/消费及正常字节流阶段转换，最多该函数与两个直接依赖（可含a00ee934）。入口usb-interface-ota报告已有逐字节/CRC简述、保留dossier和whole-rom source_paths的EsUnitProtocol.c引用；先核后续报告是否已给完整状态表避免重复。已解CRC算法/分派ABI不重做，只引用合同；不扩完整OTA/队列、不做长度审计/漏洞研究/畸形输入或任何回放，不运行历史UART脚本。独占 reverse/reports/ap01/uart-normal-parser-b18-0041-20261023.md、reverse/analysis/uart-normal-parser-b18-0041-20261023/。交付正常状态转换表/可读伪代码、准确读写地址、事实推断未知、来源/原指令/实际静态验证，保留原返回/清理行为不擅自修复；差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## B18整合记录
+
+fff077c→fad8df6；范围/差异通过，正常接收stage/escape与原清理行为交付，技术待B19。未执行固件/回放/外连，不开展缺陷调查。

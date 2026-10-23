@@ -19,20 +19,16 @@
 | 任务 | agent | 固定基线 | 当前职责 | 下一项 |
 | --- | --- | --- | --- | --- |
 | A17 | /root/a17_current_consumer | ae3956f | 当前天气值首消费helper | A18独立复核 |
-| B18 | /root/b18_normal_parser | 319dbdf | 正常接收阶段/转义标志 | B19独立复核 |
+| B19 | /root/b19_parser_review | fad8df6 | 正常stage/escape独立复核 | B20排队命令消费 |
 | C19 | /root/c19_third_gate | dde1cfd | 第三门参数/返回及直接消费 | C20独立复核 |
 
-最新已整合：A16 b8614d5→ae3956f（限定接受A15，纠正一处加载指针实参记法）；B17 bd7747d→319dbdf（限定接受B16并精确纠正检索描述，外部读者仍未知）；C18 41ab2b2→dde1cfd（限定接受C17，第三门/最终提交仍未知）。旧工作树仅在确认干净并整合后回收，任务分支保留。
+最新已整合：A16 b8614d5→ae3956f（限定接受A15，纠正一处加载指针实参记法）；B18 fff077c→fad8df6（正常stage/escape研究，技术待B19）；C18 41ab2b2→dde1cfd（限定接受C17，第三门/最终提交仍未知）。旧工作树仅在确认干净并整合后回收，任务分支保留。
 
 ## 已整合概况与开放缺口
 
 共同研究基线7c17501，后续均通过明确本地Git提交管理，不另建哈希/复制清单。限定验收与报告链接见[覆盖记录](private-coverage-0041.md)。蜂鸣正常停机/确认消费者、timer最终停止删除、完整UI/订阅销毁、MCU内部程序及准确来源版本等仍开放；不得将局部验收变为模块/全ROM完成。没有新增已认证开源排除，不计算全ROM百分比。
 
 此前任务书与提交映射已迁移到[历史任务交接](rolling-task-history-0041-20261023.md)，保留原文；历史状态只代表当时，当前以上表为准。以下任务书保留原启动门槛，实际运行/待启动以上表为准。
-
-## 预备任务 B18：正常接收阶段与转义标志
-
-分支 codex/re-0041-b18；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b18。须B17验收完成整合后，从最新管理提交启动。转正常EsUnitProtocol私有协议：只恢复a00a8330内接收stage取值和escape标志的生产/消费及正常字节流阶段转换，最多该函数与两个直接依赖（可含a00ee934）。入口usb-interface-ota报告已有逐字节/CRC简述、保留dossier和whole-rom source_paths的EsUnitProtocol.c引用；先核后续报告是否已给完整状态表避免重复。已解CRC算法/分派ABI不重做，只引用合同；不扩完整OTA/队列、不做长度审计/漏洞研究/畸形输入或任何回放，不运行历史UART脚本。独占 reverse/reports/ap01/uart-normal-parser-b18-0041-20261023.md、reverse/analysis/uart-normal-parser-b18-0041-20261023/。交付正常状态转换表/可读伪代码、准确读写地址、事实推断未知、来源/原指令/实际静态验证，保留原返回/清理行为不擅自修复；差异检查后提交结束。共同约束适用。仅预备，未启动。
 
 ## 预备任务 C19：第三门局部合同
 
@@ -53,3 +49,7 @@
 ## 预备任务 A18：当前值消费独立复核
 
 分支 codex/re-0041-a18；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a18。须A17提交整合后，从最新管理提交启动。只复核A17正常参数/字段/返回合同及最多一个直接依赖，不扩天气UI/图标/生命周期。独占 reverse/reports/ap01/weather-current-review-a18-0041-20261023.md、reverse/analysis/weather-current-review-a18-0041-20261023/；必要精确纠正A17。逐项接受/纠正/未核、来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
+
+## 预备任务 B20：正常排队命令消费
+
+分支 codex/re-0041-b20；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b20。须B19验收完成整合后，从最新管理提交启动。只恢复a01915bc尝试消费排队命令的正常字段/选择顺序/调用返回合同及最多两个直接依赖；入口usb-interface-ota报告0x24事件简述、dock报告四待发槽与保留dossier。先核后续报告避免重复。只解释一次取队列动作与槽所有权，不扩完整OTA/超时失败/漏洞调查/长度审计，不运行历史回放。独占 reverse/reports/ap01/queued-command-consume-b20-0041-20261023.md、reverse/analysis/queued-command-consume-b20-0041-20261023/。核原指令/ABI/原有清理与返回，事实推断未知/来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
