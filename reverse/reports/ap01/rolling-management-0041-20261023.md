@@ -117,3 +117,19 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 独立原指令/厂商字/事件ABI/宽度/调用重读/失败分支，逐项接受纠正未核；必要纠正仅独占报告不改H03。不要把构造直接引用搜索变穷尽别名、不要把对象free拼成ctx free、不引入缺陷判断。交付伪代码布局状态生命周期、事实推断未知、来源、实际独立静态验证和断边；标准库仅来源认证可排除，私有胶合保留恢复。排除全导航/其他窗口类型、固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
 
 最新整合：E04→f31a27a范围措辞纠正后限定接受E03；A21→875f762、G03→f82380b为待独立复核恢复，A22/G04运行中。
+
+## 预备完整任务书 A23（待A22整合）
+
+任务ID A23，业务恢复PNG class0 open→decoder-session资源→已注册close归还闭包。分支codex/re-0041-a23；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a23；基线含A22最新管理提交。独占reverse/reports/ap01/png-session-lifecycle-a23-0041-20261023.md及reverse/analysis/png-session-lifecycle-a23-0041-20261023/。
+
+业务问题：A21/A22已确认open a00eb7b6、close a00eab9a真实注册；正常class0 ROM源怎样进入open、分配/保存像素或user_data、由谁持有decoder-session、close如何归还，成功与失败清理分支怎样保持原行为？从真实open调用/注册ABI和该class0分支出发，只展开session创建/像素对象持有/转换或包装/close及必要直接依赖，约5–12核心；底层通用解压/PNG算法可先作为明确调用合同，但来源未认证仍保留未恢复/未认证记录，不能静默排除。
+
+既验收registry/info/header和A20状态门只针对核，不重复整个image setter、其他image class或完整压缩算法。对象/内存分配/所有权、decoded指针与src借用、返回值和清理顺序、间接open/close ABI必须原字节核，失败分支不能擅自修正，不做错误输入测试。若session owner或最终close调用者未连上，列实际字段/调用入口与精确断边，不以注册存在推成功执行。交付伪代码结构状态生命周期、原指令证据/厂商字/宽度、事实推断未知、来源、实际静态验证和一个后继闭包。排除像素执行/渲染观察、固件执行/外连/漏洞/历史回放、ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 G05（待G04整合）
+
+任务ID G05，业务恢复display事件35/38 descriptor注册→callback/param消费→刷新调度通知闭包。分支codex/re-0041-g05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g05；基线含G04最新管理提交。独占reverse/reports/ap01/display-event-flow-g05-0041-20261023.md及reverse/analysis/display-event-flow-g05-0041-20261023/。
+
+业务问题：G03提交过程借用clipped栈矩形发0x35，新增记录后发0x38 param0，display+2e8的事件descriptor由谁安装、真实callback怎样读/改/保存param及0x38如何触发a00e0ac8消费者？入口G03/G04合同、a00814f4、a008ad80..ad98过滤/userdata/callback(event*)、提交a00ddd90/ddd76和event timer消费者a00e0ac8。安装callback身份/调度连接当前未知，须先定位真实descriptor写入及参数，不猜timer回调，不把event38默认当唤醒。
+
+范围约5–12核心及必要短依赖，选择同一display正常注册/回调/直接调度消费小闭包，明确callback同步返回/bit0/bit1归一门、param持有/复制、生命周期与注销；已验收区域记录合并/复位只针对核，不重做全部数学。若多个独立callback并存，选实际必要目标，其他列候选/断边，不接管整个GUI事件系统或最终绘制。完成原字节/间接ABI/厂商字/宽度返回/顺序、伪代码结构状态与所有权、事实推断未知、来源、实际静态验证和一个后继闭包。来源未认证不排除，标准list/timer合同可保留并说明认证缺口。排除物理刷新/DMA/LCD、异常param/漏洞、固件执行/外连/历史回放、ROM生产模型修改；共同规则适用。
