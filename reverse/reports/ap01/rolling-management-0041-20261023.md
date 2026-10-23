@@ -25,7 +25,7 @@
 |C25|/root/e17_uv_time_review（运行）|29002d0|既有区域变换的局部候选来源认证|
 |D22|/root/g16_fb_file_review（运行）|9f76584|独立核D21属性映射与四项来源差异|
 |C23|/root/h16_clock_source_review（运行）|0a1cf0a|C13/C14正常格式化入口局部候选认证|
-|I01|/root/a46_cache_drop（派发中）|本次启动提交|启动就绪分支旧成果→实际缺口与必要接入核实|
+|I01|/root/a46_cache_drop（运行）|92e733a|启动就绪分支旧成果→实际缺口与必要接入核实|
 |A53|/root/a47_reader_mode（运行）|85cf93c|独立复核A51 drop/drop_all局部候选映射|
 |A54|/root/d19_backlight_animation（运行）|aabdfcd|reader前缀及open/close局部候选认证，不接A50内部消费|
 
@@ -127,3 +127,39 @@ A47/A49已恢复reader前缀构造/归还，A50/A52若尚运行则其内部消�
 任务先给已有出处→行为→局限→精确缺口对照；只针对该正常callback的device-ready条件、实际callee/返回、挂接参数与完成次序检查旧证据是否已闭合。已有完整行为直接引用；只补不可信指令/必要接入ABI/字段/正常分支。若已无必要增量报已覆盖，不扩boot/硬件初始化/全驱动/所有页面；真实物理ready效果不能静态代替。不重新导整callback/全资源/分类表/源码，不运行SIM/构建/回放/ROM/设备/外网。
 
 REA skill及本文共同/复用规则全适用，四分报告；旧字节重核标复核不计新增。独占worktree与输出、不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。必要静态验证、精确路径提交、回报commit/验证/未知/clean；接近提交提前给范围重叠与后继种子，无种子不扩扫。
+
+
+## 预备完整任务书 C24（有前置，未启动）
+
+独占reverse/reports/ap01/text-entry-source-review-c24-0041-20261024.md及reverse/analysis/text-entry-source-review-c24-0041-20261024/。
+
+待C23整合后，新独立agent只核正常格式化入口/两遍格式化/len+1申请/label持有/static标记与本地LVGL候选映射；核va_copy及配置/布局解释强度，尤其ROM+5c mask10与候选bitfield差异不能覆盖。不重做C13/C14字节/完整printf或GUI，新功能0。
+
+仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
+
+
+## 预备完整任务书 C26（有前置，未启动）
+
+独占reverse/reports/ap01/region-transform-source-review-c26-0041-20261024.md及reverse/analysis/region-transform-source-review-c26-0041-20261024/。
+
+待C25整合后，新独立agent只核G01/G02可靠行为到本地候选必要行/属性/flags/坐标与宽度映射及差异强度，不重复11函数与厂商字恢复，不认证精确版本或整库排除，新功能0。
+
+仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
+
+
+## 预备完整任务书 A55（有前置，未启动）
+
+独占reverse/reports/ap01/photo-reader-source-review-a55-0041-20261024.md及reverse/analysis/photo-reader-source-review-a55-0041-20261024/。
+
+待A54整合后，新独立agent只核reader前缀/open/close/注册槽/缓存布局候选映射与配置条件，callback(D,H)以A47/A49 ROM为据；A50内部read消费/A52复核直接继承，不扩全部文件系统/具体D实例，无精确版本/整库排除，新功能0。
+
+仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
+
+
+## 预备完整任务书 I02（有前置，未启动）
+
+独占reverse/reports/ap01/boot-ready-review-i02-0041-20261024.md及reverse/analysis/boot-ready-review-i02-0041-20261024/。
+
+待I01整合后，新独立agent只核其实际补充或覆盖结论：旧guide/system已有启动timer/计数/结束/configured/index8直接引用，SIM固定2s不等于原ROM条件；只核实际新增接入ABI/条件/原字/次序或旧证据范围，不扩驱动/设备初始化，不把没执行等于未分析，新功能0。
+
+仅准备不计运行。实际派发前整合前置并再核重叠，最新管理HEAD创建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告及同名analysis。REA skill、共同/复用/安全规则全适用；已有→实际缺口与四分报告、只必要稀疏证据，不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean，接近提交提前建议。
