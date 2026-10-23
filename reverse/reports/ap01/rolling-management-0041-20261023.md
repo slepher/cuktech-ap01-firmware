@@ -20,19 +20,15 @@
 | --- | --- | --- | --- | --- |
 | A17 | /root/a17_current_consumer | ae3956f | 当前天气值首消费helper | A18独立复核 |
 | B19 | /root/b19_parser_review | fad8df6 | 正常stage/escape独立复核 | B20排队命令消费 |
-| C19 | /root/c19_third_gate | dde1cfd | 第三门参数/返回及直接消费 | C20独立复核 |
+| C20 | /root/c20_third_gate_review | 9270abb | 第三门正常合同独立复核 | 选一个变换callee |
 
-最新已整合：A16 b8614d5→ae3956f（限定接受A15，纠正一处加载指针实参记法）；B18 fff077c→fad8df6（正常stage/escape研究，技术待B19）；C18 41ab2b2→dde1cfd（限定接受C17，第三门/最终提交仍未知）。旧工作树仅在确认干净并整合后回收，任务分支保留。
+最新已整合：A16 b8614d5→ae3956f（限定接受A15，纠正一处加载指针实参记法）；B18 fff077c→fad8df6（正常stage/escape研究，技术待B19）；C19 ee172d4→9270abb（第三门局部成果，技术待C20）。旧工作树仅在确认干净并整合后回收，任务分支保留。
 
 ## 已整合概况与开放缺口
 
 共同研究基线7c17501，后续均通过明确本地Git提交管理，不另建哈希/复制清单。限定验收与报告链接见[覆盖记录](private-coverage-0041.md)。蜂鸣正常停机/确认消费者、timer最终停止删除、完整UI/订阅销毁、MCU内部程序及准确来源版本等仍开放；不得将局部验收变为模块/全ROM完成。没有新增已认证开源排除，不计算全ROM百分比。
 
 此前任务书与提交映射已迁移到[历史任务交接](rolling-task-history-0041-20261023.md)，保留原文；历史状态只代表当时，当前以上表为准。以下任务书保留原启动门槛，实际运行/待启动以上表为准。
-
-## 预备任务 C19：第三门局部合同
-
-分支 codex/re-0041-c19；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c19。须C18验收允许后，从最新管理提交启动。只恢复a00ddab4(obj,&local)作为a00ddbf6第三门的参数/局部读写/返回及其直接消费条件，最多3核心函数；入口C17/C18及保留inventory。不要因前门已解扩成完整失效队列/全GUI，不推定最终显示刷新；先核是否已有报告解决。独占 reverse/reports/ap01/invalidation-third-gate-c19-0041-20261023.md、reverse/analysis/invalidation-third-gate-c19-0041-20261023/。核原指令/事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
 
 ## 预备任务 B19：正常接收状态独立复核
 
