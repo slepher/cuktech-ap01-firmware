@@ -1631,3 +1631,25 @@ A41/A42留下非零O+10 mode分支callee a01b2e3a内部未核，memory mode0已�
 
 
 D20 9cea052 已整合；D21立即接替。
+
+
+## 当前完整任务书 E18（2026-10-24立即补位）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e18；分支codex/re-0041-e18；启动基线为本任务书最新整合提交。独占reverse/reports/ap01/uv-time-division-e18-0041-20261024.md及reverse/analysis/uv-time-division-e18-0041-20261024/。
+
+只补E16/E17调用a001b302的正常unsigned64除法合同：实际分母0:0xf4240、分子构造、返回pair及必要carry/归一化路径。继承H15/H16单U32 t分拆、E14/E15 deadline和E16/E17接线，不重做clock/heap；由研究者判断该正常范围能否支持缓存商=t，实际计数节奏/epoch仍未知。仅固定非零分母实际范围，不扩零除/任意异常/整个数值库，不整函数重导。
+
+先读REA skill C:/Users/cogic/.agents/skills/reverse-engineer-anything/SKILL.md及本文共同规则/复用规则。先检索优先complete、最终验收及近期对应报告/独立复核，按地址字段交叉检索；表列已有出处→行为→局限→实际缺口。报告四分：继承、本轮复核纠正、真正新增、精确未闭；旧字节复核不算新增功能。只必要稀疏窗口/ABI，不全导出/复制/机械记账。独占输出、独占worktree，不改共享文档/主树/生产ROM配置模型，不创建下级agent；其他agent同时工作勿撤销。静态安全边界全适用。必要验证、精确路径提交、报告commit/clean/未知；接近提交先给后继建议。
+
+
+
+## 当前完整任务书 A48（2026-10-24立即补位）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a48；分支codex/re-0041-a48；启动基线为本任务书最新整合提交。独占reverse/reports/ap01/image-cache-drop-review-a48-0041-20261024.md及reverse/analysis/image-cache-drop-review-a48-0041-20261024/。
+
+独立复核A46。同backend +18=a00ebf7c/+1c=a00ec084；NULL source到同image-cache drop_all接线；零引用cleanup与随后全部树/链释放原序；单drop的门和责任。继承A27/A34/A38/A43/A44可靠合同；不把a019cfbe叫backend回调，不修原行为，不推断实际运行或缺陷。新功能0，必要稀疏复核。
+
+先读REA skill C:/Users/cogic/.agents/skills/reverse-engineer-anything/SKILL.md及本文共同规则/复用规则。先检索优先complete、最终验收及近期对应报告/独立复核，按地址字段交叉检索；表列已有出处→行为→局限→实际缺口。报告四分：继承、本轮复核纠正、真正新增、精确未闭；旧字节复核不算新增功能。只必要稀疏窗口/ABI，不全导出/复制/机械记账。独占输出、独占worktree，不改共享文档/主树/生产ROM配置模型，不创建下级agent；其他agent同时工作勿撤销。静态安全边界全适用。必要验证、精确路径提交、报告commit/clean/未知；接近提交先给后继建议。
+
+
+E18 cb2a77b、A48 2501ea4已整合；E18待E19独立复核；A48新增功能0。
