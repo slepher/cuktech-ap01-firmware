@@ -1,0 +1,141 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "authority": "static shipped ROM evidence plus analyst naming; no target execution",
+  "callback": "0xa00a0bd8..0xa00a0e78 exclusive",
+  "scheduler": "0xa009d286..0xa009d304 exclusive",
+  "request": {
+    "allocation_bytes": 8,
+    "kind_offset": 0,
+    "kind_width": 1,
+    "value_offset": 4,
+    "value_width": 4,
+    "padding_assignment": "not observed",
+    "value_consumption": "entry log only; all business branches use globals",
+    "owner": "allocated by scheduler; successful callback frees and clears timer data; start nonzero frees but no data clear observed"
+  },
+  "timer": "0x62fc9428",
+  "timer_start": {
+    "callback": "0xa00a0bd8",
+    "delay64": 0,
+    "repeat64": 0
+  },
+  "tasks": [
+    {
+      "kind": 0,
+      "reads": [
+        "u8 62fcafc8"
+      ],
+      "effects": [
+        "a00ab4d8(brightness)",
+        "a01b7de0()"
+      ],
+      "origin": "integer property 3/1"
+    },
+    {
+      "kind": 1,
+      "reads": [
+        "u8 62fcaff2"
+      ],
+      "effects": [
+        "mode=(global-1)&255; if mode<=3 call a019537a(mode)"
+      ],
+      "origin": "integer property 4/1; full input unsigned value-1<4"
+    },
+    {
+      "kind": 2,
+      "reads": [
+        "u32 62fcafc0",
+        "u8 62fcb02c"
+      ],
+      "effects": [
+        "write ck_config/loc_id length4",
+        "flags |=1",
+        "if flags==3 restart and clear flags"
+      ],
+      "origin": "no submitter in current direct-call set"
+    },
+    {
+      "kind": 3,
+      "reads": [
+        "text 62fcaf00",
+        "text 62fc90a0"
+      ],
+      "effects": [
+        "if length9 and first byte 1 and strcmp differs: a00a0ac2(text); restart"
+      ],
+      "origin": "string property 3/5"
+    },
+    {
+      "kind": 4,
+      "reads": [
+        "text 62fcaf40"
+      ],
+      "effects": [
+        "write ck_config/loc_city with strlen(global)"
+      ],
+      "origin": "no submitter in current direct-call set"
+    },
+    {
+      "kind": 5,
+      "reads": [
+        "text 62fcaf80",
+        "bytes 62fc9120",
+        "u32 62fcafc0",
+        "u8 62fcb02c"
+      ],
+      "effects": [
+        "write ck_config/loc_district with strlen(global)",
+        "flags |=2",
+        "if compare(new,9120,strlen(new))!=0: numeric setter; if setter!=0 and flags==3 restart and clear; log regardless of inner condition"
+      ],
+      "origin": "no submitter in current direct-call set"
+    },
+    {
+      "kind": 6,
+      "reads": [],
+      "effects": [
+        "restart"
+      ],
+      "origin": "no submitter in current direct-call set"
+    }
+  ],
+  "weather_restart": {
+    "bridge": "0xa00a5b90",
+    "control_call": "a01b2b5c(62fc9520)",
+    "schedule_call": "a01b24c0(1,2000)",
+    "meaning": "bypass recent-request guard and schedule once after 2000ms; not a synchronous fetch",
+    "control_semantics": "stop-like inferred from state-bit clear; complete library internals not certified"
+  },
+  "mode_sink": {
+    "address": "0xa019537a",
+    "argument": "normalized 0..3 from callback",
+    "stores": [
+      "u8 62fcb512",
+      "u8 62fcb01d"
+    ],
+    "first_call": "a0195166",
+    "mode3": "4-byte [3,b000,b001,b002] to a019530a",
+    "other": "descriptor halfword0160 and pointer62fcb01d to a01951e2",
+    "wire_protocol": "not yet recovered"
+  },
+  "direct_submitter_callsites": [
+    "0xa009dacc",
+    "0xa009de26",
+    "0xa00a0f32"
+  ],
+  "string_properties": {
+    "3/5": "copy63 to af00; af3f=0; submit kind3,value1; notify original input+strlen",
+    "3/6": "copy63 to af40; af7f=0; direct config loc_city with original input+strlen; notify",
+    "3/7": "copy63 to af80; afbf=0; direct config loc_district with original input+strlen; notify"
+  },
+  "unknowns": [
+    "all indirect submitters",
+    "kind2/4/5/6 production triggers",
+    "shared timer repeated submission and complete destruction",
+    "mode enum/product names and full sending protocol",
+    "full property handlers and notification consumers",
+    "exact open source versions and vendor changes",
+    "normal buzzer shutdown and exit acknowledgement consumer"
+  ]
+}

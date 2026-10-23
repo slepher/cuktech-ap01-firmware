@@ -1,0 +1,83 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "authority": "static instruction facts plus analyst names",
+  "power_index": {
+    "address": "0xa009c100",
+    "mapping": {
+      "0": 0,
+      "15": 4,
+      "20": 6,
+      "33": 9,
+      "45": 13,
+      "67": 17,
+      "80": 19,
+      "100": 20,
+      "120": 21,
+      "140": 23
+    },
+    "other": 255
+  },
+  "custom_param": {
+    "address": "0xa009cc0c",
+    "high": "input >> 8, not masked to 8 bits before validation",
+    "low": "input & 255",
+    "accept": "both map !=255 and high+low <101",
+    "fallback": "if model@62fc9194==2 and high+low>125 then (80,45), otherwise (67,33)",
+    "payload": "[3,u8(62fcb000),index(high_selected),index(low_selected)]",
+    "record": "store original input low16 to62fc9190 after custom_apply"
+  },
+  "custom_apply": {
+    "address": "0xa019530a",
+    "guard": "input[0]==3",
+    "updates": [
+      "62fcb01d=3",
+      "62fcb512=3",
+      "notify control change",
+      "copy input4 to62fcb518"
+    ],
+    "command": 96,
+    "length": 4
+  },
+  "mode_apply": {
+    "address": "0xa019537a",
+    "updates": [
+      "62fcb512=u8(input)",
+      "62fcb01d=u8(input)",
+      "notify control change"
+    ],
+    "mode3": "custom_apply([3,b000,b001,b002]); second control-change call occurs",
+    "other": "cmd96 len1 payload pointer62fcb01d",
+    "range_guard": "none in this helper; known MiIO caller normalizes0..3"
+  },
+  "control_change": {
+    "snapshot_pointer": "0x62fcb2cc",
+    "field7_source": "signed byte62fcb514",
+    "field8_source": "byte62fcb512",
+    "change_mask": {
+      "field7": 2,
+      "field8": 4
+    },
+    "mask_store": "replace u16 snapshot+12, not OR with previous",
+    "dispatch": "a00a536c"
+  },
+  "control_dispatch": {
+    "head": "0x62fcb554",
+    "first": "*(head+4)",
+    "callback": "node+0",
+    "userdata": "node+4",
+    "call": "callback(userdata,current snapshot pointer)",
+    "next": "*(node + *(u32*)head +4)",
+    "on_finish": "clear current snapshot+12 halfword",
+    "ownership": "borrowed snapshot; no allocation/free in dispatcher"
+  },
+  "transport": "descriptor cmd/len/payload@+4; cmd0x60 len1/4; copy synchronously into active or four queued slots, or return without admission; no explicit status contract",
+  "unknowns": [
+    "mode0..2 product names",
+    "meaning of b000/b001/b002 and complete device-side execution",
+    "control snapshot creation/free and listener registration/removal",
+    "all mode callers and response reconciliation",
+    "exact open source provenance/version and vendor changes",
+    "buzzer normal shutdown and exit acknowledgement consumer"
+  ]
+}

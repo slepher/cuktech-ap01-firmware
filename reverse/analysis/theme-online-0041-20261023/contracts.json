@@ -1,0 +1,68 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "entry": "0xa00ac93c",
+  "registration": {
+    "site": "0xa005d15c",
+    "callback": "0xa00ac93c",
+    "userdata": "s4 root",
+    "api": "a01b291a",
+    "head": "62fcb548"
+  },
+  "states": {
+    "1": "set port-state word1; wake;403a=1; maybe switch root index0; four item-field0a indicators; reset child3 text0; update/lazy-build settings",
+    "2": "set word1 first; if root4d!=0 return; create special popup, ctx38=1, call(ctx,75,1), rootmeta bytes2=31/1=75,root4d=1,403b=0",
+    "other": "set word0; wake;403a=1; delete window tag3 if found; maybe root index3/6; clear power/mode views; settings indicator0; delete child1 of settings container if constructed and clear flag"
+  },
+  "root_fields": {
+    "0x10": "metadata pointer used for byte1/2 special-state writes",
+    "0x34": "current child index",
+    "0x4d": "special-state latch, not cleared here"
+  },
+  "settings_page": {
+    "tag0x1a": "ctx+8 existing control passed to indicator helper",
+    "tag0x1e": "ctx+8 container,ctx+0c upgrade bool,ctx+10 constructed bool"
+  },
+  "ota_query": {
+    "address": "0xa00a5b5c",
+    "behavior": "log then explicit return0, no flag read",
+    "caller_effect": "both positive checks get false under reviewed ROM implementation; preserve caller branches"
+  },
+  "model_name": {
+    "address": "0xa00a5498",
+    "field": "u16 62fcb006",
+    "mapping": {
+      "0x0a01": "TA1208",
+      "0x0a02": "TA1408"
+    },
+    "other": "NULL"
+  },
+  "version": {
+    "address": "0xa00fa37e",
+    "field": "u16 62fcb00e",
+    "format": "当前版本 V%d.%d",
+    "arguments": [
+      "high byte",
+      "low byte"
+    ],
+    "initial_subtree_text": "当前版本 V1.2, not ROM/device version certification"
+  },
+  "window_lookup": {
+    "address": "0xa00a7334",
+    "match": "child+0x3c word == tag",
+    "outputs": "out_window written every iteration, failure does not uniformly clear",
+    "root": "child_count receives root in a0 despite omitted decompiler argument"
+  },
+  "deletions": [
+    "a00acfcc passes selected window pointer to a00ded6c",
+    "a00ad062 obtains child(ctx+8,1), a00ad066 deletes it; then a01ace30(ctx+8); clear ctx10"
+  ],
+  "unknowns": [
+    "product reason for state2",
+    "all root4d writers/reset and popup lifecycle",
+    "full lazy-built subtree rendering/helper semantics",
+    "recursive GUI deletion and all subscription teardown",
+    "all port-state word writers",
+    "actual firmware/version producers and entire OTA admission policy"
+  ]
+}

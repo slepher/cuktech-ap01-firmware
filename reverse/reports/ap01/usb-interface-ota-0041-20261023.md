@@ -1,5 +1,9 @@
 # 0041 底座 UART 协议与 MCU OTA 局部合同
 
+功能续作见[底座ID接入、周期轮询与不透明MCU载荷边界](dock-presence-polling-0041-20261023.md)，补齐物理ID判断到UiIFace释放的局部链；不沿历史缺陷验证方向继续。
+
+新增功能续作见[模式、自定义功率与 UI/UART 控制合同](mode-control-0041-20261023.md)；本文保留历史已核范围，后续不沿缺陷验证方向扩展。
+
 2026-10-23。固定原厂 0041 SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。本轮属于[整 ROM 非开源逆向](whole-rom-0041.md)，不修改正式 ROM，不执行底座升级。这里的 USB interface OTA 是原厂经底座接口更新 MCU 的链路，不能与 AP01 联网更新自身 application 槽混称。
 
 ## 证据

@@ -1,0 +1,483 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "location": {
+    "cache": "0x62fc90a0",
+    "province": "0x62fc90a0",
+    "adm": "0x62fc90e0",
+    "city": "0x62fc9120",
+    "legacy_gate": "0x62fc9160",
+    "config_group": "ck_config",
+    "config_text_key": "loc_province",
+    "config_numeric_key": "location_id",
+    "setter_copy_limit": 4,
+    "setter_explicit_nul_address": "0x62fc90df",
+    "fast_id_format": "length 9, first byte 1, full decimal parse, unsigned range 100000000..199999999",
+    "getter_empty": "returns 0 without config read",
+    "getter_numeric_fallback": "read exactly 4 B; in-range updates cache and text key; caller output not copied; return numeric_value != 0",
+    "getter_rejected_fast_parse": "does not explicitly assign a0 after last logging call; boolean value unconfirmed"
+  },
+  "request": {
+    "id_url_buffer": "0x62fcb8ac",
+    "legacy_url_buffer": "0x62fcbaac",
+    "id_message_order": [
+      "location_id",
+      "timestamp_signed_decimal",
+      "mac_lower_hex12",
+      "fixed_suffix"
+    ],
+    "legacy_message_order": [
+      "adm",
+      "city",
+      "timestamp_signed_decimal",
+      "mac_lower_hex12",
+      "fixed_suffix"
+    ],
+    "digest_output_bytes": 16,
+    "digest_hex_chars": 32,
+    "legacy_condition": "getter returns 0; gate > 100000; adm[0] or city[0] nonzero"
+  },
+  "digest": {
+    "identity": "MD5 family, high-confidence algorithm inference; exact source/version and unchanged implementation not verified",
+    "iv": [
+      "0x67452301",
+      "0xefcdab89",
+      "0x98badcfe",
+      "0x10325476"
+    ],
+    "context_bytes": 88,
+    "compression_window": [
+      "0xa0078904",
+      "0xa00791c6"
+    ],
+    "round_constant_matches": 64,
+    "round_constants": [
+      {
+        "index": 0,
+        "address": "0xa00789fa",
+        "constant": "0xd76aa478"
+      },
+      {
+        "index": 1,
+        "address": "0xa0078a1e",
+        "constant": "0xe8c7b756"
+      },
+      {
+        "index": 2,
+        "address": "0xa0078a42",
+        "constant": "0x242070db"
+      },
+      {
+        "index": 3,
+        "address": "0xa0078a64",
+        "constant": "0xc1bdceee"
+      },
+      {
+        "index": 4,
+        "address": "0xa0078a86",
+        "constant": "0xf57c0faf"
+      },
+      {
+        "index": 5,
+        "address": "0xa0078aa6",
+        "constant": "0x4787c62a"
+      },
+      {
+        "index": 6,
+        "address": "0xa0078aca",
+        "constant": "0xa8304613"
+      },
+      {
+        "index": 7,
+        "address": "0xa0078aec",
+        "constant": "0xfd469501"
+      },
+      {
+        "index": 8,
+        "address": "0xa0078b10",
+        "constant": "0x698098d8"
+      },
+      {
+        "index": 9,
+        "address": "0xa0078b34",
+        "constant": "0x8b44f7af"
+      },
+      {
+        "index": 10,
+        "address": "0xa0078b54",
+        "constant": "0xffff5bb1"
+      },
+      {
+        "index": 11,
+        "address": "0xa0078b76",
+        "constant": "0x895cd7be"
+      },
+      {
+        "index": 12,
+        "address": "0xa0078b98",
+        "constant": "0x6b901122"
+      },
+      {
+        "index": 13,
+        "address": "0xa0078bb8",
+        "constant": "0xfd987193"
+      },
+      {
+        "index": 14,
+        "address": "0xa0078bdc",
+        "constant": "0xa679438e"
+      },
+      {
+        "index": 15,
+        "address": "0xa0078bfc",
+        "constant": "0x49b40821"
+      },
+      {
+        "index": 16,
+        "address": "0xa0078c16",
+        "constant": "0xf61e2562"
+      },
+      {
+        "index": 17,
+        "address": "0xa0078c36",
+        "constant": "0xc040b340"
+      },
+      {
+        "index": 18,
+        "address": "0xa0078c52",
+        "constant": "0x265e5a51"
+      },
+      {
+        "index": 19,
+        "address": "0xa0078c72",
+        "constant": "0xe9b6c7aa"
+      },
+      {
+        "index": 20,
+        "address": "0xa0078c90",
+        "constant": "0xd62f105d"
+      },
+      {
+        "index": 21,
+        "address": "0xa0078cae",
+        "constant": "0x2441453"
+      },
+      {
+        "index": 22,
+        "address": "0xa0078ccc",
+        "constant": "0xd8a1e681"
+      },
+      {
+        "index": 23,
+        "address": "0xa0078ce8",
+        "constant": "0xe7d3fbc8"
+      },
+      {
+        "index": 24,
+        "address": "0xa0078d04",
+        "constant": "0x21e1cde6"
+      },
+      {
+        "index": 25,
+        "address": "0xa0078d24",
+        "constant": "0xc33707d6"
+      },
+      {
+        "index": 26,
+        "address": "0xa0078d44",
+        "constant": "0xf4d50d87"
+      },
+      {
+        "index": 27,
+        "address": "0xa0078d62",
+        "constant": "0x455a14ed"
+      },
+      {
+        "index": 28,
+        "address": "0xa0078d82",
+        "constant": "0xa9e3e905"
+      },
+      {
+        "index": 29,
+        "address": "0xa0078da0",
+        "constant": "0xfcefa3f8"
+      },
+      {
+        "index": 30,
+        "address": "0xa0078dbc",
+        "constant": "0x676f02d9"
+      },
+      {
+        "index": 31,
+        "address": "0xa0078dd8",
+        "constant": "0x8d2a4c8a"
+      },
+      {
+        "index": 32,
+        "address": "0xa0078df0",
+        "constant": "0xfffa3942"
+      },
+      {
+        "index": 33,
+        "address": "0xa0078e08",
+        "constant": "0x8771f681"
+      },
+      {
+        "index": 34,
+        "address": "0xa0078e22",
+        "constant": "0x6d9d6122"
+      },
+      {
+        "index": 35,
+        "address": "0xa0078e3c",
+        "constant": "0xfde5380c"
+      },
+      {
+        "index": 36,
+        "address": "0xa0078e56",
+        "constant": "0xa4beea44"
+      },
+      {
+        "index": 37,
+        "address": "0xa0078e70",
+        "constant": "0x4bdecfa9"
+      },
+      {
+        "index": 38,
+        "address": "0xa0078e8c",
+        "constant": "0xf6bb4b60"
+      },
+      {
+        "index": 39,
+        "address": "0xa0078ea8",
+        "constant": "0xbebfbc70"
+      },
+      {
+        "index": 40,
+        "address": "0xa0078ec4",
+        "constant": "0x289b7ec6"
+      },
+      {
+        "index": 41,
+        "address": "0xa0078ee0",
+        "constant": "0xeaa127fa"
+      },
+      {
+        "index": 42,
+        "address": "0xa0078efa",
+        "constant": "0xd4ef3085"
+      },
+      {
+        "index": 43,
+        "address": "0xa0078f16",
+        "constant": "0x4881d05"
+      },
+      {
+        "index": 44,
+        "address": "0xa0078f32",
+        "constant": "0xd9d4d039"
+      },
+      {
+        "index": 45,
+        "address": "0xa0078f4c",
+        "constant": "0xe6db99e5"
+      },
+      {
+        "index": 46,
+        "address": "0xa0078f68",
+        "constant": "0x1fa27cf8"
+      },
+      {
+        "index": 47,
+        "address": "0xa0078f84",
+        "constant": "0xc4ac5665"
+      },
+      {
+        "index": 48,
+        "address": "0xa0078fa4",
+        "constant": "0xf4292244"
+      },
+      {
+        "index": 49,
+        "address": "0xa0078fc0",
+        "constant": "0x432aff97"
+      },
+      {
+        "index": 50,
+        "address": "0xa0078fde",
+        "constant": "0xab9423a7"
+      },
+      {
+        "index": 51,
+        "address": "0xa0078ffc",
+        "constant": "0xfc93a039"
+      },
+      {
+        "index": 52,
+        "address": "0xa007901a",
+        "constant": "0x655b59c3"
+      },
+      {
+        "index": 53,
+        "address": "0xa0079036",
+        "constant": "0x8f0ccc92"
+      },
+      {
+        "index": 54,
+        "address": "0xa0079052",
+        "constant": "0xffeff47d"
+      },
+      {
+        "index": 55,
+        "address": "0xa007906e",
+        "constant": "0x85845dd1"
+      },
+      {
+        "index": 56,
+        "address": "0xa007908e",
+        "constant": "0x6fa87e4f"
+      },
+      {
+        "index": 57,
+        "address": "0xa00790ae",
+        "constant": "0xfe2ce6e0"
+      },
+      {
+        "index": 58,
+        "address": "0xa00790d2",
+        "constant": "0xa3014314"
+      },
+      {
+        "index": 59,
+        "address": "0xa00790f2",
+        "constant": "0x4e0811a1"
+      },
+      {
+        "index": 60,
+        "address": "0xa0079110",
+        "constant": "0xf7537e82"
+      },
+      {
+        "index": 61,
+        "address": "0xa007912c",
+        "constant": "0xbd3af235"
+      },
+      {
+        "index": 62,
+        "address": "0xa0079148",
+        "constant": "0x2ad7d2bb"
+      },
+      {
+        "index": 63,
+        "address": "0xa0079164",
+        "constant": "0xeb86d391"
+      }
+    ],
+    "unmatched_constant_indices": [],
+    "padding_evidence": "a0079270: write byte 0x80, pad to block byte 56, later encode bit count and export digest",
+    "wrapper": "0xa00b4e1a",
+    "update": "0xa00791c6",
+    "final": "0xa0079270",
+    "constant_match_method": "literal LUI/C.LUI plus ADDI/C.ADDI construction compared to floor(abs(sin(i+1))*2^32); identity evidence, not full source equivalence"
+  },
+  "strings": [
+    {
+      "address": "0xa0269f34",
+      "file_offset": 2535220,
+      "hex": "2573256c6c64",
+      "text": "%s%lld",
+      "sha256": "833c50add5b8025906a78b6369abc1e194cea89685550034397fd1e549e1678c"
+    },
+    {
+      "address": "0xa0269f3c",
+      "file_offset": 2535228,
+      "hex": "4433233846266e",
+      "text": "D3#8F&n",
+      "sha256": "02636fe50ed808d4f25e31a7573a443ef2b1f5537195d66f6fa6b906cae2137f"
+    },
+    {
+      "address": "0xa0269f44",
+      "file_offset": 2535236,
+      "hex": "68747470733a2f2f696f742e63756b746563682e6e65742f6170692f77656174686572323f",
+      "text": "https://iot.cuktech.net/api/weather2?",
+      "sha256": "03f1711e2b85396b391e0997ab0ec8d9738b99867fd21c8eb21311b2d684f07c"
+    },
+    {
+      "address": "0xa0269f6c",
+      "file_offset": 2535276,
+      "hex": "25736c6f6369643d2573266d61633d25732674696d657374616d703d256c6c6426746f6b656e3d2573",
+      "text": "%slocid=%s&mac=%s&timestamp=%lld&token=%s",
+      "sha256": "3dcf8e592eea0bf99508d1e079e9fc1d0559db78241bf32c8ada36c3a519a845"
+    },
+    {
+      "address": "0xa0269fd0",
+      "file_offset": 2535376,
+      "hex": "25732573256c6c64",
+      "text": "%s%s%lld",
+      "sha256": "cd9588144fe8aab7b2cac51b78706d24294c3a853e032c162022f9a704196e50"
+    },
+    {
+      "address": "0xa0269fdc",
+      "file_offset": 2535388,
+      "hex": "68747470733a2f2f696f742e63756b746563682e6e65742f6170692f776561746865723f",
+      "text": "https://iot.cuktech.net/api/weather?",
+      "sha256": "52965671efcfe77e8222891bfa0e2f5ad38aa54989829b1781095ec3665ae72f"
+    },
+    {
+      "address": "0xa026a004",
+      "file_offset": 2535428,
+      "hex": "2573636974793d25732661646d3d2573266d61633d25732674696d657374616d703d256c6c6426746f6b656e3d2573",
+      "text": "%scity=%s&adm=%s&mac=%s&timestamp=%lld&token=%s",
+      "sha256": "b6e1ed635f54d7b8f2dc19279c659175b2da0165d6907ba650e0f78dd57cf056"
+    },
+    {
+      "address": "0xa061f24c",
+      "file_offset": 6423116,
+      "hex": "25303278",
+      "text": "%02x",
+      "sha256": "0b9c6b1ba85af1cdb96ea5e43707f86743f5951eb09a1d53e3dfff312fb45d49"
+    },
+    {
+      "address": "0xa01c3068",
+      "file_offset": 1851496,
+      "hex": "636b5f636f6e666967",
+      "text": "ck_config",
+      "sha256": "fb89e58c53387a1a611fbbfcaf95cabc91510b54a2d5f6ded974e6870a37c41d"
+    },
+    {
+      "address": "0xa01c3250",
+      "file_offset": 1851984,
+      "hex": "6c6f635f70726f76696e6365",
+      "text": "loc_province",
+      "sha256": "f26728dfb1342f6b706c7f061bd20e1f668c670f005b766e2297160d20457db1"
+    },
+    {
+      "address": "0xa0265898",
+      "file_offset": 2517144,
+      "hex": "6c6f636174696f6e5f6964",
+      "text": "location_id",
+      "sha256": "c2127e501c2e74f21a27166e4a88bb35b899948df476a1ac9304d37ff12fb0df"
+    },
+    {
+      "address": "0xa025f350",
+      "file_offset": 2491216,
+      "hex": "2575",
+      "text": "%u",
+      "sha256": "7609874831a23f229981aea7750bbf898b7481be76359e323171d8ce36da577b"
+    },
+    {
+      "address": "0xa01bd240",
+      "file_offset": 1827392,
+      "hex": "776c616e30",
+      "text": "wlan0",
+      "sha256": "f2fb6f663fba09e4161bf54e107f44ba81e09c69857ed4fa3246cd3f91cd91dc"
+    }
+  ],
+  "unknowns": [
+    "exact logger result on getter rejected-fast-parse path",
+    "all writers and scheduling effects of location state",
+    "precise cryptographic library source/version and vendor changes",
+    "clock-ms vendor arithmetic/source",
+    "subscriber and timer teardown closure"
+  ]
+}

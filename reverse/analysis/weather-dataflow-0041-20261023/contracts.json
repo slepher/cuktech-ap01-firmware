@@ -1,0 +1,410 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "weather_layout": {
+    "size": 156,
+    "current_size": 36,
+    "current": [
+      {
+        "name": "year",
+        "offset": 0,
+        "size": 2,
+        "source": "daily[0].dt[0:]"
+      },
+      {
+        "name": "month",
+        "offset": 2,
+        "size": 2,
+        "source": "daily[0].dt[5:]"
+      },
+      {
+        "name": "day",
+        "offset": 4,
+        "size": 2,
+        "source": "daily[0].dt[8:]"
+      },
+      {
+        "name": "feels_like",
+        "offset": 6,
+        "size": 2,
+        "source": "now.feel"
+      },
+      {
+        "name": "temp_max",
+        "offset": 8,
+        "size": 2,
+        "source": "daily[0].mx"
+      },
+      {
+        "name": "temp_min",
+        "offset": 10,
+        "size": 2,
+        "source": "daily[0].mn"
+      },
+      {
+        "name": "temperature",
+        "offset": 12,
+        "size": 2,
+        "source": "now.tmp"
+      },
+      {
+        "name": "sunrise_hour",
+        "offset": 14,
+        "size": 2,
+        "source": "daily[0].sr[0:]"
+      },
+      {
+        "name": "sunrise_minute",
+        "offset": 16,
+        "size": 2,
+        "source": "daily[0].sr[3:]"
+      },
+      {
+        "name": "sunset_hour",
+        "offset": 18,
+        "size": 2,
+        "source": "daily[0].ss[0:]"
+      },
+      {
+        "name": "sunset_minute",
+        "offset": 20,
+        "size": 2,
+        "source": "daily[0].ss[3:]"
+      },
+      {
+        "name": "uv_level",
+        "offset": 22,
+        "size": 2,
+        "source": "now.uvlvl"
+      },
+      {
+        "name": "aqi",
+        "offset": 24,
+        "size": 2,
+        "source": "now.aqi integer at JSON node +0x18"
+      },
+      {
+        "name": "humidity",
+        "offset": 26,
+        "size": 2,
+        "source": "now.hum"
+      },
+      {
+        "name": "icon_a",
+        "offset": 28,
+        "size": 4,
+        "source": "now.ico"
+      },
+      {
+        "name": "icon_b",
+        "offset": 32,
+        "size": 4,
+        "source": "now.ico"
+      }
+    ],
+    "future_count": 6,
+    "future_stride": 20,
+    "future": [
+      {
+        "name": "year",
+        "offset": 0,
+        "size": 2,
+        "source": "dt[0:]"
+      },
+      {
+        "name": "month",
+        "offset": 2,
+        "size": 2,
+        "source": "dt[5:]"
+      },
+      {
+        "name": "day",
+        "offset": 4,
+        "size": 2,
+        "source": "dt[8:]"
+      },
+      {
+        "name": "temp_max",
+        "offset": 6,
+        "size": 2,
+        "source": "mx"
+      },
+      {
+        "name": "temp_min",
+        "offset": 8,
+        "size": 2,
+        "source": "mn"
+      },
+      {
+        "name": "reserved",
+        "offset": 10,
+        "size": 2,
+        "source": "zero-initialized"
+      },
+      {
+        "name": "icon_a",
+        "offset": 12,
+        "size": 4,
+        "source": "id"
+      },
+      {
+        "name": "icon_b",
+        "offset": 16,
+        "size": 4,
+        "source": "id"
+      }
+    ],
+    "signedness": "16-bit stores are observed; signed temperature interpretation follows business meaning, not recovered original typedef"
+  },
+  "request_view": {
+    "size": 116,
+    "fields": {
+      "0x00": "byte 0",
+      "0x08": "URL pointer",
+      "0x24": "timeout value 5",
+      "0x30": "4096-byte IO buffer pointer",
+      "0x34": "buffer length 4096",
+      "0x3c": "sink callback a00aa13a",
+      "0x40": "sink user argument 0",
+      "0x54": "TLS ops pointer when HTTPS",
+      "0x58": "TLS workspace pointer",
+      "0x60": "HTTP status",
+      "0x70": "byte 1"
+    }
+  },
+  "tls": {
+    "size": 1912,
+    "wrapper_size": 4,
+    "component_offsets": [
+      0,
+      336,
+      556,
+      896,
+      1248
+    ],
+    "fd_offset": 1904,
+    "table": {
+      "address": "0xa028d804",
+      "file_offset": 2680836,
+      "hex": "649d0aa0a8470aa01c480aa0ae480aa068400aa0",
+      "sha256": "3f4484e25d729340dde9579c1687fcbe2a9e0d40196ec0fe8f7b79c0d71ad813",
+      "entries": [
+        "0xa00a9d64",
+        "0xa00a47a8",
+        "0xa00a481c",
+        "0xa00a48ae",
+        "0xa00a4068"
+      ]
+    },
+    "ownership": "wrapper is freed by TLS close callback; workspace remains owned by outer request; retained cleanup sequences are not coalesced"
+  },
+  "publication": {
+    "registration_instruction": "0xa005cdf0",
+    "callback_slot": "0x62fc998c",
+    "handler": "0xa00b3c74",
+    "cache": "0x62fc98f0",
+    "size": 156,
+    "subscriber_base": "0x62fcc370",
+    "subscriber_count": 5,
+    "subscriber_stride": 8,
+    "trigger": "0xa00b3be6",
+    "subscriber_args": "At a00b3c18 a1=user argument, at a00b3c1c a0=original data pointer; indirect call at a00b3c1e passes both; old decompiler omitted a1."
+  },
+  "strings": [
+    {
+      "address": "0xa0269aac",
+      "text": "cache"
+    },
+    {
+      "address": "0xa0269ab4",
+      "text": "Weather API cache: %d"
+    },
+    {
+      "address": "0xa0269acc",
+      "text": "msg"
+    },
+    {
+      "address": "0xa0269ad0",
+      "text": "frm"
+    },
+    {
+      "address": "0xa0269ad4",
+      "text": "Weather API frm: %s"
+    },
+    {
+      "address": "0xa0269ae8",
+      "text": "loc"
+    },
+    {
+      "address": "0xa0269aec",
+      "text": "Weather API city: %s"
+    },
+    {
+      "address": "0xa0269b04",
+      "text": "Weather API location id: %s"
+    },
+    {
+      "address": "0xa0269b20",
+      "text": "Current location ID is invalid, setting new location ID: %s"
+    },
+    {
+      "address": "0xa0269b5c",
+      "text": "Current location ID is valid: %s"
+    },
+    {
+      "address": "0xa0269b80",
+      "text": "nup"
+    },
+    {
+      "address": "0xa0269b84",
+      "text": "Weather API nowupdate: %s"
+    },
+    {
+      "address": "0xa0269ba0",
+      "text": "dup"
+    },
+    {
+      "address": "0xa0269ba4",
+      "text": "Weather API dailyupdate: %s"
+    },
+    {
+      "address": "0xa0269bc0",
+      "text": "now"
+    },
+    {
+      "address": "0xa0269bc4",
+      "text": "tmp"
+    },
+    {
+      "address": "0xa0269bc8",
+      "text": "Weather API current temp: %s"
+    },
+    {
+      "address": "0xa0269be8",
+      "text": "wsc"
+    },
+    {
+      "address": "0xa0269bec",
+      "text": "Weather API low temp: %s"
+    },
+    {
+      "address": "0xa0269c08",
+      "text": "wsp"
+    },
+    {
+      "address": "0xa0269c0c",
+      "text": "Weather API high temp: %s"
+    },
+    {
+      "address": "0xa0269c28",
+      "text": "txt"
+    },
+    {
+      "address": "0xa0269c2c",
+      "text": "Weather API current weather: %s"
+    },
+    {
+      "address": "0xa0269c4c",
+      "text": "ico"
+    },
+    {
+      "address": "0xa0269c50",
+      "text": "Weather API current code: %s"
+    },
+    {
+      "address": "0xa0269c70",
+      "text": "feel"
+    },
+    {
+      "address": "0xa0269c78",
+      "text": "Weather API current feelsLike: %s"
+    },
+    {
+      "address": "0xa0269c9c",
+      "text": "hum"
+    },
+    {
+      "address": "0xa0269ca0",
+      "text": "Weather API current humidity: %s"
+    },
+    {
+      "address": "0xa0269cc4",
+      "text": "uvlvl"
+    },
+    {
+      "address": "0xa0269ccc",
+      "text": "Weather API current uvlvl: %s"
+    },
+    {
+      "address": "0xa0269cec",
+      "text": "aqi"
+    },
+    {
+      "address": "0xa0269cf0",
+      "text": "Weather API current aqi: %d"
+    },
+    {
+      "address": "0xa0269d0c",
+      "text": "daily"
+    },
+    {
+      "address": "0xa0269d14",
+      "text": "Weather API daily forecast count: %d"
+    },
+    {
+      "address": "0xa0269d3c",
+      "text": "dt"
+    },
+    {
+      "address": "0xa0269d40",
+      "text": "Weather API daily forecast date[%d]: %s"
+    },
+    {
+      "address": "0xa0269d68",
+      "text": "Weather API daily forecast code[%d]: %s"
+    },
+    {
+      "address": "0xa0269d90",
+      "text": "mx"
+    },
+    {
+      "address": "0xa0269d94",
+      "text": "Weather API daily forecast tempMax[%d]: %s"
+    },
+    {
+      "address": "0xa0269dc0",
+      "text": "mn"
+    },
+    {
+      "address": "0xa0269dc4",
+      "text": "Weather API daily forecast tempMin[%d]: %s"
+    },
+    {
+      "address": "0xa0269df0",
+      "text": "Weather API daily forecast sunrise[%d]: %s"
+    },
+    {
+      "address": "0xa0269e1c",
+      "text": "Weather API daily forecast sunset[%d]: %s"
+    },
+    {
+      "address": "0xa0269e48",
+      "text": "lv_wx_7day_trans_cb_reg: trigger success\n"
+    },
+    {
+      "address": "0xa0269e74",
+      "text": "lv_wx_7day_trans_cb_reg: trigger failure\n"
+    },
+    {
+      "address": "0xa0269ea0",
+      "text": "Weather data parsed and sent to LVGL via lv_wx_7day_trans_cb_trig"
+    }
+  ],
+  "unknowns": [
+    "full JSON library origin/version and private changes",
+    "URL signing builder and exact private location update semantics",
+    "all weather subscriber callback contents and downstream icon conversion",
+    "precise clock vendor arithmetic and original clock source",
+    "timer stop/teardown ownership closure"
+  ]
+}

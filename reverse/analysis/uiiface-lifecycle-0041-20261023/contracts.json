@@ -1,0 +1,61 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "snapshot": {
+    "pointer": "0x62fcb2cc",
+    "allocation_bytes": 380,
+    "items_stride": 424,
+    "known_fields": {
+      "0": "items pointer",
+      "4": "u16 total power, test log evidence",
+      "6": "u8 item count",
+      "7": "signed byte temperature, test log evidence",
+      "8": "mode byte",
+      "9..11": "not certified by this lifecycle review",
+      "12": "u16 change mask"
+    },
+    "init": "command55 inline: deinit first; zeroed alloc380; zeroed items alloc(count*424); item descriptor bits+index; count; helper calls; online notify1",
+    "deinit": "online notify0 first; release items pointer if nonzero; release current global snapshot; clear global; log",
+    "nested_item_cleanup": "no per-item traversal in deinit; separate CTK nested ownership remains unclosed"
+  },
+  "control_list": {
+    "head": "0x62fcb554",
+    "head_bytes": 12,
+    "link_offset": 8,
+    "node_allocation": 16,
+    "callback_offset": 0,
+    "userdata_offset": 4,
+    "next_offset": 12,
+    "link8": "other/back link inferred from generic setter/unlink semantics; vendor word decoding not independently certified here",
+    "register": "a01b29a0: callback-only dedup; existing userdata unchanged; new node appended at tail",
+    "remove": "a01b2966: callback-only lookup; first match unlinked viaa0089d02; no free in this call chain",
+    "allocation_failure": "append returnsNULL; registration still writes fields per original; no extra recovery branch introduced",
+    "boot": "a00a55ba resets heads with offset8,first0,last0 and registers test_total a00a3c48 userdata100",
+    "consumers": [
+      {
+        "site": "0xa005d138",
+        "callback": "0xa00ad07e",
+        "userdata": "s4 app context"
+      },
+      {
+        "site": "0xa00a79d2",
+        "callback": "0xa00ac54e",
+        "userdata": "s3 UI context"
+      },
+      {
+        "site": "0xa00b0770",
+        "callback": "0xa00f3952",
+        "userdata": "s5 page context"
+      }
+    ]
+  },
+  "allocator": "a008e362 malloc then zero-fill; a008e38c returns62fc95e0 for size0 else delegates; free adapter ignoresNULL/static sentinel",
+  "unknowns": [
+    "all snapshot readers/writers and response field semantics",
+    "nested per-item ownership and full disconnect cleanup",
+    "registration/removal of all consumers and detached node reclamation",
+    "all control callback behavior",
+    "repeated service init and callback mutation contract",
+    "precise upstream source/version and vendor changes"
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "module": "PogoPinMng/FactoryTestMode.c",
+  "entry": {
+    "initializer_container": "0xa005a736",
+    "initial_hot_window": [
+      "0xa005ab96",
+      "0xa005ac04"
+    ],
+    "cold_windows": [
+      "0xa005b34c..0xa005b7fa"
+    ],
+    "callback": "0xa009f178",
+    "callback_end_exclusive": "0xa009f348"
+  },
+  "globals": {
+    "input_fd": "0x62fc4004",
+    "output_fd": "0x62fc4000",
+    "active_byte": "0x62fc92b8",
+    "timer": "0x62fc92c0",
+    "phase_byte": "0x62fc9420",
+    "cycle_count": "0x62fcb030"
+  },
+  "fd_initializers": [
+    {
+      "runtime": "0x62fc4000",
+      "rom_address": "0xa0003b14",
+      "file_offset": 19220,
+      "hex": "ffffffff",
+      "sha256": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e"
+    },
+    {
+      "runtime": "0x62fc4004",
+      "rom_address": "0xa0003b18",
+      "file_offset": 19224,
+      "hex": "ffffffff",
+      "sha256": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e"
+    }
+  ],
+  "read_gate": {
+    "stat_type_mask": "0xf000",
+    "stat_character_value": "0x2000",
+    "open_flags": 3,
+    "pin_type_ioctl": "0x2303",
+    "read_ioctl": "0x2302",
+    "attempts": 3,
+    "threshold": "(successful_reads + 1) >> 1",
+    "between_successful_attempt_delay_argument": 10000,
+    "high_result": "sum >= threshold",
+    "low_result": "sum < threshold",
+    "all_read_fail": "close input and leave factory init",
+    "pin_type_failure": "close input then continue final LOW path"
+  },
+  "led": {
+    "write_ioctl": "0x2301",
+    "initial_write": 0,
+    "initial_phase": 0,
+    "initial_delay_ms": 750,
+    "start_success_condition": "return >= 0",
+    "repeat": 0,
+    "states": [
+      {
+        "phase": 0,
+        "write_value": 1,
+        "next_phase": 1,
+        "next_delay_ms": 250,
+        "callsite": "0xa009f1bc"
+      },
+      {
+        "phase": 1,
+        "write_value": 0,
+        "count_action": "increment int32 at 62fcb030",
+        "next_phase": "signed count <= 2 ? 0 : 2",
+        "next_delay_ms": 750,
+        "callsite": "0xa009f24e"
+      },
+      {
+        "phase": 2,
+        "write_value": 1,
+        "next_phase": 2,
+        "next_delay_ms": null,
+        "callsite": "0xa009f2fa"
+      }
+    ],
+    "active_after_hold": 1,
+    "hold_rearms_timer": false,
+    "counter_initial_state": "BSS zero at boot; factory initializer does not explicitly reset cycle_count",
+    "ioctl_failure": "log; phase/count/rearm continue",
+    "timer_rearm_result": "not inspected",
+    "init_log_arguments": {
+      "ON_ms": 250,
+      "OFF_ms": 750,
+      "cycles": 3
+    },
+    "phase0_log_ON_completed_argument_ms": 250,
+    "phase1_log_OFF_completed_argument_ms": 750
+  },
+  "strings": [
+    {
+      "address": "0xa01c2bcc",
+      "file_offset": 1850316,
+      "hex": "2f6465762f6770696f33",
+      "text": "/dev/gpio3",
+      "sha256": "f1b09a5b049371ec62c533310e0a88e25c31975f2131ab03642af9909e11a404"
+    },
+    {
+      "address": "0xa01c2df4",
+      "file_offset": 1850868,
+      "hex": "2f6465762f6770696f3132",
+      "text": "/dev/gpio12",
+      "sha256": "617775653d25a2c287add2bba3a8fb9d60c9d34aa1cecf74bb6d77c2445b429b"
+    },
+    {
+      "address": "0xa01c2f98",
+      "file_offset": 1851288,
+      "hex": "5b46545d4c4544206566666563743a204f4e2025646d732c204f46462025646d732c20726570656174202564206379636c65732c207468656e20636f6e7374616e74204f4e0a",
+      "text": "[FT]LED effect: ON %dms, OFF %dms, repeat %d cycles, then constant ON\n",
+      "sha256": "37e8de2824b388b4e3298d7b83c41a8b57f953f4c5ab9251a9ee8026e1d7d20f"
+    },
+    {
+      "address": "0xa0266208",
+      "file_offset": 2519560,
+      "hex": "5b46545d4c4544204f4e2074696d6520636f6d706c6574656420282564206d73292c20737769746368696e6720746f204f46460a",
+      "text": "[FT]LED ON time completed (%d ms), switching to OFF\n",
+      "sha256": "81aae9fc16f122deec55255f984c8e1bd80aa2175a3c9f34663fcb2fb0be1b48"
+    },
+    {
+      "address": "0xa0266270",
+      "file_offset": 2519664,
+      "hex": "5b46545d4c4544204f46462074696d6520636f6d706c6574656420282564206d73292c206379636c652025642f25640a",
+      "text": "[FT]LED OFF time completed (%d ms), cycle %d/%d\n",
+      "sha256": "307a536393399b9e68d100cf9c661054e27bca75809125c92a83fbef041aa19b"
+    },
+    {
+      "address": "0xa02662a4",
+      "file_offset": 2519716,
+      "hex": "5b46545d4c454420626c696e6b206379636c657320636f6d706c6574656420282564206379636c6573292c20737769746368696e6720746f20636f6e7374616e74204f4e0a",
+      "text": "[FT]LED blink cycles completed (%d cycles), switching to constant ON\n",
+      "sha256": "090326e822a1851bf2612376e48e799bb9ec487a6ac9d0c5d45cc2ee3543baee"
+    },
+    {
+      "address": "0xa02662ec",
+      "file_offset": 2519788,
+      "hex": "5b46545d4c454420696e20636f6e7374616e74204f4e2073746174650a",
+      "text": "[FT]LED in constant ON state\n",
+      "sha256": "a29c2cc4785aa3e78b22216481b4ea054d3962126f408a3249d7027c11665286"
+    }
+  ],
+  "unknowns": [
+    "device index to physical GPIO/pin and LED electrical polarity",
+    "all external readers/writers of factory state",
+    "complete timer stop/close and fd release after successful test",
+    "repeated service initialization contract",
+    "other factory UI/production-test features outside this C-path fragment"
+  ]
+}

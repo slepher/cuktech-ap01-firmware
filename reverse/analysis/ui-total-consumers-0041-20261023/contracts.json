@@ -1,0 +1,53 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "screensaver": {
+    "callback": "0xa00ac54e",
+    "guard": "userdata and snapshot nonNULL; no change-mask test",
+    "power": "u16 snapshot+4 read once; pass raw to page2d helper; display raw/10 unsigned integer on page2f",
+    "activity": "OR of four fixed item+0x0d bytes, stride0x1a8; not snapshot count",
+    "active": "if ctx+24==0 style1 then flag1; always update text and layout",
+    "inactive": "only if ctx+24==1 style0 then flag0"
+  },
+  "power_detail": {
+    "callback": "0xa00f3952",
+    "guards": [
+      "userdata!=0",
+      "snapshot!=0",
+      "word62fc4034!=0"
+    ],
+    "mask": "bit2 checked at entry and again before each of second/third page operations",
+    "pages": {
+      "13": "a00f3844(page_ctx), downstream rendering not fully reviewed",
+      "15": "a00f388c(page_ctx,0,snapshot.mode)",
+      "19": "a0091b3a(*(ctx+1c),mode_labels[snapshot.mode])"
+    }
+  },
+  "page_lookup": {
+    "address": "0xa00a72ae",
+    "signature": "int lookup(root,tag,out_child,out_ctx)",
+    "count": "a00dd144(root), a0 input omitted by old pseudocode",
+    "child": "a00dcee4(root,i)",
+    "tag": "*(*(child+10)+0)",
+    "ctx": "*(*(child+10)+4)",
+    "outputs": "out_child written on every iteration; out_ctx only on match; failure returns0 without general output clearing"
+  },
+  "mode_getter": {
+    "address": "0xa00a5c50",
+    "normal": "u8 current global snapshot+8",
+    "null": "branch into logging tail, return0"
+  },
+  "mode_labels": [
+    "AI 智配",
+    "极速单充",
+    "均衡输出",
+    "自定义"
+  ],
+  "unknowns": [
+    "full page rendering helpers",
+    "page/consumer destruction and subscription removal",
+    "device-side mode behavior",
+    "exact power unit calibration",
+    "all other total-info consumers"
+  ]
+}

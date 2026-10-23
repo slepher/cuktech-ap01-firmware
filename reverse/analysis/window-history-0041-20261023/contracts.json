@@ -1,0 +1,40 @@
+{
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "status": "partial",
+  "history": {
+    "entry": "0xa00a398c",
+    "bytes": 364,
+    "samples": 180,
+    "sample_width": 2,
+    "max_offset": 360,
+    "cursor_offset": 362,
+    "max_slot_offset": 363,
+    "argument": "raw word a1; observed callers zero-extend unsigned16 with LHU",
+    "store": "low16",
+    "advance": "byte cursor+1 then wrap if>179",
+    "max": "if value>max store max=value_low16 and max_slot=oldcursor; otherwise rescan iff oldcursor==max_slot",
+    "rescan": "setmax0 without resetting max_slot; scan180 halfwords ascending; strict greater updates max and slot; first positive maximum wins ties, all-zero scan retains prior max_slot",
+    "return_rule": "rescan || original_value!=0 || resulting_max!=0",
+    "embeddings": {
+      "total": "snapshot+14, ends at378, outer alloc380",
+      "item": "item+60, ends at424, outer stride424"
+    },
+    "notify_bit": 1024
+  },
+  "window": {
+    "entry": "0xa019d422",
+    "gate": "nonnull root; child_count(root)!=0 and target!=root.current34",
+    "state": "previous38=oldcurrent34; current34=target; enabled4c=0",
+    "positions": "old previous set320; outgoing current set0; incoming target set-320",
+    "descriptor": "96B initialized; var@0=root, exec@4=a00b3080, complete@16=a00ab628, userdata@28=root, path@32=a008a93e, raw@36=0,raw@40=80000000,raw@44=320,raw@48=0",
+    "exec": "incoming current x=value-320; outgoing previous x=value",
+    "complete": "enabled4c=1; if current34==7 resume GIF timer when resource+5c nonzero; no direct mask50 access/replay in this callback"
+  },
+  "unknowns": [
+    "all callers of window switching and all field50 writers",
+    "animation scheduling/timing field ABI and library provenance",
+    "who guarantees another total-info notification after transition",
+    "history consumers/plots and actual sampling time interval",
+    "complete page teardown and subscription reclamation"
+  ]
+}
