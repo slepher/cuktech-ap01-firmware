@@ -18,7 +18,7 @@
 
 ## 实际运行快照
 
-当前4恢复2独立复核共6个运行subagent，主窗口另计；已结束任务不计运行。
+当前3恢复3独立复核共6个运行subagent，主窗口另计；已结束任务不计运行。
 
 |任务|agent|启动基线|状态|
 |---|---|---|---|
@@ -27,7 +27,7 @@
 |D05|/root/d05_uart_drain|59d81c2|运行中|
 |F05|/root/f05_exit_callback|3aba13a|运行中|
 |G04|/root/g04_submit_review|f82380b|运行中|
-|H03|/root/h03_weather_close|dcc2a08|运行中|
+|H04|/root/h04_weather_close_review|2ac1fd0|运行中|
 
 整合及限定验收映射见历史交接与覆盖记录，每项完成即检查整合补位。
 
@@ -38,7 +38,7 @@
 - E06：E05 app注销/归还完整闭包独立复核，待E05整合；E05已启动。
 - F06：F05返回后对象callback完整闭包独立复核，待F05整合；F05已启动。
 - G05：G04验收后恢复display event35/38实际descriptor注册→callback/param消费→38调度连接闭包；G04已启动。
-- H04：H03页面context/离页触发完整小闭包独立复核，待H03整合；H03已启动。
+- H05：H04验收后转一个未恢复天气订阅者完整数据流，不重复ctx free有界检索；优先候选a005e8dc注册点，准确callback未知，启动前任务书细化。H04已启动。
 
 以上只是预备问题，不冒称已派发。每次空位时依据最新整合和agent建议确定完整任务书、基线及独占输出，再启动新agent；独立技术复核须换新agent。
 
@@ -48,18 +48,6 @@
 
 
 
-
-
-
-## 当前完整任务书 H03（已启动，基线dcc2a08）
-
-任务ID H03，业务恢复type0x19天气页context最终所有权和离页删除触发闭包。分支codex/re-0041-h03；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h03；基线含H02最新管理提交。独占reverse/reports/ap01/weather-page-close-h03-0041-20261023.md及reverse/analysis/weather-page-close-h03-0041-20261023/。
-
-业务问题：a00b821e构造分配的0x74B context由谁持有和最终归还，上层正常导航/离页如何把0x29 DELETE事件交给a00b3b26，wrapper清理与控件递归销毁怎样排序？先读H01/H02的真实page/type0x19挂接/删除合同；a00b3b26仅清28word→注销→free(wrapper)→清page+10，不能假装已释放context。沿一个实际离页调用者/事件分发→删除回调→context引用归还或未归还边组成约5–12函数小闭包；真实ctx释放者尚未知，需据原指令查，不能凭类型名称拼造。
-
-包含必要导航注册/触发、事件ABI、页面/ctx/wrapper/子控件所有权，既验收天气重排/主要显示/五槽注销只针对核，不重复全天气数据流。若无法证实最终free(ctx)，给明确正常路径、引用搜索边界和精确断边，不扩所有GUI删除、不作缺陷判断。完成需生命周期/状态伪代码结构、原指令/返回/宽度/顺序、事实推断未知、来源、实际静态核验与一个后继闭包。通用事件/allocator库仅来源认证才排除，厂商适配仍恢复。排除全UI/所有导航、固件执行/外连/漏洞/历史回放/正式ROM生产模型修改；共同规则适用。
-
-A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后限定接受A19，原add_flag状态门说明以A20为准。旧待正式报告仅为历史记录，本状态覆盖。
 
 
 
@@ -108,7 +96,7 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 
 包含真实callback键/userdata、注销是否仅摘链或还free、app/页面/上下文分配与清理顺序、回调期间可达性；不重复a00f4740内部或port1数值显示，既有订阅链/allocator合同针对核。未能证明节点回收/退出触发时给有界检索与精确断边，不把注销等同释放，不扩大所有UI/所有订阅者/全局deinit。完成伪代码结构状态生命周期、原指令/地址/ABI/写宽/返回覆盖、事实推断未知、来源、实际静态验证和一个后继闭包。来源未认证不排除标准实现/厂商修改。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 H04（待H03整合）
+## 当前完整任务书 H04（已启动，基线2ac1fd0）
 
 任务ID H04，新agent独立复核H03真实按键离页→父/子DELETE→递归析构与context断边闭包。分支codex/re-0041-h04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h04；基线含H03最新管理提交。独占reverse/reports/ap01/weather-page-close-review-h04-0041-20261023.md及reverse/analysis/weather-page-close-review-h04-0041-20261023/。
 
@@ -151,3 +139,5 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 问题：a005ccc6→a0084b96→a008aec0分配zero324对象/58B payload→a00873ea写out，配置/dev/fb0与/dev/input0，是否确为返回后a0081554显示清理对象，而不是loop walker？真实DELETE注册a0086cd4→a007ffa0→a01b93b4(obj+2e8 event list,cb=a00800b4,filter29,userdata=obj)及a008acfa分发event+c userdata→callback后端归还→后续可选obj+2b8/payload/obj清理顺序是否成立？按F05正式约5–12核心与必要片段；F03/F04栈loop/关闭合同只针对核，不重新扫timer。
 
 重点+2b8仅可证构造zero初值，非NULL安装/真实callback未定位，普通SW立即数有界搜索不涵盖别名/批量/厂商store，不能推返回时必NULL；backend=obj+2e0清理、fd>=0 close wrapper/free backend+34/backend与对象资源顺序、callback返回后字段重读须原指令核。显示闭包无已证loop9428连接但opaque callee不能作全局否定。独立核ABI/厂商字/写宽/返回分支/所有权，逐项接受纠正未核，纠正只独占报告不改F05。不扩全部显示/输入或obj+2b8后继恢复，保留来源认证和上层loop断边。交付必要伪代码结构状态生命周期、事实推断未知、来源、实际静态验证与一个后继闭包；禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
+
+H03已整合2ac1fd0待H04。G04正在独立复核，报告G03 filter机器表达及不同bit0检查位置需精确纠正/补充，正式报告待提交，不提前标无纠正接受。
