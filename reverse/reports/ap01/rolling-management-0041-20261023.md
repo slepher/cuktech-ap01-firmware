@@ -122,3 +122,27 @@
 独立原指令/ABI/厂商字/宽度/重读/返回覆盖及失败清理原序，逐项接受纠正未核，必要纠正只独占报告不改A23。通用解压算法保留明示未恢复/来源未认证合同，实际cache驱逐与像素handler安装未解精确保留，不扩全部cache/图像/物理绘制。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证和一个后继闭包。禁止固件执行/外连/漏洞/错误输入/历史回放/ROM生产模型修改；共同规则适用。
 
 最新：E05→26fc8d7待E06且仅部分生命周期；H04→8a7807e限定接受H03；F06→f22ec27 filter表达纠正后接受F05。F07已只读定位本地候选实际路径/home/slepher/nuttx-ap01-sim/apps/graphics/lvgl/lvgl（lv_display.c/lv_version.h），尚未认证ROM来源/排除；未启动SIM或构建联网。
+
+## 预备完整任务书 D07（待D06纠正报告整合）
+
+任务ID D07，业务恢复D05条件DMA实际提交者a01b554e的本地描述符/缓冲持有→配置启动→归还连接小闭包。分支codex/re-0041-d07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d07；基线含D06最新管理提交。独占reverse/reports/ap01/uart-dma-descriptor-d07-0041-20261023.md及reverse/analysis/uart-dma-descriptor-d07-0041-20261023/。
+
+业务问题：条件+e非零时UART TX怎样把ring一/两段地址/长度交a01b554e，本地DMA描述符谁分配/填充/持有、channel参数与callback对保存地址的依赖、正常完成后何时可复用/归还？具体核心从D05/D06真实a001a240提交和a01b554e直接依赖定位，约5–12函数及必要短配置/回调片段，只此UART TX调用，不接管所有DMA channel/RX框架。D06对型号分支dev+88发布次数和IRQ trampoline/pair安装的纠正作为既有合同；IRQ初始主路径不重做，不把条件DMA当默认。
+
+原指令核descriptor布局/宽度符号/传参/发布顺序、cache维护调用边、buffer指针持有与复制、busy/phase及正常返回/清理；a0019d9a→a002d5d8归还合同针对核，不无限追硬件运行。若存在本地官方SDK候选可只读对照D:/Documents/PlatformIO/Projects/bouffalo_sdk（已有交接固定41bf338a57be53919d99f6c6715a96100428c97d），来源版本/芯片适配须核实，不下载不构建不默认与ROM相同。已认证标准实现才排除，厂商封装继续恢复。交付伪代码结构状态所有权、原字节/厂商编码/间接ABI、事实推断未知、来源、实际静态验证与精确断边及一个后继闭包。禁止设备/固件执行、外连、异常/超时/漏洞、历史回放、ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 E07（待E06整合）
+
+任务ID E07，业务恢复CTK剩余item+0x34/+0x38扩展字段的一条实际数值消费闭包。分支codex/re-0041-e07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e07；基线含E06最新管理提交。独占reverse/reports/ap01/ctk-extra-consumers-e07-0041-20261023.md及reverse/analysis/ctk-extra-consumers-e07-0041-20261023/。
+
+问题：E01/E02已核此两字段创建/响应覆盖/通知/清零释放，但真正页面/业务数值消费者仍未解；它们由谁读取、如何转换/触发更新和保持借用寿命？以一条真实call/data链从cmd52生产/通知合同→一个实际消费者/必要注册→主要数值下游→复用/清理范围组成约5–12函数，若两字段属于同一小数据族可一并恢复，否则选一条并列另一独立后继，不扩全CTK页。入口E01/E02五字段布局/日志、a00a8582 cmd52片段、item查找a00a53c0与item通知a00a389c、已有whole-ROM retained consumer/call索引；a00f4740只读前3组，不能将它当这两组已解消费者。
+
+先核既有E03/E04/E05/E06并避免重复port1栈view或root DELETE负搜索。生产/清理已验收部分只针对核，核心工作是定位新实际读者、结构/数值宽度符号/索引/掩码/返回分支、借用与复制、主要下游调用ABI及正常生命周期。未定位实际读者时给精确引用界限与候选断边，不用单helper冒充完成、不扩全ROM泛扫。字段业务名须有日志/用途依据，未知不猜。交付原指令/伪代码结构状态所有权、事实推断未知、来源、实际静态验证和一个后继闭包。来源未认证不排除；禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 G06（待G05整合）
+
+任务ID G06，新agent独立复核G05 display真实event38安装→timer resume/通知→调度与poll门→区域消费者闭包。分支codex/re-0041-g06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g06；基线含G05最新管理提交。独占reverse/reports/ap01/display-event-review-g06-0041-20261023.md及reverse/analysis/display-event-review-g06-0041-20261023/。
+
+问题：a0086bba向同display+2e8安装callback a0080002/filter38/userdata0、timer a0084ee2(a00e0ac8,16,display)后在a00873b6..be改+8为a0080da6，event38怎样通过display+308/a008bd70清timer+14 bit0/a0087b06通知，在a00804e2 elapsed>=period且repeat非零后间接timer*调用，再由poll非负/revents4门控a00e0ac8？具体核心按G05正式约12合同/必要片段，G04 mask/bit0返回纠正与记录消费只针对核。
+
+重点同display对象关系/真实注册字段和间接ABI、timer16实际单位合同、resume不是立即绘制、callback只读event+8/+4且不读/改/保存param/flags、内建filter38/29对event35不匹配但不能否定动态35/ALL handler、创建/替换/删除资源原序及notifier+9c实际安装断边。a008335e删除同timer并装a00806f8/filter38/userdata=&state+58为替代链候选，保持未知不接管其恢复。独立原字节/厂商编码/宽度/返回重读/所有权，逐项接受纠正未核，纠正只独占报告不改G05。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证及一个后继闭包；不扩全GUI事件/全部timer/物理绘制、固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
