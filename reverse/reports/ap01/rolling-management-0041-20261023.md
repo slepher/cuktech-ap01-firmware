@@ -22,12 +22,12 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A43|完整任务书就绪|准备立即补位|
+|A44|任务书就绪|准备立即补位|
 |A45|完整任务书就绪|准备立即补位|
-|D17|完整任务书就绪|准备立即补位|
+|D18|任务书就绪|准备立即补位|
 |E16|完整任务书就绪|准备立即补位|
 |G15|完整任务书就绪|准备立即补位|
-|H14|完整任务书就绪|准备立即补位|
+|H15|任务书就绪|准备立即补位|
 
 ## 派发规则（本次用户调整优先）
 
@@ -58,35 +58,11 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 
 后继以文件内仍标“预备完整任务书”的章节为准；移入当前任务书或历史后即不再计排队。不得从旧静态ID列表重复派发。
 
-## 当前完整任务书 H14（准备立即补位，H13已整合）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h14；分支codex/re-0041-h14；基线为启动时最新整合任务书提交，届时记录SHA，不提前建旧基线树。独占reverse/reports/ap01/weather-clock-review-h14-0041-20261024.md及reverse/analysis/weather-clock-review-h14-0041-20261024/。
-
-独立复核H13正常时钟helper调用/原厂商字、两次除1000与64位返回/URL%lld接入单位可证范围；旧条款/较晚反编译与URL摘要合同继承，不套用E14 uv deadline时钟源/epoch，不推实际外网请求或时间回放。
-
-正式报告后据其继承/真正新增/未知清单收缩，先已有→精确缺口，四分类报告。独立复核新增功能0，仅必要旧字节/源行锚点，不重复整函数/资源源码复制/机械账；研究无增量及时覆盖交付主窗口换题补位，不凑时长函数。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证后独占提交报告commit/验证/未知/clean。
-
-## 当前完整任务书 A43（准备立即补位，2026-10-24）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a43；分支codex/re-0041-a43；基线为本任务书提交。独占reverse/reports/ap01/image-cache-source-a43-0041-20261024.md及reverse/analysis/image-cache-source-a43-0041-20261024/。
-
-A23/A27/A30/A34/A38及对应独立复核已闭默认image-cache键/计量/链/cleanup，准确库来源尚未认证；F07/F08显示/list与D13/D14 draw-buffer认证不覆盖cache backend。只与本地LVGL9.2.1候选对应image-cache/key与LRU backend源文件/必要头局部比对结构字段、comparator/首word计量/链与callback清理，复用候选身份不重扫整库或重读ROM整函数。WSL Ubuntu-24.04候选/home/slepher/nuttx-ap01-sim/apps/graphics/lvgl/lvgl只读；源码不得覆盖ROM差异，不默认配置/enum宽度相同或整库排除，不复制源码库。
-
-先已有→行为→局限→实际缺口，四分类报告，独立复核新增功能0；已有可靠合同引用，不重复整函数/源码/资源导出或机械账。必要原字节/源行锚点验证，无增量及时覆盖交付主窗口补位，不凑时长/函数。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
-
 ## 当前完整任务书 E16（准备立即补位，2026-10-24）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e16；分支codex/re-0041-e16；基线为本任务书提交。独占reverse/reports/ap01/uv-time-producer-e16-0041-20261024.md及reverse/analysis/uv-time-producer-e16-0041-20261024/。
 
 E14/E15已闭正常deadline算术和unsigned到期合同，实际loop+140/+144缓存时间生产者/单位仍未知。本题沿已知uv start/dispatch和旧initializer已有callee/retained字段写者，仅补一个实际缓存时间刷新函数→底层source→两word回写→已知deadline读取，先查较晚round3和旧调度/关闭报告。无真实writer种子有界交付，不全ROM字段扫描，不重做heap/callback/close；H13天气clock源与epoch不得套用，时间单位只到实际换算证据。
-
-先已有→行为→局限→实际缺口，四分类报告，独立复核新增功能0；已有可靠合同引用，不重复整函数/源码/资源导出或机械账。必要原字节/源行锚点验证，无增量及时覆盖交付主窗口补位，不凑时长/函数。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
-
-## 当前完整任务书 D17（准备立即补位，2026-10-24）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d17；分支codex/re-0041-d17；基线为本任务书提交。独占reverse/reports/ap01/pwm-source-auth-d17-0041-20261024.md及reverse/analysis/pwm-source-auth-d17-0041-20261024/。
-
-D15/D16已闭PWM lower a0136762正常算术/ABI，准确来源仍未认证。本题只比对该正常start/频率duty阈值与必要字段在本地NuttX12.10候选PWM lower或SDK PWM候选的对应实现，识别相符/差异/未匹配与厂商适配范围。候选WSL Ubuntu-24.04 /home/slepher/nuttx-ap01-sim/nuttx（身份复用A13/A14/F07）与D:/Documents/PlatformIO/Projects/bouffalo_sdk（身份复用D07/D11/D12）；只读明确PWM文件/必要头，不扫整盘或复制源码，不默认芯片/版本/编译设置同ROM，不整库排除。候选不存在即明确缺口，不下载构建修环境，不再逆向D15全部算术/stop/停机消费者。
 
 先已有→行为→局限→实际缺口，四分类报告，独立复核新增功能0；已有可靠合同引用，不重复整函数/源码/资源导出或机械账。必要原字节/源行锚点验证，无增量及时覆盖交付主窗口补位，不凑时长/函数。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
 
@@ -106,7 +82,7 @@ A33/A37/A41及独立复核已闭构造O与setter替换free；本题只沿旧照�
 
 先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码资源导出/机械账，无增量及时交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
 
-## 预备完整任务书 D18（准备，2026-10-24）
+## 当前完整任务书 D18（准备立即补位，前序已整合）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d18；分支codex/re-0041-d18；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/pwm-source-review-d18-0041-20261024.md及reverse/analysis/pwm-source-review-d18-0041-20261024/。
 
@@ -114,7 +90,7 @@ A33/A37/A41及独立复核已闭构造O与setter替换free；本题只沿旧照�
 
 先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码资源导出/机械账，无增量及时交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
 
-## 预备完整任务书 H15（准备，2026-10-24）
+## 当前完整任务书 H15（准备立即补位，前序已整合）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h15；分支codex/re-0041-h15；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/clock-source-offset-h15-0041-20261024.md及reverse/analysis/clock-source-offset-h15-0041-20261024/。
 
@@ -122,10 +98,16 @@ H13/H14天气ID0算术与E16 uv ID1缓存刷新分开；E16明确只核a002696a 
 
 先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码资源导出/机械账，无增量及时交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
 
-## 预备完整任务书 A44（准备，2026-10-24）
+## 当前完整任务书 A44（准备立即补位，前序已整合）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a44；分支codex/re-0041-a44；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/image-cache-source-review-a44-0041-20261024.md及reverse/analysis/image-cache-source-review-a44-0041-20261024/。
 
 独立复核A43默认image-cache/backend与LVGL9.2.1候选局部匹配/差异范围、enum/字段ABI强度和不作未改认证结论。F07/F08及D13/D14候选身份和A23/A27/A30/A34/A38合同继承，只读A43相应源行/必要头，不重扫整库、复制源码或重读完整ROM，不以候选补ROM差异。
 
 先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码资源导出/机械账，无增量及时交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
+
+## 预备完整任务书 E17（待E16正式报告整合，不计运行）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e17；分支codex/re-0041-e17；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/uv-time-producer-review-e17-0041-20261024.md及reverse/analysis/uv-time-producer-review-e17-0041-20261024/。
+
+新agent独立复核E16真实writer a0098b60→a019e1a2→a002696a(1,out8)、UMAR64组合返回pair、除数0:0xf4240的helper接口→loop+140/+144回写及dispatch前消费连接。H13/H14 ID0 offset分支与E14/E15期限/unsigned比较全继承，不把来源/epoch或单位相互套用；helper若仅必要路径支持unsigned quotient，保持推断/未认证完整算法范围。H15负责a002645a/offset下层，E17不重复核其内部。先已有→复核缺口，四分类逐项接受纠正未核/新增功能0，必要稀疏原字节/厂商规则/ABI验证，不重导全函数、heap或close。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
