@@ -18,11 +18,11 @@
 
 | 任务 | agent | 固定基线 | 当前职责 | 下一项 |
 | --- | --- | --- | --- | --- |
-| A17 | /root/a17_current_consumer | ae3956f | 当前天气值首消费helper | A18独立复核 |
+| A18 | /root/a18_current_review | 2400931 | 当前值首消费独立复核 | A19图标消费callee |
 | B19 | /root/b19_parser_review | fad8df6 | 正常stage/escape独立复核 | B20排队命令消费 |
 | C20 | /root/c20_third_gate_review | 9270abb | 第三门正常合同独立复核 | 选一个变换callee |
 
-最新已整合：A16 b8614d5→ae3956f（限定接受A15，纠正一处加载指针实参记法）；B18 fff077c→fad8df6（正常stage/escape研究，技术待B19）；C19 ee172d4→9270abb（第三门局部成果，技术待C20）。旧工作树仅在确认干净并整合后回收，任务分支保留。
+最新已整合：A17 f95d973→2400931（当前值正常字段合同，技术待A18）；B18 fff077c→fad8df6（正常stage/escape研究，技术待B19）；C19 ee172d4→9270abb（第三门局部成果，技术待C20）。旧工作树仅在确认干净并整合后回收，任务分支保留。
 
 ## 已整合概况与开放缺口
 
@@ -38,10 +38,6 @@
 
 分支 codex/re-0041-c20；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c20。须C19提交整合后，从最新管理提交启动。仅复核C19第三门参数/局部读写/返回与直接消费条件，最多3核心函数，不扩失效队列/GUI全集。独占 reverse/reports/ap01/invalidation-third-gate-review-c20-0041-20261023.md、reverse/analysis/invalidation-third-gate-review-c20-0041-20261023/；必要精确纠正C19。逐项接受/纠正/未核/来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
 
-## 预备任务 A17：天气当前值首消费
-
-分支 codex/re-0041-a17；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a17。须A16验收完成整合后，从最新管理提交启动。仅恢复天气callback a00ab6ea调用的a008ce16(arc,current)正常参数/字段/返回合同及最多一个直接依赖，最多3核心函数。入口A15/A16中已知当前温度首消费点；不重复a008ce90范围helper，不扩图标/对象生命周期/全天气UI。先核后续报告是否已解。独占 reverse/reports/ap01/weather-current-consumer-a17-0041-20261023.md、reverse/analysis/weather-current-consumer-a17-0041-20261023/。核原指令及宽度/事实推断未知/来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
-
 ## 预备任务 A18：当前值消费独立复核
 
 分支 codex/re-0041-a18；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a18。须A17提交整合后，从最新管理提交启动。只复核A17正常参数/字段/返回合同及最多一个直接依赖，不扩天气UI/图标/生命周期。独占 reverse/reports/ap01/weather-current-review-a18-0041-20261023.md、reverse/analysis/weather-current-review-a18-0041-20261023/；必要精确纠正A17。逐项接受/纠正/未核、来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
@@ -49,3 +45,11 @@
 ## 预备任务 B20：正常排队命令消费
 
 分支 codex/re-0041-b20；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b20。须B19验收完成整合后，从最新管理提交启动。只恢复a01915bc尝试消费排队命令的正常字段/选择顺序/调用返回合同及最多两个直接依赖；入口usb-interface-ota报告0x24事件简述、dock报告四待发槽与保留dossier。先核后续报告避免重复。只解释一次取队列动作与槽所有权，不扩完整OTA/超时失败/漏洞调查/长度审计，不运行历史回放。独占 reverse/reports/ap01/queued-command-consume-b20-0041-20261023.md、reverse/analysis/queued-command-consume-b20-0041-20261023/。核原指令/ABI/原有清理与返回，事实推断未知/来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
+
+## 预备任务 A19：天气图标消费callee
+
+分支 codex/re-0041-a19；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a19。须A18验收完成整合后，从最新管理提交启动。只恢复A15/A16明确未解的a0198946(load32(context+0x20),icon)正常参数/字段/返回合同及最多两个直接依赖，最多3核心函数。先核已有后续报告，A17已仅检索未见callee合同；不扩全部图标/天气UI/生命周期。独占 reverse/reports/ap01/weather-icon-consumer-a19-0041-20261023.md、reverse/analysis/weather-icon-consumer-a19-0041-20261023/。核原指令/指针与地址边界/来源/事实推断未知/实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
+
+## 预备任务 C21：变换前置callee
+
+分支 codex/re-0041-c21；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c21。须C20验收完成整合后，从最新管理提交启动。只恢复a00dbff4正常参数/返回含义及是否写区域的局部合同，最多3核心函数/必要直接依赖；入口C19/C20中两个区域变换前的非零门，不同时接管a00dca48或完整变换库/GUI。独占 reverse/reports/ap01/transform-predicate-c21-0041-20261023.md、reverse/analysis/transform-predicate-c21-0041-20261023/。核原指令和调用者消费、事实推断未知/来源/实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。

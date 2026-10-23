@@ -341,3 +341,11 @@ fff077c→fad8df6；范围/差异通过，正常接收stage/escape与原清理�
 ## C19整合记录
 
 ee172d4→9270abb；范围/差异通过，472B/169条/69断言/40目标/4厂商原位域核验，技术待C20。返回1不证明刷新，失败交集也已写局部副本，两个变换callee未知。
+
+## 预备任务 A17：天气当前值首消费
+
+分支 codex/re-0041-a17；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a17。须A16验收完成整合后，从最新管理提交启动。仅恢复天气callback a00ab6ea调用的a008ce16(arc,current)正常参数/字段/返回合同及最多一个直接依赖，最多3核心函数。入口A15/A16中已知当前温度首消费点；不重复a008ce90范围helper，不扩图标/对象生命周期/全天气UI。先核后续报告是否已解。独占 reverse/reports/ap01/weather-current-consumer-a17-0041-20261023.md、reverse/analysis/weather-current-consumer-a17-0041-20261023/。核原指令及宽度/事实推断未知/来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
+
+## A17整合记录
+
+f95d973→2400931；范围/差异通过，136B/44指令/20编码/2厂商word核验，技术待A18。只恢复current局部钳位/写入调用，update helper/生命周期未知。
