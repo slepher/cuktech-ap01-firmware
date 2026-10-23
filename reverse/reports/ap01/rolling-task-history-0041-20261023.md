@@ -1829,3 +1829,27 @@ C25 f4e5330已整合，待C26独立复核；J01复用检索接替，为下一批
 
 
 A52 0108ef6、C24 f19cf22已整合，分别接受A50/C23限定合同，新功能0；C26/J02立即补位。
+
+
+## 当前完整任务书 I01（2026-10-24，立即接替）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-i01；分支codex/re-0041-i01；基线本任务书启动提交。独占reverse/reports/ap01/boot-ready-increment-i01-0041-20261024.md及reverse/analysis/boot-ready-increment-i01-0041-20261024/。
+
+先优先复用guide-complete boot/证据、system-complete boot_final、page-logic、main-knob/较晚round3/pass3/近期报告/最终ZIP相应basename。旧guide已知a00a7472 timer1000ms、无device-ready分支计数两次、a00a73fe揭示应用并删boot；system已有configured与a00b2ea6→a00b2f48 index8，均不得首次发现。SIM固定2秒就绪是替代，不等于ROM原就绪条件恢复。主窗口在近期reports仅按两地址未命中，此搜索不证明此前未分析。
+
+任务先给已有出处→行为→局限→精确缺口对照；只针对该正常callback的device-ready条件、实际callee/返回、挂接参数与完成次序检查旧证据是否已闭合。已有完整行为直接引用；只补不可信指令/必要接入ABI/字段/正常分支。若已无必要增量报已覆盖，不扩boot/硬件初始化/全驱动/所有页面；真实物理ready效果不能静态代替。不重新导整callback/全资源/分类表/源码，不运行SIM/构建/回放/ROM/设备/外网。
+
+REA skill及本文共同/复用规则全适用，四分报告；旧字节重核标复核不计新增。独占worktree与输出、不改共享/主树/生产ROM配置模型、不创建下级agent；其他agent同时工作勿撤销。必要静态验证、精确路径提交、回报commit/验证/未知/clean；接近提交提前给范围重叠与后继种子，无种子不扩扫。
+
+
+
+## 当前完整任务书 A54（A47/A49已整合，立即接替）
+
+独占reverse/reports/ap01/photo-reader-source-a54-0041-20261024.md及reverse/analysis/photo-reader-source-a54-0041-20261024/。
+
+A47/A49已恢复reader前缀构造/归还，A50/A52若尚运行则其内部消费不重复接管。只作本地LVGL9.2.1 lv_fs相关前缀/driver注册槽/open/close/缓存布局到A47/A49可靠ROM合同的局部来源认证；先查旧complete/ZIP/近期source报告。候选名/ABI不能代替ROM实参callback(D,H)，具体实例/精确版本仍未知；不全文件系统/所有缓存算法/全源码复制/ROM重导。
+
+仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
+
+
+I01 083ea25、A54 a0514a3已整合，新功能0；A55/I02交叉补位新独立复核。
