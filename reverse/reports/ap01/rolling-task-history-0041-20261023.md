@@ -949,3 +949,29 @@ f166c84→e0e357d：仅容量helper局部合同，新增业务0，待F10。
 先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
 
 H07 69ee808→89875e2：普通切出旧成果覆盖，新增业务0；实际teardown断边与E05/E06同源，合并归属，不另派天气DELETE负搜索。
+
+
+## 当前完整任务书 D09（已启动，基线fca1d5e）
+
+问题：channel分配到正常close与槽归还。
+
+D07/D08已覆盖描述符持有/提交/IRQ合同，继承不重做。精确种子a001a8ee→a00288de；旧优先材料按地址检索未命中不等于从未分析，先按调用者/字段别名再核。仅回答本UART路径channel如何分配、callback/pool槽何时解绑归还，正常close实际连接是否可证。硬件行为保留未知，不扩全部DMA/RX。
+
+分支codex/re-0041-d09；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d09。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/uart-dma-channel-d09-0041-20261023.md及reverse/analysis/uart-dma-channel-d09-0041-20261023/。
+
+先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
+
+e85bf9a→1b0cd8c：channel busy/最后close增量待D10。
+
+
+## 当前完整任务书 G07（已启动，基线fca1d5e）
+
+问题：event38替代work调度与状态归还。
+
+继承G05/G06已知主路径和三项纠正，旧system/settings timer/SIM调度不再恢复。派发后交叉检索确认G05已有替代38注册/去重/clear窗口，C03/C04已有a009e4f6→a009f9b6成组初始化/启动合同，全部继承；实际范围收缩为display state+58/+60对象身份、a009f9b6到实际消费及正常归还/退出连接。优先材料按4地址无精确命中仅为检索范围事实，须再核字段/调用者/旧Evidence。未安装的hook不假定已运行，不扩所有poll/event。
+
+分支codex/re-0041-g07；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g07。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/display-alternate-work-g07-0041-20261023.md及reverse/analysis/display-alternate-work-g07-0041-20261023/。
+
+先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
+
+0c7abd3→ef1bdf3：poll身份/正常消费及owner归还增量待G08。
