@@ -649,3 +649,20 @@ E03 b0c4ea8→85c61e2待E04独立复核；F04 1a100d8→3aba13a限定接受F03�
 问题：F03 type13 close→stop→pending→完成分派摘链→handle+0xc回调是否成立，是否足以连接9428共享timer与data归还，caller栈loop和返回后间接callback边证据范围是否准确？入口F03正式报告/21窗口1428B、F01/F02合同；已知a009fb96/a009fc50/a009fd94/a009c228/a009f524/a0098b4a及a005cc1e→a005cec6、a0081554/a00815f4 obj+0x2b8。具体完整核心以F03表为准，约5–12函数合同。已验收stop/data callback只针对核，关闭dispatcher完整正常type13和链表字段/回调ABI/写宽/顺序需独立原指令核。
 
 逐项接受纠正未核；重点注册节点+0x10与close callback+0xc、到期callback+0x30区别，不自动调用业务data清理，caller loop参数身份/局部栈区和返回后对象参数不能混同。9428实际close登记/walker及obj+0x2b8安装/身份未解须保留精确断边，有界负搜索不得变不存在。必要纠正只独占报告不改F03。完成原字节/厂商编码/间接ABI、伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证及一个后继闭包；不接管obj+2b8恢复或全loop/heap。排除异常提交/漏洞/固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
+
+
+## D04纠正后限定验收及D05补位
+
+D04 30a9d6f→59d81c2，有一处optional_mark非NULL分支伪代码纠正后限定接受D03；实际acquire a3=0主链不受影响，D03对应helper视图须以D04为准。管理范围/差异/JSON/链接检查通过，原树干净且已整合，分支保留；D05从59d81c2新树新agent补位。
+
+## 当前完整任务书 D04（已启动，基线d07ed94）
+
+任务ID D04，新agent独立复核D03 UART fd→实际write→同步缓冲所有权闭包。分支codex/re-0041-d04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d04；基线含D03最新管理提交。独占reverse/reports/ap01/uart-write-review-d04-0041-20261023.md及reverse/analysis/uart-write-review-d04-0041-20261023/。
+
+业务问题：同名/dev/ttyS1的注册安装与fd62fc91b0怎样静态连接到具体write=a002c206；对象页式取得/引用加减和正常write是否同步消费frame并写TX ring，返回值与实际硬件交付的边界是否准确？核心按D03正式12函数表及短lower/context依赖，约5–12核心；已知a0025904/a00258e4/a00258a0/a0025874/a0027e54、注册a00296bc→a01b5a7e、inode ops a066d7c8、device62fc36d0、应用open a005ab1c、具体write a002c206，必要三初始化区。既验收D02 write wrapper/帧/队列/parser只针对核，不重做全链证据。
+
+重点路径安装关联的条件性/别名与动态换表限制、24B对象/每页6项/引用临界区与锁范围、负返回/errno原序、按byte源读取与ring半字head/tail/缓冲复制、直接lower按值发送和未安装批量槽、frame指针不持有的范围、返回源字节接受数而非硬件完成。原厂商字/间接ABI/写宽与返回覆盖须独立原指令核；标准实现仅来源版本认证才排除。
+
+逐项接受纠正未核，纠正只独占报告不改D03。来源未认证、完整path解析、零引用final close、ring后续a001a70a/DMA/tail/唤醒可保留精确断边，不恢复实际DMA后继或全UART驱动。交付原字节独立证据、必要伪代码布局状态所有权、事实推断未知、来源、实际静态验证与一个后继闭包。排除异常输入/超时/漏洞、固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
+
+最新：G02→da4c9dc、H02→dcc2a08限定验收通过；D03→d07ed94、F03→48af5ae已整合待独立复核。旧动态快照仅记录当时，本表覆盖。

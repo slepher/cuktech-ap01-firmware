@@ -1,6 +1,6 @@
 # 0041 私有功能恢复覆盖记录
 
-当前滚动状态（2026-10-23恢复）：A21/F05/G03/H03恢复与D04/E04独立复核六路运行。F04→3aba13a接受F03；E03→85c61e2待E04。D04报告D03 optional_mark分支需纠正、正式报告待提交；A20→ab67c6f纠正后接受A19。其他既有验收保持限定范围。完整目标未完成、不计算百分比、无新增开源排除、不推送。详见[管理队列](rolling-management-0041-20261023.md)。
+当前滚动状态（2026-10-23恢复）：A21/D05/F05/G03/H03恢复与E04独立复核六路运行。D04→59d81c2纠正后接受D03（optional_mark分支以D04为准）；A20→ab67c6f纠正后接受A19。E04报告E03 port1/port2同栈布局的同次执行措辞需收紧、正式报告待提交。既有其他限定验收保持；完整目标未完成、不计算百分比、无新增开源排除、不推送。详见[管理队列](rolling-management-0041-20261023.md)。
 
 更新：2026-10-23。原件 SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。目标仍为全部非开源程序逻辑；本表是功能导航，不是完整函数认证清单。历史缺陷调查不作为默认续作。
 
@@ -59,3 +59,5 @@
 新增独立闭包验收：[G02](region-transform-review-g02-0041-20261023.md)限定接受[G01](region-transform-flow-g01-0041-20261023.md)，[H02](weather-lifecycle-review-h02-0041-20261023.md)限定接受[H01](weather-subscriber-lifecycle-h01-0041-20261023.md)。[D03](uart-write-object-d03-0041-20261023.md)、[F03](miio-loop-close-f03-0041-20261023.md)仅作者静态验证通过，已整合待独立复核；实际硬件、完整关闭和全部生命周期断边保留。
 
 新增：[F04](miio-loop-close-review-f04-0041-20261023.md)限定接受F03关闭条件链及其断边，无语义纠正；[E03](ctk-view-dataflow-e03-0041-20261023.md)恢复真实注册/触发→CTK栈view→主要port1消费，待E04独立复核。
+
+最新纠正验收：[D04](uart-write-review-d04-0041-20261023.md)有一处optional_mark分支纠正后限定接受D03；helper对应伪代码以D04为准。实际acquire a3=0的正常fd→write→ring复制闭包不变，最终close、DMA/tail/唤醒和硬件交付仍断边。

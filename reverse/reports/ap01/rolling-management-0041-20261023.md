@@ -18,13 +18,13 @@
 
 ## 实际运行快照
 
-当前4恢复2独立复核共6个运行subagent，主窗口另计；已结束任务不计运行。
+当前5恢复1独立复核共6个运行subagent，主窗口另计；已结束任务不计运行。
 
 |任务|agent|启动基线|状态|
 |---|---|---|---|
 |A21|/root/a21_png_info|ab67c6f|运行中|
 |E04|/root/e04_ctk_review|85c61e2|运行中|
-|D04|/root/d04_write_review|d07ed94|运行中|
+|D05|/root/d05_uart_drain|59d81c2|运行中|
 |F05|/root/f05_exit_callback|3aba13a|运行中|
 |G03|/root/g03_invalidation_submit|da4c9dc|运行中|
 |H03|/root/h03_weather_close|dcc2a08|运行中|
@@ -34,7 +34,7 @@
 ## 近期滚动候选（未启动）
 
 - A22：A21 PNG registry/info完整闭包独立复核，待A21整合；A21已启动。
-- D05：D04验收后恢复a001a70a传输启动→正常完成callback→ring tail/等待者通知小闭包；D04已启动。
+- D06：D05 TX ring正常启动/完成/唤醒闭包独立复核，待D05整合；D05已启动。
 - E05：E04验收后，app订阅节点/页面正常注销销毁小闭包，先据E04正式建议选一条真实退出边；E04已启动。
 - F06：F05返回后对象callback完整闭包独立复核，待F05整合；F05已启动。
 - G04：G03提交/直接消费完整小闭包独立复核，待G03整合；G03已启动。
@@ -77,17 +77,6 @@ A20对add_flag callee/字段谓词纠正须作为既有合同，不能沿用A19�
 A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后限定接受A19，原add_flag状态门说明以A20为准。旧待正式报告仅为历史记录，本状态覆盖。
 
 
-## 当前完整任务书 D04（已启动，基线d07ed94）
-
-任务ID D04，新agent独立复核D03 UART fd→实际write→同步缓冲所有权闭包。分支codex/re-0041-d04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d04；基线含D03最新管理提交。独占reverse/reports/ap01/uart-write-review-d04-0041-20261023.md及reverse/analysis/uart-write-review-d04-0041-20261023/。
-
-业务问题：同名/dev/ttyS1的注册安装与fd62fc91b0怎样静态连接到具体write=a002c206；对象页式取得/引用加减和正常write是否同步消费frame并写TX ring，返回值与实际硬件交付的边界是否准确？核心按D03正式12函数表及短lower/context依赖，约5–12核心；已知a0025904/a00258e4/a00258a0/a0025874/a0027e54、注册a00296bc→a01b5a7e、inode ops a066d7c8、device62fc36d0、应用open a005ab1c、具体write a002c206，必要三初始化区。既验收D02 write wrapper/帧/队列/parser只针对核，不重做全链证据。
-
-重点路径安装关联的条件性/别名与动态换表限制、24B对象/每页6项/引用临界区与锁范围、负返回/errno原序、按byte源读取与ring半字head/tail/缓冲复制、直接lower按值发送和未安装批量槽、frame指针不持有的范围、返回源字节接受数而非硬件完成。原厂商字/间接ABI/写宽与返回覆盖须独立原指令核；标准实现仅来源版本认证才排除。
-
-逐项接受纠正未核，纠正只独占报告不改D03。来源未认证、完整path解析、零引用final close、ring后续a001a70a/DMA/tail/唤醒可保留精确断边，不恢复实际DMA后继或全UART驱动。交付原字节独立证据、必要伪代码布局状态所有权、事实推断未知、来源、实际静态验证与一个后继闭包。排除异常输入/超时/漏洞、固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
-
-最新：G02→da4c9dc、H02→dcc2a08限定验收通过；D03→d07ed94、F03→48af5ae已整合待独立复核。旧动态快照仅记录当时，本表覆盖。
 
 ## 当前完整任务书 E04（已启动，基线85c61e2）
 
@@ -97,7 +86,7 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 
 逐项接受纠正未核，独立原指令/厂商字/宽度符号/返回覆盖/循环重读和必要伪代码布局状态所有权，事实推断未知、来源、实际静态验证与断边。纠正只独占报告不改E03。页面/订阅最终清理、其他端口分支/+34/+38及全局deinit保持原边界，不扩完整CTK页面或所有通知。来源未认证不排除，formatter/已验收转换/allocator可留明确合同。禁止固件执行/外连/漏洞/异常输入/历史回放/ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 D05（待D04纠正报告整合）
+## 当前完整任务书 D05（已启动，基线59d81c2）
 
 任务ID D05，业务恢复UART TX ring启动→正常完成callback→tail推进/等待者通知。分支codex/re-0041-d05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d05；基线含D04最新管理提交。独占reverse/reports/ap01/uart-ring-drain-d05-0041-20261023.md及reverse/analysis/uart-ring-drain-d05-0041-20261023/。
 
@@ -130,3 +119,5 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 问题：a008e3ac初始化片段→a0082914创建/registry插入→a0082c8c class0匹配a00eb6fe PNG info→descriptor/header输出→registry deinit回收是否可由真实注册写入/间接ABI连接？具体核心以A21正式清单为准约5–12函数。已知registry base62fc957c、+110 payload28B、+114/+118 head/tail；创建36B头插、PNG最后注册优先BIN；a008e82c创建/a008e838写callback，close字段真实地址a00eab9a，不能沿用A21早期临时误报a00eb39a；deinit a008be06在a008bed2清registry。重点PNG signature实际data前8B与data+10取低16位宽高、format0x10/返回1、info只借decoder、list unlink/free、构造/注销所有权及顺序，header认证不等于像素/物理绘制执行。
 
 独立原指令/厂商字/函数边界/间接ABI/返回覆盖/资源宽度、逐项接受纠正未核，必要纠正只独占报告不改A21；source classifier/image setter及A20纠正后的flag合同仅针对核，不重复整个image链。完整open/decode/压缩算法、其他格式、动态注册全集及最终显示保留边界，不扩完整图像库。来源版本可核实才排除标准实现，厂商注册适配恢复。交付伪代码结构状态所有权、事实推断未知、来源、实际独立静态验证和断边；排除固件执行/外连/漏洞/畸形输入/历史回放/ROM生产模型修改；共同规则适用。
+
+D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠正为准，正常acquire a3=0闭包限定接受。E04运行中报告port1/port2栈复用措辞需收紧：同布局不等于同次通知执行两支，待正式报告提交。
