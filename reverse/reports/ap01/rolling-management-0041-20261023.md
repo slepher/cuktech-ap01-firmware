@@ -243,3 +243,15 @@ A11 4d4d5ed→139d994已整合，范围/差异通过，待A12；A12从139d994运
 ## C13/C14交接更新
 
 C13 aee8940→a10893d已整合，范围/差异通过，技术待C14；C14从a10893d运行，agent /root/c14_text_review。C13工作树干净且整合可回收保留分支。当前A12/B13/C14三个agent运行，A13/B14预备。C13源码归属仅LVGL候选，精确版本/厂商改动未认证，无新增开源排除。
+
+## A12/A13与B13/B14交接更新
+
+A12 79e7dc3→2b0c716已整合，限定接受A11，无纠正；248B/91指令/66项原编码核验通过。A13从2b0c716运行，agent /root/a13_nuttx_source。B13 afdf195→3c2bdeb已整合，限定接受B12，无纠正；68B/25条完整原编码核验通过。B14从3c2bdeb运行，agent /root/b14_numeric_location。两旧工作树均干净且整合可回收保留分支。当前A13/B14/C14，C14固定a10893d。
+
+## 预备任务 B15：数字位置setter独立复核
+
+分支 codex/re-0041-b15；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b15。须B14成果提交整合后，从最新管理提交启动。只复核B14最终实际范围正常字段/参数/返回合同，最多3核心函数及已给局部，不扩MiIO/天气全集。独占 reverse/reports/ap01/numeric-location-review-b15-0041-20261023.md、reverse/analysis/numeric-location-review-b15-0041-20261023/；必要精确纠正B14。原指令逐项接受/纠正/未核/来源及实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 A14：两函数来源识别独立复核
+
+分支 codex/re-0041-a14；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a14。须A13成果提交整合后，从最新管理提交启动。仅复核A13两个函数本地源码匹配/差异、版本和厂商修改识别证据，不外连、不从符号名推定未修改开源实现。独占 reverse/reports/ap01/scheduler-source-review-a14-0041-20261023.md、reverse/analysis/scheduler-source-review-a14-0041-20261023/；必要精确纠正A13。按证据接受/纠正/未核及实际静态验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
