@@ -219,3 +219,11 @@ B11 07d454b→5cabca7已整合，限定接受B10，无纠正；490B/157普通指
 ## 预备任务 C13：文本格式化更新入口
 
 分支 codex/re-0041-c13；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c13。须C12验收允许后，从最新管理提交启动。只恢复a0091ee4文本更新入口及一个直接依赖的格式化/文本存储合同，最多3核心函数，不扩完整GUI/printf库。入口C09/C10与C11/C12相关既有证据，先查已解成果避免重复。若识别为开源须记录本地可核实来源/版本或识别依据，未知修改不排除；不能只凭库形状排除。独占 reverse/reports/ap01/text-update-entry-c13-0041-20261023.md、reverse/analysis/text-update-entry-c13-0041-20261023/。核原指令/ABI/所有权的局部事实，事实推断未知、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## C12/C13交接更新
+
+C12 0bae399→8b82f93已整合，限定接受C11，无纠正；660B/234普通指令/1厂商word/30目标/28字段核验通过。C13从8b82f93运行，agent /root/c13_text_entry；现有报告已核实a0091ee4内部未展开。C12工作树干净且整合可回收保留分支。
+
+## 预备任务 C14：文本更新入口独立复核
+
+分支 codex/re-0041-c14；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c14。须C13成果提交整合后，从最新管理提交启动。只复核C13最终实际范围内文本更新入口及一个直接依赖（最多3函数），参数/变参/文本存储所有权及来源边界，不扩GUI/printf。独占 reverse/reports/ap01/text-update-entry-review-c14-0041-20261023.md、reverse/analysis/text-update-entry-review-c14-0041-20261023/；必要精确纠正C13。原指令逐项接受/纠正/未核、来源/实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
