@@ -140,7 +140,7 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 
 独占reverse/reports/ap01/backlight-animation-source-d21-0041-20261024.md及reverse/analysis/backlight-animation-source-d21-0041-20261024/。
 
-待D20整合后，只认证D19/D20的96B descriptor必要字段与start/get/delete/target/exec/path合同到本地LVGL9.2.1 lv_anim.c/lv_anim.h相应行。先核F07/F08等旧来源报告有无已覆盖，匹配直接引用；对未核字段/删除callback与ROM差异给局部答案。厂商遍历字未认证不能用候选替代；不扩完整动画调度/GUI/生命周期，也不假定ctx最终释放。候选精确ROM版本未知。
+待D20整合后，优先补其提出的真实a00f43bc→a018fb3c→a00df94c(target,0x3e,value,0x20000) property/selector语义认证，回答三角动画的具体UI效果；只核必要薄wrapper/属性定义，不扩通用style引擎。D20已筛旧complete/settings只含通用setter/清理，不能据标题认首次发现。其次仅在尚未覆盖时认证D19/D20的96B descriptor必要字段与start/get/delete/target/exec/path合同到本地LVGL9.2.1 lv_anim.c/lv_anim.h相应行。先核F07/F08等旧来源报告有无已覆盖，匹配直接引用；对未核字段/删除callback与ROM差异给局部答案。厂商遍历字未认证不能用候选替代；不扩完整动画调度/GUI/生命周期，也不假定ctx最终释放。候选精确ROM版本未知。
 
 准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
 
