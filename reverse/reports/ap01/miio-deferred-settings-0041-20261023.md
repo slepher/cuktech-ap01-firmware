@@ -4,6 +4,8 @@
 
 新增功能续作见[模式、自定义功率与 UI/UART 控制合同](mode-control-0041-20261023.md)；本文保留历史已核范围，后续不沿缺陷验证方向扩展。
 
+数字地区码函数续作见[B14只读校验合同](numeric-location-setter-b14-0041-20261023.md)及[B15独立复核](numeric-location-review-b15-0041-20261023.md)：`a009c5fc` 是区域码有效性判定器（validator），不是位置 setter；下文仅据此更正该函数术语，保留原调用条件和配置调用顺序。
+
 本轮在[蜂鸣/背光第三轮](buzzer-backlight-round3-0041-20261023.md)的 kind=0 合同基础上，展开 `PogoPinMng/MiIotMng.c` 中共享 timer 的全部任务分支与当前已定位的提交者。已恢复的局部职责还包括蜂鸣/背光、天气请求/UI 数据流、工厂门控/灯效；全局主要缺口仍有设备协议、UI/任务销毁、私有无线适配、内嵌 MCU 和来源未知代码。本轮选择此模块，因为它能把已经分散恢复的亮度、位置与天气调度连接起来。
 
 状态为**部分恢复**。本文是分析命名的伪代码，不是原始源码。只做静态分析，未运行固件、访问实机/服务、验证缺陷、修改安全检查或正式 ROM、提交或推送。原件 SHA256：`972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。
@@ -41,7 +43,7 @@
 
 `3/6` 城市、`3/7` 区县字符串 setter 分别复制到 `af40/af80`、写末字节 NUL，然后**直接**用原输入和 strlen(input) 写 `ck_config/loc_city`、`loc_district`，最后发字符串通知。当前分支没有提交 kind=4/5。持久化和通知长度取原输入，而非复制后全局槽的长度。不要因为 callback 中有同名任务就替换实际直接调用路径。
 
-整数属性 `3/8` 也直接检查/更新 `afc0`、调用 `a009c5fc` 并按返回条件持久化 `loc_id`，不是本轮找到的 kind=2 提交点；相关完整属性函数仍仅部分恢复。kind=2/4/5/6 有真实分支，但当前已定位提交者集合未覆盖它们，不宣称不可达或删除代码。
+整数属性 `3/8` 将输入与 `62fc9160` 的 word 比较，不同时先写 `afc0`，再调用只读区域码校验器 `a009c5fc`，仅返回非0时调用 `loc_id` 配置写接口；配置调用不等于已认证实际落盘成功。它不是本轮找到的 kind=2 提交点；相关完整属性函数仍仅部分恢复。kind=2/4/5/6 有真实分支，但当前已定位提交者集合未覆盖它们，不宣称不可达或删除代码。
 
 scheduler `a009d286` 分配 8 B，将 kind/value 写入并覆盖 timer.data，以 delay=0、repeat=0 注册 `a00a0bd8`。分配失败直接返回；start 返回非 0 时记录并 free 请求，已核窗口未清 data。成功时请求借给 callback，callback 的所有分支最终到 `a00a0cce..a00a0cd4` free 并清 data。该结构是一个共享 timer/data 槽，没有恢复出链式或环形任务队列；ROM 日志 `work_queue_submit` 不能代替数据结构证据。重复提交、外部串行化与完整销毁仍未知，未进一步做异常验证。
 
@@ -87,7 +89,7 @@ void miio_handle_timer_cb_local(Timer *timer) {
         config_write("ck_config", "loc_district", text_af80, strlen(text_af80));
         flags_b02c |= 2;
         if (compare_bytes_a00501be(text_af80, ptr(0x62fc9120), strlen(text_af80)) != 0) {
-            if (numeric_location_set_a009c5fc(word_afc0) != 0 && flags_b02c == 3) {
+            if (area_code_valid_a009c5fc(word_afc0) != 0 && flags_b02c == 3) {
                 weather_restart_bridge();
                 flags_b02c = 0;
             }
@@ -112,7 +114,7 @@ void miio_handle_timer_cb_local(Timer *timer) {
 
 - kind=3 只在本分支检查长度 9 和首字节 `'1'`，再与缓存比较；不补造更严格的内容检查。setter 的实际复制参数/持久化分支沿用已有位置报告；callback 不检查其状态结果就安排天气重排。
 - kind=5 比较长度为新文本的 strlen，不包含 NUL，不是完整字符串相等判断；比较目标确实是 `62fc9120`，此前天气 URL 合同将它识别为 city 文本。不能为了字段名一致改成另一地址或“旧区县”。
-- kind=2 达到 flags==3 就重排；kind=5 还需要字节比较非 0、数字位置 setter 返回非 0。两条路径不对称，不能简化为“两项更新齐全便必定刷新”。只有触发重排的内层分支清 flags，普通未触发路径保留已有位。
+- kind=2 达到 flags==3 就重排；kind=5 还需要字节比较非 0、数字地区码校验器返回非 0。两条路径不对称，不能简化为“两项更新齐全便必定刷新”。只有触发重排的内层分支清 flags，普通未触发路径保留已有位。
 - kind=5 的“Restart weather service”日志在字节比较非 0 分支末尾，即使内层条件未满足也会输出；日志本身不证明当次实际重排。
 
 ## 模式下游与天气重排桥
