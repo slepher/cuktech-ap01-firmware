@@ -22,12 +22,12 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A48|派发中|本任务书提交|独立复核A46|
-|A49|派发中|本任务书提交|独立复核A47分类1→a0107d8e→mode1 W→既有O复制；a01b2e3a实参callback(D,H)、条件缓存归还和O前三word清零，不能直接命名fclose|
-|D20|派发中|本任务书提交|独立复核D19动画descriptor96B、2000ms无限repeat单周期、完成/删除回调0、target=ctx+10而非ctx、exec/path和结束编辑删除身份|
-|E18|派发中|本任务书提交|只补E16/E17调用a001b302的正常unsigned64除法合同：实际分母0:0xf4240、分子构造、返回pair及必要carry/归一化路径|
-|G17|派发中|本任务书提交|只认证G13/G15/G16具体fb open/close/poll/notify与本地NuttX12.10候选对应关系|
-|H17|派发中|本任务书提交|只补H15/H16读者62fc6c64的真实writer/正常计数更新连接|
+|A48|/root/e17_uv_time_review（运行）|df35f44|独立复核A46|
+|A49|/root/g16_fb_file_review（运行）|df35f44|独立复核A47分类1→a0107d8e→mode1 W→既有O复制；a01b2e3a实参callback(D,H)、条件缓存归还和O前三word清零，不能直接命名fclose|
+|D20|/root/h16_clock_source_review（运行）|df35f44|独立复核D19动画descriptor96B、2000ms无限repeat单周期、完成/删除回调0、target=ctx+10而非ctx、exec/path和结束编辑删除身份|
+|E18|/root/a46_cache_drop（运行）|df35f44|只补E16/E17调用a001b302的正常unsigned64除法合同：实际分母0:0xf4240、分子构造、返回pair及必要carry/归一化路径|
+|G17|/root/a47_reader_mode（运行）|df35f44|只认证G13/G15/G16具体fb open/close/poll/notify与本地NuttX12.10候选对应关系|
+|H17|/root/d19_backlight_animation（运行）|df35f44|只补H15/H16读者62fc6c64的真实writer/正常计数更新连接|
 
 ## 派发规则（本次用户调整优先）
 
@@ -111,3 +111,8 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 只补H15/H16读者62fc6c64的真实writer/正常计数更新连接。优先既有source-xrefs/global refs/较晚round3/clock_timer或clock_systimer候选定位，实际有种子才补一条increment/reset/timer周期链；无可靠writer有界交付精确未知，不承诺节奏/单调/epoch。不重复offset62fc5c74无种子搜索，不全ROM字节/字段扫、不扫全IRQ、无硬件执行。候选源只定位不等于ROM。
 
 先读REA skill C:/Users/cogic/.agents/skills/reverse-engineer-anything/SKILL.md及本文共同规则/复用规则。先检索优先complete、最终验收及近期对应报告/独立复核，按地址字段交叉检索；表列已有出处→行为→局限→实际缺口。报告四分：继承、本轮复核纠正、真正新增、精确未闭；旧字节复核不算新增功能。只必要稀疏窗口/ABI，不全导出/复制/机械记账。独占输出、独占worktree，不改共享文档/主树/生产ROM配置模型，不创建下级agent；其他agent同时工作勿撤销。静态安全边界全适用。必要验证、精确路径提交、报告commit/clean/未知；接近提交先给后继建议。
+
+
+## 本批继承与增量快照（df35f44启动）
+
+A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode0合同，只独立复核，新增0；D20继承settings-round2b清理接线与D19，只独立复核，新增0。E18只补实际固定分母除法返回合同，不重做时间上层；G17只补NuttX fb候选来源认证，不用LVGL认证替代；H17只找计数writer正常连接，不重搜offset未知。六个agent已由实时状态确认全部running；管理窗口另计。
