@@ -22,9 +22,9 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A31|/root/a31_cache_invalidation_review|9ea568f|独立技术复核已整合增量|
+|A33|照片新源ABI缺口|准备补位|
 |A32|独立技术复核|待启动，完整任务书已就绪|
-|D12|/root/d12_uart_source_review|9ea568f|独立技术复核已整合增量|
+|D13|Pixel/raw候选来源认证|准备补位|
 |E11|独立技术复核|待启动，完整任务书已就绪|
 |G10|独立技术复核|待启动，完整任务书已就绪|
 |H09|独立复核type2 DELETE真实增量|待启动，任务书就绪|
@@ -65,27 +65,11 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 
 以上需据正式报告收缩为完整独占任务书；若任务已覆盖且无必要技术增量，则从其他已定位缺口换题，不递归复核纯重复材料。主窗口在每项提交前准备具体任务，保持六路。
 
-## 当前完整任务书 A31（已启动，基线9ea568f）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a31；分支codex/re-0041-a31；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/image-cache-invalidation-review-a31-0041-20261024.md及reverse/analysis/image-cache-invalidation-review-a31-0041-20261024/。
-
-新agent独立技术复核：A29的a00ed7f4 +5c门→getter对象+2c旧源→a00890e8→G+11c image-cache source/class key→a019cfbe连接；G+120另一cache必须分开，旧photo调用/custom0新源实参继承且不补成每次切页必失效。A27/A28内部失效/release/cleanup不重做。
-
-正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
-
 ## 当前完整任务书 A32（待启动，正式前序已整合）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a32；分支codex/re-0041-a32；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/image-cache-accounting-review-a32-0041-20261024.md及reverse/analysis/image-cache-accounting-review-a32-0041-20261024/。
 
 新agent独立技术复核：A30真正新增计量callback安装身份、参数返回单位、占用增减到容量预算门数据合同；A23/A27/A28 cleanup及A29失效调用链直接继承。不扩排序/heap或重导已有窗口。
-
-正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
-
-## 当前完整任务书 D12（已启动，基线9ea568f）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d12；分支codex/re-0041-d12；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/uart-channel-source-review-d12-0041-20261024.md及reverse/analysis/uart-channel-source-review-d12-0041-20261024/。
-
-新agent独立技术复核：D11候选SDK分层/具体匹配差异和未认证范围，区分低层deinit/irq_detach与NuttX channel allocator/free/shutdown。候选SDK HEAD/version与D07/D08旧认证直接引用，不拿候选detach填ROM未知，不重读三槽全部原字节或重新扫描所有候选源码。
 
 正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
 
@@ -110,3 +94,19 @@ E10现已确认其候选为旧导航覆盖，后继不再重复根退出搜索�
 新agent独立技术复核：H08真正补充的type2 ctx/wrapper与a00aba9c DELETE/注销原序；a00ab754完整callback、pass3 type2登记挂接及分类显示全继承，不跨用type4 68B或type19 116B，不重导整callback。
 
 正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
+
+## 当前完整任务书 A33（准备，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a33；分支codex/re-0041-a33；基线为本任务书提交。独占reverse/reports/ap01/photo-source-abi-a33-0041-20261024.md及reverse/analysis/photo-source-abi-a33-0041-20261024/。
+
+A29/A31明确留存照片主旋钮调用a00ed7f4的新源实参custom0未可信。photo-evidence-round3 ev_e3db…、main/detail-knob round2、最终ZIP照片重建与较晚round3先继承。仅核这一个已知正常照片分支到image setter的新源身份、厂商指令、实参ABI与借用/复制连接；A29已闭旧源失效、A23–A28 decoder/cleanup合同不重做，不重做资源提取/PNG解码/照片分类。不把较早custom0当较晚仍未知，先查最新完整body；若已有覆盖直接引用结束。保留实际切页时序/执行命中未知，不扩全旋钮函数。
+
+先已有→解释行为→局限→精确缺口，四分类交付，必要局部静态验证，不重复整函数/源码/资源/哈希账。无增量报覆盖不擅自换题，完成及时提交供立即补位。共同安全/隔离/独占输出规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网。提交明确独占文件，报告commit/验证/未知/clean后结束。
+
+## 当前完整任务书 D13（准备，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d13；分支codex/re-0041-d13；基线为本任务书提交。独占reverse/reports/ap01/pixel-source-auth-d13-0041-20261024.md及reverse/analysis/pixel-source-auth-d13-0041-20261024/。
+
+A25/A26默认raw/free/独立align表绑定与Pixel/raw析构、A30计量字段已有ROM合同，准确库来源匹配尚未认证；F07/F08只认证候选显示/list差异，不等于draw-buffer来源。仅将这些已知draw-buffer默认handler/字段/对齐/清理合同与本地WSL Ubuntu-24.04候选/home/slepher/nuttx-ap01-sim/apps/graphics/lvgl/lvgl的LVGL9.2.1实现逐项比对，复用候选身份，不重做display/list认证或整库排除。候选根只读（WSL访问必要时require_escalated，已有静态读取授权），禁止启动SIM/构建/网络/修配置。源码不能覆盖ROM差异；不匹配明确字段/ABI差异，不重读完整ROM函数或复制整源码。
+
+先已有→解释行为→局限→精确缺口，四分类交付，必要局部静态验证，不重复整函数/源码/资源/哈希账。无增量报覆盖不擅自换题，完成及时提交供立即补位。共同安全/隔离/独占输出规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网。提交明确独占文件，报告commit/验证/未知/clean后结束。
