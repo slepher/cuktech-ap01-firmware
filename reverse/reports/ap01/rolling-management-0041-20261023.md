@@ -23,10 +23,10 @@
 |任务|agent|基线|实际范围|
 |---|---|---|---|
 |C25|/root/e17_uv_time_review（运行）|29002d0|既有区域变换的局部候选来源认证|
-|D22|/root/g16_fb_file_review（派发中）|本次启动提交|独立核D21属性映射与四项来源差异|
+|D22|/root/g16_fb_file_review（运行）|9f76584|独立核D21属性映射与四项来源差异|
 |C23|/root/h16_clock_source_review（运行）|0a1cf0a|C13/C14正常格式化入口局部候选认证|
 |A50|/root/a46_cache_drop（运行）|1edfc57|真实reader消费端a008b888局部合同|
-|H18|/root/a47_reader_mode（运行）|ed4735b|独立复核H17有界搜索与未知结论|
+|A53|/root/a47_reader_mode（派发中）|本次启动提交|独立复核A51 drop/drop_all局部候选映射|
 |G18|/root/d19_backlight_animation（运行）|ed4735b|独立复核G17候选映射/差异/配置条件|
 
 ## 派发规则（本次用户调整优先）
@@ -82,15 +82,6 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
 
 
-## 当前完整任务书 H18（前置已整合，立即接替）
-
-独占reverse/reports/ap01/clock-counter-review-h18-0041-20261024.md及reverse/analysis/clock-counter-review-h18-0041-20261024/。
-
-待H17整合后，新独立agent只复核H17实际增量或有界负结论。只核其真实writer种子、必要字段/原字节/周期连接与解释强度；若无种子则核搜索边界，不重复全ROM搜索，不将未找到等于不存在，不再搜offset writer。H15/H16既有读者继承，新增功能0。
-
-准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
-
-
 ## 预备完整任务书 A52（有前置，未启动）
 
 独占reverse/reports/ap01/photo-reader-consumer-review-a52-0041-20261024.md及reverse/analysis/photo-reader-consumer-review-a52-0041-20261024/。
@@ -100,7 +91,7 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
 
 
-## 预备完整任务书 A53（有前置，未启动）
+## 当前完整任务书 A53（A51已整合，立即接替）
 
 独占reverse/reports/ap01/image-cache-drop-source-review-a53-0041-20261024.md及reverse/analysis/image-cache-drop-source-review-a53-0041-20261024/。
 
