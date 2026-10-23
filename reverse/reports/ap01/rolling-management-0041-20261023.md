@@ -287,3 +287,11 @@ A13 7f44b57→77d4336已整合，范围/差异通过，技术待A14；A14从77d4
 ## 预备任务 A15：一个天气订阅消费点
 
 分支 codex/re-0041-a15；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a15。须A14验收完成整合后，从最新管理提交启动。转weather-dataflow已知五槽订阅缺口，只恢复a00b3a68一个具体注册调用者及其callback首个天气数据消费点，最多3核心函数/少量直接依赖；先核后续报告避免重复。入口weather-dataflow报告的callback(data,user_arg)合同、保留inventory/调用者引用。先选有明确证据的小注册点，不接管全部天气UI/图标转换/生命周期。独占 reverse/reports/ap01/weather-subscriber-a15-0041-20261023.md、reverse/analysis/weather-subscriber-a15-0041-20261023/。核原指令及间接ABI、参数/数据宽度/借用与复制边界，事实推断未知、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## B15/B16交接更新
+
+B15 fa7edde→30c7797已整合，限定接受B14；284B/88普通指令/16目标/29组独立断言通过。授权旧MiIO报告已将setter改为validator并加续作链接，保留调用、返回条件和持久化顺序；不是改ROM行为。B16从30c7797运行，agent /root/b16_factory_reader。B15工作树干净且整合可回收保留分支。当前A14/B16/C16，A15/C17已预备。
+
+## 预备任务 B17：工厂active读者独立复核
+
+分支 codex/re-0041-b17；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b17。须B16成果提交整合后，从最新管理提交启动。仅复核B16一个读者的原指令/byte宽度/调用触发条件或有界检索结论，不扩工厂UI/销毁。独占 reverse/reports/ap01/factory-active-review-b17-0041-20261023.md、reverse/analysis/factory-active-review-b17-0041-20261023/；必要精确纠正B16。逐项接受/纠正/未核、来源/实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
