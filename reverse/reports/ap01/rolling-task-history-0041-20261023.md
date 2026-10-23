@@ -1747,3 +1747,15 @@ H18 0ac422a已整合，H17有界结论接受/新增0，不重搜；A53立即接�
 
 
 G18 9c082da已整合，接受G17限定来源/新增0；A54立即接替。
+
+
+## 当前完整任务书 A50（前置已整合，立即接替）
+
+独占reverse/reports/ap01/photo-reader-consumer-a50-0041-20261024.md及reverse/analysis/photo-reader-consumer-a50-0041-20261024/。
+
+A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5d6非零mode→a008b888种子，whole-ROM round1已有a008b888 extent(ev_0cf7b05a…/544B)；并非此前未分析。只补同reader前缀进入此callee的ABI、D读取/reader回调槽、缓存持有连接；先核旧complete内部与A47/A49覆盖，若已覆盖直接收缩交付。具体D实例/真实mode1 source仍未知，不扩全部文件系统/所有解码算法/失败分支，不重导544B全函数。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+A50 0ec0cb6已整合，待A52独立复核；I01立即接替。
