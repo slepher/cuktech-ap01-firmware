@@ -1564,3 +1564,58 @@ H13/H14天气ID0算术与E16 uv ID1缓存刷新分开；E16明确只核a002696a 
 先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码资源导出/机械账，无增量及时交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
 
 已整合，正式报告保留真正新增/复用与精确断边；A45无class种子停止，不继续全GUI搜索。
+
+
+## 当前完整任务书 A46（准备立即补位，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a46；分支codex/re-0041-a46；基线为本任务书提交。独占reverse/reports/ap01/image-cache-drop-a46-0041-20261024.md及reverse/analysis/image-cache-drop-a46-0041-20261024/。
+
+A43/A44明确backend drop/drop_all分支未展开；A27/A34/A38已有默认表a0263afc十word和remove/计量/链/cleanup。只核这同一backend的真实drop/drop_all槽及其normal通用API接入、条目/索引/链移除、引用/失效门与cleanup/free责任。先复用原表，不重建表，不能将通用a019cfbe直接命名backend drop_cb。旧release/victim/key合同继承，不扩平衡树/所有cache/任意异常重复操作；合法all-key分支须按原正常API证据认定，不擅加NULL门。
+
+先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码/资源导出/机械账。无增量及时覆盖交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
+
+
+## 当前完整任务书 A47（准备立即补位，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a47；分支codex/re-0041-a47；基线为本任务书提交。独占reverse/reports/ap01/photo-reader-mode-a47-0041-20261024.md及reverse/analysis/photo-reader-mode-a47-0041-20261024/。
+
+A41/A42留下非零O+10 mode分支callee a01b2e3a内部未核，memory mode0已闭。本题只沿已知setter正常非零reader mode的真实实参到该callee及对应构造/持有字段，核mode语义与资源归还（文件型只是候选，不能先把a01b2e3a命名fclose）。先查旧photo/较晚round3及retained caller，正常路径源指针/句柄身份有证才写合同；无真实构造种子精确交付，不扩解码算法/文件系统/全部失败臂。ROM输入借用与mode0析构全继承，不能虚构实际照片调用该mode。
+
+先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码/资源导出/机械账。无增量及时覆盖交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
+
+
+## 当前完整任务书 D19（准备立即补位，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d19；分支codex/re-0041-d19；基线为本任务书提交。独占reverse/reports/ap01/backlight-animation-d19-0041-20261024.md及reverse/analysis/backlight-animation-d19-0041-20261024/。
+
+早期buzzer/backlight-round2明确a00f43d4(timer)读timer+c ctx与ctx+8c亮度、调用setter并创建2000ms动画，动画/UI所有权未闭。管理在当前reports/rehost/tooling按地址仅旧两报告命中、ZIP文本未命中，此范围不表示从未分析。只补此正常callback的动画descriptor/对象userdata、exec/ready主要更新与完成/清理身份；先查旧system/guide/settings/page-logic与较晚round3按地址/字段，已解释的背光setter/PWM全继承，不恢复所有动画或所有UI，不能拿SIM动画当ROM生命周期。
+
+先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码/资源导出/机械账。无增量及时覆盖交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
+
+
+## 当前完整任务书 E17（准备立即补位，E16已整合）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e17；分支codex/re-0041-e17；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/uv-time-producer-review-e17-0041-20261024.md及reverse/analysis/uv-time-producer-review-e17-0041-20261024/。
+
+新agent独立复核E16真实writer a0098b60→a019e1a2→a002696a(1,out8)、UMAR64组合返回pair、除数0:0xf4240的helper接口→loop+140/+144回写及dispatch前消费连接。H13/H14 ID0 offset分支与E14/E15期限/unsigned比较全继承，不把来源/epoch或单位相互套用；helper若仅必要路径支持unsigned quotient，保持推断/未认证完整算法范围。H15负责a002645a/offset下层，E17不重复核其内部。先已有→复核缺口，四分类逐项接受纠正未核/新增功能0，必要稀疏原字节/厂商规则/ABI验证，不重导全函数、heap或close。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
+
+
+## 当前完整任务书 G16（准备立即补位，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g16；分支codex/re-0041-g16；基线为本任务书提交。独占reverse/reports/ap01/fb-file-review-g16-0041-20261024.md及reverse/analysis/fb-file-review-g16-0041-20261024/。
+
+独立复核G15 ops实际open=a012fabc/close=a012f3e0、16B F零化/字段初始化、D链和file+10持有、close lower可选调用→摘链→free F原序。G13/G14 poll槽teardown继承；close本体未遍历槽不能外推所有lower callback无清理，更不能作缺陷结论。实际open执行、poll teardown与close时序仍未知，只必要稀疏ABI/字段锚点，新增功能0。
+
+先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码/资源导出/机械账。无增量及时覆盖交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
+
+
+## 当前完整任务书 H16（准备立即补位，2026-10-24）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h16；分支codex/re-0041-h16；基线为本任务书提交。独占reverse/reports/ap01/clock-source-review-h16-0041-20261024.md及reverse/analysis/clock-source-review-h16-0041-20261024/。
+
+独立复核H15 a002645a正常8B调用者buffer、单次uint32 load62fc6c64、DIVU/REMU1000及乘1000000、return0；候选只支持秒/纳秒形状与刻度解释，counter writer/cadence/epoch与offset writer未证。H13/H14/E16已核两ID上层区别全继承，不重导上层或全ROM搜writer，不把候选源当ROM周期证明。新增功能0，必要稀疏原字节/源行锚点。
+
+先已有→行为→局限→精确缺口，四分类报告，复核新增功能0；可靠合同引用，只补必要原字节/源行，不重复整函数/源码/资源导出/机械账。无增量及时覆盖交付主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；必要验证独占提交报告commit/验证/未知/clean。
+
+
+整合：E17 bf07de2；G16 3024fec；H16 fb50710；A46/A47/D19已整合，后继独立复核A48/A49/D20。
