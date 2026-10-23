@@ -303,3 +303,11 @@ A14 c5ddb11→92c9d2e已整合，限定接受A13，0核心纠正；248B/91条、
 ## 预备任务 A16：天气订阅消费独立复核
 
 分支 codex/re-0041-a16；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a16。须A15成果提交整合后，从最新管理提交启动。仅复核A15一个注册点及callback首个数据消费合同、间接ABI/借用复制边界，最多3核心函数，不扩全部天气UI。独占 reverse/reports/ap01/weather-subscriber-review-a16-0041-20261023.md、reverse/analysis/weather-subscriber-review-a16-0041-20261023/；必要精确纠正A15。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## C16/C17交接更新
+
+C16 16190f1→f482b78已整合，限定接受C15，无纠正；226B/81条独立位域解析/52合同断言通过。C17从f482b78运行，agent /root/c17_invalidation_gates。C16工作树干净且整合可回收保留分支。当前A15/B16/C17；B16有界直接编码定位仅命中已解initializer/callback，外部读者仍未知，待其正式交付/B17复核，不扩扫描。
+
+## 预备任务 C18：下游门控独立复核
+
+分支 codex/re-0041-c18；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c18。须C17成果提交整合后，从最新管理提交启动。仅复核C17入口两个正常返回门/必要字段和参数，最多3核心函数及已给局部，不扩失效队列/GUI全集。独占 reverse/reports/ap01/invalidation-gates-review-c18-0041-20261023.md、reverse/analysis/invalidation-gates-review-c18-0041-20261023/；必要精确纠正C17。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
