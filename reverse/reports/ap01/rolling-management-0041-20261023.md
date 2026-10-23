@@ -127,3 +127,15 @@ B02：973240d已整合为bd21fff，范围/差异检查通过，B03限定技术�
 ## C09 实际任务调整（优先于上方预备任务）
 
 C09从efefd4a启动，agent /root/c09_detail_gate。启动核对发现62fc4034 gate setter/清理已由theme-total-state/theme-online恢复；依用户“若已解决选等量级未完成项”改为只恢复详情页摘要helper a00f3844及最多两个直接依赖，回答ctx字段、模式getter及实际控件更新。入口ui-total-consumers报告明确未展开helper，排除a00f388c、完整UI及页面生命周期。独占输出改为 reverse/reports/ap01/detail-summary-c09-0041-20261023.md、reverse/analysis/detail-summary-c09-0041-20261023/。不新增重复gate验收成果，只在新报告注明调整和旧报告链接。工作树/分支/基线不变，共同约束及交付标准全部适用。
+
+## 预备任务 B09：callback ABI独立复核
+
+分支 codex/re-0041-b09；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b09。须B08成果提交整合后，从最新管理提交启动。仅复核B08 a00a389c→a00a3c8a间接ABI、注册userdata首个使用点及日志参数，最多三个核心函数/既有局部，不扩基础信息状态机。独占 reverse/reports/ap01/basic-info-callback-review-b09-0041-20261023.md、reverse/analysis/basic-info-callback-review-b09-0041-20261023/；必要可精确纠正B08。原指令逐项接受/纠正/未核、来源/实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 A09：线程适配入口一个消费点
+
+分支 codex/re-0041-a09；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a09。须A08验收允许后，从最新管理提交启动。只恢复a012f946适配入口如何直接读取对象+130/+134并进入原entry、构造其a0，最多3核心函数/直接依赖；不扩调度器、启动可达性或蜂鸣关联。入口A07/A08及保留inventory。独占 reverse/reports/ap01/thread-adapter-a09-0041-20261023.md、reverse/analysis/thread-adapter-a09-0041-20261023/。核原指令与ABI、事实推断未知、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 C10：详情摘要独立复核
+
+分支 codex/re-0041-c10；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c10。须C09实际调整后的detail-summary成果提交整合后，从最新管理提交启动。仅复核a00f3844及C09最多两个直接依赖的ctx/模式/控件合同，不回到已解gate或扩完整UI。独占 reverse/reports/ap01/detail-summary-review-c10-0041-20261023.md、reverse/analysis/detail-summary-review-c10-0041-20261023/；必要可精确纠正C09。核原指令、逐项接受/纠正/未核/来源及实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
