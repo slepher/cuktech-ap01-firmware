@@ -24,8 +24,8 @@
 |---|---|---|---|
 |T02|/root/e17_uv_time_review（运行）|75f977a|独立核T01复用接入/运行时限定|
 |B23|/root/g16_fb_file_review（运行）|14e7291|独立核B22 cmd51真正新增分类合同|
-|I06|/root/h16_clock_source_review（运行）|14e7291|独立核I05旧配置read/cache合同衔接|
-|K01|/root/a46_cache_drop（派发中）|本次启动提交|a00a4cac正常UI动作入口至同组件callee接入|
+|B24|/root/h16_clock_source_review（派发中）|本次启动提交|同item+18生产者旧记录局部检索/必要接入|
+|K01|/root/a46_cache_drop（运行）|bd7b344|a00a4cac正常UI动作入口至同组件callee接入|
 |L01|/root/a47_reader_mode（运行）|75f977a|设置UI两caller到a00ab478的必要接入合同|
 |J04|/root/d19_backlight_animation（运行）|09e11d0|工厂正常UI/资源生命周期旧证据复用与真实种子|
 
@@ -82,15 +82,6 @@ A48继承A46/既有cache合同，只独立复核，新增0；A49继承A47及mode
 REA skill、本文共同/复用/静态安全规则全适用；独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。先已有→行为→局限→精确缺口，四分报告，只必要稀疏证据；已覆盖直接收缩，无可靠种子不扩扫。必要JSON/链接/差异检查、精确独占提交commit/验证/未知/clean，接近提交提前报重叠/种子。
 
 
-## 当前完整任务书 I06（前置已整合，立即接替）
-
-独占reverse/reports/ap01/wifi-config-cache-review-i06-0041-20261024.md及reverse/analysis/wifi-config-cache-review-i06-0041-20261024/。
-
-待I05整合后，新独立agent只复核旧a005a736内联初始化配置read a0060946参数/精确rc1/62fc919c字节失败清0成功读取及同I01 getter关系；PSM旧static/原字/flags覆盖必须继承，不当新的setter/持久写，不扩事件writer/网络或底层NVS。主体已有新功能0，必要稀疏锚点标复核。
-
-仅准备不计运行，派发前整合前置核重叠，最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则全适用，已有→实际缺口与四分报告、最小稀疏验证，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，独占提交commit/验证/未知/clean，接近提交先报后继种子。
-
-
 ## 当前完整任务书 T02（T01已整合，立即接替）
 
 独占reverse/reports/ap01/timer-repeat-release-review-t02-0041-20261024.md及reverse/analysis/timer-repeat-release-review-t02-0041-20261024/。
@@ -131,7 +122,7 @@ REA skill及本文共同/复用/静态安全规则全适用；先已有→行为
 最新管理HEAD新建独占树re0041-l02，分支codex/re-0041-l02，根同K01。REA skill及本文共同/复用/静态安全规则全适用；先已有→行为→局限→精确缺口，四分报告，必要稀疏窗口而非重复整函数/资源/源码/机械账。独占树/输出、不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销。精确路径提交commit/验证/未知/clean，接近提交先报重叠与真实种子。
 
 
-## 预备完整任务书 B24（有前置，未启动）
+## 当前完整任务书 B24（B22旧读者合同已整合，立即接替）
 
 独占reverse/reports/ap01/cmd51-item-field-producer-b24-0041-20261024.md及reverse/analysis/cmd51-item-field-producer-b24-0041-20261024/。
 

@@ -1983,3 +1983,15 @@ I04 5391bf4、T01 b5b5bdb已整合，新功能0；T02/L01立即接替，不重�
 
 
 J03 06c6469已整合，纯盘点新增0；L01已接其唯一优先种子；K01接替J04已交叉筛选的另一个UI动作种子。
+
+
+## 当前完整任务书 I06（前置已整合，立即接替）
+
+独占reverse/reports/ap01/wifi-config-cache-review-i06-0041-20261024.md及reverse/analysis/wifi-config-cache-review-i06-0041-20261024/。
+
+待I05整合后，新独立agent只复核旧a005a736内联初始化配置read a0060946参数/精确rc1/62fc919c字节失败清0成功读取及同I01 getter关系；PSM旧static/原字/flags覆盖必须继承，不当新的setter/持久写，不扩事件writer/网络或底层NVS。主体已有新功能0，必要稀疏锚点标复核。
+
+仅准备不计运行，派发前整合前置核重叠，最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则全适用，已有→实际缺口与四分报告、最小稀疏验证，不改共享/主树/生产ROM配置模型、不创建下级agent，其他agent同时工作勿撤销，独占提交commit/验证/未知/clean，接近提交先报后继种子。
+
+
+I06 8d1c34a已整合，I05限定合同接受/新增0；18 raw计数更正为17完整+2B前缀，补2B；B24接替有界检索同item字段生产者。
