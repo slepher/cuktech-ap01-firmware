@@ -910,3 +910,29 @@ E06 b5e53e4→0724167限定接受E05局部合同、完整退出注销仍未闭�
 先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
 
 E08 208dcc7→08dfc7c：限定接受E07候选/retained body结论，真实函数归属未知；新增功能0。
+
+
+## 当前完整任务书 A26（已启动，基线fca1d5e）
+
+问题：独立复核A25新增默认内存绑定。
+
+A23/A24、A25及其reuse-crosscheck；旧pass3初始化调用已知。只核a008e3ac实际表写入、a007fe60/a007ff40/a007fe4e raw/free/align ABI、Pixel与raw身份及析构原序。旧PNG合同直接引用，不重导整个函数，不扩heap/cache/动态替换。结果逐项接受/纠正/未核，新增功能记0。
+
+分支codex/re-0041-a26；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a26。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/pixel-memory-review-a26-0041-20261023.md及reverse/analysis/pixel-memory-review-a26-0041-20261023/。
+
+先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
+
+71bcb56→872972c：限定接受A25，新增功能0。
+
+
+## 当前完整任务书 F09（已启动，基线fca1d5e）
+
+问题：event array维护与重入精确断边。
+
+继承F05/F06/G05/G06事件注册/分发合同及F07/F08来源差异。派发后交叉检索确认G03/G04已留ac38/acc6快照清理，G05/G06已恢复dirty/busy、压紧/free及capacity=count+4调用，全部继承。实际范围收缩为a00ecc68容量helper内部owned门、大小计算/realloc/回写/限幅与caller返回消费；只补未解释语义窗口，不再恢复重入/删除，不重导已有原指令。候选源码不能替代ROM事实，20B不是完整list尺寸。
+
+分支codex/re-0041-f09；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f09。基线为本任务书提交（启动时最新整合提交，另记实际SHA）。独占reverse/reports/ap01/event-array-maintenance-f09-0041-20261023.md及reverse/analysis/event-array-maintenance-f09-0041-20261023/。
+
+先交简短复用/精确缺口对照，按共同规则仅做必要静态验证。完成标准为回答本题或保留有界、可定位断边；无增量即报告已覆盖，禁止凑闭包扩扫。提交独占成果、报告验证/未知/clean后结束，不创建下级agent。技术纠正只写独占报告不改原成果。
+
+f166c84→e0e357d：仅容量helper局部合同，新增业务0，待F10。
