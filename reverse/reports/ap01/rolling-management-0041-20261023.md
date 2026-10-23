@@ -18,26 +18,26 @@
 
 ## 实际运行快照
 
-当前5恢复1独立复核共6个运行subagent，主窗口另计；已结束任务不计运行。
+当前4恢复2独立复核共6个运行subagent，主窗口另计；已结束任务不计运行。
 
 |任务|agent|启动基线|状态|
 |---|---|---|---|
-|A21|/root/a21_png_info|ab67c6f|运行中|
-|E04|/root/e04_ctk_review|85c61e2|运行中|
+|A22|/root/a22_png_review|875f762|运行中|
+|E05|/root/e05_ctk_close|f31a27a|运行中|
 |D05|/root/d05_uart_drain|59d81c2|运行中|
 |F05|/root/f05_exit_callback|3aba13a|运行中|
-|G03|/root/g03_invalidation_submit|da4c9dc|运行中|
+|G04|/root/g04_submit_review|f82380b|运行中|
 |H03|/root/h03_weather_close|dcc2a08|运行中|
 
 整合及限定验收映射见历史交接与覆盖记录，每项完成即检查整合补位。
 
 ## 近期滚动候选（未启动）
 
-- A22：A21 PNG registry/info完整闭包独立复核，待A21整合；A21已启动。
+- A23：A22验收后，PNG class0 open→会话像素对象→注册close归还的小闭包，不扩通用解压算法；A22已启动。
 - D06：D05 TX ring正常启动/完成/唤醒闭包独立复核，待D05整合；D05已启动。
-- E05：E04验收后，app订阅节点/页面正常注销销毁小闭包，先据E04正式建议选一条真实退出边；E04已启动。
+- E06：E05 app注销/归还完整闭包独立复核，待E05整合；E05已启动。
 - F06：F05返回后对象callback完整闭包独立复核，待F05整合；F05已启动。
-- G04：G03提交/直接消费完整小闭包独立复核，待G03整合；G03已启动。
+- G05：G04验收后恢复display event35/38实际descriptor注册→callback/param消费→38调度连接闭包；G04已启动。
 - H04：H03页面context/离页触发完整小闭包独立复核，待H03整合；H03已启动。
 
 以上只是预备问题，不冒称已派发。每次空位时依据最新整合和agent建议确定完整任务书、基线及独占输出，再启动新agent；独立技术复核须换新agent。
@@ -49,22 +49,7 @@
 
 
 
-## 当前完整任务书 A21（已启动，基线ab67c6f）
 
-任务ID A21，业务恢复PNG decoder注册→info callback→正常图标描述符信息提取小闭包。分支codex/re-0041-a21；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a21；基线含A20最新管理提交。独占reverse/reports/ap01/png-info-lifecycle-a21-0041-20261023.md及reverse/analysis/png-info-lifecycle-a21-0041-20261023/。
-
-问题：A19的ROM PNG源在info dispatcher a0082c8c正常class0分支怎样匹配注册decoder、调用哪个确切info callback、向image setter返回哪些宽高/格式/状态，decoder对象注册及注销/生命周期如何衔接？入口A19/A20及a0082e32/a0082c8c/a00ed560合同，具体PNG注册/callback地址目前未知，agent须据原证据定位，不以PNG header/CRC代替执行路径身份。约5–12核心及必要依赖，注册→选择/间接ABI→正常PNG信息读取→结果返回→注册对象回收或已知常驻边界；不恢复完整像素解码/压缩通用算法/所有image格式。
-
-A20对add_flag callee/字段谓词纠正须作为既有合同，不能沿用A19旧误名。PNG容器格式静态证据可用于参数界限，不进行畸形输入/漏洞/错误触发测试。恢复函数地址/布局/所有权/返回分支/原指令、事实推断未知、准确来源/版本或未认证状态、必要静态验证；精确decoder或注销未能定位时列断边与有界检索，不外连下载，不修改分析模型。标准实现只有可核实来源才排除，厂商注册/回调恢复。排除全GUI/最终显示、固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
-
-
-## 当前完整任务书 G03（已启动，基线da4c9dc）
-
-任务ID G03，业务恢复区域门控成功后的失效区域提交→合并/入队→直接消费闭包。分支codex/re-0041-g03；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g03；基线含G02最新管理提交。独占reverse/reports/ap01/invalidation-submit-g03-0041-20261023.md及reverse/analysis/invalidation-submit-g03-0041-20261023/。
-
-业务问题：a00ddbf6在第三门非零后从a00ddc7e继续，怎样使用已变换裁剪的入口区域副本、写入谁的区域记录/队列、何时合并或通知，以及哪一个直接消费者读取它？a00ddc7e只是已知续接地址，不是新函数入口；后段callee与实际队列结构目前未知，不按名字假设。先复用C22/G01/G02正常门控与变换合同，只对必要接口针对核，展开提交后段及其必要直接依赖/一个直接消费者，约5–12核心函数小闭包，不把整个显示刷新栈接管。
-
-完成需原写入顺序、区域布局/容量状态、返回覆盖/失败原分支、合并次序、通知ABI、借用栈副本或复制所有权、伪代码/状态转换及原指令证据。若没有队列或合并，按实际结构纠正任务术语而不造队列；如果消费为另一个独立业务，恢复到精确合同/入口并列断边，不无限扩成最终DMA/LCD完成。来源未知不排除，若已认证开源则记录来源版本/修改边界；已有数学/复制/allocator可作明确合同。独立相称静态验证，事实推断未知、来源与一个后继闭包。排除物理显示、设备/固件执行、异常区域/漏洞测试、外连、历史回放、正式ROM生产模型修改；共同规则适用。
 
 ## 当前完整任务书 H03（已启动，基线dcc2a08）
 
@@ -78,13 +63,6 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 
 
 
-## 当前完整任务书 E04（已启动，基线85c61e2）
-
-任务ID E04，新agent独立复核E03真实CTK callback→栈dst→主消费闭包。分支codex/re-0041-e04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e04；基线含E03最新管理提交。独占reverse/reports/ap01/ctk-view-review-e04-0041-20261023.md及reverse/analysis/ctk-view-review-e04-0041-20261023/。
-
-问题：注册a005d142参数a00adabc，经a005d146/14a调用a01b28ce挂到62fcb530，是否真连接a00a389c→a00adabc→a00f4740→port1主要dst消费？入口E03正式报告/约9核心清单及E01/E02合同，已知真实调用点a00ae238/a00aef62/a00af17c，必要消费者a00f44e8/a00f4610/a00ef2da，具体功能以正式交付为准。重点端口来源、s0-0x94的0x52B栈view/0x100B帧、返回0跳消费、port1与port2复用、4槽/标签/SOC消费、f44e8第4参a3总数量、dst不逃逸及间接callback ABI。E02已验收转换/五嵌套资源只针对核，不重做cmd50/51/52。
-
-逐项接受纠正未核，独立原指令/厂商字/宽度符号/返回覆盖/循环重读和必要伪代码布局状态所有权，事实推断未知、来源、实际静态验证与断边。纠正只独占报告不改E03。页面/订阅最终清理、其他端口分支/+34/+38及全局deinit保持原边界，不扩完整CTK页面或所有通知。来源未认证不排除，formatter/已验收转换/allocator可留明确合同。禁止固件执行/外连/漏洞/异常输入/历史回放/ROM生产模型修改；共同规则适用。
 
 ## 当前完整任务书 D05（已启动，基线59d81c2）
 
@@ -104,7 +82,7 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 
 最新：E03 b0c4ea8→85c61e2待E04；F04 1a100d8→3aba13a通过限定复核。D04已报告D03 optional_mark非空分支伪代码需纠正；实际acquire参数a3=0主链未受影响，正式报告待提交，不冒称无纠正接受。
 
-## 预备完整任务书 G04（待G03整合）
+## 当前完整任务书 G04（已启动，基线f82380b）
 
 任务ID G04，新agent独立复核G03失效提交/记录合并/直接消费完整闭包。分支codex/re-0041-g04；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g04；基线含G03最新管理提交。独占reverse/reports/ap01/invalidation-submit-review-g04-0041-20261023.md及reverse/analysis/invalidation-submit-review-g04-0041-20261023/。
 
@@ -112,7 +90,7 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 
 独立核原字节/厂商字、宽度符号/返回/ABI/原调用重读、记录与栈指针所有权。逐项接受纠正未核，必要纠正仅独占报告不改G03。事件callback未知可能持有param、a00e082e后具体绘制与物理完成保留断边，不追完整绘制/事件注册后继。交付可读伪代码结构状态生命周期、事实推断未知、来源、实际独立静态核验及一个后继闭包；标准库来源未认证不排除，已验收复制/面积/allocator可作明确合同。排除异常区域/漏洞/固件执行/外连/历史回放/ROM生产模型修改；共同规则适用。
 
-## 预备完整任务书 A22（待A21整合）
+## 当前完整任务书 A22（已启动，基线875f762）
 
 任务ID A22，新agent独立复核A21 PNG decoder注册/info/注销条件闭包。分支codex/re-0041-a22；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a22；基线含A21最新管理提交。独占reverse/reports/ap01/png-info-review-a22-0041-20261023.md及reverse/analysis/png-info-review-a22-0041-20261023/。
 
@@ -122,7 +100,7 @@ A20已整合ab67c6f，正式技术裁定为有一处callee/字段谓词纠正后
 
 D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠正为准，正常acquire a3=0闭包限定接受。E04运行中报告port1/port2栈复用措辞需收紧：同布局不等于同次通知执行两支，待正式报告提交。
 
-## 预备完整任务书 E05（待E04纠正报告整合）
+## 当前完整任务书 E05（已启动，基线f31a27a）
 
 任务ID E05，业务恢复CTK app订阅与正常离页注销/对象归还闭包。分支codex/re-0041-e05；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e05；基线含E04最新管理提交。独占reverse/reports/ap01/ctk-app-close-e05-0041-20261023.md及reverse/analysis/ctk-app-close-e05-0041-20261023/。
 
@@ -137,3 +115,5 @@ D04正式报告已整合59d81c2：D03 helper optional_mark非NULL分支以D04纠
 问题：a00afc88天气子页创建片段及8B父state(type19)→输入hook a00b35ee event11/key10/窗口64零门→恢复主页面/删除a00ded6c(window)→父DELETE a00b1a02→子天气DELETE a00b3b26→控件递归/类析构摘链free的原序与所有权是否成立？核心以H03正式清单约5–12函数为准，只核该正常type19路径，不复核全GUI删除系统。已验收H02子hook/重排/注销只针对核。重点父8B state、20B wrapper、116B ctx三者区分，父stop timer/free state与子清28word/unregister/free wrapper排序、事件mask/vendor条件/返回门、对象递归/类析构前后指针持有及ctx最终free未证的有界范围。
 
 独立原指令/厂商字/事件ABI/宽度/调用重读/失败分支，逐项接受纠正未核；必要纠正仅独占报告不改H03。不要把构造直接引用搜索变穷尽别名、不要把对象free拼成ctx free、不引入缺陷判断。交付伪代码布局状态生命周期、事实推断未知、来源、实际独立静态验证和断边；标准库仅来源认证可排除，私有胶合保留恢复。排除全导航/其他窗口类型、固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
+
+最新整合：E04→f31a27a范围措辞纠正后限定接受E03；A21→875f762、G03→f82380b为待独立复核恢复，A22/G04运行中。
