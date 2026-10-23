@@ -227,3 +227,7 @@ C12 0bae399→8b82f93已整合，限定接受C11，无纠正；660B/234普通指
 ## 预备任务 C14：文本更新入口独立复核
 
 分支 codex/re-0041-c14；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c14。须C13成果提交整合后，从最新管理提交启动。只复核C13最终实际范围内文本更新入口及一个直接依赖（最多3函数），参数/变参/文本存储所有权及来源边界，不扩GUI/printf。独占 reverse/reports/ap01/text-update-entry-review-c14-0041-20261023.md、reverse/analysis/text-update-entry-review-c14-0041-20261023/；必要精确纠正C13。原指令逐项接受/纠正/未核、来源/实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## A11/A12与B12/B13交接更新
+
+A11 4d4d5ed→139d994已整合，范围/差异通过，待A12；A12从139d994运行，agent /root/a12_writer_review。B12 31aae09→123d476已整合，范围/差异通过，待B13；B13从123d476运行，agent /root/b13_compare_review。两旧工作树均干净且整合，可回收保留分支。当前A12/B13/C13三个agent运行，C14已预备；后继不得重复a00a53c0（B10/B11已解）。
