@@ -19,10 +19,10 @@
 | 任务 | agent | 固定基线 | 当前职责 | 下一项 |
 | --- | --- | --- | --- | --- |
 | A16 | /root/a16_weather_review | f966a5e | 天气订阅三核心独立复核 | 按验收建议选小缺口 |
-| B17 | /root/b17_factory_review | 0e1d5b9 | 工厂active有界定位复核 | B18正常接收状态 |
+| B18 | /root/b18_normal_parser | 319dbdf | 正常接收阶段/转义标志 | B19独立复核 |
 | C18 | /root/c18_gates_review | e29de84 | 失效入口两门复核 | C19第三门 |
 
-最新已整合：A15 5f3f3db→f966a5e（技术待A16）；B16 1b87a2f→0e1d5b9（技术待B17）；C17 3920202→e29de84（技术待C18）。旧工作树仅在确认干净并整合后回收，任务分支保留。
+最新已整合：A15 5f3f3db→f966a5e（技术待A16）；B17 bd7747d→319dbdf（限定接受B16并精确纠正检索描述，外部读者仍未知）；C17 3920202→e29de84（技术待C18）。旧工作树仅在确认干净并整合后回收，任务分支保留。
 
 ## 已整合概况与开放缺口
 
@@ -33,10 +33,6 @@
 ## 预备任务 A16：天气订阅消费独立复核
 
 分支 codex/re-0041-a16；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a16。须A15成果提交整合后，从最新管理提交启动。仅复核A15一个注册点及callback首个数据消费合同、间接ABI/借用复制边界，最多3核心函数，不扩全部天气UI。独占 reverse/reports/ap01/weather-subscriber-review-a16-0041-20261023.md、reverse/analysis/weather-subscriber-review-a16-0041-20261023/；必要精确纠正A15。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
-
-## 预备任务 B17：工厂active读者独立复核
-
-分支 codex/re-0041-b17；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b17。须B16成果提交整合后，从最新管理提交启动。仅复核B16一个读者的原指令/byte宽度/调用触发条件或有界检索结论，不扩工厂UI/销毁。独占 reverse/reports/ap01/factory-active-review-b17-0041-20261023.md、reverse/analysis/factory-active-review-b17-0041-20261023/；必要精确纠正B16。逐项接受/纠正/未核、来源/实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
 
 ## 预备任务 C18：下游门控独立复核
 
@@ -49,3 +45,7 @@
 ## 预备任务 C19：第三门局部合同
 
 分支 codex/re-0041-c19；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c19。须C18验收允许后，从最新管理提交启动。只恢复a00ddab4(obj,&local)作为a00ddbf6第三门的参数/局部读写/返回及其直接消费条件，最多3核心函数；入口C17/C18及保留inventory。不要因前门已解扩成完整失效队列/全GUI，不推定最终显示刷新；先核是否已有报告解决。独占 reverse/reports/ap01/invalidation-third-gate-c19-0041-20261023.md、reverse/analysis/invalidation-third-gate-c19-0041-20261023/。核原指令/事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 B19：正常接收状态独立复核
+
+分支 codex/re-0041-b19；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b19。须B18提交整合后，从最新管理提交启动。只复核B18正常接收stage/escape生产消费及直接依赖，最多3核心函数，不做长度审计/异常回放/缺陷验证/OTA扩展。独占 reverse/reports/ap01/uart-normal-parser-review-b19-0041-20261023.md、reverse/analysis/uart-normal-parser-review-b19-0041-20261023/；必要精确纠正B18。原指令逐项接受/纠正/未核、来源/实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
