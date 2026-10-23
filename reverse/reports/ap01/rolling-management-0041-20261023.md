@@ -255,3 +255,7 @@ A12 79e7dc3→2b0c716已整合，限定接受A11，无纠正；248B/91指令/66�
 ## 预备任务 A14：两函数来源识别独立复核
 
 分支 codex/re-0041-a14；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a14。须A13成果提交整合后，从最新管理提交启动。仅复核A13两个函数本地源码匹配/差异、版本和厂商修改识别证据，不外连、不从符号名推定未修改开源实现。独占 reverse/reports/ap01/scheduler-source-review-a14-0041-20261023.md、reverse/analysis/scheduler-source-review-a14-0041-20261023/；必要精确纠正A13。按证据接受/纠正/未核及实际静态验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 C15：文本入口前置helper
+
+分支 codex/re-0041-c15；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c15。须C14验收允许后，从最新管理提交启动。仅恢复C13/C14文本入口直接调用的a00dddf4前置helper正常参数/返回/门控合同及最多两个直接依赖，不扩完整GUI/断言系统，不做诊断/缺陷触发。先核本地已恢复成果避免重复；来源未知不得自动称私有或开源排除。暂不重复泛搜LVGL源码（C13已核sdk/tooling文件名未找到可靠版本）；若已有参考源明确可用可记录，但不外连。独占 reverse/reports/ap01/text-precondition-c15-0041-20261023.md、reverse/analysis/text-precondition-c15-0041-20261023/。核原指令/ABI/事实推断未知、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
