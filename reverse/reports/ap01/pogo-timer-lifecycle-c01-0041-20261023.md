@@ -52,8 +52,10 @@ if (ctx == NULL) { log_assert(); for (;;) {} }  // 原指令片段的分支
 // 中间是既有 ADC/UART poll 注册，本任务省略。
 ctx->poll_timer = create_a008bc64(poll_callback_a00a805a, 20, ctx);
 // 创建器正常路径：timer->callback=callback; timer->userdata=ctx; ...
-// 回调：ctx = timer->userdata; phase = word_at(ctx, 0x190); ...
+// 回调：ctx = timer->userdata; observed_word_190 = word_at(ctx, 0x190); ...
 ```
+
+字段名称按 [C02 独立复核](pogo-timer-review-c02-0041-20261023.md)澄清：这里仅证明 context+0x190 是 word，不将其与 controller 的 `62fc4b35` phase byte 等同。
 
 周期20是立即数事实；毫秒单位沿用已有 LV timer 接口研究，未在此重做时钟/调度认证。这里只证明 callback 能通过 timer 找回 context，不证明调用频率精度、线程串行性或 context 所有权转移。
 
