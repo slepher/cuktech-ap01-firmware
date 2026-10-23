@@ -1971,3 +1971,15 @@ REA skill、本文共同/复用/静态安全规则全适用；独占树/输出�
 
 
 I04 5391bf4、T01 b5b5bdb已整合，新功能0；T02/L01立即接替，不重开无种子生命周期。
+
+
+## 当前完整任务书 J03（先行复用盘点，立即接替）
+
+独占reverse/reports/ap01/settings-persistence-reuse-gap-j03-0041-20261024.md及reverse/analysis/settings-persistence-reuse-gap-j03-0041-20261024/。
+
+仅既有证据检索不新增ROM字节/反编译。先application最终SIM验收/matrix/reference-map/system-complete与settings-round2各批，再按地址/字段/callback/state检索近期settings/backlight/theme/miio/config专项及独立复核/父级结论/ZIP必要成员。只正常设置值的读取/保存/持有原ROM合同与SIM持久本地服务替代的证据范围，给短已有→行为→局限→真实缺口/可靠种子表，不重复D19/D22动画/背光、I01/I02启动、I05特定wifi-cache更新。旧pending须核较晚complete，已有回调/写值不因报告标题缺失当未分析；SIM服务源码/截图不证明ROM存储ABI。不重建整矩阵/分类资源表/源码/机械账，不扩OTA安全/异常或全driver/NVS扫描。少量真实调用/extent/字段种子才建议后继，无必要增量直接覆盖结论，新功能0；主窗口决定派发，不自行接题。
+
+仅准备不计运行，派发前整合前置并核重叠。最新管理HEAD独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis；REA skill与共同/复用/静态安全规则适用，已有→实际缺口及四分报告；不改共享/主树/生产ROM配置模型，不创建下级agent，其他agent同时工作勿撤销；精确独占提交commit/验证/未知/clean，接近提交提前报种子。
+
+
+J03 06c6469已整合，纯盘点新增0；L01已接其唯一优先种子；K01接替J04已交叉筛选的另一个UI动作种子。
