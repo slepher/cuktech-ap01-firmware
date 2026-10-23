@@ -271,3 +271,15 @@ C14 867810f→c021206已整合，限定接受C13，无纠正；306B/101条、51�
 ## B15验收后术语纠正授权补充
 
 B14发现a009c5fc无位置/全局/配置写入，仅栈保存及区域码范围判定；这目前待B15独立核准。为让旧报告不继续传播setter误名，另将 reverse/reports/ap01/miio-deferred-settings-0041-20261023.md 独占授予B15：仅在独立核准后按原指令把a009c5fc相关setter命名澄清为validator/有效性判定，保留原调用、返回条件、持久化顺序，并加B14/B15续作链接，不扩展或改其他合同。未核准不得先改结论。共享status/task/README/覆盖仍由主窗口维护。
+
+## 当前交接更新：A14 / B15 / C16
+
+A13 7f44b57→77d4336已整合，范围/差异通过，技术待A14；A14从77d4336运行，agent /root/a14_source_review。B14 44ffc89→f723db0已整合，范围/差异通过，技术待B15；B15从f723db0运行，agent /root/b15_area_code_review，含核准后旧MiIO术语纠正。C15 450d127→7373c0f已整合，范围/差异通过，技术待C16；C16从7373c0f运行，agent /root/c16_preparation_review。A13/C15工作树干净且整合可回收保留分支，B14也已干净整合可回收。下一小任务候选C17只核a00ddbf6两个正常返回门；B16可转工厂active byte一个外部读者；A15待A14建议，避免重复追版本。
+
+## 预备任务 C17：失效区域下游两个门控
+
+分支 codex/re-0041-c17；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c17。须C16验收允许后，从最新管理提交启动。仅恢复a00ddbf6入口两个正常返回门及必要参数/字段合同，最多3核心函数/少量直接依赖；入口C15/C16调用与保留inventory。排除完整失效队列、显示刷新、全GUI/异常验证。独占 reverse/reports/ap01/invalidation-gates-c17-0041-20261023.md、reverse/analysis/invalidation-gates-c17-0041-20261023/。来源未知不自动排除；核原指令、事实推断未知/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 B16：工厂active一个外部读者
+
+分支 codex/re-0041-b16；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b16。须B15验收完成整合后，从最新管理提交启动。只恢复FactoryTestMode active byte62fc92b8在已解initializer和a009f178 callback之外的一个直接读取者合同，最多3核心函数；入口factory-test报告/既有inventory与留存引用。可以针对该byte一次有界静态引用定位，不重复蜂鸣全ROM扫描，不扩整个工厂UI或销毁；无法定位给明确搜索界限/未知。独占 reverse/reports/ap01/factory-active-reader-b16-0041-20261023.md、reverse/analysis/factory-active-reader-b16-0041-20261023/。核原指令宽度/调用/事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
