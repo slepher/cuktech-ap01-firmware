@@ -311,3 +311,11 @@ C16 16190f1→f482b78已整合，限定接受C15，无纠正；226B/81条独立�
 ## 预备任务 C18：下游门控独立复核
 
 分支 codex/re-0041-c18；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c18。须C17成果提交整合后，从最新管理提交启动。仅复核C17入口两个正常返回门/必要字段和参数，最多3核心函数及已给局部，不扩失效队列/GUI全集。独占 reverse/reports/ap01/invalidation-gates-review-c18-0041-20261023.md、reverse/analysis/invalidation-gates-review-c18-0041-20261023/；必要精确纠正C17。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## B16/B17交接更新
+
+B16 1b87a2f→0e1d5b9已整合，范围/差异通过，技术待B17；B17从0e1d5b9运行，agent /root/b17_factory_review。B16仅给一次有界命中（已有initializer sb/callback lbu），外部读者未知，不宣称不存在。B16工作树干净且整合可回收保留分支。当前A15/B17/C17。
+
+## 预备任务 B18：正常接收阶段与转义标志
+
+分支 codex/re-0041-b18；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b18。须B17验收完成整合后，从最新管理提交启动。转正常EsUnitProtocol私有协议：只恢复a00a8330内接收stage取值和escape标志的生产/消费及正常字节流阶段转换，最多该函数与两个直接依赖（可含a00ee934）。入口usb-interface-ota报告已有逐字节/CRC简述、保留dossier和whole-rom source_paths的EsUnitProtocol.c引用；先核后续报告是否已给完整状态表避免重复。已解CRC算法/分派ABI不重做，只引用合同；不扩完整OTA/队列、不做长度审计/漏洞研究/畸形输入或任何回放，不运行历史UART脚本。独占 reverse/reports/ap01/uart-normal-parser-b18-0041-20261023.md、reverse/analysis/uart-normal-parser-b18-0041-20261023/。交付正常状态转换表/可读伪代码、准确读写地址、事实推断未知、来源/原指令/实际静态验证，保留原返回/清理行为不擅自修复；差异检查后提交结束。共同约束适用。仅预备，未启动。
