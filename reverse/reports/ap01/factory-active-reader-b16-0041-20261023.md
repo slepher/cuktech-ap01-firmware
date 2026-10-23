@@ -15,7 +15,7 @@
 
 先检查本树报告/analysis 中的地址文字、既有 inventory 和留存引用。主树 `evidence/rea-0041-20261017` 下 JSON 的区分大小写字面量 `62fc92b8` 检索命中四个既存文件：`round3/evidence/whole-rom-round3-initial.evidence.json`、`evidence/whole-rom-retained-private-20261023-000.json`、`evidence/whole-rom-private-20261023.evidence.json`、`evidence/whole-rom-usb-closure-20261023.evidence.json`。四者命中所属函数均是 `a005a736`；三个 bundle 的 normalized/raw 表示含重复记录。native_value_flow 中反复出现的内存状态位置不是新的机器指令读者，不按命中数计访问数。其保留 outgoing reference 的精确目标边均是 `a005b7ba -> 62fc92b8`、`WRITE/read=false`。
 
-随后仅一次运行 `locate.py`：ROM 文件偏移 `[0,0x1bee24)`，即虚拟地址 `[9ffff000,a01bde24)`，按 2 字节步长定位 32 位 `LUI` 的 upper=`62fc9000`，检查其后 64 字节内同基址寄存器、I-type load/ADDI 或 S-type store 的立即数 `0x2b8`。区间末端取既有 inventory 的 ROMFS 起点，**不是**已证明的全部代码段边界；半字候选也可能落在数据/指令中部，必须逐点核原指令。这里没有跟踪中间寄存器改写，因此只产候选、不自动认证真实数据流。
+随后仅一次运行 `locate.py`：ROM 文件偏移起点 `[0,0x1bee24)`，即虚拟地址起点 `[9ffff000,a01bde24)`，按 2 字节步长定位 32 位 `LUI` 的 upper=`62fc9000`，检查 seed 后 `+4,+6,…,+66`（末端另受区间上限约束）的半字起点：同基址寄存器，opcode `0x03`/`0x13` 的 I 型立即数字段或 opcode `0x23` 的 S 型立即数字段为 `0x2b8`。定位器不筛 funct3，所以 `0x13` 不仅限 ADDI，也不自动证明得到目标地址。区间末端取[既有交接记录的 ROMFS 起点](0041-handoff.md)，**不是**已证明的全部代码段边界；四字节读取可越过末端起点界限最多 2 字节。半字候选也可能落在数据/指令中部，必须逐点核原指令；定位器没有代码/数据过滤，`localization.json` 的 scope 中“data excluded”不能理解为已过滤数据。这里没有跟踪中间寄存器改写，因此只产候选、不自动认证真实数据流。以上边界措辞经[B17独立复核](factory-active-review-b17-0041-20261023.md)澄清，两个实际命中与外部读者未知结论不变。
 
 只得到两条候选，逐点原编码已认证：
 
