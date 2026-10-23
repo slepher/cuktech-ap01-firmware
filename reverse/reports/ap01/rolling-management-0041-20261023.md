@@ -22,12 +22,12 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|A31|独立复核A29真正新增连接|待启动，任务书就绪|
+|A31|/root/a31_cache_invalidation_review|9ea568f|独立技术复核已整合增量|
 |A30|/root/a30_cache_accounting|bccdd65|计量callback/预算数据合同|
-|D12|独立复核D11认证范围|待启动，任务书就绪|
+|D12|/root/d12_uart_source_review|9ea568f|独立技术复核已整合增量|
 |E10|/root/e10_app_root_exit|bccdd65|主app正常root退出连接|
 |G09|/root/g09_ready_dispatch|bccdd65|实际backend ready到watcher分发|
-|H08|/root/h08_type2_lifecycle|bccdd65|旧type2页ABI/DELETE未认证窗口|
+|H09|独立复核type2 DELETE真实增量|待启动，任务书就绪|
 
 ## 派发规则（本次用户调整优先）
 
@@ -70,14 +70,6 @@ E05/E06与H07共同断边为主app正常teardown触发；已恢复DELETE内部�
 
 先给已有出处→解释行为→局限→实际缺口对照；按地址/调用点/字段/状态/Evidence检索complete与较晚留存，不把未命中/旧pending当从未恢复。已有可靠合同直接引用，仅补接入ABI/身份/厂商字/清理次序等必要窗口。无增量报覆盖结束，不擅自换题，管理者立即补位。四分报告，必要静态验证后提交独占路径，报告commit/验证/未知/clean。共同规则全部适用：不创建下级agent，不改他人/共享/生产ROM配置模型，无SIM/构建/回放/设备/外网；不重复整函数导出、全资源或源复制。
 
-## 当前完整任务书 H08（已启动，基线bccdd65）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h08；分支codex/re-0041-h08；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/weather-type2-lifecycle-h08-0041-20261024.md及reverse/analysis/weather-type2-lifecycle-h08-0041-20261024/。
-
-本题只补旧type2天气页尚未独立认证的callback ABI与DELETE所有权连接。pass3第2488–2494行已留a00ac6f8、callback a00ab754、type2/context挂接、DELETE a00aba9c；weather-calendar-complete evidence[18]已有a00ab754完整旧原汇编，全部先继承，不称首次发现。先核近期报告/旧完整阶段是否已解释ABI/对象清理，若主体覆盖只补不可信窗口或报覆盖。只该type2对象的context/wrapper/注销键/原清理次序，不重做分类/文字/图标/资源/整callback导出；type4 68B和type19 116B均不得跨用。
-
-先给已有出处→解释行为→局限→实际缺口对照；按地址/调用点/字段/状态/Evidence检索complete与较晚留存，不把未命中/旧pending当从未恢复。已有可靠合同直接引用，仅补接入ABI/身份/厂商字/清理次序等必要窗口。无增量报覆盖结束，不擅自换题，管理者立即补位。四分报告，必要静态验证后提交独占路径，报告commit/验证/未知/clean。共同规则全部适用：不创建下级agent，不改他人/共享/生产ROM配置模型，无SIM/构建/回放/设备/外网；不重复整函数导出、全资源或源复制。
-
 ## 当前完整任务书 A30（已启动，基线bccdd65）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a30；分支codex/re-0041-a30；基线为本任务书提交。独占reverse/reports/ap01/image-cache-accounting-a30-0041-20261024.md及reverse/analysis/image-cache-accounting-a30-0041-20261024/。
@@ -89,13 +81,13 @@ A27/A28已闭release/victim→cleanup，A29只追失效API上层调用。本题�
 - A31：A29交付后，独立复核其真正新增的调用/同cache身份与实参合同；旧照片Evidence全部继承。
 - A32：A30交付后，独立复核计量callback/单位/预算数据合同，继承A27/A28 cleanup。
 - D12：D11交付后，独立复核候选分层与来源认证范围，避免以候选低层deinit补ROM callback析构。
-- E11：E10交付后，独立复核真实业务退出动作与root身份；SIM探针删除策略不当ROM证据。
+- E11：改为E09较晚round3覆盖纠正的独立技术复核，避免重复根退出搜索。
 - G10：G09交付后，独立复核正常ready到watcher间接ABI，保留运行时触发未知。
 - H09：H08交付后，独立复核旧type2未认证ABI/清理合同，分类/资源不重做。
 
 以上需据正式报告收缩为完整独占任务书；若任务已覆盖且无必要技术增量，则从其他已定位缺口换题，不递归复核纯重复材料。主窗口在每项提交前准备具体任务，保持六路。
 
-## 当前完整任务书 A31（待启动，原报告7bc4119已整合）
+## 当前完整任务书 A31（已启动，基线9ea568f）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a31；分支codex/re-0041-a31；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/image-cache-invalidation-review-a31-0041-20261024.md及reverse/analysis/image-cache-invalidation-review-a31-0041-20261024/。
 
@@ -111,7 +103,7 @@ A27/A28已闭release/victim→cleanup，A29只追失效API上层调用。本题�
 
 正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
 
-## 当前完整任务书 D12（待启动，原报告292e15d已整合）
+## 当前完整任务书 D12（已启动，基线9ea568f）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d12；分支codex/re-0041-d12；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/uart-channel-source-review-d12-0041-20261024.md及reverse/analysis/uart-channel-source-review-d12-0041-20261024/。
 
@@ -119,13 +111,11 @@ A27/A28已闭release/victim→cleanup，A29只追失效API上层调用。本题�
 
 正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
 
-## 预备完整任务书 E11（待E10正式提交整合，不计运行）
+## 预备完整任务书 E11（改题为E09较晚留存覆盖结论的独立技术复核）
 
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e11；分支codex/re-0041-e11；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/main-app-root-exit-review-e11-0041-20261024.md及reverse/analysis/main-app-root-exit-review-e11-0041-20261024/。
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-e11；分支codex/re-0041-e11；基线为启动时最新整合提交。独占reverse/reports/ap01/ctk-round3-coverage-review-e11-0041-20261024.md及reverse/analysis/ctk-round3-coverage-review-e11-0041-20261024/。
 
-新agent独立技术复核：E10正式报告实际正常业务动作、root/window身份与真实callee边；后加host探针的两轮删除及按窗口解除订阅属于SIM替代，必须继承这种证据局限。仅核真正新增连接，不重做E05/E06 DELETE内部或H07滑动/type19页清理。
-
-正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
+E10现已确认其候选为旧导航覆盖，后继不再重复根退出搜索；E11改为尚未经独立技术复核的E09纠正。只核round3 Evidence ev_dac9ee80…15c3确属同ROM与profile/函数完整body a00a12d0..a00a24a5、a00a1aa8调用/s0-e4保存槽读取+0xa/+0x12链早已有留存、旧二轮截断在a00a1450既有SUB64，及E07/E08仅retained body边界结论不能外推此前分析缺失。E01–E08消费者合同直接引用，不重做CTK/全字节扫描/整函数导出，不将未发现+34/+38等同不存在。重点是技术证据范围/身份与局部厂商字校核，不再制作旧函数清单。先已有→复核缺口，四分类报告、逐项接受纠正未核、新增功能0，必要静态验证与独占提交，报告commit/验证/未知/clean。共同安全/隔离规则适用，不创建下级agent、不改主树共享/ROM生产配置模型，无SIM/构建/回放/设备/外网。
 
 ## 预备完整任务书 G10（待G09正式提交整合，不计运行）
 
@@ -135,7 +125,7 @@ A27/A28已闭release/victim→cleanup，A29只追失效API上层调用。本题�
 
 正式报告交付后据其最终新增/纠正清单收缩，不按任务标题认定完成或扩大。先已有→复核缺口，逐项接受/纠正/未核，必要旧字节复核标复核、新增功能0；四分类报告、独占证据、必要验证和明确路径提交，报告commit/未知/clean。可靠合同直接引用，不重复整函数导出/源码资源复制/机械账。无必要复核则主窗口立即换真实缺口，保持六路，不无限复核纯重复材料。共同静态/隔离/安全规则适用，不创建下级agent，不改主树共享/ROM生产配置模型，无SIM/构建/历史回放/设备/外网。
 
-## 预备完整任务书 H09（待H08正式提交整合，不计运行）
+## 当前完整任务书 H09（待启动，H08已整合）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h09；分支codex/re-0041-h09；基线必须为启动时最新整合提交，报告后记录SHA，预备阶段不建旧基线树。独占reverse/reports/ap01/weather-type2-review-h09-0041-20261024.md及reverse/analysis/weather-type2-review-h09-0041-20261024/。
 

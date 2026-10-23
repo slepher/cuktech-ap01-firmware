@@ -1063,3 +1063,14 @@ D09/D10已确认三槽busy分配a00288de、释放a01b5c48与lower shutdown a0019
 先给已有出处→解释行为→局限→实际缺口对照；按地址/调用点/字段/状态/Evidence检索complete与较晚留存，不把未命中/旧pending当从未恢复。已有可靠合同直接引用，仅补接入ABI/身份/厂商字/清理次序等必要窗口。无增量报覆盖结束，不擅自换题，管理者立即补位。四分报告，必要静态验证后提交独占路径，报告commit/验证/未知/clean。共同规则全部适用：不创建下级agent，不改他人/共享/生产ROM配置模型，无SIM/构建/回放/设备/外网；不重复整函数导出、全资源或源复制。
 
 1ccc973→292e15d，来源未认证/层次差异结论待D12。
+
+
+## 当前完整任务书 H08（已启动，基线bccdd65）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h08；分支codex/re-0041-h08；基线为本任务书提交，启动另记SHA。独占reverse/reports/ap01/weather-type2-lifecycle-h08-0041-20261024.md及reverse/analysis/weather-type2-lifecycle-h08-0041-20261024/。
+
+本题只补旧type2天气页尚未独立认证的callback ABI与DELETE所有权连接。pass3第2488–2494行已留a00ac6f8、callback a00ab754、type2/context挂接、DELETE a00aba9c；weather-calendar-complete evidence[18]已有a00ab754完整旧原汇编，全部先继承，不称首次发现。先核近期报告/旧完整阶段是否已解释ABI/对象清理，若主体覆盖只补不可信窗口或报覆盖。只该type2对象的context/wrapper/注销键/原清理次序，不重做分类/文字/图标/资源/整callback导出；type4 68B和type19 116B均不得跨用。
+
+先给已有出处→解释行为→局限→实际缺口对照；按地址/调用点/字段/状态/Evidence检索complete与较晚留存，不把未命中/旧pending当从未恢复。已有可靠合同直接引用，仅补接入ABI/身份/厂商字/清理次序等必要窗口。无增量报覆盖结束，不擅自换题，管理者立即补位。四分报告，必要静态验证后提交独占路径，报告commit/验证/未知/clean。共同规则全部适用：不创建下级agent，不改他人/共享/生产ROM配置模型，无SIM/构建/回放/设备/外网；不重复整函数导出、全资源或源复制。
+
+H08 0dc4d94已整合，type2 DELETE增量待H09；旧callback原指令仅复核。
