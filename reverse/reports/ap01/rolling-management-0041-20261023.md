@@ -22,8 +22,8 @@
 
 |任务|agent|基线|实际范围|
 |---|---|---|---|
-|C25|/root/e17_uv_time_review（派发中）|本次启动提交|既有区域变换的局部候选来源认证|
-|E19|/root/g16_fb_file_review（运行）|809b5cd|独立复核E18实际固定分母商合同|
+|C25|/root/e17_uv_time_review（运行）|29002d0|既有区域变换的局部候选来源认证|
+|D22|/root/g16_fb_file_review（派发中）|本次启动提交|独立核D21属性映射与四项来源差异|
 |C23|/root/h16_clock_source_review（运行）|0a1cf0a|C13/C14正常格式化入口局部候选认证|
 |A50|/root/a46_cache_drop（运行）|1edfc57|真实reader消费端a008b888局部合同|
 |H18|/root/a47_reader_mode（运行）|ed4735b|独立复核H17有界搜索与未知结论|
@@ -73,15 +73,6 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
 
 
-## 当前完整任务书 E19（E18已整合，立即接替）
-
-独占reverse/reports/ap01/uv-time-division-review-e19-0041-20261024.md及reverse/analysis/uv-time-division-review-e19-0041-20261024/。
-
-待E18整合后，新独立agent只复核固定分母1M正常路径、H15/H16已证t范围下返回商及高word、分支范围/必要table/厂商字/ABI和静态代数。E16/E17接线继承，不复核整个数值库/计数cadence/epoch，不执行输入或异常测试。新增功能0。
-
-准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
-
-
 ## 当前完整任务书 G18（前置已整合，立即接替）
 
 独占reverse/reports/ap01/fb-source-review-g18-0041-20261024.md及reverse/analysis/fb-source-review-g18-0041-20261024/。
@@ -118,7 +109,7 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
 
 
-## 预备完整任务书 D22（有前置，未启动）
+## 当前完整任务书 D22（D21已整合，立即接替）
 
 独占reverse/reports/ap01/backlight-animation-source-review-d22-0041-20261024.md及reverse/analysis/backlight-animation-source-review-d22-0041-20261024/。
 

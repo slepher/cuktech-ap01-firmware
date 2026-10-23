@@ -1711,3 +1711,15 @@ D21 6db872f已整合，待D22独立核四项来源差异；C23立即接替。
 
 
 A51 d4828fb已整合，待A53独立复核；C25立即接替。
+
+
+## 当前完整任务书 E19（E18已整合，立即接替）
+
+独占reverse/reports/ap01/uv-time-division-review-e19-0041-20261024.md及reverse/analysis/uv-time-division-review-e19-0041-20261024/。
+
+待E18整合后，新独立agent只复核固定分母1M正常路径、H15/H16已证t范围下返回商及高word、分支范围/必要table/厂商字/ABI和静态代数。E16/E17接线继承，不复核整个数值库/计数cadence/epoch，不执行输入或异常测试。新增功能0。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+E19 5d91e16已整合，固定分母闭包接受/新增0；D22立即接替。
