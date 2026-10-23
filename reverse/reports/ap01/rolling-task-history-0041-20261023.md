@@ -1286,3 +1286,25 @@ E03/E04明确没有恢复完整offline/状态变化分支与a00ef1d4全实现。
 先已有→行为→局限→实际缺口，报告分继承、复核纠正、真正新增、精确断边；复核新增功能0，可靠合同直接引用，不重复整函数/源码/资源导出或机械账。无增量及时报覆盖由主窗口补位，不凑时长/函数。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
 
 已整合：A36限定接受A34并补两处重读精度；E13旧offline主体已有覆盖，无新增业务。
+
+
+## 当前完整任务书 A37（已启动，基线f17c7d7）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-a37；分支codex/re-0041-a37；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/photo-decoder-owner-a37-0041-20261024.md及reverse/analysis/photo-decoder-owner-a37-0041-20261024/。
+
+A33/A35新源ABI与descriptor+10→a0107dea工作区+c handoff已闭；真正未知为a010a65a内部输入指针的复制/持久化与返回对象保存槽。只追这一个正常构造器的输入跨度/reader字段、必要对象分配/初始化、原source借用或复制、返回对象接回a00ed7f4 owner的连接；旧photo/GIF/PNG/资源表与A29失效合同先引用，不能假定输入格式/算法库版本。先查较晚round3与旧照片留存/ZIP相应basename及现有caller，不重导setter/整算法，不解码资源、不执行样本，不扩完整动画/压缩算法/所有失败臂。
+
+先已有→行为→局限→实际缺口，四分类报告，只补必要原字节，不重复整函数/全资源/源码复制/机械哈希账；无增量及时覆盖交付由主窗口补位，不凑函数时长。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
+
+已整合：A37输入指针按值持有→owner连接待A39；G12接受G11并纠正先读revents后清链指针原序，新增0。
+
+
+## 当前完整任务书 G12（已启动，基线f312a1a）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-g12；分支codex/re-0041-g12；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/display-producer-review-g12-0041-20261024.md及reverse/analysis/display-producer-review-g12-0041-20261024/。
+
+新agent独立复核G11新增fallback首次ADD/a010e722字段安装、通知flag/rearm与a010d7da materializer输出count/stride16/events/data64、容量满节点归队及旧消费者连接。必须保持record+8为登记data低word，仅本显示路径等于fd，+4未写；a010d7da不能被命名成直接epoll_wait。G09/G10旧消费/业务poll合同直接引用，不重导initializer或扩全部MOD/ring后端，设备revents写者/实际ready仍精确未知。只核必要节点别名/厂商srw/ABI/重读原序，复核新增功能0。
+
+先已有→复核缺口，四分类报告逐项接受纠正未核，必要稀疏旧字节验证，不重复整函数/源码/资源导出。可靠合同直接引用，未知保留范围，无增量及时交付主窗口补位。共同静态/安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网；独占提交报告commit/验证/未知/clean。
+
+已整合：A37输入指针按值持有→owner连接待A39；G12接受G11并纠正先读revents后清链指针原序，新增0。
