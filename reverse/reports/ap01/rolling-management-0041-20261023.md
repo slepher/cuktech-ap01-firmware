@@ -27,7 +27,7 @@
 |D14|独立技术复核|准备立即补位|
 |E12|真实剩余断边研究|准备立即补位|
 |G11|真实剩余断边研究|准备立即补位|
-|H10|type2 timer创建/更新实际缺口|准备立即补位|
+|H11|type19 C+54派生行指针实际链|准备立即补位|
 
 ## 派发规则（本次用户调整优先）
 
@@ -64,12 +64,6 @@ H05/H06 type4 68B与H01/H03 type19 116B是不同对象；type19最终context释�
 - H09：H08交付后，独立复核旧type2未认证ABI/清理合同，分类/资源不重做。
 
 以上需据正式报告收缩为完整独占任务书；若任务已覆盖且无必要技术增量，则从其他已定位缺口换题，不递归复核纯重复材料。主窗口在每项提交前准备具体任务，保持六路。
-
-## 当前完整任务书 H10（待启动，H09已整合）
-
-树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h10；分支codex/re-0041-h10；基线为启动时最新整合提交。独占reverse/reports/ap01/time1-timer-lifecycle-h10-0041-20261024.md及reverse/analysis/time1-timer-lifecycle-h10-0041-20261024/。
-
-H08/H09 type2/time1的136B ctx与20B wrapper以及DELETE先借ctx+78再timer_delete已闭；真正未核为ctx+78 timer的实际创建安装、callback主要正常更新与page/ctx身份。本题只补这条timer创建→正常callback/数据使用→既有删除借用连接。先查pass3 type2构造附近、weather-calendar-complete、page-logic-evidence/asset-index的lv_ui_time1_update_wx_data_cb、最终ZIP及较晚round3，已有登记/天气callback a00ab754全继承，不重做分类显示/资源/DELETE。不套用type4/type19，正常主app teardown触发仍归共同未知，不再搜天气DELETE上层。若创建/更新旧证据已解释，只局部核ABI/厂商字/字段接入；若无真实callback种子有界交付，不泛扫所有timer。四分类报告、必要静态验证、独占提交并报告commit/验证/未知/clean。共同安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/回放/设备/网络，不重复整函数导出/复制资源或源码。
 
 ## 当前完整任务书 A34（准备，2026-10-24）
 
@@ -111,7 +105,7 @@ G09/G10已闭ready消费者→fd bucket/watcher callback；真正未核是底层
 
 先已有→行为→局限→实际缺口，报告分继承、复核纠正、真正新增、精确断边；复核新增功能0，可靠合同直接引用，不重复整函数/源码/资源导出或机械账。无增量及时报覆盖由主窗口补位，不凑时长/函数。共同静态/安全/隔离/独占规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/网络。必要验证后独占提交，报告commit/验证/未知/clean结束。
 
-## 预备完整任务书 H11（准备，2026-10-24）
+## 当前完整任务书 H11（待启动，H04实际种子）
 
 树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h11；分支codex/re-0041-h11；基线为启动时最新整合任务书提交。独占reverse/reports/ap01/weather-detail-row-owner-h11-0041-20261024.md及reverse/analysis/weather-detail-row-owner-h11-0041-20261024/。
 

@@ -1191,3 +1191,12 @@ A25/A26默认raw/free/独立align表绑定与Pixel/raw析构、A30计量字段�
 先已有→解释行为→局限→精确缺口，四分类交付，必要局部静态验证，不重复整函数/源码/资源/哈希账。无增量报覆盖不擅自换题，完成及时提交供立即补位。共同安全/隔离/独占输出规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/历史回放/设备/外网。提交明确独占文件，报告commit/验证/未知/clean后结束。
 
 已整合待独立复核；A33新增照片新源ABI，D13仅候选匹配/差异不作未改认证或排除。
+
+
+## 当前完整任务书 H10（待启动，H09已整合）
+
+树D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h10；分支codex/re-0041-h10；基线为启动时最新整合提交。独占reverse/reports/ap01/time1-timer-lifecycle-h10-0041-20261024.md及reverse/analysis/time1-timer-lifecycle-h10-0041-20261024/。
+
+H08/H09 type2/time1的136B ctx与20B wrapper以及DELETE先借ctx+78再timer_delete已闭；真正未核为ctx+78 timer的实际创建安装、callback主要正常更新与page/ctx身份。本题只补这条timer创建→正常callback/数据使用→既有删除借用连接。先查pass3 type2构造附近、weather-calendar-complete、page-logic-evidence/asset-index的lv_ui_time1_update_wx_data_cb、最终ZIP及较晚round3，已有登记/天气callback a00ab754全继承，不重做分类显示/资源/DELETE。不套用type4/type19，正常主app teardown触发仍归共同未知，不再搜天气DELETE上层。若创建/更新旧证据已解释，只局部核ABI/厂商字/字段接入；若无真实callback种子有界交付，不泛扫所有timer。四分类报告、必要静态验证、独占提交并报告commit/验证/未知/clean。共同安全/隔离规则适用，不创建下级agent、不改主树共享/生产ROM配置模型，无SIM/构建/回放/设备/网络，不重复整函数导出/复制资源或源码。
+
+H10 c1d5873已整合：timer创建无种子，有界交付，helper直接字段写不含ctx78；不继续泛扫。
