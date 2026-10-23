@@ -1735,3 +1735,15 @@ E19 5d91e16已整合，固定分母闭包接受/新增0；D22立即接替。
 
 
 H18 0ac422a已整合，H17有界结论接受/新增0，不重搜；A53立即接替。
+
+
+## 当前完整任务书 G18（前置已整合，立即接替）
+
+独占reverse/reports/ap01/fb-source-review-g18-0041-20261024.md及reverse/analysis/fb-source-review-g18-0041-20261024/。
+
+待G17整合后，新独立agent只复核具体fb open/close/poll/notify候选映射、ROM字段与CONFIG条件边界；G13–G16行为继承，不重导ROM。精确版本与配置不能由候选自动认证；不整库排除，新增功能0。
+
+准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
+
+
+G18 9c082da已整合，接受G17限定来源/新增0；A54立即接替。
