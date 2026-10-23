@@ -295,3 +295,11 @@ B15 fa7edde→30c7797已整合，限定接受B14；284B/88普通指令/16目标/
 ## 预备任务 B17：工厂active读者独立复核
 
 分支 codex/re-0041-b17；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b17。须B16成果提交整合后，从最新管理提交启动。仅复核B16一个读者的原指令/byte宽度/调用触发条件或有界检索结论，不扩工厂UI/销毁。独占 reverse/reports/ap01/factory-active-review-b17-0041-20261023.md、reverse/analysis/factory-active-review-b17-0041-20261023/；必要精确纠正B16。逐项接受/纠正/未核、来源/实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## A14/A15交接更新
+
+A14 c5ddb11→92c9d2e已整合，限定接受A13，0核心纠正；248B/91条、24位域、2字符串、7Git记录/269源码行核验通过。A15从92c9d2e运行，agent /root/a15_weather_subscriber。A14工作树干净且整合可回收保留分支。当前A15/B16/C16；本地NuttX12.10语义参考不等于认证ROM版本/未修改实现，开源新增排除仍0。
+
+## 预备任务 A16：天气订阅消费独立复核
+
+分支 codex/re-0041-a16；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a16。须A15成果提交整合后，从最新管理提交启动。仅复核A15一个注册点及callback首个数据消费合同、间接ABI/借用复制边界，最多3核心函数，不扩全部天气UI。独占 reverse/reports/ap01/weather-subscriber-review-a16-0041-20261023.md、reverse/analysis/weather-subscriber-review-a16-0041-20261023/；必要精确纠正A15。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
