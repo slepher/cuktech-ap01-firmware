@@ -24,7 +24,7 @@
 |---|---|---|---|
 |A51|/root/e17_uv_time_review（运行）|1edfc57|drop/drop_all局部来源认证|
 |E19|/root/g16_fb_file_review（运行）|809b5cd|独立复核E18实际固定分母商合同|
-|D21|/root/h16_clock_source_review（运行）|24c7b3d|背光动画具体属性/selector及局部来源认证|
+|C23|/root/h16_clock_source_review（派发中）|本次启动提交|C13/C14正常格式化入口局部候选认证|
 |A50|/root/a46_cache_drop（运行）|1edfc57|真实reader消费端a008b888局部合同|
 |H18|/root/a47_reader_mode（运行）|ed4735b|独立复核H17有界搜索与未知结论|
 |G18|/root/d19_backlight_animation（运行）|ed4735b|独立复核G17候选映射/差异/配置条件|
@@ -82,15 +82,6 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
 
 
-## 当前完整任务书 D21（D20已整合，立即接替）
-
-独占reverse/reports/ap01/backlight-animation-source-d21-0041-20261024.md及reverse/analysis/backlight-animation-source-d21-0041-20261024/。
-
-待D20整合后，优先补其提出的真实a00f43bc→a018fb3c→a00df94c(target,0x3e,value,0x20000) property/selector语义认证，回答三角动画的具体UI效果；只核必要薄wrapper/属性定义，不扩通用style引擎。D20已筛旧complete/settings只含通用setter/清理，不能据标题认首次发现。其次仅在尚未覆盖时认证D19/D20的96B descriptor必要字段与start/get/delete/target/exec/path合同到本地LVGL9.2.1 lv_anim.c/lv_anim.h相应行。先核F07/F08等旧来源报告有无已覆盖，匹配直接引用；对未核字段/删除callback与ROM差异给局部答案。厂商遍历字未认证不能用候选替代；不扩完整动画调度/GUI/生命周期，也不假定ctx最终释放。候选精确ROM版本未知。
-
-准备队列不等于运行或已交付。实际派发前须整合前置、再核重叠，使用当时最新管理HEAD创建独立worktree；树名re0041-ID小写，分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占本文指定报告与同名analysis目录。REA skill及共同/复用规则适用：先已有出处→行为→局限→缺口、四分报告、最小稀疏取证、静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型、其他agent同时工作勿撤销、独占提交commit/验证/未知/clean，接近提交预告后继建议。
-
-
 ## 当前完整任务书 E19（E18已整合，立即接替）
 
 独占reverse/reports/ap01/uv-time-division-review-e19-0041-20261024.md及reverse/analysis/uv-time-division-review-e19-0041-20261024/。
@@ -140,12 +131,12 @@ A49有界重叠筛选得到旧weather-calendar-complete evidence[30]真实a010a5
 
 独占reverse/reports/ap01/backlight-animation-source-review-d22-0041-20261024.md及reverse/analysis/backlight-animation-source-review-d22-0041-20261024/。
 
-待D21整合后，新独立agent只核property3e/selector20000的候选定义与ROMwrapper、动画descriptor size/early_apply/start顺序三项来源差异及其证据强度。D19/D20继承；不能候选覆盖ROM/推断真实视觉效果、控件类型或ctx free，不扩style引擎，新功能0。
+待D21整合后，新独立agent只核property3e/selector20000的候选定义与ROMwrapper、动画descriptor size/early_apply/start顺序/repeat超期余时四项来源差异及其证据强度。D19/D20继承；不能候选覆盖ROM/推断真实视觉效果、控件类型或ctx free，不扩style引擎，新功能0。
 
 仅准备，不计运行。实际派发前整合前置并再核重叠，使用最新管理HEAD新建独占树re0041-ID小写/分支codex/re-0041-ID小写，根D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb。独占指定报告/同名analysis。REA skill与共同/复用规则适用；先已有出处→行为→局限→缺口、四分报告、只必要稀疏原字节/源行；静态安全边界、不创建下级agent、不改共享/主树/生产ROM配置模型，其他agent同时工作勿撤销。独占精确提交commit/验证/未知/clean；接近提交预告后继，主体已覆盖则收缩结束不扩扫。
 
 
-## 预备完整任务书 C23（有前置，未启动）
+## 当前完整任务书 C23（已有合同已整合，立即接替）
 
 独占reverse/reports/ap01/text-entry-source-c23-0041-20261024.md及reverse/analysis/text-entry-source-c23-0041-20261024/。
 
