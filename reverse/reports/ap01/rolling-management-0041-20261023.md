@@ -117,3 +117,19 @@
 重点同display对象关系/真实注册字段和间接ABI、timer16实际单位合同、resume不是立即绘制、callback只读event+8/+4且不读/改/保存param/flags、内建filter38/29对event35不匹配但不能否定动态35/ALL handler、创建/替换/删除资源原序及notifier+9c实际安装断边。a008335e删除同timer并装a00806f8/filter38/userdata=&state+58为替代链候选，保持未知不接管其恢复。独立原字节/厂商编码/宽度/返回重读/所有权，逐项接受纠正未核，纠正只独占报告不改G05。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证及一个后继闭包；不扩全GUI事件/全部timer/物理绘制、固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
 
 最新整合：E06→0724167局部验收；D06→e8ce444发布次数纠正+DMA IRQ精确ABI后验收；A23→5e0da7b/G05→a6a4e7c待A24/G06。A24运行中发现A23对齐data回调全局槽应为62fc964c而非handler表+8，正式报告待提交。
+
+## 预备完整任务书 H06（待H05整合后立即启动）
+
+任务ID H06，新agent独立复核H05 type4 weather1订阅/主要字段与图标消费/显式ctx释放闭包。分支codex/re-0041-h06；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-h06；基线含H05最新管理提交。独占reverse/reports/ap01/weather-subscriber-review-h06-0041-20261023.md及reverse/analysis/weather-subscriber-review-h06-0041-20261023/。
+
+问题：a005e8dc属于a005cc1e，构造page/wrapper20B/ctx0x44并登记(a00abed2,page)→写type4/ctx/page+10→装DELETE a00abb62，主要当前/高低/体感/icon/日出日落字段消费与新a019cbc0图标setter怎样衔接、DELETE怎样归还？按H05正式约5–12核心/必要短依赖，已验收五槽分发/分类/PNG info及arc只针对核，不将a019cbc0混成A19 a0198946。重点原注册与字段挂接顺序、LH/LHU/参数ABI、category默认保留旧src、隐藏门、16word清ctx但最后4B未清后整块free、先free(ctx)再同键注销再free wrapper/清page+10，不能套H03未free详情ctx的不同页面合同。
+
+逐项接受纠正未核，独立原指令/厂商编码/宽度符号/返回重读/清理顺序及伪代码结构状态所有权，事实推断未知/来源/实际独立静态验证/断边。上层正常离页动作→本page DELETE交付未连，不拿E05条件root删除填补，不扩全部天气/全UI或异常重入判断。必要纠正只独占报告不改H05；来源未认证不排除。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 F08（待F07整合）
+
+任务ID F08，新agent独立复核F07本地源码候选/包一致性及源-ROM差异认证。分支codex/re-0041-f08；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f08；基线含F07最新管理提交。独占reverse/reports/ap01/display-source-review-f08-0041-20261023.md及reverse/analysis/display-source-review-f08-0041-20261023/。
+
+问题：F07源-ROM约11项映射、候选LVGL9.2.1元数据、13源文件与本地v9.2.1.zip成员相等、DELETE enum 0x26对ROM0x29、event list16B对ROM20B/+14状态、bit16/deleted门、layer默认初始化和早期hook布局差异，是否有独立可定位证据、哪些只是候选命名而非ROM认证？候选实际只读根/home/slepher/nuttx-ap01-sim/apps/graphics/lvgl/lvgl；zip精确位置/文件清单以F07正式报告为准，不猜新版本。apps固定commit仅认证父仓，解包LVGL树被Git忽略且无独立.git，不能认证其未改；包成员相等也不等ROM来源。
+
+独立重读指定源/zip并核版本、enum逐项计数/条件编译、struct对RV32及enum packing/配置的影响、关键ROM锚点/已验收合同；重点+2b8候选layer_deinit仅由顺序/邻接/(disp,layer*)ABI支持，安装/运行值仍未知，+2c与候选flush_cb+28的布局差异不得定成已证原名。逐项接受纠正未核，不凭匹配扩大整库排除或把差异自动归因厂商；确证可排除范围若无则明确0。只保存必要差异/映射证据，不重复整源码、哈希清单/旧全指令证据，不扩版本搜寻/+2b8扫描。伪代码/映射为分析表达非原源码；交付来源可信度分层、实际独立只读验证、剩余认证缺口和一个后继闭包。必要纠正仅独占报告不改F07。WSL仅已授权本地文件只读，可必要require_escalated读权限，不启动SIM/构建/网络、不改候选树/ACL；禁止固件执行/漏洞/历史回放/ROM生产模型修改；共同规则适用。
