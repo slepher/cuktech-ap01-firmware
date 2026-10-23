@@ -139,3 +139,19 @@ C09从efefd4a启动，agent /root/c09_detail_gate。启动核对发现62fc4034 g
 ## 预备任务 C10：详情摘要独立复核
 
 分支 codex/re-0041-c10；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c10。须C09实际调整后的detail-summary成果提交整合后，从最新管理提交启动。仅复核a00f3844及C09最多两个直接依赖的ctx/模式/控件合同，不回到已解gate或扩完整UI。独占 reverse/reports/ap01/detail-summary-review-c10-0041-20261023.md、reverse/analysis/detail-summary-review-c10-0041-20261023/；必要可精确纠正C09。核原指令、逐项接受/纠正/未核/来源及实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 当前交接快照：A09 / B09 / C09
+
+用户再次强调维持3个运行中的subagent是核心调度要求。完成后先范围/差异验收、本地整合、从最新整合提交建新worktree并启动新agent，再更新汇总和清理旧树；预备后继任务缩短空档。不得长期复用同一agent接不同任务。
+
+| 当前任务 | agent | 分支 | 固定基线 | 下一项 |
+| --- | --- | --- | --- | --- |
+| A09 线程适配入口 | /root/a09_thread_adapter | codex/re-0041-a09 | d85348e | A10独立复核 |
+| B09 callback ABI复核 | /root/b09_callback_review | codex/re-0041-b09 | 99899e3 | 根据复核建议选新小缺口 |
+| C09 详情摘要helper（已替换已解gate任务） | /root/c09_detail_gate | codex/re-0041-c09 | efefd4a | C10独立复核 |
+
+各工作树仍为同父目录re0041-<id>。最新已整合：B08 32aa8ef→99899e3（待B09）；A08 30dc717→d85348e（限定接受A07）。C08 1f2ee8b→efefd4a（限定接受C07），不等于全生命周期完成。上一代A08/B08已干净且整合，可回收，保留任务分支。
+
+## 预备任务 A10：线程适配入口独立复核
+
+分支 codex/re-0041-a10；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a10。须A09成果提交整合后，从最新管理提交启动。仅复核A09 a012f946及最多两个直接依赖的entry/userdata读取、调用参数与返回边界，原指令未知不能以伪代码填补，不扩调度/运行时可达性。独占 reverse/reports/ap01/thread-adapter-review-a10-0041-20261023.md、reverse/analysis/thread-adapter-review-a10-0041-20261023/；必要可精确纠正A09。逐项接受/纠正/未核、来源、实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
