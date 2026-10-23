@@ -1,6 +1,6 @@
 # H06：H05 weather1 type4 订阅、图标消费及 ctx 归还独立复核
 
-2026-10-23；基线 `04cb395c5c38875ba72cefd84ca55bfadc3e4538`；分支 `codex/re-0041-h06`。本轮为新 agent 对 [H05](weather-subscriber-h05-0041-20261023.md) 的独立静态技术复核，使用 reverse-engineer-anything 技能及共同规则。**六个新恢复入口、三个既有合同边界均限定接受；无语义纠正项。** 接受范围仅为构造必要片段→主要 callback/直接图标 setter→已安装 DELETE 中的注销与 ctx/wrapper 归还。正常上层离页动作→该 page DELETE 的派送仍未连接。
+2026-10-23；基线 `04cb395c5c38875ba72cefd84ca55bfadc3e4538`；分支 `codex/re-0041-h06`。本轮为新 agent 对 [H05](weather-subscriber-h05-0041-20261023.md) 的独立静态技术复核，使用 reverse-engineer-anything 技能及共同规则。**H05列出的六个恢复入口、三个既有合同边界均限定接受；无语义纠正项。H06真正新增恢复为0，仅计独立复核。** 接受范围仅为构造必要片段→主要 callback/直接图标 setter→已安装 DELETE 中的注销与 ctx/wrapper 归还。正常上层离页动作→该 page DELETE 的派送仍未连接。既有成果的复用与增量分类见末尾附记，不能把旧登记/身份/挂接或分类显示称首次发现。
 
 ## 原件、方法与范围
 
@@ -132,3 +132,20 @@ SW(p+0x10,0);               // a00abbe4
 来源仍分层：厂商UI日志/路径与胶合结构可识别；LVGL候选合同可复用；没有认证本链精确上游版本、未修改实现或整个库来源。**本轮新增确证开源排除0**。
 
 唯一后续闭包建议：沿本type4 page的真实所有者/父对象和正常导航调用，恢复“具体用户动作或父页替换→该对象被删除→向此page送达0x29→`a00abb62`”。目前精确断边在已安装的DELETE handler与其上层正常触发来源之间；本次没有重做全UI负搜索，也不拼接E05条件root删除或其身份未闭合对象。上述局部生命周期已可限定验收，上层断边继续明确保留。
+
+## 旧成果复用附记与增量口径
+
+本附记按用户补充要求只读检查旧成果，保留已提交H06技术复核，未开启新的技术恢复。所有下列相对定位的**只读根**均为 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/`，不是失效的旧 `artifacts/ap01-research/...` 链接；已按basename在当前 `reverse/rehost`、`reverse/reports`、`reverse/analysis` 找到实件。
+
+| 已有出处 | 可复用的行为 | 不能据此声称的内容 |
+| --- | --- | --- |
+| `reverse/analysis/0041-20261013/0041-ghidra-pass3.txt:2653–2657` | 原有反编译已顺序列出`register(a00abed2,page)`、type4、ctx、page+10、`install(page,a00abb62,0x29,0)` | H05/H06不是首次发现此页callback/DELETE身份或登记挂接。反编译中的LAB常量不等于已恢复callback及DELETE内部 |
+| `reverse/rehost/weather-calendar-complete-0041.json`，`weather`及`evidence[10/11/12/14/15/17]` | 已有`a00a6998/a00a6afa/a00a6d34/a00b564e/a008ce16/a0198946`证据；当前/预报分类、条件文字、AQI/UVI/湿度arc和tiny图标可继承 | 不从零重做分类/显示，也不将tiny setter `a0198946`替代本页直接setter `a019cbc0`；SIM服务状态和受控数据不是原ROM网络服务证明 |
+| `reverse/reports/ap01/application-function-matrix-0041.json#/features/31`，`C9-AP01-F032` | `lv_page_ui_weather1_create`已归weather-calendar，标记family SIM验证及旧complete出处 | family `passed-in-sim`不是原ROM全部分支/生命周期证明 |
+| `reverse/analysis/factory-reference-map-0041.json#/sim_features/31`；`reverse/reports/ap01/factory-reference-map-0041-20261020.md:407` | 已关联weather1与包含函数`a005cc1e`、page-logic/pass3及资源引用 | JSON明确`native_creator_entry_proven=false`，旧映射本身不能认证独立creator入口或导航/删除闭包 |
+| `reverse/rehost/page-logic-0041.json#/records/2` | `analyze_function(a005cc1e)`历史Evidence `ev_29c3e3a3ec43f12e0a1d9c5db26f6b39875288fb82b8c2126a9974ddfe734175`，可复用包含函数定位和provider局限 | 本次也读了`page-logic-evidence.json`与`page-logic-evidence2.json`的结构和目标地址出现界限；不能把相邻旧证据或0031记录混成0041新增证明 |
+| `reverse/rehost/ap01-ui-0041-complete-source.zip`成员`tools/ap01/ap01-ui-pages.h` | 第47行条件文字；106–129行当前/预报分类与large/small选择；492–497行tiny图标；673–724行weather1当前/高低/体感/描述/图标/日出日落重建。`tools/ap01/ap01-ui-details.h:438–444`也已有详情页日出日落呈现 | 这是最终重建/SIM源码成员，不是原厂源码认证；它不能代替原callback参数宽度、对象挂接顺序或ctx free证据 |
+
+ZIP只读列成员并用`ZipFile.read`读取上述已有文本，未解压全包、导出全函数/资源、PNG解码或执行任何SIM脚本；读取源码不重放旧运行测试。`complete`中的分类文字和资源显示及已有matrix覆盖应作为继承成果，旧路径迁移不记作证据缺失。
+
+据此，**H05相对可复用旧成果的主要技术增量仅为主要callback原数据流/ABI、直接`a019cbc0` setter、显式ctx释放及精确清理原序；H06本身新增恢复=0**。H06剩余工作量已由10窗/210项原编码检查完成，属原序、宽度、ABI和所有权的独立复核，不是再发现一套天气功能。H05的type4/68 B ctx与H01/H03的type19/116 B ctx是不同页面，不能跨用释放合同。正常上层离页→本page DELETE仍未连；本补充不开展该导航题。
