@@ -464,3 +464,31 @@ C22：3d59b72→004ff56；B21：d461760→99c02ab。两任务独占范围、差�
 - 独占报告：reverse/reports/ap01/region-gating-review-c22-0041-20261023.md
 - 独占分析目录：reverse/analysis/region-gating-review-c22-0041-20261023/
 - 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
+
+
+## D01/F01恢复成果整合并转独立复核
+
+D01 475b43a→919051d；F01 3df638e→4a897ee。管理范围/差异/JSON/链接检查通过；技术待D02/F02独立复核。原树已确认干净，待回收；分支保留。
+
+### D01：正常命令从描述符提交到构帧、部分写及完成通知
+
+- 分支：codex/re-0041-d01
+- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d01
+- 业务问题/证据入口：usb-interface-ota、queued-command-consume-b20、uart-normal-parser-b18/b19、dock-presence-polling；入口 a01951e2/a00ee9ce/a01a4ff8/a00ee96c/a00a8330，活动区62fcb2f0
+- 闭包、包含/排除、可保留合同和断边：恢复提交→活动副本/入队→构帧→部分写→正常完成事件闭包，约5–12核心函数及必要直接依赖。B20槽消费、B18解析和CRC按既有合同核对，不重复完整解码；不修改或复核B20原文，疑义报告管理者。排除超时异常、长度审计、漏洞调查、OTA全模块、历史回放。断边须列底层write合同、回调ABI、状态写者和资源归还限制。
+- 独占报告：reverse/reports/ap01/uart-send-lifecycle-d01-0041-20261023.md
+- 独占分析目录：reverse/analysis/uart-send-lifecycle-d01-0041-20261023/
+- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
+
+
+### F01：MiIO共享延后设置timer的创建、提交、消费及控制生命周期
+
+- 分支：codex/re-0041-f01
+- worktree：D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-f01
+- 业务问题/证据入口：miio-deferred-settings、buzzer-backlight-round3、weather-scheduling、numeric-location-review-b15；入口 a009d286/a00a0bd8/a00a0e78/a009d8bc/a00a5b90，timer/data字段见已有证据
+- 闭包、包含/排除、可保留合同和断边：恢复私有timer初始化→三个已知属性提交→数据槽交接→callback清理→停止或销毁连接的小闭包，约5–12核心函数，已恢复kind0..6仅核接口及顺序，不逐分支重复。优先展开真实初始化/控制调用者，不重复kind2直接提交者扫描。保留libuv/allocator/天气重排合同，不重做通用timer库算法；来源不认证则仍列缺口。排除异常重复提交实验、全MiIO、外连。断边须说明外部串行化、data重读、资源与最终销毁。
+- 独占报告：reverse/reports/ap01/miio-deferred-lifecycle-f01-0041-20261023.md
+- 独占分析目录：reverse/analysis/miio-deferred-lifecycle-f01-0041-20261023/
+- 基线：启动时最新管理提交，见派发记录；其他完成标准及验证遵循共同规则。发现范围外独立业务先报告，不自行扩展。
+
+
