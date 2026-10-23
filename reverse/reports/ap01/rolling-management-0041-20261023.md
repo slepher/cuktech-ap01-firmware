@@ -141,3 +141,11 @@
 问题：62fc9674 handler表+0 raw申请、+4 raw归还由谁安装，a0081d90对象data对齐实际来自独立全局62fc964c，正常图像/PNG像素对象怎样调用这些回调、持有raw/data并在a0081f26归还？先读A23/A24，A24原LW算式及两槽区别为既有合同，不能沿用A23错归handler+8。围绕一个真实正常pixel对象的handler设置/默认配置→raw申请/对齐→对象发布→raw析构组成约5–12核心及必要短依赖；准确安装函数/callback身份目前未知，须从实际槽写入/初始化和被调用者定位，不凭函数名补。
 
 包含default/可选handler及空槽原分支、raw指针与aligned data区别、参数/返回/宽度/偏移/重读、包装对象和raw双层归还顺序；已验收session open/close/cache转持有只针对核，不恢复全cache/完整PNG解压/通用heap。若静态配置没有非NULL安装证据，给实际初值/写者候选/精确断边，不能把候选allocator身份当运行绑定。必要只读来源比较可复用已有本地LVGL候选，但来源版本/未改范围未认证不排除。交付原字节/厂商编码/间接ABI、可读伪代码结构状态所有权、事实推断未知、来源、实际静态验证及一个后继闭包。禁止固件执行/外连/漏洞/异常/历史回放/ROM生产模型修改；共同规则适用。
+
+## 预备完整任务书 D08（待D07整合后立即启动）
+
+任务ID D08，新agent独立复核D07正常UART stack transfer→固定LLI→MMIO/cache→enable→callback/release闭包。分支codex/re-0041-d08；worktree D:/CodexHome/visualizations/2026/10/23/01a1691a-e178-7710-86c0-84c2ff2d3dfb/re0041-d08；基线含D07最新管理提交。独占reverse/reports/ap01/uart-dma-review-d08-0041-20261023.md及reverse/analysis/uart-dma-review-d08-0041-20261023/。
+
+问题：a01a47dc→a01b554e如何同步把栈12B {src,dst,nbytes}转为固定RAM池16B {src,dst,next,control}、持有ring payload地址而非复制、发布首LLI 4个MMIO word→a0025d9e clean池范围→caller独立enable，normal callback靠持久length/phase而非pool指针归还ring？按D07正式核心清单约5–12合同/必要配置与已验收D06 callback接口，不重做整个IRQ/文件引用。重点byte宽/src递增/dst固定、1024B ring每段1项前提、LLI拆段/next和control位宽、栈地址不逃逸、payload持续借用、MMIO/cache发布原序、返回a0保留cache helper的pool+used*16且caller不检查，与SDK used_count/-1/-ENOMEM不同，失败边仅epilogue不能修正。
+
+独立原字节/厂商条款/压缩分支/返回/循环/S型写宽/间接ABI、所有权及成功/失败清理原序。SDK本地HEAD41bf338a…/tracked clean/2.3.36仅来源候选，可只读定位所选源码差异，不下载构建，不因算法同形排除ROM。逐项接受纠正未核，必要纠正只独占报告不改D07；channel分配/最终close池归还、payload cache属性、硬件完成保留断边，不扩全DMA/异常/超时。交付伪代码结构状态生命周期、事实推断未知、来源、实际独立静态验证及一个后继闭包。禁止固件执行/外连/漏洞/历史回放/ROM生产模型修改；共同规则适用。
