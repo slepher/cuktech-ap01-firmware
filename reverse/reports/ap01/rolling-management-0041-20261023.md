@@ -267,3 +267,7 @@ C14 867810f→c021206已整合，限定接受C13，无纠正；306B/101条、51�
 ## 预备任务 C16：前置helper独立复核
 
 分支 codex/re-0041-c16；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c16。须C15成果提交整合后，从最新管理提交启动。仅复核C15最终实际范围正常参数/返回门控合同及最多两个直接依赖，不扩GUI/断言系统或诊断触发。独占 reverse/reports/ap01/text-precondition-review-c16-0041-20261023.md、reverse/analysis/text-precondition-review-c16-0041-20261023/；必要精确纠正C15。原指令逐项接受/纠正/未核、来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## B15验收后术语纠正授权补充
+
+B14发现a009c5fc无位置/全局/配置写入，仅栈保存及区域码范围判定；这目前待B15独立核准。为让旧报告不继续传播setter误名，另将 reverse/reports/ap01/miio-deferred-settings-0041-20261023.md 独占授予B15：仅在独立核准后按原指令把a009c5fc相关setter命名澄清为validator/有效性判定，保留原调用、返回条件、持久化顺序，并加B14/B15续作链接，不扩展或改其他合同。未核准不得先改结论。共享status/task/README/覆盖仍由主窗口维护。
