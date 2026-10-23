@@ -161,3 +161,18 @@ display删除中先同步发29，再禁用所有descriptor：filter OR0x10000、
 实际执行新 `review.py`：**passed，22窗口/950指令/101检查**；另有有界构造s1定义候选审计及4条厂商字字段/只读模型语义核对。人工读取新listing中的构造实参、注册/分派、handler、timer初始化/pause/resume、notify、scheduler选定迭代、poll/getter、消费者入口和资源清理；按原寄存器流形成三项精度纠正。脚本最初两次取窗末端落在32位指令中，被边界断言拒绝，随后按完整指令边界调整；这些是静态工具取窗修正，没有执行ROM。未执行旧验证器、固件、实机/外部服务、历史回放、异常param、漏洞验证、编译或生产测试。
 
 本轮达到独立复核范围闭包，**在三项精度纠正和所列断边下接受G05**。一个适合后续的完整小闭包是 `a008335e` 替代38安装 → `a00806f8` 去重 → `a009f9b6` 真调度消费 → `a00806d0` 状态清回及owner退出归还；只作为建议，不自行承接，不扩全部GUI timer或最终绘制。
+
+## 成果复用与分类附记（用户最新复用要求）
+
+保留原独立复核提交 `ba1d4e0`，不重置。按地址、callback、状态和结构字段回查主仓旧留存，旧 `artifacts/ap01-research/rehost-20261016/...` 路径通过 basename 找回当前 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/rehost/`；旧路径失效不视为没有成果。以下只读JSON/文本及ZIP成员，没有运行旧SIM、测试、脚本或ZIP程序，也没有再导出函数指令。
+
+| 已有出处（主仓实际路径相对 reverse） | 已解释行为/可复用内容 | 证据局限与 G06 分类 |
+| --- | --- | --- |
+| `reports/ap01/application-function-matrix-0041.json`；`reports/ap01/factory-reference-map-0041-20261020.md` 及 `analysis/factory-reference-map-0041.json` | 既有33构造器业务家族/SIM合同和原件函数资源索引；map已明确“SIM验收”与“完整C文件认证0”的区别。 | 有界检索本轮核心地址、callback和字段未得到本display调度闭包的直接映射；这只是索引结果，不否定旧成果或ROM行为。继承其来源/覆盖口径，不记新增恢复。 |
+| `rehost/system-complete-0041.json` 的 `integration`、`cached_evidence.settings_a00fd1ac` | 既有100ms UI tick、直接对象更新/各模块redraw标志及按键按下时推迟整体重建；缓存反编译已见timer创建/暂停状态检查后resume。 | `integration`明确是本地服务/SIM对象策略；页面timer不是display+308。旧timer行为应承认继承，不能把SIM redraw成功当作ROM event38/poll闭合。 |
+| `rehost/settings-0041-round2b.json` records[10]，`ev_d2c060238142516e1df7a388e5984d96623578a75366a96c1472e9ed8c8df9fb`；`settings-0041-round2c.json` records[6]，`ev_e247f56bf831d4ed2425a3af2676aa923f012bc9123906a74d174a2f8ac7b77b` | 旧 `a00fd1ac` 原指令留存已有 `a00fd33c/a00fef14 → a008bc64`、`a00fef38 → a008bd70`。round2b records[3] `ev_475545dcf37edbd24d373c32080ead4ebe8f7d1ae096103b094e09d925ab704f` 为相应pseudocode分页。 | 证明通用timer入口及页面侧使用已有证据；不等于恢复本display真实callback或notifier安装。本轮复核通用入口属于继承后对合同核验，不作为新函数恢复。round2、d、e也已实际读取；有界关键字未命中不推不存在。 |
+| `rehost/page-logic-0041.json` records[15]，`ev_794a176f91454b7304c06fbfaff53024aa96bf8a3a51698dbb831f8b9359f9ef`；同目录 `page-logic-evidence.json/evidence2.json` | 前者是 `a0024906` dossier，其caller表已列 `a00e0ac8` 及非连续函数范围；辅助证据两文件也按本轮地址/字段读取检索。 | 旧证据证明消费者在图中已有定位，不证明timer/poll调用链成功。非连续函数识别及旧generic Ghidra模型限度继续保留；不是G06新发现消费者。 |
+| `analysis/0041-20261013/0041-ghidra-pass3.txt`，例如行1920、2260、2831/2832、2892 | 既有 `a008bc64` 调用目录和多个页面timer创建伪代码；行2260已有 `a008bc64(a00ad602,3000,ctx)` 后保存并pause。 | 这是别的页面callback/周期，不能把3000或1000移到本display的16。承认旧timer原指令/反编译留存，不重出整函数，也不把别页状态映射到display。 |
+| `rehost/ap01-ui-0041-complete-source.zip`，只读39成员中的 `tools/ap01/nuttx-sim.c:114..118`、`tools/ap01/ap01-ui.h:383..406,715` | 最终SIM源码已有 `lv_timer_handler()`循环，按delay限10ms/最少1ms休眠；UI以100ms tick维护redraw_pending并等待press结束再重建。 | 这是可直接复用的重建行为和状态逻辑，ZIP不是ROM准确源码或完整LVGL实现；它不包含本轮三个ROM窗口的尺寸/快照原序证明。未启动SIM或执行ZIP中任何成员。 |
+
+G06应登记为**独立复核/精度纠正**，不是新增功能恢复。真实display安装→timer替换→resume→周期/poll→消费者及资源边均继承G05，区域/filter/返回继承G04、显示资源边继承F06；旧SIM/页面原件证据提供上述定位与已解释合同。G06本轮剩余语义增量仅三项：`a0080002..a0080030` 的46B尺寸、`a0087b0e..a0087b24` 的callback快照先于清next-delay、`a00805b0..a00805c6` 的now→callback快照→last_tick→保存值消费。原提交22窗口为当时独立验收证据覆盖，不代表22项新增恢复；本附记不新增调度或替代38技术恢复，也不因旧SIM验收而撤销原ROM断边。
