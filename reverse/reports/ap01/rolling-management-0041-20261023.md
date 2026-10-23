@@ -231,3 +231,7 @@ C12 0bae399→8b82f93已整合，限定接受C11，无纠正；660B/234普通指
 ## A11/A12与B12/B13交接更新
 
 A11 4d4d5ed→139d994已整合，范围/差异通过，待A12；A12从139d994运行，agent /root/a12_writer_review。B12 31aae09→123d476已整合，范围/差异通过，待B13；B13从123d476运行，agent /root/b13_compare_review。两旧工作树均干净且整合，可回收保留分支。当前A12/B13/C13三个agent运行，C14已预备；后继不得重复a00a53c0（B10/B11已解）。
+
+## 预备任务 B14：数字位置setter
+
+分支 codex/re-0041-b14；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b14。须B13验收允许后，从最新管理提交启动。仅恢复a009c5fc数字位置setter正常参数/字段/返回合同及最多两个直接依赖；入口miio-deferred-settings中3/8与kind5调用、天气位置报告及既存inventory，先查已有后续成果避免重复。不要重新扫描kind2全部直接提交者（旧扫描已覆盖3个标准直接点），不扩完整MiIO/天气状态机。独占 reverse/reports/ap01/numeric-location-setter-b14-0041-20261023.md、reverse/analysis/numeric-location-setter-b14-0041-20261023/。核原指令参数宽度/返回分支/持久化边界，事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
