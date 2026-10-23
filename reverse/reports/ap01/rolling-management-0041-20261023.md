@@ -191,3 +191,15 @@ B10 d870680→aabf574已整合，技术待B11；B11从aabf574运行，agent /roo
 ## 预备任务 A11：当前对象指针一个写入者
 
 分支 codex/re-0041-a11；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a11。须A10验收完成整合后，从最新管理提交启动。只从已有inventory/留存引用恢复62fc6c18一个直接写者的局部合同（入参来源、写条件、word宽度），最多3核心函数；单写者不证明当前对象同一性/运行时调度。不全ROM重复扫描，不扩调度；无明确证据给有界未知。独占 reverse/reports/ap01/current-object-writer-a11-0041-20261023.md、reverse/analysis/current-object-writer-a11-0041-20261023/。原指令/事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## A10/A11交接更新
+
+A10 3b6e270→f712c40已整合，限定接受A09，无纠正；672B/223槽/60项核验通过。A11从f712c40运行，agent /root/a11_current_writer。A10工作树干净且整合可回收保留分支。当前A11/B11/C11均运行，C12已预备。
+
+## 预备任务 B12：opaque返回合同
+
+分支 codex/re-0041-b12；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b12。须B11验收允许后，从最新管理提交启动。只恢复B10局部调用的a00501be正常参数/返回合同及最多两个直接依赖，回答机器返回零/非零的静态语义和来源识别依据，不扩完整响应、不异常输入/缺陷验证，也不假设跨调用对象稳定性。入口B10/B11及既有证据，不重复旧异常回放；若既有报告已完整恢复应先指出证据，再转同量级未完成依赖。独占 reverse/reports/ap01/compare-contract-b12-0041-20261023.md、reverse/analysis/compare-contract-b12-0041-20261023/。核原指令、事实推断未知/来源/实际验证，差异检查后提交结束。共同约束适用。仅预备，未启动。
+
+## 预备任务 A12：当前对象写入者独立复核
+
+分支 codex/re-0041-a12；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-a12。须A11成果提交整合后，从最新管理提交启动。仅复核A11一个写入者的局部原指令/word宽度/参数来源/写条件，不由单写者推出当前对象或运行时调度。独占 reverse/reports/ap01/current-object-writer-review-a12-0041-20261023.md、reverse/analysis/current-object-writer-review-a12-0041-20261023/；必要可精确纠正A11。逐项接受/纠正/未核/来源及实际验证、差异检查后提交结束。共同约束适用。仅预备，未启动。
