@@ -20,19 +20,15 @@
 | --- | --- | --- | --- | --- |
 | A18 | /root/a18_current_review | 2400931 | 当前值首消费独立复核 | A19图标消费callee |
 | B20 | /root/b20_queue_consumer | b105687 | 一次正常排队命令消费 | B21独立复核 |
-| C20 | /root/c20_third_gate_review | 9270abb | 第三门正常合同独立复核 | 选一个变换callee |
+| C21 | /root/c21_transform_predicate | fe1fcd4 | 一个变换前置callee正常合同 | C22独立复核 |
 
-最新已整合：A17 f95d973→2400931（当前值正常字段合同，技术待A18）；B19 a5e40e7→b105687（限定接受B18正常stage/escape，初始化等仍未知）；C19 ee172d4→9270abb（第三门局部成果，技术待C20）。旧工作树仅在确认干净并整合后回收，任务分支保留。
+最新已整合：A17 f95d973→2400931（当前值正常字段合同，技术待A18）；B19 a5e40e7→b105687（限定接受B18正常stage/escape，初始化等仍未知）；C20 d6b79f6→fe1fcd4（限定接受C19，opaque变换/最终刷新仍未知）。旧工作树仅在确认干净并整合后回收，任务分支保留。
 
 ## 已整合概况与开放缺口
 
 共同研究基线7c17501，后续均通过明确本地Git提交管理，不另建哈希/复制清单。限定验收与报告链接见[覆盖记录](private-coverage-0041.md)。蜂鸣正常停机/确认消费者、timer最终停止删除、完整UI/订阅销毁、MCU内部程序及准确来源版本等仍开放；不得将局部验收变为模块/全ROM完成。没有新增已认证开源排除，不计算全ROM百分比。
 
 此前任务书与提交映射已迁移到[历史任务交接](rolling-task-history-0041-20261023.md)，保留原文；历史状态只代表当时，当前以上表为准。以下任务书保留原启动门槛，实际运行/待启动以上表为准。
-
-## 预备任务 C20：第三门独立复核
-
-分支 codex/re-0041-c20；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c20。须C19提交整合后，从最新管理提交启动。仅复核C19第三门参数/局部读写/返回与直接消费条件，最多3核心函数，不扩失效队列/GUI全集。独占 reverse/reports/ap01/invalidation-third-gate-review-c20-0041-20261023.md、reverse/analysis/invalidation-third-gate-review-c20-0041-20261023/；必要精确纠正C19。逐项接受/纠正/未核/来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
 
 ## 预备任务 A18：当前值消费独立复核
 
@@ -53,3 +49,7 @@
 ## 预备任务 B21：排队消费独立复核
 
 分支 codex/re-0041-b21；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-b21。须B20提交整合后，从最新管理提交启动。仅复核B20正常一次取槽/选择/所有权/调用返回合同，最多3核心函数；不扩完整OTA/超时调查/异常输入或回放。独占 reverse/reports/ap01/queued-command-review-b21-0041-20261023.md、reverse/analysis/queued-command-review-b21-0041-20261023/；必要精确纠正B20。逐项接受/纠正/未核、来源和实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
+
+## 预备任务 C22：变换前置callee独立复核
+
+分支 codex/re-0041-c22；worktree D:/CodexHome/visualizations/2026/10/23/01a1689f-d8c8-7821-aacd-286f467e884d/re0041-c22。须C21提交整合后，从最新管理提交启动。只复核C21正常参数/返回/是否写区域及必要直接依赖，最多3核心函数，不扩完整变换库或GUI。独占 reverse/reports/ap01/transform-predicate-review-c22-0041-20261023.md、reverse/analysis/transform-predicate-review-c22-0041-20261023/；必要精确纠正C21。原指令逐项接受/纠正/未核、来源及实际静态验证，差异检查后提交结束。共同规则适用。仅预备，未启动。
