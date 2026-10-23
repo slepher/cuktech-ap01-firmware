@@ -24,6 +24,10 @@
 
 ## 管理队列
 
-- A01、B01、C01：待从共同基线启动。
+- 共同基线：7c17501，基本差异检查通过。三个 worktree 均已从此提交创建。
+- A01：运行中，agent /root/a01_buzzer_stop。
+- B01：运行中，agent /root/b01_dock_review；dock 成果仍待复核。
+- C01：运行中，agent /root/c01_pogo_timer。
+- Git 元数据初次写入遇 sandbox 的 index.lock Permission denied；按用户明确提交授权使用升级工具后成功，未改动权限或绕过限制。
 - 后续：按交付未知拆分小任务，技术结论交 subagent 复核。完成一个先验收整合一个，再从最新整合提交启动新 agent。
 - 覆盖边界仍见 private-coverage-0041.md；开源须可核实来源/版本，未知来源不排除。内嵌 MCU 仍不透明，高熵不证明架构、加密或压缩。
