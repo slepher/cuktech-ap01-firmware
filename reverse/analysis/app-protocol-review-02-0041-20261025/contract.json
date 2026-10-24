@@ -1,0 +1,47 @@
+{
+  "claim": "Q-14",
+  "reviewer": "/root/app_protocol_review_02",
+  "decision": "accept-bounded-static-contract-no-author-correction",
+  "new_business_recovery": 0,
+  "baseline": "b6e97800516598807a11fc3dca8d8f085c97cdb6",
+  "author_commit": "1f3f86fa7f376d0bbd78d94b17f0e3ce9f19fb9b",
+  "evidence_id": "ev_6f9f82e5daf0540a1c24a0b85daa2e394785391692765e5e3e100eb7b37ed94c",
+  "profile_digest": "bcefdee5092076e55636e077b45523e203f4b870ae7b7ab547945ed1b8162279",
+  "checks": {
+    "instruction_boundaries": 74,
+    "indexed": 3,
+    "sb": 2,
+    "jal": 3,
+    "dispatch_jump": 1,
+    "rom_and_full_retained_raw": true,
+    "author_script_executed": false
+  },
+  "accepted": [
+    "copy n=(u8[62fcb01c]<<3)&0xf8 independent of T.count",
+    "S=load32[62fcb6c4] cached after helper; T/count/A reread each iteration",
+    "unsigned S[8i]/S[8i+1] to item+14/+15",
+    "mask overwrites word with 1000/2000/3000; one synchronous borrowed notify(i&ff) per changed item",
+    "equal fields skip notification and still advance query",
+    "later actual Q11 refresh reads same item+14 with full byte2 comparison gate"
+  ],
+  "unproved": [
+    "immediate refresh from notification",
+    "specific cmd67 causal confirmation",
+    "physical protocol application or persistence",
+    "global S/T lifetime and count invariant",
+    "downstream application use of item+15"
+  ],
+  "ignored": {
+    "path": "instruction-evidence.json",
+    "bytes": 11651,
+    "sha256": "7913bacc404eb0cb147d61fe864dbdb2f353fa990f474c33b2f6f2a6b942b3b6"
+  },
+  "timing": {
+    "first_clock_utc": "2026-10-24 17:06:31 UTC",
+    "checks_completed_utc": "2026-10-24 17:07:47 UTC",
+    "measured_checks_interval_seconds": 76,
+    "full_turn_start_unknown": true,
+    "tool_wait_separately_measured": false,
+    "token_usage": null
+  }
+}
