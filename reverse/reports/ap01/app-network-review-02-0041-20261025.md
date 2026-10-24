@@ -8,7 +8,7 @@
 
 ## 继承结论
 
-从主仓绝对路径只读作者 [Q-06报告](app-network-research-01-0041-20261025.md)、同stem `verify.py` 和 `verification.json`（未执行或导入作者脚本）；继承主仓 `evidence/rea-0041-20261017/evidence/miio-recovered.md` §2–6：N=`0x62fca7f8`，N+0指M，注册与连接主体、同wlan0 down及monitor业务已有旧根合同。本次不重新恢复整个monitor，不把其已有覆盖计作新发现。
+从主仓绝对路径只读作者 [Q-06报告](D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-network-research-01-0041-20261025.md)、同stem `verify.py` 和 `verification.json`（未执行或导入作者脚本）；作者材料尚未提交，故独占worktree没有其副本。继承主仓 `evidence/rea-0041-20261017/evidence/miio-recovered.md` §2–6：N=`0x62fca7f8`，N+0指M，注册与连接主体、同wlan0 down及monitor业务已有旧根合同。本次不重新恢复整个monitor，不把其已有覆盖计作新发现。
 
 证据主仓 `evidence/rea-0041-20261017/evidence/upper-complete.evidence.json`：`#/records/248` 的 `ev_c3dd842723b83165bc8e1a6b235f2005269080da4969520bd0c0f0e413db133a`，`#/records/273` 的 `ev_d76ebf1841cb72027270b5feeea0b8b57e1281117d0b6694a25563737919b983`，`#/records/252` 的 `ev_c8b063daf96a046bac562fcfecfea5ece175e337890f17070b1a548e6f9c01dd`。三记录自身profile均核为 `4825fb58a33a3e7d618557975b153b8318cf7e833d190ad16bcbf8bd441ae621`；不转贴到miio旧profile或新原字读取。
 
