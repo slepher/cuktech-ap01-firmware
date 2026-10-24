@@ -572,3 +572,26 @@ SDK0xa0111ff6旧完整合同见绝对同目录miio-recovered.md §桥接RPC段ev
 独立验v3三元IID/ACK分组/状态/value借用、Q18 matcher首−4004门与同H=ctx+228；请求serializer在**raw API调用后清N ptr/len**的准确时点、借用到同步API边界与API深copy未知不可混同。该真新增收窄旧Q18跨ACK raw断边但不能推任意下游API复制；输出/清链/finalize/reply、错误−1/保槽按作者最终合同，不套Q26无−4004 matcher。旧stage/matcher/response serializer共1382B继承，不重验；完整ctx/并发/云设备动作未闭。阶段定位<1、双callback/五word1–2、请求raw清槽/错误/返回1、原字交付1=3–5分钟中置信，作者总221秒/技术173秒参照同域非作者144–182秒；首工具UTC clock、独立静态精确路径commit不推送。最小派发：`Q-29同认领S44非作者，只1074B与Q18接口，核v3 ACK/raw API后清槽及五vendor限定，禁止套订阅matcher或扩API，首clock，静态commit。`
 
 第九版当前队列：S45/S46/S47均取走派下一组三研究；Q-27/28/29作者都已交付停止，因此S42/S43/S44已成熟，真正ready为**3/3**，不是将旧S39/40/41或未交付条件冒充库存。以后这三复核取走时必须递减；新三作者的复核将在运行阶段先做条件模板，未交前不计ready。
+
+
+### 条件S-P48：S45串行downstream作者的非作者前置模板
+
+绑定已派**Q-30** app_serial_downstream_research_01，基线5f50102e56012e2e1e0fa8f9d8010d3c8e8214fd；不以无连字符rg误判。作者仍在跑，交付SHA/窗口/计时未知，不计ready。预定app_serial_downstream_review_01、branch codex/app-serial-downstream-review-01-20261025、serial-downstream-review01，独占app-serial-downstream-review-01-0041-20261025报告/analysis。交付后必要绝对作者报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-serial-downstream-research-01-0041-20261025.md` 及同stem analysis。
+
+原父级/四新窗1610B沿S45，实际范围按作者交付收窄，不抢live原字。重点poll两mode实际handled门、pending/timeout/result槽与消息借用、两个回传适配的真实角色、MQfallback仅get_down与缓冲/返回、已验result state消费接合，不能按函数名命名回调或从helper非0认MCU执行。旧root网络状态/自动恢复不重做，SDK/MQ/public API止边，完整ctx/并发/实际执行未闭。待补SHA/新差异/unknown/完整UTC后才校准估时转ready；复核第一工具clock、独立静态不执行作者脚本/固件/模型，精确路径本地commit不推送。
+
+### 条件S-P49：S46 OT owner接入作者的非作者前置模板
+
+绑定已派**Q-31** app_ot_integration_research_01，基线5f50102e56012e2e1e0fa8f9d8010d3c8e8214fd；作者在跑不可派、不计ready。预定app_ot_integration_review_01、branch codex/app-ot-integration-review-01-20261025、ot-integration-review01，独占app-ot-integration-review-01-0041-20261025报告/analysis。必要作者绝对报告交付后为 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-ot-integration-research-01-0041-20261025.md` 及同stem analysis。
+
+沿S46七body3658B实际差集、两旧接入根/dyna_params/SDKcopy API；a01129be两段中间12B不当body。重点owner/child/ctx关联、事件数字门/状态缓存和上报字段来源、scheduled参数/取消或重排真实调用、解除API与完整析构不可混同、栈payload到SDK同步copy/ctx浅持有终点。不能给未知event意义脑补云鉴权，不能因取消API存在承诺队列任务清空。公共框架/容器/SDK止API，实际调度/并发/云接收未闭。待补作者SHA/最终角色/原字unknown/完整UTC后校准估时；复核第一工具clock、独立静态精确路径commit，不运行任何目标/模型/作者脚本。
+
+### 条件S-P50：S47串行uplink作者的非作者前置模板
+
+绑定已派**Q-32** app_serial_uplink_research_01，基线5f50102e56012e2e1e0fa8f9d8010d3c8e8214fd；作者在跑不可派、不计ready。预定app_serial_uplink_review_01、branch codex/app-serial-uplink-review-01-20261025、serial-uplink-review01，独占app-serial-uplink-review-01-0041-20261025报告/analysis；交付后必要绝对作者报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-serial-uplink-research-01-0041-20261025.md` 及同stem analysis。
+
+沿S47三body818B、call/json_send旧根与SDKcopy已验API，最终实际差集以作者交付为上限。重点call参数grammar和descriptor构造到真callback literal0xa00ba8b2、json_send callback0xa00ba536、两者busy状态/回包形状/状态门/借用和解析doc归还，不能将serial ok当异步云动作完成。与S45下行同ctx槽也不能套生命周期，SDK完整ctx/取消/权限/真实效果未闭。作者SHA/差异/unknown/完整UTC待补后转ready校准估时；复核第一工具clock、独立静态不执行作者脚本或目标/模型，精确路径本地commit不推送。
+
+前置模板快照：S48/S49/S50未交付不计库存，ready仍只有已成熟S42/S43/S44。模板在本组三作者执行期间落盘，不等其完成后从零组包。
+
+主窗确认检查点：Q-30/Q-31/Q-32均running，三者基线5f50102e56012e2e1e0fa8f9d8010d3c8e8214fd。可派库存保留S42/Q-27、S43/Q-28、S44/Q-29共3/3；S48/Q-30、S49/Q-31、S50/Q-32只条件模板。此后本批仅消耗/交付转ready/实际时钟校准，不另扩域，不重复初始三研究包充库存。
