@@ -621,3 +621,52 @@ Q-32/S50实字校正：cmd.call submit0后serial ok但不写busy1；json_send旧
 独立核call参数/descriptor/真callback literal、submit0 serial ok但**不写busy1**，json_send旧根busy1行为独立保留；两个callback finalize后ctx+1fc写2(return0)或3(non0)，失败/无有效result也3，**没有清0**，idle消费端未知不扩。两个回包形状/字段门和borrow/解析doc/临时buffer归还、SDK同步copy与ctx浅持有分别核；不能从2/3状态或serial ok推云执行成功。旧根/body/API不重计，1vendor保持raw/限定，不改模型，SDK取消/完整ctx/并发/实际动作未闭。阶段定位<1、call/descriptor1、双callback/busy/归还1–2、原字交付1=3–4分钟中置信，据作者总205秒/技术182秒及同域短复核实测，不重新报6–10分。第一工具UTC clock、独立静态精确路径本地commit不推送。最小派发：`Q-32同认领S50非作者，只818B三窗，核call不写1/两callback仅写2或3无清0、1vendor限定及回包借用，SDK/API止边，首clock，静态commit。`
 
 第十版当前队列检查点：主窗取旧ready S42/Q-27、S43/Q-28、S44/Q-29补三非作者执行席；本次已交作者让S48/Q-30、S49/Q-31、S50/Q-32转成熟ready，后备仍**3/3**。旧ready与新ready不可叠加称6；三研究初包均已消耗，模板已在运行中前置而不是交付后重组。后续仅同批消耗/复核纠正/实际计时滚动，不扩新域。
+
+Q-28非作者中断补修记录：descbase=s0−0x168，但清零起点s0−0x164、length36，即memset(desc+4,0,36)，随后写desc+0=id/+0x1c=len/+0x20=buf；不能泛称整个descriptor清0。主窗已先暂停review、再唤醒原作者仅核旧几条指令/一处措辞，恢复原review前不把补修当新包/新原字。三执行为Q-27review/Q-29review/Q-28作者补修；ready S48/S49/S50仍3/3，补修等待不冒称完整有效工时。
+
+Q-28作者补修f6669cf663d74a0171de46922f0971741171149a已停止：UTC18:22:38→18:22:54总16秒，仅报告一句及旧指令核对，无新body/ignored。原非作者已恢复只确认此差集；16秒是作者补修观测，不等整段非作者暂停/调度/等待，最终总时待主窗提供外层时钟，不拆造有效工时。ready仍S48/S49/S50=3/3。
+
+
+### 可派S-P51：Q-30下行两个mode的ACK消费与SDK回包
+
+候选app_serial_downstream_research_02，主窗登记新认领。与正在Q-30非作者原四窗无重叠，只新callback消费；前提作者138119aece4883d73f0af4c1f9045f3fa5b198d5已停，旧包S48只验安装/API，不能把live复核当本题依赖。必要绝对父级 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-serial-downstream-research-01-0041-20261025.md` 与upper-miio-b.md两get_down根、upper-miio-a.md cmd.result/json_ack（精确EIDs沿S45）；真实安装mode1 result0xa00bda7c/error0xa00bd910、mode0 result0xa00bd938/error0xa00bd7fa，通用result读state后消费并清0的旧合同继承，不重读原四窗1610B或root。
+
+新精确metadata三窗0xa00bda7c..0xa00bdb73 248B、0xa00bd938..0xa00bda7b 324B、0xa00bd910..0xa00bd923 20B，共592B。必要绝对metadata `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/analysis/whole-rom-coverage-0041-20261023-round1.json` 三地址项，只extent/directcall不当body。第四error0xa00bd7fa已由Q22普通action/shared error恢复并非作者接受（沿S32），本包仅API，不重计278B。root领域卡/近期串行专项没有三新callback完整合同，本题只同一poll接口两个ACK mode结果接合，不跨域凑量。
+
+恢复result(ctx,args)/error(ctx,status,text)实际参数、mode1 JSON解析到SDK reply descriptor/状态与mode0 token/raw解析到同SDKreply的差异、原请求id与ctx字段来源、JSON/error消息门、ctx+64及+68参数/返回、解析doc和栈descriptor借用终点、回调是否改state及通用cmd.result何时抑制或发ok。不能从名json_ack推JSON验证，更不能以callback返0等真实设备动作成功；error20B须核真实委托参数，不能从同形推同形。共享error/JSON/tokenizer/formatter/reply复制到API，不展开既验body或SDK全生命周期；未知word保raw不改模型。保留实际MCU动作、reply外部copy、取消/完整ctx/并发未知；不做异常/固件/模型/设备实验。
+
+验收两mode从已验安装→用户ACK正常消费→同SDK回包的独立合同，原四窗安装/API已知不等本体已验。独占app-serial-downstream-research-02-0041-20261025报告/analysis，branch codex/app-serial-downstream-research-02-20261025，serial-downstream02；最新主窗基线、第一工具UTC clock、精确路径本地commit不推送。阶段材料<1、双result/借用1–2、error/reply/state1、原字交付1=3–5分钟中置信；只有592B三真实新入口，完整两mode有实际差集，参照Q-32 818B总205秒，不假报半小时。最小派发：`登记S51，Q30已交安装前提，只三ACK新窗592B，shared error已验API，核两mode结果/借用/回包/state，首clock，静态独占commit。`
+
+执行消耗/实测更新：S48/Q-30、S49/Q-31、S50/Q-32现已取走补三非作者，ready从3递减为0；新增S51后若未取走仅1/3。Q-27非作者2b6db3c5dd22fd61434e2cc76ac7a627aa02e9e0接受无修正，18:21:11→技术18:23:37 146秒→停18:24:04总173秒。Q-28非作者71cf674549a434644c57925ef3c03a1f6de2a470接受作者f6669cf修正1：18:21:29→技术18:24:26→停18:24:47总198秒，观测中断18:22:09–18:23:11共62秒含作者16秒/调度，非净等待不拆造纯工时。Q-29非作者1727f4c4a6aeeda4052c361fd88d4ef9835c28ae无修正，18:21:42→技术18:23:32 110秒→停18:23:57总135秒。上述review已交付，不再次作为新复核库存。
+
+
+### 可派S-P52：串行BLE控制记录到本机JSON桥提交
+
+候选app_serial_ble_bridge_research_01，主窗登记新认领。不是Q05 FE95服务/动态peer handle，也不追无writer默认conn；只已验串行四种BLE控制根将正常typed record转本机JSON桥提交的同一适配接口。必要绝对父级 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-miio-b.md` §0xa00bca16 ev_d80263069148e63aed549c6b90fe32f3b7fa9393531b5cafba010c87e19c20bc、§0xa00bcece ev_17e8546194bf39e6525727cb18f595010caeb20ff707d788ef41ffb1e44c80b3、§0xa00bd522 ev_e633d942e6a8e48a0a0c9047e7cb5a774d5529070b58eb1e5c1afef96cb15e54、§0xa00bd6ae ev_f4f65b0b0088927b6bfbb9179eec75640d3779542fccb87872e723e6d44d51e0。四根完整继承enable门、pid/version/scan、event32B/fastpair12B布局和serial ok忽略结果差异；不重做根parser/dump/数值范围，不包装异常试验。
+
+已解释后端绝对 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/mible-recovered.md` 及upper-mible.md，另 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/miio-mible-protocol-rea-0041-20261017.md` §3：dispatcher0xa0129f0c读取params.cmd/aug，ble_config0xa012a44c、ble_event0xa012a6fe、ble_fastpair0xa012abfa、ble_scan0xa012a29e既有完整参数/实际本地效果，直接继承不重读其body/CRC/数据库。不要把串行两个新helper误叫实际持久化writer：它们directcall已知send边界0xa00612a2，真正JSON schema/发送数据和返回依原字恢复。
+
+新metadata精确四窗0xa00bc97a..0xa00bca15 156B、0xa00bcc42..0xa00bcecd 652B、0xa00bd2c0..0xa00bd521 610B、0xa00bd61e..0xa00bd6ad 144B，共1562B。必要绝对metadata `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/analysis/whole-rom-coverage-0041-20261023-round1.json` 四函数项只有extent/directcalls、不当body；upper串行卡明确helper未闭，MiBLE卡完整的是另四JSON处理器，不同入口不能替代。本包是同serial BLE bridge完整四record族的正常适配，不把两个短config/scan单拆任务。
+
+恢复输入pid/version/scan、act和event record、fastpair record的字段宽度/布尔与大小端到JSON params.cmd/aug的实际schema，是否完整对接已验四JSON后端；descriptor/本地端点/socket打开/发送/关闭调用参数与顺序、临时buffer拥有/释放/字符串borrow、返回值和根是否消费，存在回复处理则只本层直接接口，不为闭合扩公共socket/接收任务。send0xa00612a2旧完整合同在miio-recovered.md（ev_1c45b74aaec210be1d2102ff38555d3cfa08dc06d1ae29cf220153af193c72ca）：负即返/短写重试、返回最后send非累计、零send无进度门，继承API不重读。仅提交或串行ok不等JSON后端接受/持久化成功/射频实际动作，连接/来源权限未知留边，不进行实机/外网配置。
+
+验收四种record同桥序列化/资源/返回合同及与旧JSON处理器参数接合的明确限度，不以名称猜event_rule已写/permit已生效。公共format/JSON/socket/send止API，底层BLE服务/默认conn/数据库/CRC/MCU/射频均不扩；未知ISA保raw不改模型。独占app-serial-ble-bridge-research-01-0041-20261025报告/analysis，branch codex/app-serial-ble-bridge-research-01-20261025，serial-ble-bridge01；最新主窗基线、第一工具UTC clock、静态精确路径本地commit不推送。阶段旧根/后端1–2、两大record桥2–3、配置/scan同桥与资源1–2、原字交付1=5–8分钟中置信，1562B真新四入口、后端完整继承，参考Q22 1658B总284秒/Q-30 1610B总278秒；提前闭合即交，不凑预算。最小派发：`登记S52，四串行BLE bridge新窗1562B，继承四根/四MiBLE后端及send API，只record→JSON提交/资源/返回，非FE95或射频效果，首clock，静态独占commit。`
+
+后备快照：S51/S52尚未取走时ready2/3，真实缺1；Q32 state2/3 idle消费仍缺有界caller seed，已验task卡不能凭同ctx名反推，不再负搜。OTA app prepare/complete父级已明确完整继承，不以旧body复用凑第三包；未派未来review不计。
+
+
+### 可派S-P53：串行普通/v3 property变更到暂存/延后flush
+
+候选app_serial_property_research_01，主窗登记新认领。不同于Q18/Q-29 RPC get/set待ACK链，亦非Q15 UI计数collector、Q19 event队列或Q21 named-property64B链；只串行properties_changed普通/v3两个正常输入→property暂存与即时publication→task延后flush的同一report接口。必要绝对父级 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-miio-b.md` §0xa00bf4ce ev_28465c2645d62601f6cbb67bb0823129be9acb504d0f8340052e96f46608354d 与§0xa00c5e24 ev_2ef406b35004b974b2432d5fd713828ced40b977e4208528f14170af804f1db0；根完整继承DID32、72B stack record/普通二元ID和v3三元ID/type3、raw value借用、ctx+36c options、逐tuple第一个错误即停且不回滚。两根同委托0xa00bf084，是精确新种子而非从property名称猜相同布局。
+
+同绝对目录upper-miio-a.md §0xa00b8cc0 ev_7d458296c72c285d34775ea0cf02852d2747b807405db73e10dd0795086a0b1e：task的ctx+364 circular property list/+36c optional lock，低16类型node+50/arg+54/tick+58、bytekind+28/ownedpayload+4c和每约1000单位的筛选、unlock后0xa00bbecc(kind1/2,nodearg,bytekind==3)已完整局部合同继承；不重做802B task/clock/命令parser，单位仍不擅称ms。Q24作者b2c1453681afa24b306834a49286b045bd6e592f及非作者已验publication0xa011c0da recipient路径/0xa0113340 SDKsubmit是接口前提，引用主树app-publication-research-01-0041-20261025.md/app-publication-review-01-0041-20261025.md，不重复其784B或SDKcopy。
+
+新精确metadata三窗0xa00bf084..0xa00bf4cd 1098B、0xa00bbecc..0xa00bc1f9 814B、其真实directcallee0xa00bb46e..0xa00bb5a5 312B，总2224B。必要绝对metadata `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/analysis/whole-rom-coverage-0041-20261023-round1.json` 三地址项仅extent/directcall，无旧完整body；upper领域卡只旧根及task调用API，近期app report未恢复此三函数。a00bb46e是同flush直接序列化适配，实际作用按原字判，不先叫ACK callback；无新对象通用库拼量。
+
+恢复由DID定位实际ctx/缓存对象的调用边界、同ID/type匹配或替换/去重、raw值copy或borrow与节点分配/已有payload归还、options实际位门/即时fanout参数与结果消费、暂存record字段/状态/时间与task旧节点布局接合、延后flush JSON字段/descriptor/submit及节点是否保留/清状态/归还、serialization失败和回调返回对本层资源的真实影响。不能把72B输入当Q18 pending84B N，不能把同ctx+36c options参数与lock字段按同名直接等同地址/解引用层级；用实际ABI说明a2是值还是指针。两根normal输入/旧task给定有效节点前提，不做异常队列或并发实验。
+
+JSON/string/clock/allocator/通用list/SDK/publication到已知API，不重验其内部；property payload→JSON同步borrow与SDKcopy/ctx浅持有分开，不能以serial ok或submit0等设备状态已云同步。保留完整ctx/并发/实际云递送、未读生产者/取消和socket保证；未知ISA保raw不改模型，不执行目标/模型/回放/构建/设备/外网。验收两版本同property report暂存→即时/延后发布的完整本地阶段及所有权/返回/归还/真正外部效果断边，既验根和task不重计新量。
+
+独占app-serial-property-research-01-0041-20261025报告/analysis，branch codex/app-serial-property-research-01-20261025，serial-property01；最新基线、第一工具UTC clock、静态精确路径本地commit不推送。阶段旧两根/task/对象1–2、stage/即时publication2–3、flush/serializer/归还2–3、原字交付1–2=6–10分钟中低置信，2224B新三函数，同域Q-31 3658B总290秒/Q-30 1610B总278秒作参照，正常依赖齐备提前交，不把已验802B task再算量。最小派发：`登记S53，两个串行properties_changed根/task继承，只三新窗2224B恢复普通/v3同report缓存→即时/延后flush，既验publication/SDK止API，先辨options/lock地址层级，首clock，静态独占commit。`
+
+当前后备若S51/S52/S53均尚未取走为3/3，三个均独立于live Q-30/31/32非作者原范围；不是以live成果未来复核充数。S53由两个已验根和已验task的真directcall种子合并相关阶段，未进行三body完整业务取证。
