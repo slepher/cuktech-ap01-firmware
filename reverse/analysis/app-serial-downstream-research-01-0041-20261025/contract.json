@@ -1,0 +1,61 @@
+{
+  "claim": "Q-30",
+  "baseline": "5f50102e56012e2e1e0fa8f9d8010d3c8e8214fd",
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "rom_length": 6769704,
+  "mapping": "offset=VA-0x9ffff000",
+  "windows": [
+    {
+      "va": "0xa00bdb74",
+      "length": 1064,
+      "offset": 781172,
+      "sha256": "a82223f5726ea2b10b95982b912f73318ac19820c69af2ec37c87a8baadb89e3"
+    },
+    {
+      "va": "0xa00ba712",
+      "length": 174,
+      "offset": 767762,
+      "sha256": "25161c9e749760495c3c344eae8a0b433c62f713b16932d57d8899726313d92e"
+    },
+    {
+      "va": "0xa00ba4b4",
+      "length": 130,
+      "offset": 767156,
+      "sha256": "3cfce82c1f61ab824c87596e209bc83f826aea9f63989ab4090226e48c14bcbe"
+    },
+    {
+      "va": "0xa00ba7c0",
+      "length": 242,
+      "offset": 767936,
+      "sha256": "e89b6acdc5ed29a52ee4f39855fa2b061b1e4f6086e550b8969e6199f3ec8895"
+    }
+  ],
+  "new_body_bytes": 1610,
+  "undecoded_instructions": [],
+  "stopped_apis": [
+    "0xa011f43e",
+    "0xa01a5268",
+    "0xa01990c8",
+    "0xa0060cac",
+    "0xa0061d20",
+    "0xa01b38b6",
+    "0xa018fd68",
+    "0xa00b5636",
+    "0xa00b55e2"
+  ],
+  "callback_installs": {
+    "json": {
+      "result": "0xa00bda7c",
+      "error": "0xa00bd910"
+    },
+    "text_default": {
+      "result": "0xa00bd938",
+      "error": "0xa00bd7fa"
+    }
+  },
+  "artifacts": {
+    "windows.json": "4ba1631be47e40b719bc520089c59dec3adeff7279b76a583d55cc80564d500b",
+    "disassembly.txt": "3c1a9213619cb00e0e45cf706bd2d6e170b1a04197240378a5c9b7f3394a2346",
+    "referenced-data.json": "24bbf75c9b1acafaa1bb6305a746697e035b8068493543c6f39038cd01a4aa29"
+  }
+}
