@@ -80,5 +80,3 @@ summary={'static_only':True,'windows':7,'bytes':1780,'unknown':unknown,'byte_mat
 (O/'independent-evidence.json.tmp').write_text(json.dumps({'summary':summary,'windows':windows,'roots_complete':roots,'roots_miio_b':[{k:r[k] for k in ('address','evidence_id','profile_digest')} for r in broots]},indent=2),encoding='utf-8')
 (O/'checks.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
 print(json.dumps(summary))
-
-
