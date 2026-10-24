@@ -1,0 +1,60 @@
+{
+  "claim": "Q-31",
+  "review": "S-P49",
+  "author_commit": "a5abd029fc1a59b550c4c20b5a45ab73892e2fb2",
+  "review_baseline": "5a5b732235c5b0d1654c8bc543b92c9cc5331e0b",
+  "result": "bounded acceptance; no semantic correction",
+  "body_bytes": 3658,
+  "records": 1139,
+  "fragments": 8,
+  "logical_bodies": 7,
+  "ordinary_jal_checked": 163,
+  "target_checks": 18,
+  "strings_checked": 19,
+  "object_immediate_checks": 7,
+  "unknown_words": [
+    {
+      "pc": "0xa0112e78",
+      "raw": "0b475981"
+    },
+    {
+      "pc": "0xa0113154",
+      "raw": "0bc64c58"
+    },
+    {
+      "pc": "0xa011322a",
+      "raw": "0bc57c45"
+    },
+    {
+      "pc": "0xa0112ad0",
+      "raw": "7717c7c0"
+    },
+    {
+      "pc": "0xa0112b0e",
+      "raw": "7715e5c0"
+    },
+    {
+      "pc": "0xa01127bc",
+      "raw": "0b50ea4a"
+    },
+    {
+      "pc": "0xa0110a14",
+      "raw": "0b46e95a"
+    }
+  ],
+  "excluded_gap": {
+    "start": "0xa0112b12",
+    "end_exclusive": "0xa0112b1e",
+    "raw": "771925c31305803e33052503"
+  },
+  "execution": "static ROM reads only; no author script executed",
+  "limits": [
+    "vendor ISA unknown",
+    "OTA complete time expression",
+    "syncfixedip unknown sources",
+    "full owner lifetime",
+    "event framework retention",
+    "actual queue cancellation and concurrency",
+    "cloud acceptance"
+  ]
+}
