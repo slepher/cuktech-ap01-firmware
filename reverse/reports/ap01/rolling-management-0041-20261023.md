@@ -1,5 +1,57 @@
 # 0041 六路滚动管理（2026-10-23恢复）
 
+## 链条认领与查重规则（2026-10-24新增）
+
+本节补充并优先于下方旧派发/队列规则中的去重做法；不改变当前会话授权的研究范围、并发数或静态限制，不据此启动或停止任务。完整流程与注意事项统一见[逆向工作流程](reverse-design.md)，向现有任务传达的[通知 prompt](chain-claim-notice-prompt-20261024.md)另存。历史快照不是实时运行状态。
+
+**本文件下表是唯一链条认领表，由当前管理窗口单人维护，串行查重、登记后才派发。** 研究者通过报告/消息请求登记，不修改共享表；独立 worktree 中的旧表不能自行授予认领。派发时附最新登记行和管理基线。管理窗口交接时移交最新表及实际任务状态，不能有两个窗口同时派发。
+
+认领按“原件版本/身份 + 具体连接 + 对象身份 + 问题”划分。地址用统一 `0x` 写法，保留旧别名；具体连接列已知函数/callsite/callback/字段与对象来源，未知端写待找及精确问题。任务名、领域、文件名、worktree 不作为独占依据。
+
+### 派发前
+
+1. 查父级 complete、最终验收及近期专项/独立复核，再用地址、callsite、callback、字段、对象和问题查下表。空表或无相同行不证明未研究；相关旧覆盖按需补录，不全量重建历史。
+2. 与研究中同链同问题重叠：合并、收缩或等待。与待复核重叠：挂原认领安排非作者复核。与已验重叠：继承证据。共享节点但连接/问题不同：写明差集后可以并行；对象身份或范围不清：标待消歧，先核已有证据，不派重叠取证。
+3. 写明已有出处、继承范围、真正增量和相交行，登记负责人/状态/独占范围后才派发。没有真实锚点或无法说明差集则不派取证。
+
+### 扩范围前
+
+发现超出认领连接和问题的新 caller/callee/callback/字段/对象，只保存偶遇锚点，不沿新链展开。研究者提交原认领 ID、新连接/问题、相交行、旧证据和必要增量；管理窗口查重并更新范围或新增关联行后再展开。原有不重叠范围可以继续，新名字或新 worktree 不能绕过这一步。
+
+### 状态与交付
+
+状态使用待补登记、待消歧、研究中、待复核、已验、未闭、暂停。独立复核列在同一认领行，注明非作者复核者及证据；只复查差集和必要继承前提，不把复核当新增研究。报告分列继承、复核/纠正、真正新增、未闭边。
+
+完成、暂停、交接都更新行并保留历史；移交先确认原研究者停止，不按超时自动释放。已验部分与未闭边分别写清，重开须给旧证据不足、新输入/证据及理由。主体已覆盖则收缩，无必要增量报已覆盖并换题，不重复整函数/全资源或旧负搜索，不以无种子推断全局完成。
+
+### 链条认领表
+
+实际状态已由本管理窗口核实（2026-10-24本轮补录）：J05/J06/J07盘点均已提交停止，G19与P01作者均已提交停止；当前F11作者与P02非作者复核者已确认暂停新增取证并回报实际链条。G20仅有预建worktree，尚未派发，不能算运行。下面登记不是重新派发旧任务；研究基线保持不动，逐行确认后才恢复对应差集。
+
+本表各行“0041原件”统一引用[ROM目录](../../../roms/CATALOG.md:17)和[最终应用身份记录](application-rehost-complete-0041-20261017.md:7)：AP01 1.0.2_0041，主仓roms/0041/ap01-1.0.2_0041.bin，6,769,704 B，既有SHA256 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`，本批代码VA映射file_offset=VA−0x9ffff000。不重算摘要；不是0031、unsigned候选或SIM ELF。每行继承的Evidence保留各自profile，不把不同profile重标成同一份。
+
+|认领 ID／关联任务|版本／原件身份引用|具体连接、对象身份及问题|独占范围／继承范围及证据|负责人／非作者复核者|状态|查重结论／相交行／后续断边及重开理由|
+|---|---|---|---|---|---|---|
+|J05（盘点已结束）|0041原件，见本表身份引用|C06 type8 close→0xa009f972；0xa009f986→0xa009f442(L,P+0x34,0x17)；0xa009f9a8→0xa009e212(L,word(P+0x58))。W=P+0x34且W.fd@+0x24，确认同poll的已存调用/字段种子，非callee本体语义|仅transport-reuse-gap-j05同名报告/analysis；[J05](transport-reuse-gap-j05-0041-20261024.md)，0fa2089整合；盘点新增0|/root/k03已停止；主窗口范围核对，不冒称技术复核|已验（仅盘点定位）|与C06/1、G07/1、G09/1相交已验上层直接继承；新本体问题已移G19/1、G19/2，不再派同一盘点|
+|J06（盘点已结束）|0041原件，见本表身份引用|0xa01b6146@0xa01b632a栈D→0xa0111ff6→0xa011f9da→0xa011f86c及0xa005f222回调；旧pending head 0x62fca4c8、32B记录callback+0x10/fd+0x14→0xa01977cc的callback(fd,message,length)已解释。仅筛尚缺copy/retain/对象寿命接入|仅miio-reuse-gap-j06同名报告/analysis；[J06](miio-reuse-gap-j06-0041-20261024.md)，ee220d8；upper-complete records197/91/13/163/278/282与旧miio-rpc reply_matching，盘点新增0|/root/b25已停止盘点，另持F11；无盘点技术验收冒称|已验（仅盘点定位）|原pending三参ABI候选撤销为继承；F11/1只补D复制/持有，F11/2补R/S回调对象连接。与G19的loop名称不构成同对象，不能套fd watcher布局|
+|J07（盘点已结束）|0041原件，见本表身份引用|0xa00afd5c→global byte 0x62fc403a；0xa00af262尾部0xa00afa78/0xa00afab0两次读同byte→0x62fcbcc4/0x62fcbcc8。s2=0x62fc402c全局，非timer borrowed app；只筛原字段顺序独立认证不足|仅input-idle-reuse-gap-j07同名报告/analysis；[J07](input-idle-reuse-gap-j07-0041-20261024.md)，327d557；main-knob records1、screen-host-append functions4、guide父级，盘点新增0|/root/l03已停止；主窗口范围核对|已验（仅盘点定位）|与E05/1及guide阈值/唤醒旧合同相交直接继承；userdata候选已撤销。具体精度问题归P01/1，不新派完整timer/idle题|
+|C06/1（必要继承）|0041原件，见本表身份引用|type8 handle正常close的0xa009ffbe→0xa009f972，随后pending登记/消费与cb(poll)→ctx+0x198计数释放合同；问题仅作已验入口前提|[C06](pogo-close-dispatch-review-c06-0041-20261023.md)、C04/C08；无新增独占取证|历史作者/独立复核已结束；本轮只引用|已验（原报告限定范围）|与G19/1、G19/2共用close入口，差集是两backend callee本体；不重开timer删除、drain或ctx完整释放|
+|G07/1（必要继承）|0041原件，见本表身份引用|0xa009f972的W=P+0x34、mask0x17、word(P+0x58)调用端；stop中的active/loop计数原序|[G07](display-alternate-work-g07-0041-20261023.md)/[G08](display-alternate-review-g08-0041-20261023.md)，仅引用既验stop本体|历史作者/复核者已结束|已验（限定）|G19/1、G19/2继承实参及上层顺序，不能把G07 opaque backend当整stop未研究|
+|G09/1（必要继承）|0041原件，见本表身份引用|W+0x14入同fd bucket、W.fd@+0x24、ready→W.callback→poll callback；问题仅保证G19使用同watcher/fd布局|[G09](display-ready-dispatch-g09-0041-20261024.md)/[G10](display-ready-review-g10-0041-20261024.md)|历史作者/复核者已结束|已验（限定）|与G19/1、G19/2共享bucket字段，ready投递不重做；不能外推close后callback已排空|
+|F03/1（必要继承）|0041原件，见本表身份引用|0xa0098b4a局部链摘除及F03/F04已验pending/close链合同；G19只引用所需摘链helper|[F03](miio-loop-close-f03-0041-20261023.md)/[F04](miio-loop-close-review-f04-0041-20261023.md)|历史作者/复核者已结束|已验（限定）|G19/1只核W+0x0c/W+0x14节点和loop链的本轮连接，不重验通用unlink/整个close链；不据MiIO名称同一化F11对象|
+|G19/1（关联G20）|0041原件，见本表身份引用|0xa009f986→0xa009f442(L,W,0x17)：W=P+0x34、W+0x1c请求mask、W+0x0c更新链、W+0x14 fd桶链、W+0x20比较槽、W.fd+0x24。回答mask清除后两链持有/loop计数/槽变化及返回|pogo-poll-cancel-backend-g19报告/analysis；[G19](pogo-poll-cancel-backend-g19-0041-20261024.md)，bedf291→0ea89ca；必要链helper沿F03/1|作者/root/k03已提交停止；非作者/root/k04拟G20，尚未派发|待复核|与G07/1、G09/1只共享前提；差集为0xa009f442本体状态转换，不恢复整stop/ready，不认证OS成功。G20挂本行只查差集|
+|G19/2（关联G20）|0041原件，见本表身份引用|0xa009f9a8→0xa009e212(L,fd=P+0x58)；B=word(L+0x14)、R=word(B+0x114)，同fd剩余W+0x1c聚合、record mask/fd改写；四参0xa010e722与六参0xa009e0e6实参/返回消费。问软件记录/提交边界|同G19独占报告/analysis；继承G09/1 fd桶；仅到下层callsite，不含下层body|作者/root/k03已停止；非作者/root/k04拟G20，尚未派发|待复核|与G19/1是同W fd的下游但不同callee问题，无第二作者。R正式类型/栈16B下层复制不预设；0xa009e0e6本体另见G19/3，不在复核中扩展|
+|G19/3（后继仅锚点）|0041原件，见本表身份引用|0xa009e320→0xa009e0e6(word(L+0x20),B+0x84,word(R),2,fd,&stack16)，待找服务对六参/栈16B的消费、复制/持有、提交及返回合同；对象身份沿G19/2，不猜OS操作名|仅保存G19后继锚点及旧extent ev_5ecc1c04…/directcall ev_054cff13…；不授权读下层body|未派负责人；原作者已停止|未闭（未派，仅锚点）|与G19/2相交仅callsite ABI已覆盖；将来重开须核旧G09/G10/父级实际不足，并先登记本体差集。不得顺扩0xa010e722或完整backend|
+|F11/1|0041原件，见本表身份引用|0xa01b6146@0xa01b62fc..0xa01b632a栈D=s0−0x54→0xa0111ff6@0xa0112062的D+4适配→0xa011f9da@0xa011fa1a→0xa011f86c构造R；R+0x20长度/+0x24消息/+0x2c callback/+0x30 user为待原字核字段。经0xa011f610/0xa011f66c建立Invocation I的{ctx,R} payload，至0xa011f84a/0xa011e2f0 type1入队交接。问D/载荷复制或持有及R/I队列持有|仅miio-request-ownership-f11报告/analysis，树re0041-f11基线ee220d8；J06旧upper records197/91/13及相应callee已有body。状态暂存于同名analysis/status.json，无完成证据冒称|/root/b25；非作者复核者未派|研究中（补录确认后仅本差集可恢复）|与J06相交旧定位/旧pending三参全部继承；与F11/2共用R但本行止于请求构造/入队，不新增响应匹配/清理取证；与G19只共用泛称loop，没有证据同对象，禁止套布局。当前无另一研究者同题|
+|F11/2|0041原件，见本表身份引用|已偶遇0xa01ac226→0xa01ac2cc装0xa011f67e、0xa01ac2d0→0xa011f610，{ctx,S}→0xa011f67e；0xa011f6ae从matched session+0x10取R，0xa011f6b4/0xa011f6b6读R+0x30/+0x2c，callback(S+4,user)→0xa005f222读view+0x20/+0x1c。待证明matched session所持R与F11/1构造R身份、S+4临时view/消息借用与callback后0xa0119b72(session)/0xa0119720(S)归还|同F11输出，仅整理已有临时观察/旧body；需补0xa01ac226/0xa011f67e/session建立匹配的既有载体pointer和对象证据，不继续新ROM读取|/root/b25仅做既有证据消歧；非作者复核未派|待消歧（禁止新增沿链取证）|与F11/1共享R，问题为响应S/view与R绑定及归还，不重做D复制；与J06旧a005f222→0xa01b38dc→0xa01977cc普通回执仅消费端相交。旧down 0xa0191872对象不得套up。先补匹配身份/旧出处再由主窗口更新放行|
+|E05/1（必要继承）|0041原件，见本表身份引用|T1=0xa008bc64(0xa00af262,1000,borrowed app)，callback entry timer+0x0c→app；不同于尾段s2=global0x62fc402c。仅作P01/1对象排除前提|[E05](ctk-app-close-e05-0041-20261023.md)/[E06](ctk-app-close-review-e06-0041-20261023.md)|历史作者/复核者已结束|已验（限定）|P01/1不重做timer注册/userdata/DELETE；只核global activity→两counter字段顺序。J07已撤userdata新缺口口径|
+|P01/1（关联P02）|0041原件，见本表身份引用|0xa00afd52/0xa00afd56构造global0x62fc402c，0xa00afd5c SB1→0x62fc403a；0xa00afa78 LBU→0xa00afa8c零门；非零0xa00afaa8 SW0@0x62fcbcc4→0xa00afaac诊断→0xa00afab0重读byte→0xa00afabc零门；第二读非零才0xa00afac0 SW0@0x62fcbcc8→0xa00afac4 SB清byte。问宽度/基址/目标/重读与原顺序，新增功能0|input-idle-activity-p01报告/analysis（a09959e整合）；P02只拥有input-idle-activity-review-p02报告/analysis，树re0041-p02基线a09959e。继承J07、guide阈值/唤醒、E05/1，不复验整callback|作者/root/l03已提交停止；非作者/root/l04已完成技术检查，待认领注记与提交|待复核（已确认无冲突，仅整理提交）|与J07同链旧精度候选合并本行；P02挂本行非新研究。已读110B中20条/76B为独立字段记录；无剩余ROM读取。与F11、G19对象/地址/问题无交集；跨调用flag稳定/全writer/真实秒数仍未闭|
+
+新行使用现有任务 ID；一个任务有数条连接时加 `任务ID/1`、`任务ID/2`，不要另建一套编号系统。每行只登记可区分的连接与问题；证据列链接旧报告，避免复制长篇正文。状态迁移/范围变更在本文件追加简短说明并引用原行，保留可追溯记录。
+
+
+认领补录决定（2026-10-24）：F11/1与P01/1及G19/1–2无相同对象/连接/问题的并行研究冲突；F11/1可在收到本表管理基线通知后恢复原差集，F11/2保持待消歧且只整理既有证据。P02挂P01/1，只补报告认领注记并提交；作者已停止，不能重派P01研究。G19作者提交停止已核实，G20尚未派，后续只在原G19/1–2挂非作者复核；G19/3未派。未重置进度、未增并发、未重派旧任务。管理者仅编辑本表；README/reverse-design/通知prompt的外部现有修改保留，不撤销。
+
 ## 最新跨领域推进指令（2026-10-24）
 
 用户明确：继续推进，上一批无新种子不能当成整体无事可做；用3个subagent从其他未闭领域的既有报告/留存去重盘点，取得真实地址/字段/callback种子后继续研究及独立复核。不重复已验合同，不无种子扩扫，静态限制不变。本节覆盖下方上一批运行0/无新种子的范围快照，历史结论保留而非全局终止条件。
@@ -8,9 +60,9 @@
 
 |任务|agent/独占树|拥有范围|
 |---|---|---|
-|G19（J05种子）|/root/k03；re0041-g19|运行：Pogo同watcher取消/同fd同步；基线0fa2089；独占pogo-poll-cancel-backend-g19报告/analysis|
-|F11（J06种子）|/root/b25；re0041-f11|运行：MiIO普通栈descriptor复制/请求队列持有→callback寿命；基线ee220d8；独占miio-request-ownership-f11报告/analysis|
-|P01（J07种子）|/root/l03；re0041-p01|运行：旧activity→双counter清零/重读/清byte原字段精度复核，新增功能0；基线327d557；独占input-idle-activity-p01报告/analysis|
+|G19（J05种子）|/root/k03已结束；G20仅预建未派|研究0ea89ca已整合待复核；认领G19/1、G19/2；后继G19/3仅锚点|
+|F11（J06种子）|/root/b25；re0041-f11|基线ee220d8不动；F11/1补录确认后可恢复，F11/2先既有证据消歧；新规则通知已回执|
+|P01→P02（J07种子）|/root/l03已结束；/root/l04仅整理提交|P01 a09959e已整合；独立复核挂P01/1，基线a09959e不动，无剩余ROM读取|
 
 盘点整合J05 a81502c→0fa2089、J07 fe78562→327d557、J06 561a90e→ee220d8；功能新增0。J06原pending三参ABI、J07原timer userdata候选因旧合同已覆盖被撤下，不能新计。F09/F10编号已有历史event-array分支，未覆盖/复用，MiIO新题使用F11。
 
