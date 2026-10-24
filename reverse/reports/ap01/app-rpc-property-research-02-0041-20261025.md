@@ -42,3 +42,5 @@ get五条vendor word保持原字：`0xa00bef08 0bca2a45`、`0xa00bef26 0bcafa44`
 同stem [verify_windows.py](../../analysis/app-rpc-property-research-02-0041-20261025/verify_windows.py) 实跑PASS：五窗1074B、ROM大小、精确VA/offset/length/hex/SHA256留存、指令宽度全覆盖、恰五vendor word显式未知，以及必要直接call target存在。它是有界提取/解码复验工具，不是执行固件或完整语义测试；人工逐指令核对门、字段、调用顺序与返回。没有构建/回放/设备测试。新raw证据不是REA EID。
 
 ignored待父窗转存同相对路径：`windows.json`、`windows.txt`、`metadata.json`；报告与复验源码精确路径本地commit，不推送。技术结束/提交/停止UTC分列回传；首工具UTC **2026-10-24 18:05:26**。token用量不可得，不估造。预计5–7分仅预测，提前即交，不凑等待或额外窗口。
+
+技术正文及原字核对结束UTC **2026-10-24 18:08:19**，首工具起173秒（2分53秒），含正常读写及工具时间，非有效计算工时。初次补写时间遇本机Python默认GBK读取UTF-8失败，未改文件；初次暂存检查发现源码一处空白，已修复再检查。无异常等待/中断；一次重复worktree add失败未改状态。提前原因是五窗均已定位、共享三端直接继承，无反编译器等待。提交和停止时点由交付消息分列，token不可得不估造。

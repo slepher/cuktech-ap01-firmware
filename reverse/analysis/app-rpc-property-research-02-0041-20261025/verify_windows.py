@@ -12,7 +12,7 @@ for va,n in [(0xa00beeb0,468),(0xa00c59d4,440),(0xa00bb0f6,26),(0xa00c0478,26),(
   ins=next(md.disasm(raw[pos:],va+pos,count=1),None)
   if ins: size=ins.size;desc=ins.mnemonic+' '+ins.op_str
   else: size=4 if raw[pos]&3==3 else 2;desc='UNDECODED';unknown.append(hex(va+pos))
-  
+
   if ins and ins.mnemonic == 'jal': desc += f' ; target={va+pos+int(ins.op_str,0):#x}'
   out.append(f'{va+pos:08x} {raw[pos:pos+size].hex():8} {desc}');pos+=size
  assert pos==n
