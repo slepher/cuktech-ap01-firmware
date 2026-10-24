@@ -1,0 +1,61 @@
+{
+  "claim": "N01",
+  "baseline": "5bbc331ab429fb76e956e50b8081c56f8d278b11",
+  "status": "normal-coordination-stage-complete-interface-partial-awaiting-independent-review",
+  "authority": "static ROM instructions; analysis names; inherited contracts separately cited",
+  "identity_reference": "roms/CATALOG.md:0041",
+  "preconditions": [
+    "ordinary response handler installed; ordinary non-OTA path",
+    "normal mode 0..3; valid source storage through synchronous calls",
+    "incoming wire delivery uses existing CRC/state2/command-match parser gates",
+    "external serialization; no thread-safety proof"
+  ],
+  "inputs": {
+    "mode": {"entry": "0xa019537a", "argument": "a0 uint32 mode", "normal": "0..3", "local_validation": "none", "command": "0x60", "payload": "low8(mode) for original32 mode !=3; [3,b000,b001,b002] via custom_apply for original32 mode==3"},
+    "custom": {"entry": "0xa019530a", "argument": "a0 points to 4 readable bytes", "guard": "input[0]==3", "command": "0x60", "payload": "input4 copied after synchronous control_change"},
+    "descriptor": {"entry": "0xa01951e2", "layout": {"command": 0, "length": 1, "payload_pointer": 4}, "normal_lengths": [1, 4], "return": "no business admission result"}
+  },
+  "storage": {
+    "desired_mode": "0x62fcb01d",
+    "report6": "0x62fcb510..515",
+    "received_and_optimistic_mode": "0x62fcb512; report6[2], also overwritten by local apply",
+    "coordination_stage": "0x62fcb51d",
+    "custom_replay4": "0x62fcb518..51b",
+    "custom_readback3": "0x62fcb000..002",
+    "ack_byte": "0x62fcb50d",
+    "control16": "0x62fcb51e",
+    "companion16": "0x62fcb516"
+  },
+  "response": {
+    "0x60": {"window": "0xa00a87ac..87d0", "source": "a2 original payload", "minimum_readable": 1, "actions": ["ack_copy(b50d,1,payload): state=0 then copy", "reread desired_mode; if3 query_custom()"], "ack_interpretation": "none; no success/failure branch"},
+    "0x57": {"window": "0xa00a983e..98ce", "minimum_readable": 6, "first": "cache_helper(b510,6,&view) including state0 and optional nested 0x77 event", "stage0": ["desired=report6[2]", "stage=1", "set_control16(10,0)", "query_custom()"], "stage1": ["if received mode != desired then replay desired mode/custom4", "else if report_u16 != control16 then set_control16(control16,1)"], "other_stage": "skip reconciliation", "tail": ["control_change()", "existing_poll_selector()"]},
+    "0x5e": {"window": "0xa00a99f0..9a88", "minimum_readable": 3, "actions": ["cache_helper(b000,3,&view), optional nested 0x7e", "if snapshot nonNULL copy changed readback3 bytes to snapshot+9/+10/+11", "if any changed replace snapshot+12 halfword with4 and dispatch synchronously"]},
+    "0x62": {"window": "0xa00a9cbc..9d02", "actions": ["ack_copy(b50d,1,payload)", "if companion16!=100 write100 then submit cmd61 len2"], "scope": "necessary control16 continuation only"},
+    "0x61": {"actions": ["ack_copy(b50d,1,payload)", "return"], "scope": "necessary control16 continuation only"}
+  },
+  "new_helpers": {
+    "0xa00a4158": {"size": 36, "arguments": "none", "action": "submit stack descriptor cmd5e len0 NULL payload", "result": "no business result"},
+    "0xa00a417c": {"size": 62, "arguments": "a0 value full32, a1 force", "guard": "u16(control16)!=value || force!=0", "action": "store low16(value) then submit cmd62 len2 control16", "result": "no business result"},
+    "0xa01ad024": {"size": 38, "arguments": "a0 dst,a1 n,a2 raw source", "action": "state0 before copy(dst,src,n)", "result": "no business result", "ownership": "synchronous borrowed source; no allocator/free"}
+  },
+  "results": {
+    "request_return": "no per-request confirmation, future, id or cancel handle",
+    "UI": "optimistic local mode; mask4 for mode/custom changes; synchronous borrowed snapshot; mask cleared after dispatch",
+    "readback_equality": "current reported mode equals current desired only; no per-request association or execution/persistence proof",
+    "timeout": "inherited state2 wait threshold and attempts>=5 clear state0, handler(0x24,0,NULL), starter; same event as normal completion; no mode rollback proved",
+    "cancel_close": "not closed; known global reset/cleanup does not establish queue/timer/in-flight ordering"
+  },
+  "ownership": {
+    "source": "caller retains descriptor/payload, submit copies synchronously or declines admission",
+    "queue": "four static copies; clear occupied after starter returns is logical return, not MCU completion",
+    "response": "static copied response borrowed by synchronous handler",
+    "snapshot": "borrowed synchronous callback pointer; no durable completion token"
+  },
+  "new_semantics": ["cmd60 ack distinct from mode status", "cmd57 initial adoption and later desired replay", "cmd5e custom readback and UI mapping", "three helper ABI bodies", "required cmd62 to61 continuation"],
+  "unknown_edges": [
+    {"seed": "0xa00a3b10 and 0xa00a557c; shared timer0x62fc9428", "question": "disconnect/close versus in-flight response, queued mode and deferred timer; late apply/cancel/drain order", "remaining_estimate_minutes": "20..30"},
+    {"seed": "0x62fcb50d,0x62fcb51e,0x62fcb516", "question": "product interpretation and result-code meaning; not inferable from copied byte or constants"},
+    {"seed": "0x62fcb6c0 and UART write driver boundary", "question": "complete handler lifetime and driver source-buffer holding; inherited external interfaces"}
+  ],
+  "replacement_boundary": "Use equivalent public copy/compare/timer/container implementations; preserve protocol ABI and call order. New results/cancel tokens or desired/reported separation are replacement design, not recovered ROM interfaces."
+}

@@ -1,0 +1,50 @@
+{
+  "claim": "P-06",
+  "baseline": "5bbc331",
+  "status": "usable conditional owner identity and registration/exit stage; full close incomplete; pending non-author review",
+  "objects": {
+    "L": "borrowed original argument 0, saved in s1 at 0xa005a77a",
+    "C": "nonzero return of a008e362(request=0x19c), saved in s2 at a005cbe6",
+    "P": "C+0x8, embedded UART poll; P.word0=C",
+    "fd_context_slot": "word(C+0x4)",
+    "fd_global_slot": "word(0x62fc91b0), distinct address storing same initial open result",
+    "close_count": "word(C+0x198); global invariant not established"
+  },
+  "registration": {
+    "init": "a009e4f6(a0=L,a1=P,a2=word(C+4)) at a005b2f6",
+    "count": "load/add1/store C+198 follows init without checking numerical return",
+    "start": "a009f9b6(a0=P,a1=1,a2=a00a8330) at a005b310; numerical return unchecked",
+    "fd_borrow": "callback a00a8330 reloads current global fd at a00a83ae for read; not a load from P or C.fd"
+  },
+  "exit": {
+    "caller": "a005c8f8 reads C.fd; signed>0 registers a009fb96(C+8,a00a3bc6) at a005c90c",
+    "inherited": "C02/C04/C06, G07/G08 and G19-G28: type8 stop, pending, conditional consumer delivery to callback(P), owner counter and release wrapper",
+    "limits": "close registration is not fd close, device shutdown, pending drain, timer deletion, exactly-once delivery or business cancellation"
+  },
+  "review_delta": [
+    "original loop argument to s1 and its bounded preserved-register identity",
+    "successful context allocation s2 and its bounded identity to teardown",
+    "one ttyS1 open result in separate C+4/global91b0 slots",
+    "P=C+8; P.word0=C; init uses C.fd; start uses same P/callback",
+    "count update and unchecked init/start return sequence",
+    "signed C.fd>0 gate registers same P and known close callback",
+    "callback reloads current global fd rather than captured handle fd",
+    "module exit is separate from P-01 local offline cleanup"
+  ],
+  "new_helper_bodies": 0,
+  "unknown": [
+    "runtime global fd replacement/alias writers and order relative to poll stop",
+    "actual fd close and fd slot clearing/reopening",
+    "post-deinit pending drain and exactly-once callbacks",
+    "timer stop/delete and count invariant",
+    "context final release safety and driver/DMA/IRQ/hardware quiescence",
+    "complete initializer CFG, arbitrary indirect entries and all possible owners"
+  ],
+  "successor": {
+    "seed": "retained initializer a005c9e6 deinit tail; a005cbb6 SW then next listing a005cbba allocation-prefix",
+    "question": "business exit continuation and loop identity: is there pending consumption before context replacement/release?",
+    "estimate_minutes": "20-30",
+    "boundary": "only relevant business caller edges; inherit c166/c802 consumer; do not redo walker/timer/MiIO internals",
+    "caution": "listing adjacency does not prove deinit tail reaches allocation or that loop identity survives"
+  }
+}
