@@ -471,3 +471,20 @@ S38转可派补记：作者9dc5fd4af492bd1ef180a5833cd83b05d56e51cd已停止，2
 阶段表/旧接口1–2、准备大槽3–4、其余槽/ctx接合2–3、原字交付1–2=7–11分钟中低置信；1638B真新六入口，多对象但父级完成槽现成，参照Q16 2182B采样290秒前读未知/Q26 2784B完整354秒，不把采样当完整预测依据。若接口到API已足立刻交付，不要求无种子trigger闭合。最小派发：`登记S40 ota_mcu应用七槽，只六新槽1638B及表/旧完成槽接合，继承MiIO/HTTP与下游UART合同，验证/trigger/API边界停止，不运行固件/模型，首工具UTC clock，静态独占commit。`
 
 第七版交付快照：S36/S37/S38为已交Q24/Q25/Q26的完整非作者包，主窗已授权即时取走补三席；另已准备独立S39 DDF、S40 MCU应用七槽，若未取走为2/3，真实缺1。没有以条件复核/旧完整body/公共库补数。本次准备只原件精确表28B和已有卡/metadata定位，未进行六槽业务完整取证；UTC首观测17:56:36，结束以提交后clock记，token不可得不造值。queue JSON ignored另交转存，不force-add。
+
+
+### 可派S-P41：v3 get/set_properties同链结果与请求raw消费
+
+候选app_rpc_property_research_02，主窗登记新差集，同正常get/set_properties_v3接口成包，不是Q18普通二元IID callback重复。必要绝对父级 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-miio-b.md` §0xa00c04c6 ev_80a2dc60a59bad76a166cdbcb8c8b28b62e8b7c503b55cc858a83c2257d5331e、§0xa00c07cc ev_7ddfcaa6358f1207bc34e7ad785509a50da2179e4b02d2fe8cc2a30f47bc7b7b：同H=ctx+228，非空array、optional DID/default32、iid三段、type3 staged72B，成功装result/error，失败清H。根完整继承，不重做请求parser/JSON。
+
+已交Q18作者72a10cb66106a1a1a66ba4f62a75c4213fa58dac/非作者0e2e312b1676fb1d28e87887e6c8c9b2b62beea2是普通get/set，绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-rpc-property-research-01-0041-20261025.md` 及app-rpc-property-review-01-0041-20261025.md。继承stage0xa00bb67e浅copy72B、N默认−4004；matcher0xa01adc0e同IDs/type3额外ID/仅首个−4004，不比DID；serializer0xa00bb6da逐节点code/有ptr且len raw输出并清ptr/len；clear0xa01afb26只API。这些body不重读/不重计。两旧报告明确保留0xa00bb80e请求raw消费断边，本包与v3同对象请求→响应一起核，不另拆114B微题。
+
+精确metadata新窗：0xa00beeb0..0xa00bf083 468B、0xa00c59d4..0xa00c5b8b 440B、0xa00bb0f6..0xa00bb10f 26B、0xa00c0478..0xa00c0491 26B、0xa00bb80e..0xa00bb87f 114B，总1074B。必要绝对metadata `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/analysis/whole-rom-coverage-0041-20261023-round1.json` 五地址函数项只有extent/directcall，不当body。根真注册result get0xa00beeb0/set0xa00c59d4及error各0xa00bb0f6/0xa00c0478；近期报告/upper父级没有这四callback完整恢复。Q26的四head为+2e4/+30c/+334/+35c，不能因为共用ctx/同type3而套其无−4004 matcher；本包只H+228，正好沿Q18已验匹配API。
+
+恢复两个v3 ACK分组/ID/status/value正常门、token借用到matcher/serializer终点、bad ACK是早返还是继续默认输出清链、finalize/reply/清槽/返回顺序；两error不能从普通同形推同形须读原字。请求serializer114B核是否同步消费raw/清N ptr/len及何时保持借用，止其a00b55a0/a00b5636格式API，不扩其body，若API没有copy保证则保留未闭，不能为闭raw寿命继续追库。v3 tokenizer0xa0191d52继承upper补充卡，不执行/深挖grammar；既验matcher/serializer行为仅调用参数接合，不重新取证96/308B。未知原字原样保留，不改模型。
+
+验收同H=ctx+228从staged/请求raw消费→三元IID ACK→首匹配更新→输出/归还的独立适配合同，明确与普通二元IID及Q26订阅不同，所有权/返回/错误路径/尚未回填记录不被别的接口经验替代。止reply下游持有、真正设备属性应用、权限、完整ctx生命周期/并发取消；返回0不等设备施加成功。独占app-rpc-property-research-02-0041-20261025报告/analysis，branch codex/app-rpc-property-research-02-20261025，rpc-property02；最新主窗基线、第一工具UTC clock、静态精确路径本地commit不推送。
+
+阶段旧根/共享对象1、两result2–3、请求raw/error/归还1–2、原字交付1=5–7分钟中置信，1074B新五入口、matcher/stage/serializer均现成，参照Q25 786B完整247秒/Q22 1658B完整284秒；不是预算，不重复旧1382B。最小派发：`登记S41，继承Q18同H阶段，只v3两result/两error+请求serializer1074B，核三元ID/ACK门/raw消费与归还，公共API止边，不套Q26 matcher，第一工具UTC clock，静态独占commit。`
+
+第七版后补即时快照：S39/S40尚未取走时，加S41为三个独立真包3/3；不是把S36..38非作者派发后的消耗留在库存。均无live作者依赖；后续取走按主窗消息及时递减。
