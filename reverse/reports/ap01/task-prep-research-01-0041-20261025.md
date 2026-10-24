@@ -410,3 +410,64 @@ peer lookup按P+8原始8B DID键而非文本/sender；a0118c20只E+8指针存在
 验收给七helper的0/非0/借用查询与owned构造、方向/字段/位宽及正常root接口，不能只把两callback输入名换位。独占app-subscription-review-02-0041-20261025报告/analysis，branch codex/app-subscription-review-02-20261025，subscription-review02，最新管理基线/首工具clock/静态独占commit、不推送。阶段定位<1、覆盖谓词/根方向1–2、双构造/查询/边界1、交付1=3–5分钟中置信；作者完整17:39:24→17:42:59总215秒/技术180秒分列，Q21review含修正总233秒/Q20review技术177秒参照。最小派发：`Q23同认领非作者，七窗604B与必要旧根/卡前提，重点非对称方向及同型identity/owned构造，首UTC clock再读，静态commit。`
 
 第六轮最新准备快照：S32已取走Q22非作者；S33 report-config、S34 RPC subscription ACK、S35 Q23非作者已先落盘，尚未取走时3/3。S31/Q24实际派发由主窗按Q21完整342秒/Q22完整284秒将6–10分下调5–8分；不是把原预测改写成实测。S28..31的历史派发/继承和当前新包位置已齐，后续按主窗实际消耗继续更新；未交Q24复核仍条件项。
+
+
+### 可派S-P36：Q24 publication提交/callback非作者
+
+候选app_publication_review_01，同Q24，作者b2c1453681afa24b306834a49286b045bd6e592f已停止。必要绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-publication-research-01-0041-20261025.md`，analysis同stem extract.py/verify.py/raw.json/checks.json。父级与S31相同；SDK同步copy旧合同继承 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/miio-recovered.md` session段，ev_3c1987c9d0b0223c28b66671236fb3303aea3c0ccb028253ec8660393dd03e02、ev_e7a80442abbf3a1af9636c77de5a9a5b9993e5b10a7b0758e6ffcff375d61317，不重做其body。与live Q25/Q26不相交；matcher/Q20 stale仅已交API，不复验其body。
+
+独立核五精确窗：0xa011c0da..0xa011c203 298B、0xa0113340..0xa011339b 92B、0xa0116b5a..0xa0116c23 202B、0xa0116db0..0xa0116de5 54B、0xa0116ad0..0xa0116b59 138B，总784B/279指令/11JAL/16原字。不得运行作者脚本/固件/模型；原ROM与offset规则沿本报告头，只静态必要窗。
+
+验收路由matcher调用(T+8,K)非对称方向、逐topic/edge recipient无去重、peer快照0x30B与word(B+18)门、D+14 sender8及SDK message=D+4接合；直接a011f86c与经a011f9da清metadata的两路径不能混同。C+1134/C+1c8 bit20选择session/time/mode及无路由−12；一次成功返回1后续失败不撤销，调用端是否消费返回沿原字。D/P/B/K同步SDKcopy与cb/ctx浅持有分开；跨unlock缓存next不证明并发安全。
+
+event callback只检result存在，不检内容成功；先释放解析doc再锁C+e4，调用a0116ad0(C+dc,id,status?0:2)。helper遍历所有同id，state0清pending再retry++保留record/id/时间/argv，非0先写pending后unlink/free，不先验pending、不只首命中；即时callback只日志/返0。保持C生命周期/并发/实际递送/物理应用未闭，不以ACK或返回0补成功。未知原字保留，不改模型。独占app-publication-review-01-0041-20261025报告/analysis，branch codex/app-publication-review-01-20261025，publication-review01，最新主窗基线、首工具UTC clock、本地精确路径commit不推送。
+
+阶段定位<1、recipient/同步copy1–2、ACK恢复/归还1–2、交付1=3–5分钟中置信。作者完整17:42:30→17:46:28 238秒、技术209秒分列；最近Q23复核总174秒/技术144秒作校准。最小派发：`Q24同认领非作者，只784B五窗及旧SDKcopy API，核路由方向/不同submit/ACK恢复所有权，第一工具UTC clock，静态独占commit。`
+
+### 可派S-P37：Q25 report-config结果非作者
+
+候选app_report_config_review_01，同Q25，作者1890c41d135ed66bf282d601645096c3e7d09a41已停止。必要绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-report-config-research-01-0041-20261025.md` 及同stem analysis作者实际留存（先只读目录定位，不执行脚本）。父级两root/两个profile/EIDs/输入上下文及API排除严格沿S33，不因旧根complete重复研究请求。新四窗0xa00c6198..0xa00c6367 464B、0xa00c607e..0xa00c6197 282B、0xa00c0b82..0xa00c0b95 20B、0xa00c0b6e..0xa00c0b81 20B，总786B，作者6关键检查无unknown；独立必要ROM原字复核，不运行作者脚本。
+
+验收get/set ACK正常门与IID/status/min/max/change字段来源和宽度、两输出结构差异、raw借用/本地类型验证界限、ctx+64栈descriptor回复与返回/错误委托顺序、是否清槽/归还。只恢复作者实际合同，不先按method名承诺配置生效；共享a00bd7fa沿已交Q22及非作者合同API，不再读其278B，tokenizer/JSON/formatter/数字转换止API。两root get optional DID/set minmax接受规则沿旧卡，不做缺陷/异常/配置实验。与Q26四订阅head/result不同对象；止真实report调度/设备应用/reply持有/并发取消/完整ctx生命周期。
+
+独占app-report-config-review-01-0041-20261025报告/analysis，branch codex/app-report-config-review-01-20261025，report-config-review01。首工具UTC clock，最新管理基线，静态独占commit不推送。阶段材料<1、两result与字段1–2、error/reply/归还1、原字交付1=3–5分钟中置信；作者17:49:21→技术17:52:56 215秒，commit17:53:15，停止17:53:28总247秒；不能把215秒称完整工时。最小派发：`Q25同认领非作者，只四callback786B与必要旧根接口，核get/set门和输出/borrow/返回/清理，shared错误只API，第一工具UTC clock，静态精确路径commit。`
+
+### 条件S-P38：Q26 property/event订阅结果非作者模板
+
+作者app_rpc_subscription_research_01仍在跑，未有交付SHA、实际窗口和最终报告，**不是可派库存**。待作者停止交付后填SHA/真实新差集/实测，再由主窗转ready；不得并行抢作者原字。预定app_rpc_subscription_review_01、branch codex/app-rpc-subscription-review-01-20261025、rpc-subscription-review01及同stem报告/analysis。
+
+父级四root/四head/两record族与2784B入口精确范围沿S34；待交付后以作者实际保留窗为上限，不自动扩全部metadata。核心已知差异须验：property-sub bad ACK直接−1不清，其它三callback略过回填仍输出清；matcher无type/−4004门，不套Q18普通property。其余按作者最终合同验两族stage/匹配字段/默认状态、四result输出/清理、四error、两serializer所有权/返回、公共clear API止边和完整ctx/实际订阅生效未闭。首工具UTC clock，独立静态原字、不得运行作者脚本，精确独占路径commit不推送。估时待作者实际差集/计时后校准，不预报虚精度。
+
+第七轮即时快照：S33/S34/S35已分别取走Q25/Q26/Q23非作者，旧3/3已消耗。Q23非作者389c58014df0ed6e08eb4c8270b7fc411e3ed60d，17:50:19→17:53:13总174秒（技术144/提交13/末检查17），新增纠正0。现新增S36/Q24和S37/Q25两份可派；S38条件不计。两份若补空席取走即库存0/3，仍缺三个后备，不以条件填数。
+
+
+S38转可派补记：作者9dc5fd4af492bd1ef180a5833cd83b05d56e51cd已停止，2784B/13窗/8分组跳转PASS。完整17:49:30→技术17:54:30 300秒、提交17:55:05、停止17:55:24总354秒。必要绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-rpc-subscription-research-01-0041-20261025.md` 及同stem analysis。验收追加closeJSON→clear→finalize→reply顺序，error仅clear−1/槽不清、owner并发后台未知；只propsub invalid ACK直接−1保链，另外三者输出清链。阶段材料1、两族matcher/staging1–2、四result/error/serializer2–3、交付1=5–7分中置信，据作者总354秒/技术300秒及同域非作者174–233秒校准，不机械以字节倍增。S36/S37/S38由主窗同认领派发即消耗，本段补齐实际SHA与差集，非另开新题。
+
+### 可派S-P39：DDF transfer缓存到discovery结果/归还阶段
+
+候选app_ddf_research_01，新认领由主窗登记；与Q24/25/26非作者不同入口/对象，当前认领表未见DDF专项。只正常有效DDF缓存输入→discovery level选择/结果构造→reply和本层cache归还，非DDF模型执行/内容解码/完整设备语义。父级绝对 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-miio-b.md` §0xa00c1a00 ev_586b87930c1ebb9fa5abd60af3f4c077909ab784b12171ad40e6b6fa2d4395d2、§0xa00c756e ev_e06417125856a36a910255f4f2645f550163c84f543b45a6699b8c1030883101。另一profile同目录upper-complete.evidence.json records176/291，ev_8d07ce5cc468be325f93e2a6d44b97a82dc7fa14407f2cf5b1dcb06cacbdaa94 / ev_e4976417818c57a53dbe04bdafb461c5a441dae4f402c82c2563f0d647ff8909，各保原profile，不混证据。
+
+继承旧transfer全body：ctx mutex+2c0、type1..5五head+298/+2a0/+2a8/+2b0/+2b8、type/IDs键缓存node32B（type+8、IDs+12/+16/+20、len+24、buf+28）、新分配先于旧free、失败保旧与旧normal输入形状。不重做956B transfer/parser/quote边界/缓存失败实验；根discovery optional DID+260、level字节+280、miid+284、siid+288及callback安装+6c/+70继承，level>=3/==5门是旧卡事实，不伪造新发现。
+
+真新入口来自根注册或结果真实directcall，只有metadata extent无旧body：0xa00c6f8e..0xa00c756d 1504B（result）；0xa00c6f56..0xa00c6f8d 56B（error）；0xa00c1930..0xa00c1967 56B与0xa00c1968..0xa00c19ff 152B（结果字段适配）；0xa00c6efe..0xa00c6f55 88B与0xa00c6eba..0xa00c6efd 68B（锁/归还路径，具体角色待原字）。总1924B；必要绝对metadata `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/analysis/whole-rom-coverage-0041-20261023-round1.json` 精确这六地址函数项，只能当边界/directcall，不当已留存body。可按本报告ROM/映射读必要短窗独立静态解码并保存raw/指令；不以函数名猜清理作用。
+
+恢复正常ACK门/level分支与五cache对象接合、节点/字符串/JSON数据来源和复制或借用、输出字段/数组层次、ctx+64回复及本层返回、close/finalize/归还先后、error是否同归还和槽状态。六函数为同对象缓存消费与归还完整阶段，不拆清理微题。shared error0xa00bd7fa沿Q22已交API；JSON/string/format/allocator/通用unlink内部止边，不扩库，不执行模型或校验DDF业务内容，不以cache输出等价设备支持/云接受。上下文全寿命、并发/后台真实DDF来源及reply外部持有明确未闭；未知word留raw不改ISA模型。父级解释了transfer本体，新研究只接到其既有缓存格式，不能把旧body重计新量。
+
+验收给level/IDs/cache选择与输出来源的可独立合同、所有权/锁/归还/返回和真正外部效果断边，输入为已有正常有效缓存，不做异常探测。独占app-ddf-research-01-0041-20261025报告/analysis，branch codex/app-ddf-research-01-20261025，ddf01，最新主窗基线、第一工具UTC clock、本地精确路径commit不推送。阶段旧接口/head1–2、result及两字段helper3–5、归还/回复1–2、原字交付1–2=6–11分钟中低置信；1924B新六入口、旧transfer现成，参照Q26 2784B完整354秒/Q22 1658B完整284秒，提前闭合即交付，不凑半小时。最小派发：`登记S39，继承两DDF根/transfer完整缓存合同，只六新入口1924B恢复discovery结果到归还正常阶段，公共库止API，不执行DDF模型，第一工具UTC clock，静态独占commit。`
+
+
+### 可派S-P40：MCU OTA应用七槽生命周期适配
+
+候选app_mcu_ota_research_01，主窗先登记新认领；与Q08/Q13/Q16 ota_app和Q24/25/26复核不重叠，只同MiIO OTA handler架构下**ota_mcu应用侧ctx/table**从准备→资源打开/写入→完成/错误归还的阶段，止MCU传输/安装和内部固件。必要绝对父级 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/miio-recovered.md` §3末段：独立0x38c MCU命令对象/900B接收与两1025B buffer、七槽注册；同目录upper-complete.evidence.json record248的初始化段0xa00661f2..0xa0066218为注册真种子，继承该大root不重做。0xa01bb0e8只读ROM28B已核LE七word依次为0xa006fbe8、0xa0074b22、0xa007019e、0xa00702a6、0xa0074ea2、0xa0070390、0xa006faca；不是凭七槽名推ABI。ROM来源/映射沿本报告头。
+
+已解释父级 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-miio-a.md` §0xa0074ea2（ev_9da86361ce16fc84dba2cdf02382d0ad5f7241c94d366c9256e11464fa3bcb17，282B）完整本地完成槽合同继承：ctx tag+16、flag+24、header+16c、retry+174、signal+178；验证/写8Bheader/trigger委托及每出口signal。不重做282B或1886B验证a00703ce/密码库。`D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/usb-interface-ota-0041-20261023.md` 和uart-retry-receive-0041-20261023.md/P08下游已验UART state/opaque固件项目流均继承，**不下探其控制器或MCU内部，不把应用完成等价真实烧写**。
+
+新metadata只有边界/调用无旧body：0xa006fbe8..0xa00700b5 1230B、0xa0074b22..0xa0074b93 114B、0xa007019e..0xa00701f5 88B、0xa00702a6..0xa0070321 124B、0xa0070390..0xa00703cd 62B、0xa006faca..0xa006fadd 20B，共1638B六槽。必要绝对metadata `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/analysis/whole-rom-coverage-0041-20261023-round1.json` 对应六函数精确项；upper领域卡只有已验完成槽，当前报告/认领未见六槽专项。六槽实际ABI/返回/调用时点须对已验MiIO七槽handler/selector/start/Q16 HTTPadapter接口恢复，不能照搬ota_app F布局；共享handler/HTTPbody只已交API，不重复取证。
+
+范围准备槽有效参数与ctx字段宽度/配置和header来源、持有对象/内嵌资源初始化、打开/写入槽的ctx+参数到已知文件/验证接口、完成与错误槽的信号/归还对称性、最后通知槽与注册ctx接合。a00700b6/a00701f6/a0070322只直接API边界，若角色未有可信合同则完整地址/实参/raw保留未知，不为闭合而展开新helper；a006fade实际trigger依旧未闭，不扩其266B，更不读验证1886B/MCU二进制。普通allocator/config/sem/file服务到API；a01addc6沿Q08 fd>0关闭合同，是否传同对象须本层原字证明，不凭函数名认定。不能把0x38c命令对象等同MCU OTA ctx、不能从七槽索引先认open/write完整原型。
+
+验收六槽和已验完成槽的同注册ctx关联、正常输入借用/复制/资源归还/信号/返回、本地配置写何时发生及trigger止边；保留构造/全析构/并发取消/底层flash实际保证/MCU硬件效果未知。未知厂商字保raw不改模型，所有操作纯静态，不执行任何OTA/模型/设备/回放/构建。独占app-mcu-ota-research-01-0041-20261025报告/analysis，branch codex/app-mcu-ota-research-01-20261025，mcu-ota01；最新基线、第一工具UTC clock、精确路径本地commit不推送。
+
+阶段表/旧接口1–2、准备大槽3–4、其余槽/ctx接合2–3、原字交付1–2=7–11分钟中低置信；1638B真新六入口，多对象但父级完成槽现成，参照Q16 2182B采样290秒前读未知/Q26 2784B完整354秒，不把采样当完整预测依据。若接口到API已足立刻交付，不要求无种子trigger闭合。最小派发：`登记S40 ota_mcu应用七槽，只六新槽1638B及表/旧完成槽接合，继承MiIO/HTTP与下游UART合同，验证/trigger/API边界停止，不运行固件/模型，首工具UTC clock，静态独占commit。`
+
+第七版交付快照：S36/S37/S38为已交Q24/Q25/Q26的完整非作者包，主窗已授权即时取走补三席；另已准备独立S39 DDF、S40 MCU应用七槽，若未取走为2/3，真实缺1。没有以条件复核/旧完整body/公共库补数。本次准备只原件精确表28B和已有卡/metadata定位，未进行六槽业务完整取证；UTC首观测17:56:36，结束以提交后clock记，token不可得不造值。queue JSON ignored另交转存，不force-add。
