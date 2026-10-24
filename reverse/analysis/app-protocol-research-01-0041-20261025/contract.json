@@ -1,0 +1,29 @@
+{
+  "claim": "Q-11",
+  "status": "bounded static interface recovered; author result pending independent review",
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "caller": {
+    "address": "0xa009d8bc",
+    "input": ["word siid", "word piid", "uint32 packed by value"],
+    "properties": [
+      {"siid": 4, "piid": 14, "mirror_u32": "0x62fcafe8"},
+      {"siid": 4, "piid": 17, "mirror_u32": "0x62fcafec"}
+    ],
+    "common_setter": "0xa009c8a4",
+    "notify": "0xa0195144(4, original_piid, packed & 255, 0)",
+    "return": "0 after local recognized branch; no submission or device success guarantee"
+  },
+  "slots": {"base": "0x62fc91a0", "stride_bytes": 4, "count": 2, "ports": [0, 1], "byte0": "bits7..4 requested/observed enabled flags; low nibble preserved", "byte2": "last observed full disable mask; not updated by setter", "bytes1_3": "untouched in these bodies"},
+  "mapping": [
+    {"name_from_log": "PD", "input_bits_by_port": [0, 8], "cache_byte0_bit": 7, "disable_mask_bit": 3},
+    {"name_from_log": "PPS", "input_bits_by_port": [1, 9], "cache_byte0_bit": 6, "disable_mask_bit": 4},
+    {"name_from_log": "UFCS", "input_bits_by_port": [2, 10], "cache_byte0_bit": 5, "disable_mask_bit": 5},
+    {"name_from_log": "SCP", "input_bits_by_port": [3, 11], "cache_byte0_bit": 4, "disable_mask_bit": 7}
+  ],
+  "setter": {"refresh_first": "0xa009c662; bool ignored", "input_unused_bits": "4..7 and12..31", "writes": "individual byte0 bits via byte stores", "gate": "per-port any of four mapped flags differs after refresh", "submit": "0xa01b272c(port, inverse mapped mask), at most once per port in order0,1", "mask": "only bits3,4,5,7; cached enabled=0 sets corresponding disable bit"},
+  "refresh": {"getter": "0xa00a53c0(port) borrowed item or NULL", "source": "u8[item+0x14]", "gate": "source != slot[2]", "effect": "inverse mapped flags into slot[0]; source byte into slot[2]", "return": "true iff any mapped flag changed; unrelated mask-bit changes alone may return false", "null": "skip slot after logging"},
+  "inherited_submit": {"source": "reverse/rehost/charge-complete-0041.json#/records/22", "evidence_id": "ev_d97cb7170ca8cb469dfadc2fa50720df6b6619ef04203b9e0d76a24f9154eaec", "gates": ["getter(port) non-NULL", "item+0x14 byte != mask", "0xa00a533a(port) !=0"], "descriptor": {"cmd_u8": 103, "len_u8": 2, "payload": ["u8 port", "u8 mask"]}, "handoff": "0xa01951e2(stack descriptor); stack payload borrowed during call", "result": "no business success result"},
+  "lifetime": "input scalar copied; static mirrors/cache; item borrowed not retained/freed; wrapper stack descriptor/payload no ownership transfer",
+  "non_guarantees": ["notification is low-byte request reporting, not confirmation", "cache equality can suppress repeat submission before confirmation", "copy/queue/MCU behavior inherited rather than newly recovered", "no physical protocol negotiation or persistence claim"],
+  "evidence": ["ev_ed7e71f1bd106ab36710c56dfbcad813bb82ce7c1c69484bfd18f4da5eddf6d7", "ev_32edb8a17764f474455354c17df1d950e43cd7dbf42deeec64921a33c9ad23d7", "ev_17a8de6820bfe771a96a269aef06904915c9fd915bf3dd149e40a78307a6e1e2"]
+}
