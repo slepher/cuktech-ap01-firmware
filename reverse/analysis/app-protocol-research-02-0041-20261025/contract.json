@@ -1,0 +1,23 @@
+{
+  "claim": "Q-14",
+  "status": "author-research-awaiting-independent-review",
+  "baseline": "3a6602608e65ed7504bec657f829d463b504777d",
+  "evidence_id": "ev_6f9f82e5daf0540a1c24a0b85daa2e394785391692765e5e3e100eb7b37ed94c",
+  "profile_digest": "bcefdee5092076e55636e077b45523e203f4b870ae7b7ab547945ed1b8162279",
+  "body": "a00a973e..<a00a983e",
+  "command": 89,
+  "copy_request": "(u8[62fcb01c]<<3)&0xf8",
+  "copy_destination": "u32[62fcb6c4]",
+  "loop": "i starts 0; reload T=u32[62fcb2cc] and u8[T+6] per iteration; reload A=u32[T] per body",
+  "fields": [
+    {"source": "cached S+8*i", "width": 1, "destination": "A+0x1a8*i+0x14", "change_bit": 4096},
+    {"source": "cached S+8*i+1", "width": 1, "destination": "A+0x1a8*i+0x15", "change_bit": 8192}
+  ],
+  "mask": "if changes != 0, overwrite item+0 u32; do not OR old mask",
+  "notification": "synchronous a00a389c(i&0xff); inherited borrowed item, clear mask after walker",
+  "equal_path": "no mask store/notify; query advance still runs",
+  "refresh_join": "subsequent a009c662 getter0/1 reads same item+14, gated by full byte versus slot.byte2",
+  "does_not_prove": ["specific cmd67 causal acknowledgement", "physical protocol application", "persistence", "immediate refresh callback edge", "global S/T lifetime and count invariants"],
+  "timing": {"first_clock_utc": "2026-10-24T17:01:23.8381920Z", "checks_completed_utc": "2026-10-24T17:03:58.2173859Z", "measured_clock_interval_seconds": 154.3791939, "full_start_unknown": true, "token_usage": null},
+  "ignored_artifact": {"name": "instruction-evidence.json", "bytes": 11556, "sha256": "62ee62a106c95ce3c38b86197f77e4ab1c0bcc8d5bbd2e2535a8406e92d71c3b"}
+}
