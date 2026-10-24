@@ -24,7 +24,7 @@ a00be72e..756清零64 B方法暂存区，formatter `a002d7fc(method,64,"_sync.%s
 
 builder在stack，scratch与容量装入后调用a01a4e04；a01b3872开始对象，a01b3574写id，a01b69d2以(methodptr,strlen(method))写method，a01b3480开始params。s2=1，与count比较；count==1直接结束数组/对象。否则a00be880处原字 `8b452b45`（word0x452b458b）未由通用Capstone认证：rd=11(a1)、rs1=22(s6 tokens)、rs2=18(s2)、funct3=4、high5=8、shift=2。其后s2++，a1经strlen后以(a1,len)调用raw API a01b67e6，再回比较。符合索引tokens后的raw追加形状，但本报告不将这一个厂商word升级为已认证indexed-load语义，正常多参数精确指针选择留下限定；不补异常/grammar测试。
 
-a00be7d4..7ee关闭数组/对象，`a00602e6(builder,0,&len)`非0跳error；0才初始化52 B栈D。D=a0frame−0x194：D+4=id32；byte D+0x10=0；D+0x20=len32；D+0x24=scratch；D+0x2c=callback；D+0x30=C。a00be82a原字 `b7b70ba0` LUI a5,0xa00bb；a00be82e `9387278b` ADDI a5,a5,−0x74e，精确合成 **a00ba8b2**，a00be83e存D+0x2c，a00be842存C到D+0x30。
+a00be7d4..7ee关闭数组/对象，`a00602e6(builder,0,&len)`非0跳error；0才初始化52 B栈D。D=s0−0x194：D+4=id32；byte D+0x10=0；D+0x20=len32；D+0x24=scratch；D+0x2c=callback；D+0x30=C。a00be82a原字 `b7b70ba0` LUI a5,0xa00bb；a00be82e `9387278b` ADDI a5,a5,−0x74e，精确合成 **a00ba8b2**，a00be83e存D+0x2c，a00be842存C到D+0x30。
 
 `a00be846: a0111ff6(C[0],&D)` 非0跳error；0经a00be84e..85a调用 `C+0x14(C+4,"ok")`。**该新body没有busy=1写入**；不能把json_send旧根的写入套到call。失败也没有本body可见的busy写入、scratch归还或远端撤销。stack D/方法/builder随返回结束，scratch仍属C。成功交接只依赖已验SDK同步copy合同，C浅持有仍待寿命约束。
 
