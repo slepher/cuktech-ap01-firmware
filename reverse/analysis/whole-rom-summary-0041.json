@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "base_address": "0x9ffff000",
+  "summary": {
+    "observed_procedures": 6487,
+    "source_path_candidates": 407,
+    "paths_with_resolved_owners": 403,
+    "scope_counts": {
+      "external-boundary": 1,
+      "unresolved": 5396,
+      "source-origin-candidate": 797,
+      "vendor-or-mixed": 293
+    },
+    "collected_procedures": 178,
+    "historically_collected_procedures": 315,
+    "historical_local_contracts": 130,
+    "procedures_with_extents": 6487,
+    "procedures_with_direct_calls": 6487,
+    "resolved_direct_edges": 26581,
+    "provider_body_union_bytes": 1730593,
+    "bytes_outside_provider_bodies": 5039111,
+    "unresolved_private_direct_frontier": 569,
+    "verified_open_source_exclusions": 0,
+    "complete_private_procedures": 0
+  },
+  "limitations": [
+    "Inventory covers provider-defined procedures, not all executable bytes.",
+    "Ranges outside provider bodies include resources, strings, padding and potentially unidentified code; they are not all executable.",
+    "Direct C-path xrefs are attribution candidates; inlining, shared assertions and modified library code remain possible.",
+    "No source-path candidate is automatically certified as unchanged open source.",
+    "Collected dossiers do not imply reviewed implementations or closed indirect-call dependencies."
+  ],
+  "retention": "Summary only. Full generated ledger is archived outside Git; see README.md."
+}

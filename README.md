@@ -11,16 +11,15 @@
 | [roms/CATALOG.md](roms/CATALOG.md) | 原厂镜像及实验候选的版本、长度、哈希与验证范围 |
 | `roms/0031/`、`roms/0041/` | Git 收录的未修改原厂 0031 / 0041 镜像；实验候选须另行准备 |
 | [reverse/reports/ap01/](reverse/reports/ap01/README.md) | 研究索引、阶段报告和交接；`knowledge/` 保存专题结论 |
-| `reverse/analysis/` | 地址索引、反汇编、资源映射、硬件模型和工具导出 |
-| `reverse/raw/` | 原始探针、交叉反汇编及历史尺寸测量，按原始哈希解释 |
+| [reverse/analysis/](reverse/analysis/README.md) | 必要语义合同、资源清单、来源摘要及复验脚本；逐指令导出不入库 |
+| `reverse/raw/` | 保留原始探针源码；交叉反汇编及历史测量输出存本地归档 |
 | `reverse/sdk/` | 用于交叉核对的 SDK 头文件和少量源码摘录 |
-| `reverse/app-0031/`、`reverse/nuttx-sim/` | 历史诊断程序构建产物、SIM 配置和验证记录 |
+| `reverse/nuttx-sim/` | SIM 配置和验证记录；历史诊断构建产物另存本地归档 |
 | [reverse/migration/](reverse/migration/README.md) | 历史迁移清单及停用的迁移、文档同步、业务尺寸探针 |
 | [tooling/scripts/](tooling/scripts/README.md) | 分析、ROM 打包、QEMU 模型、模拟运行及验证脚本 |
 | [tooling/firmware-modules/](tooling/firmware-modules/README.md) | 实验载荷、链接脚本、APX1 加载器、OTA 和诊断模块源码 |
 | `evidence/` | 本机私有实验输出、QEMU/REA/Ghidra 会话；不随 Git 分发 |
 | `reverse/rehost/` | 本机应用重宿主生成物；不随 Git 分发 |
-| [checksums/SHA256SUMS.txt](checksums/SHA256SUMS.txt) | 历史全量归档指纹，不是当前 Git 检出的文件清单 |
 
 ## 阅读与复现
 
@@ -31,6 +30,8 @@
 - [0031 槽尾版实机记录](reverse/reports/ap01/knowledge/0031-tail-physical-success-20261018.md)及[2026-10-19 镜像准入记录](reverse/reports/ap01/ota-image-admission-20261019.md)：已记录的单次实机结果，不代表其他候选均可安装。
 
 Git 检出不包含全部运行证据、工具链或第三方依赖。RISC-V 工具链、WSL/QEMU、NuttX/LVGL、REA/Ghidra 和只读上游材料按各实验需要另行配置。文档中的历史命令不代表已在当前机器重跑。
+
+2026-10-24 起，逐指令 JSON、整段反汇编、重复工具导出及构建输出从当前文件和本地 Git 历史清除。保留结论、合同、原件身份和复验源码。历史报告中指向这些输出的路径按本地归档解释，复验需要先准备对应材料；规则及归档位置见 [分析材料说明](reverse/analysis/README.md)，处理记录见 [仓库清理](reverse/reports/ap01/repository-cleanup-20261024.md)。
 
 ## 证据边界与来源
 

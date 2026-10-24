@@ -1,0 +1,646 @@
+{
+  "date": "2026-10-24",
+  "head": "32f9c9e0e0d4ebd1a72633a19a6f711aab28cb6d",
+  "comparison_base": "ab9716ee8bc2c8408529893a5fdaa0354718c299",
+  "repositories": [
+    {
+      "name": "nuttx",
+      "path": "D:/Documents/PlatformIO/Projects/nuttx",
+      "origin": "https://github.com/apache/nuttx.git",
+      "commit": "6fc5b3e9dc51dcda46d99519f72b7f2ec6db2e64",
+      "ref": "nuttx-12.10.0",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "nuttx-apps",
+      "path": "D:/Documents/PlatformIO/Projects/nuttx-apps",
+      "origin": "https://github.com/apache/nuttx-apps.git",
+      "commit": "8ff533beb37eeef1f288c467acd7c50b542464eb",
+      "ref": "nuttx-12.10.0",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "lvgl",
+      "path": "D:/Documents/PlatformIO/Projects/lvgl",
+      "origin": "https://github.com/lvgl/lvgl.git",
+      "commit": "59a6b61c9580b65089010c5273f2fcdd6c4d2aae",
+      "ref": "v9.2.1",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "libuv",
+      "path": "D:/Documents/PlatformIO/Projects/libuv",
+      "origin": "https://github.com/libuv/libuv.git",
+      "commit": "19bbf90e1a7a1526da6daa1c79eec2e3ff8b6c55",
+      "ref": "19bbf90",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "littlefs",
+      "path": "D:/Documents/PlatformIO/Projects/littlefs",
+      "origin": "https://github.com/littlefs-project/littlefs.git",
+      "commit": "6cb4e86540eca0d9ba62500a298385c9d863c8be",
+      "ref": "v2.11.3",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "tlsf",
+      "path": "D:/Documents/PlatformIO/Projects/tlsf",
+      "origin": "https://github.com/mattconte/tlsf.git",
+      "commit": "deff9ab509341f264addbd3c8ada533678591905",
+      "ref": "deff9ab",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "mbedtls",
+      "path": "D:/Documents/PlatformIO/Projects/mbedtls",
+      "origin": "https://github.com/Mbed-TLS/mbedtls.git",
+      "commit": "cac9589a97fb9d07a115b42fa10523bc226b5180",
+      "ref": "cac9589",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "cJSON",
+      "path": "D:/Documents/PlatformIO/Projects/cJSON",
+      "origin": "https://github.com/DaveGamble/cJSON.git",
+      "commit": "6d9f2443ab071f86e5d9b43025a40929ec41c46c",
+      "ref": "6d9f244",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "zephyr",
+      "path": "D:/Documents/PlatformIO/Projects/zephyr",
+      "origin": "https://github.com/zephyrproject-rtos/zephyr.git",
+      "commit": "2a9e8ac155a3f2fd85d4559753be86a47b44ccf0",
+      "ref": "2a9e8ac15",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "lodepng",
+      "path": "D:/Documents/PlatformIO/Projects/lodepng",
+      "origin": "https://github.com/lvandeve/lodepng.git",
+      "commit": "e584a8490db1b76b81bf298c11c09d3b55d9c270",
+      "ref": "e584a84",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "ArduinoJson",
+      "path": "D:/Documents/PlatformIO/Projects/ArduinoJson",
+      "origin": "https://github.com/bblanchon/ArduinoJson.git",
+      "commit": "1cd478f48e7c4cd142a0bd26ee17d63d70d04e3f",
+      "ref": "1cd478f",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "gifdec",
+      "path": "D:/Documents/PlatformIO/Projects/gifdec",
+      "origin": "https://github.com/lecram/gifdec.git",
+      "commit": "1dcbae19363597314f6623010cc80abad4e47f7c",
+      "ref": "1dcbae1",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "bouffalo_sdk",
+      "path": "D:/Documents/PlatformIO/Projects/bouffalo_sdk",
+      "origin": "https://github.com/bouffalolab/bouffalo_sdk.git",
+      "commit": "41bf338a57be53919d99f6c6715a96100428c97d",
+      "ref": "41bf338",
+      "shallow": "true",
+      "status": ""
+    },
+    {
+      "name": "cuktech-ap01-firmware-tools",
+      "path": "D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware-tools",
+      "origin": "https://github.com/andy-JustSayWhen/cuktech-ap01-firmware-tools.git",
+      "commit": "3bd98a8ca4fb35a9f8869121b13961d405b16dff",
+      "ref": "3bd98a8",
+      "shallow": "false",
+      "status": ""
+    },
+    {
+      "name": "cuktech-screen-controller",
+      "path": "D:/Documents/PlatformIO/Projects/cuktech-screen-controller",
+      "origin": "https://github.com/wqytommy666/cuktech-screen-controller.git",
+      "commit": "87db85df0075e1e07de03e9f7a9576c6e663d291",
+      "ref": "v0.4.1-8-g87db85d",
+      "shallow": "false",
+      "status": ""
+    },
+    {
+      "name": "libuv-openvela",
+      "path": "D:/Documents/PlatformIO/Projects/libuv-openvela",
+      "origin": "https://github.com/open-vela/apps_system_libuv.git",
+      "commit": "bb97bfd99430ca0970962a71a2a78d1e9ecffde0",
+      "ref": "bb97bfd",
+      "shallow": "true",
+      "status": ""
+    }
+  ],
+  "sdk_comparison": [
+    {
+      "file": "reverse/sdk/sdk-bl616.h",
+      "lines": 339,
+      "sha256": "98a272d62748c3c15207dcfe239c81ac61e347872f4158119b6f3e3ed0270d4d",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/include/hardware/bl616.h"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/include/hardware/bl616.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-bl616_clock.c",
+      "lines": 1417,
+      "sha256": "978622e27c424958e1d118718f79b8e9402c8a67b697d1d57fbab8501eed8a15",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/src/bl616_clock.c"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/port/bl616_clock.c",
+        "drivers/soc/bl616/std/src/bl616_clock.c"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-bl616_memorymap.h",
+      "lines": 107,
+      "sha256": "e50dafb99c84e0e4fed7c6d29ae56ed6a7d4d823a81b20fcbe621897c4d46605",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/lhal/config/bl616/bl616_memorymap.h"
+      ],
+      "candidates": [
+        "drivers/lhal/config/bl616/bl616_memorymap.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-bl616_sys.c",
+      "lines": 221,
+      "sha256": "692514d0b2b1bbc8d5aace7935124fcf0591fc653715726e1f76b211edb71dd9",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/sys/bl616/bl616_sys.c"
+      ],
+      "candidates": [
+        "drivers/sys/bl616/bl616_sys.c"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-core_rv32.h",
+      "lines": 1473,
+      "sha256": "a253b4036fa6239fc0d4b150c3618dd4120dbe0264fd82c793f007c0e6ba0189",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/lhal/include/arch/risc-v/t-head/Core/Include/core_rv32.h"
+      ],
+      "candidates": [
+        "drivers/lhal/include/arch/risc-v/t-head/Core/Include/core_rv32.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-csi_rv32_gcc.h",
+      "lines": 3167,
+      "sha256": "a2b9f9d47c5b79330205f3b16e221d618d7ec169e86fbdc6e90835e899e5e294",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/lhal/include/arch/risc-v/t-head/Core/Include/csi_rv32_gcc.h"
+      ],
+      "candidates": [
+        "drivers/lhal/include/arch/risc-v/t-head/Core/Include/csi_rv32_gcc.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-ef_ctrl_reg.h",
+      "lines": 895,
+      "sha256": "920b98c231e746526f8038fc35b447a9605a276ce91947c3347bc66749d108a8",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/include/hardware/ef_ctrl_reg.h"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/include/hardware/ef_ctrl_reg.h",
+        "drivers/lhal/include/hardware/ef_ctrl_reg.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-glb_reg.h",
+      "lines": 10478,
+      "sha256": "2e08b7581457f6c694fbc8273305666185abc2613cee202452c83d69f41133c5",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/include/hardware/glb_reg.h"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/include/hardware/glb_reg.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-hbn_reg.h",
+      "lines": 941,
+      "sha256": "fa3e6f7bbf568bcf3e7d7cbdb329072452002d2d8fc343413fb8b414c4001da4",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/include/hardware/hbn_reg.h"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/include/hardware/hbn_reg.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-mcu_misc_reg.h",
+      "lines": 421,
+      "sha256": "507febb90e17912280c399a649b1ce1446ca387cce632fc1b2796bf4e6f65e80",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/include/hardware/mcu_misc_reg.h"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/include/hardware/mcu_misc_reg.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-pds_reg.h",
+      "lines": 1264,
+      "sha256": "54c4b0ffafd81ca3b84777c8e48e57358948ed835a354db6eeb05bd62f73b195",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/include/hardware/pds_reg.h"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/include/hardware/pds_reg.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-sf_ctrl_reg.h",
+      "lines": 3371,
+      "sha256": "32ce4d3c3bf7174cfb6c10508abd7c3034840ec7e0e7969f00cb8a63c54b47c3",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/include/hardware/sf_ctrl_reg.h"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/include/hardware/sf_ctrl_reg.h",
+        "drivers/lhal/include/hardware/sf_ctrl_reg.h"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-start.S",
+      "lines": 66,
+      "sha256": "c536b029fc6811bae23f7b4147c3cfcb30525cfbd69154789d425f2906306d5e",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/startup/start.S"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/startup/start.S"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-system_bl616.c",
+      "lines": 286,
+      "sha256": "3c542d999cedc9728ca9dca2f002f3287912a2bc02a0f19e7e98fb518ee31e0e",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/startup/system_bl616.c"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/startup/system_bl616.c"
+      ]
+    },
+    {
+      "file": "reverse/sdk/sdk-tzc_sec_reg.h",
+      "lines": 2833,
+      "sha256": "c43a80069cdfd66aea5d53fd6d1b5bbcd354f581bae0385bdd7d9a418c5bf2ce",
+      "upstream_matches_ignoring_crlf": [
+        "drivers/soc/bl616/std/include/hardware/tzc_sec_reg.h"
+      ],
+      "candidates": [
+        "drivers/soc/bl616/std/include/hardware/tzc_sec_reg.h"
+      ]
+    }
+  ],
+  "limitations": [
+    "Reference checkouts are not certified vendor source revisions.",
+    "Clones are shallow depth 1; submodules and build dependencies were not initialized.",
+    "No firmware execution or device access."
+  ],
+  "diff_by_directory": {
+    "reverse/analysis": {
+      "files": 418,
+      "insertions": 354610,
+      "deletions": 0
+    },
+    "reverse/reports": {
+      "files": 176,
+      "insertions": 15958,
+      "deletions": 29
+    }
+  },
+  "largest_diff_files": [
+    {
+      "path": "reverse/analysis/weather-icon-review-a20-0041-20261023/instruction-review.json",
+      "insertions": 15474,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/invalidation-submit-review-g04-0041-20261023/evidence.json",
+      "insertions": 11652,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/invalidation-submit-g03-0041-20261023/evidence.json",
+      "insertions": 10540,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/uart-ring-review-d06-0041-20261023/original-instructions.json",
+      "insertions": 9415,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/weather-icon-flow-a19-0041-20261023/instruction-evidence.json",
+      "insertions": 8900,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/region-transform-flow-g01-0041-20261023/evidence.json",
+      "insertions": 8888,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/display-event-review-g06-0041-20261023/evidence.json",
+      "insertions": 8483,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/uart-ring-drain-d05-0041-20261023/instruction-evidence.json",
+      "insertions": 8161,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/png-info-lifecycle-a21-0041-20261023/instruction-evidence.json",
+      "insertions": 8108,
+      "deletions": 0
+    },
+    {
+      "path": "reverse/analysis/region-transform-review-g02-0041-20261023/evidence.json",
+      "insertions": 8083,
+      "deletions": 0
+    }
+  ],
+  "roms": [
+    {
+      "version": "0031",
+      "size": 6804520,
+      "sha256": "8a721fc8ef25458d415b2460e4a251e0503a82f7743fdff85b12612190e5c1cb",
+      "component_strings": {
+        "nuttx": [
+          {
+            "file_offset": "0x1b9010",
+            "text": "sched/sched_addprioritized.c"
+          },
+          {
+            "file_offset": "0x485f68",
+            "text": "User-Agent: NuttX/6.xx.x (; http://www.nuttx.org/)"
+          }
+        ],
+        "lvgl": [
+          {
+            "file_offset": "0x1c870c",
+            "text": "/home/ubuntu/Projects/ap01_v0031_release/AP01_BL618/apps/graphics/lvgl/lvgl/src/drivers/nuttx/lv_nuttx_libuv.c"
+          },
+          {
+            "file_offset": "0x1c8830",
+            "text": "/home/ubuntu/Projects/ap01_v0031_release/AP01_BL618/apps/graphics/lvgl/lvgl/src/lv_init.c"
+          }
+        ],
+        "libuv": [
+          {
+            "file_offset": "0x1c799c",
+            "text": "libuv/src/unix/thread.c"
+          },
+          {
+            "file_offset": "0x1e7fe0",
+            "text": "libuv/src/unix/nuttx.c"
+          }
+        ],
+        "littlefs": [
+          {
+            "file_offset": "0x1bbf08",
+            "text": "littlefs/littlefs/lfs.c"
+          }
+        ],
+        "tlsf": [
+          {
+            "file_offset": "0x1b9b7c",
+            "text": "tlsf/tlsf/tlsf.c"
+          }
+        ],
+        "mbedtls": [
+          {
+            "file_offset": "0x1c1f00",
+            "text": "[%s] %s: mbedtls_md_setup() returned -0x%04x"
+          }
+        ],
+        "zephyr": [
+          {
+            "file_offset": "0x483e08",
+            "text": "subsys/bluetooth/host/gatt.c"
+          },
+          {
+            "file_offset": "0x6764c8",
+            "text": "Zephyr Bluetooth init"
+          }
+        ],
+        "lodepng": [
+          {
+            "file_offset": "0x483b64",
+            "text": "/home/ubuntu/Projects/ap01_v0031_release/AP01_BL618/apps/graphics/lvgl/lvgl/src/libs/lodepng/lv_lodepng.c"
+          },
+          {
+            "file_offset": "0x485470",
+            "text": "must provide custom zlib function pointer if LODEPNG_COMPILE_ZLIB is not defined"
+          }
+        ],
+        "gifdec": [
+          {
+            "file_offset": "0x484070",
+            "text": "/home/ubuntu/Projects/ap01_v0031_release/AP01_BL618/apps/graphics/lvgl/lvgl/src/libs/gif/gifdec.c"
+          }
+        ],
+        "lwip_candidate": [
+          {
+            "file_offset": "0x5386c0",
+            "text": "RWNX + LwIP driver"
+          }
+        ],
+        "wpa_candidate": [
+          {
+            "file_offset": "0x542a28",
+            "text": "chip/wifi6_private/bl6_wpa_supplicant/src/wpa_crypto/sha1-pbkdf2-nuttx.c"
+          }
+        ],
+        "fatfs_candidate": [
+          {
+            "file_offset": "0x1bc9e0",
+            "text": "fatfs/fatfs_vfs.c"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0041",
+      "size": 6769704,
+      "sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+      "component_strings": {
+        "nuttx": [
+          {
+            "file_offset": "0x1bd0b0",
+            "text": "sched/sched_addprioritized.c"
+          },
+          {
+            "file_offset": "0x56eb94",
+            "text": "User-Agent: NuttX/6.xx.x (; http://www.nuttx.org/)"
+          }
+        ],
+        "lvgl": [
+          {
+            "file_offset": "0x1c4874",
+            "text": "/home/jiangmingmin/ap01/AP01_BL618/apps/graphics/lvgl/lvgl/src/drivers/nuttx/lv_nuttx_libuv.c"
+          },
+          {
+            "file_offset": "0x1c4aa8",
+            "text": "/home/jiangmingmin/ap01/AP01_BL618/apps/graphics/lvgl/lvgl/src/lv_init.c"
+          }
+        ],
+        "libuv": [
+          {
+            "file_offset": "0x1c3954",
+            "text": "libuv/src/unix/thread.c"
+          },
+          {
+            "file_offset": "0x2662b0",
+            "text": "libuv/src/unix/nuttx.c"
+          }
+        ],
+        "littlefs": [
+          {
+            "file_offset": "0x1bff8c",
+            "text": "littlefs/littlefs/lfs.c"
+          }
+        ],
+        "tlsf": [
+          {
+            "file_offset": "0x1bdc1c",
+            "text": "tlsf/tlsf/tlsf.c"
+          }
+        ],
+        "mbedtls": [
+          {
+            "file_offset": "0x256bc8",
+            "text": "[%s] %s: mbedtls_md_setup() returned -0x%04x"
+          }
+        ],
+        "zephyr": [
+          {
+            "file_offset": "0x568d48",
+            "text": "subsys/bluetooth/host/gatt.c"
+          },
+          {
+            "file_offset": "0x66deb8",
+            "text": "Zephyr Bluetooth init"
+          }
+        ],
+        "lodepng": [
+          {
+            "file_offset": "0x56c1a4",
+            "text": "/home/jiangmingmin/ap01/AP01_BL618/apps/graphics/lvgl/lvgl/src/libs/lodepng/lv_lodepng.c"
+          },
+          {
+            "file_offset": "0x56da90",
+            "text": "must provide custom zlib function pointer if LODEPNG_COMPILE_ZLIB is not defined"
+          }
+        ],
+        "gifdec": [
+          {
+            "file_offset": "0x56c0ec",
+            "text": "/home/jiangmingmin/ap01/AP01_BL618/apps/graphics/lvgl/lvgl/src/libs/gif/gifdec.c"
+          }
+        ],
+        "lwip_candidate": [
+          {
+            "file_offset": "0x61d810",
+            "text": "RWNX + LwIP driver"
+          }
+        ],
+        "wpa_candidate": [
+          {
+            "file_offset": "0x627b68",
+            "text": "chip/wifi6_private/bl6_wpa_supplicant/src/wpa_crypto/sha1-pbkdf2-nuttx.c"
+          }
+        ],
+        "fatfs_candidate": [
+          {
+            "file_offset": "0x1c0a68",
+            "text": "fatfs/fatfs_vfs.c"
+          }
+        ]
+      }
+    }
+  ],
+  "reference_path_checks": [
+    {
+      "repository": "lvgl",
+      "path": "src/drivers/nuttx/lv_nuttx_libuv.c",
+      "exists": true
+    },
+    {
+      "repository": "libuv",
+      "path": "src/unix/nuttx.c",
+      "exists": false
+    },
+    {
+      "repository": "libuv-openvela",
+      "path": "src/unix/nuttx.c",
+      "exists": true
+    }
+  ],
+  "size_assessment": {
+    "rom_bytes": 6769704,
+    "png_count": 199,
+    "png_bytes": 689182,
+    "gif_count": 11,
+    "gif_bytes": 3434444,
+    "image_union_bytes": 4123626,
+    "image_sha256_verified": true,
+    "image_overlap_with_provider_bodies": 0,
+    "provider_body_union_bytes": 1730593,
+    "mcu_payload_bytes_including_headers": 141878,
+    "font_wrapper_count": 55,
+    "path_association_groups": {
+      "dock-weather-device-business": {
+        "functions": 61,
+        "body_union_bytes": 39690
+      },
+      "custom-ui": {
+        "functions": 98,
+        "body_union_bytes": 91854
+      },
+      "miio-sdk": {
+        "functions": 1,
+        "body_union_bytes": 4096
+      },
+      "settings": {
+        "functions": 3,
+        "body_union_bytes": 530
+      }
+    },
+    "limitations": [
+      "Path associations are partial and may overlap; counts do not certify complete source ownership.",
+      "Body ranges come from the historical round-1 model; not all executable bytes are recognized.",
+      "Source-line estimates are planning assumptions, not recovered original source counts."
+    ],
+    "mcu_payload_hashes_verified": true,
+    "mcu_overlap_with_provider_bodies_bytes": 18,
+    "remaining_bytes_after_image_body_mcu_union": 773625
+  }
+}

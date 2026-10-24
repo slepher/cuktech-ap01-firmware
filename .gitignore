@@ -40,3 +40,26 @@ reverse/**/ap01-assets.h
 reverse/**/round*-ap01-assets.h
 # 本地缓存
 __pycache__/
+# 分析生成物仅存本地归档；源码、语义合同和必要清单显式保留。
+/reverse/analysis/**/*
+!/reverse/analysis/**/
+!/reverse/analysis/**/*.py
+!/reverse/analysis/**/*.mjs
+!/reverse/analysis/**/*.pem
+!/reverse/analysis/**/.gitignore
+!/reverse/analysis/**/README.md
+!/reverse/analysis/**/contracts.json
+!/reverse/analysis/**/contract.json
+!/reverse/analysis/opensource-audit-20261024.json
+!/reverse/analysis/factory-code-resources-0041-inventory.json
+!/reverse/analysis/usb-ota-payloads-0041-20261023.json
+!/reverse/analysis/buzzer-backlight-round2-20261023/mapping-and-boundaries.json
+!/reverse/analysis/whole-rom-summary-0041.json
+/reverse/raw/**/*
+!/reverse/raw/**/
+!/reverse/raw/**/*.c
+!/reverse/raw/**/*.h
+!/reverse/raw/**/*.py
+!/reverse/raw/**/*.md
+/reverse/app-0031/
+/checksums/SHA256SUMS.txt

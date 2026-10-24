@@ -26,4 +26,4 @@
 ## 隐私
 
 本仓库不包含设备账号缓存、token、认证密钥或任何 `*.auth-key` / `*.dpapi` 文件。
-`checksums/SHA256SUMS.txt` 仅记录哈希，不包含文件内容。
+历史 `checksums/SHA256SUMS.txt` 仅记录哈希，不包含文件内容；现存仓库外归档，不再纳入 Git。
