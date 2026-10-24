@@ -551,3 +551,24 @@ SDK0xa0111ff6旧完整合同见绝对同目录miio-recovered.md §桥接RPC段ev
 阶段旧两根/对象1、call构造1–2、两callback/busy/归还1–2、原字交付1=4–6分钟中置信，818B新三body，与Q25 786B完整247秒匹配；没有把log/store两个54B日志callback凑量。最小派发：`登记S47，只818B三body恢复cmd.call/json_send主动uplink接受到异步reply，SDKcopy已验API/公共parser止边，核busy与借用，首UTC clock，静态独占commit。`
 
 新一轮三包快照：S45/S46/S47均独立、无live作者依赖，若未取走为3/3；S42/43/44仍是条件模板，不计ready。S39/40/41均已派发Q-28/Q-27/Q-29，不重复计库存。
+
+
+### S-P42转可派：Q-27已交付MCU应用七槽非作者
+
+作者342abd2b092ed1bb12d8ace1991f3e83f0dc972e已停；旧493行模板全部必要父级/精确窗/独占输出/分支继续适用，本段取代“条件”状态。实际1638B六槽+0xa01bb0e8表28B、unknown0；不追加验证/trigger下游。首clock18:05:02→技术18:09:15 253秒，停止18:09:43总281秒（提交/末检查含在总时，不称有效取证）。必要绝对作者报告和analysis沿S42主树路径；未merge时由主窗提供作者独占树只读，禁止自猜已合并。
+
+独立验作者新合同：同C与G=C+0x10关系不能等同0x38c命令对象；write真实偏移+8（不是直接offset0）及header原字0x584c4655/total字段；正常/错误close信号恒0、+4恒−9的字段含义/写宽和时点，以原字区分信号调用返回与OTA成功；六槽ABI和borrow/归还按作者最终实际合同，不照ota_app推演。旧完成槽282B只继承，不增原字；物理烧写/验证/trigger/ctx完整析构/并发保持未闭。阶段定位<1、准备/同C/G/写入1–2、close/通知/原字1–2、交付1=3–5分钟中置信，据作者总281秒/技术253秒，参考前同域非作者174–233秒。第一工具UTC clock，独立静态不执行作者脚本/固件/模型，精确独占报告commit不推送。最小派发：`Q-27同认领S42非作者，沿493行范围及本段实际合同，只1638B+28B表，核C/G/header/write+8/两close通知，旧完成与下游止API，首clock，静态commit。`
+
+### S-P43转可派：Q-28已交付DDF结果/归还非作者
+
+作者e8de704feb3129ead82ceeff64e3e9faed50d5b7已停；旧499行模板的六入口1924B与父级/独占路径/分支保留，状态现在ready。实际573指令、unknown0；首18:05:13→技术18:09:54 281秒、停止18:10:21总308秒。必要主树绝对作者报告/analysis沿S43，材料未merge由主窗给作者只读树，不能将extent当body。
+
+独立验level选择和ID取低byte的真实来源/转换、正常ACK字段/五cache消费、**早tokenfail不clear，其余清五cache后reply**，不能泛化所有出口都会归还；遍历不持锁，仅归还阶段锁，不能用归还锁推整个结果构造线程安全。字段helper/清理helper实际角色以作者原字为准，旧transfer完整956B不重读/不重计；SDK error/JSON/allocator止API，保留cache来源/全ctx/并发/实际DDF支持与reply外部copy未闭。阶段定位<1、level/字段/借用1–2、出口/五cache归还/锁1–2、原字交付1=4–6分钟中置信，作者总308秒/技术281秒参考，不机械按1924B推半小时。首工具UTC clock、独立静态精确路径commit不推送。最小派发：`Q-28同认领S43非作者，沿499行六窗1924B，核level/低byte IDs、早tokenfail不清与其余清后reply、仅归还锁，旧transfer/public API继承，首clock，静态commit。`
+
+### S-P44转可派：Q-29已交付v3 property/raw消费非作者
+
+作者47653c4018021e18b3942d9d922baf3a1531a6c6（含前件f9ef0f47）已停；旧505行模板父级/独占报告/branch及五新窗1074B保留，状态现在ready。首18:05:26→技术18:08:19 173秒，停止18:09:07总221秒；5厂商word未认证必须保留原字/限定，不能以对称标准指令升级ISA语义。必要主树绝对作者报告/analysis沿S44，合并前只用主窗给的作者树只读。
+
+独立验v3三元IID/ACK分组/状态/value借用、Q18 matcher首−4004门与同H=ctx+228；请求serializer在**raw API调用后清N ptr/len**的准确时点、借用到同步API边界与API深copy未知不可混同。该真新增收窄旧Q18跨ACK raw断边但不能推任意下游API复制；输出/清链/finalize/reply、错误−1/保槽按作者最终合同，不套Q26无−4004 matcher。旧stage/matcher/response serializer共1382B继承，不重验；完整ctx/并发/云设备动作未闭。阶段定位<1、双callback/五word1–2、请求raw清槽/错误/返回1、原字交付1=3–5分钟中置信，作者总221秒/技术173秒参照同域非作者144–182秒；首工具UTC clock、独立静态精确路径commit不推送。最小派发：`Q-29同认领S44非作者，只1074B与Q18接口，核v3 ACK/raw API后清槽及五vendor限定，禁止套订阅matcher或扩API，首clock，静态commit。`
+
+第九版当前队列：S45/S46/S47均取走派下一组三研究；Q-27/28/29作者都已交付停止，因此S42/S43/S44已成熟，真正ready为**3/3**，不是将旧S39/40/41或未交付条件冒充库存。以后这三复核取走时必须递减；新三作者的复核将在运行阶段先做条件模板，未交前不计ready。
