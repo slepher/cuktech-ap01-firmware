@@ -1,6 +1,6 @@
 # PREP-S01：底座协议与应用接入预分配队列
 
-本报告为定题核对，不是业务取证或独立技术验收。首发Q-06/Q-07/Q-08已由主窗登记派出；首发三包不再计库存。主窗后续已取走S-P01登记Q09；当前后备 **0/3可派，缺3份**；缺口不能用未交付复核、BLE无writer或短胶水填充。管理表唯一写入者为主窗，本报告不授权认领。
+本报告为滚动定题队列，不是业务取证或独立技术验收。**最新可派与实际消耗见文末快照**；下文按轮保留当时库存，不能将旧数字视作实时状态。初版首发Q-06/Q-07/Q-08和后续S-P01/Q09均已由主窗取走，当时后备0/3、缺3；缺口不能用未交付复核、BLE无writer或短胶水填充。管理表唯一写入者为主窗，本报告不授权认领。
 
 基线 `5bbc331ab429fb76e956e50b8081c56f8d278b11`；分支 `codex/task-prep-research-01-20261025`。主仓根 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware` 下述所有证据均从该绝对根只读访问，新规则及未提交成果不能从本worktree推断不存在。独占worktree `D:/CodexHome/visualizations/2026/10/24/01a16ec4-7aa8-7b43-a0e8-609e1021781b/ap01-s/prep01`。
 
@@ -292,3 +292,39 @@ app_network_review_04，作者bc4ed028de4aa5d60f0fc88578f2f66bd278192e已停。�
 阶段coverage/对象1–2、update/typing/retention2–3、report/归还2–4、原字交付1–2=6–11分钟中低置信，958B新私有字段/两路径，参考Q15齐材222秒但新body增加不确定性，不追库凑20–40。独占app-named-property-research-01-0041-20261025，同名branch、named-property01。最小派发：`登记新认领，继承cmd.props根，只四确切helper的正常名称值更新/持有/报告调用与真实归还，Q19 flush不读、跨owner先报、API止边，静态独占commit。`
 
 第四轮最终状态（主窗确认）：S-P22 OTAreview、S-P23 NETreview、S-P24 named-property均未派，真实库存3/3；当前执行Q18/Q19/Q20，不把它们的未来复核算库存。Q20作者二次实字核正覆盖上述中间说法：a0113c8a本层为dump，但0xa0113ca8入口先调用a011bffe，shared stale-peer清理有副作用（now−peer+0x10按unsigned差>78）；所以不能称整个调用只读或无清理。0xa01188a6仅9类计数与delta，并非外部callback注册/注销。前次‘cleanup’→‘只读dump’两项历史表述保留作纠正轨迹，当前Q20验收/复核必须采用本段最终事实，不因中间说法漏掉callee清理。
+
+## 第五轮：S25/S26/S27三份非作者完整包
+
+第四轮S22/Q16非作者、S23/Q17非作者已从库存取走（基线8782ea6）；S24已收窄为820B并登记Q21补位。新作者Q18/Q19/Q20均已停止交付，复核现可计可派，不再是条件项。S25/S26/S27完整包均已交主窗，未取走时3/3；实际派发仍由主窗串行登记。后续每份新包要求**执行者第一工具先取UTC clock，再读取材料**，结束、提交、暂停/等待分别记，token不可得不估算；避免重复缺首时钟。
+
+### S24对象纠正与正确范围（已消耗为Q21）
+
+Q19新交付确认 `a0116ad0(H=C+0xdc,id,0)` 属于event恢复/按id处理边，不能从函数邻近或形状放进named-property归还族。S24在尚未派发时已向主窗纠正并删除该138B body，正确独占范围仅0xa0116a3a150B、0xa0116900314B、0xa011c3b0356B，共820B。问题仍是名称值更新/替换持有/即时报告交接；旧节点替换/回收只从6900本体证明，完整publication回收保未知。Q19 flush及a0116ad0本体不在S24范围；如果追到同event节点/跨owner先报冲突。原958B准备记录保留为纠正历史，当前派发/验收必须用820B边界。
+
+### 可派S-P25：Q18 RPC staged property非作者
+
+候选app_rpc_property_review_01，同Q18认领，作者72a10cb66106a1a1a66ba4f62a75c4213fa58dac已停。合并/转存后必要绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-rpc-property-research-01-0041-20261025.md`，analysis同stem verify_windows.py/windows.json/windows.txt/parent-links.json；未合并时独占rpc-property01树同路径。独立源是主仓upper-miio-a根卡、upper-complete records59/164，前述不同profile分账；新七窗1382B为stage92/result430+404/error26+26/serializer308/matcher96。不重验root/public list/JSON，不运行作者脚本。
+
+验收H=ctx+0x228同head，calloc84后copy72到N+8为浅拷贝、N+0x50=-4004；matcher两ID，type3额外第三ID，不比DID，只首个默认−4004项回填status/ptr/len，caller忽略返回；回填仍−4004不等一次性完成。callback ABI、token适配与local清零，四get厂商load完整raw未知保留；独立字段/已有SINC若能对应仍分账，不把同族/对称推断升格为独立ISA验收，不运行/改模型。
+
+serializer输出普通siid/piid或type3 IID、code与ptr+len raw value，写后清字段不free指针；**关闭JSON对象后、finalize之前清H**，finalize失败链也已清。两error只清H返−1，不序列化error JSON、不调用ctx+64；result把栈descriptor交ctx+64及ctx+68，返回间接回调原结果；ctx+6c/+70未清。原set raw跨ACK是否必须保活取决旧a00bb80e接口，本复核不读它或宣称deepcopy；响应value只同步borrow。止tokenizer/JSON/清链公共API，保留ctx全寿命/并发/取消/真实设备应用，callback0不当应用成功。
+
+独占app-rpc-property-review-01-0041-20261025报告/analysis，branch codex/app-rpc-property-review-01-20261025，rpc-property-review01，最新管理基线。阶段材料<1、stage/matcher1、双result/unknown/清链1–2、serializer/交付1–2=4–6分中置信；作者成稿317秒/外层348秒不同端点，前读未知，Q16复杂2KB复核4–7作参照。最小派发：`Q18同认领非作者，只七窗口和根接合的浅持有/匹配/输出清链/回调合同，4custom字不升级语义，首工具clock，静态独占commit。`
+
+### 可派S-P26：Q19 event owned记录与单项flush非作者
+
+候选app_event_review_01，同Q19，作者1d7890db5a6288260bf576122fdaa01d300e9075已停。必要绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-event-research-01-0041-20261025.md`，analysis同stem extract.py/verify.py/raw.json/inherited-root.json/checks.json，未合并时event01树同路径。只四窗1566B/508raw/20calls/9vendor/7strings及upper root233必要前提，不执行作者脚本/目标/模型。
+
+验收n/name正常门与验证器API边；先a011c204即时旁路且忽略返回，再锁C+e4→record(H=C+dc)；calloc0x88+sum(strlen+1)、event.name33B、最多16指针都指own尾部、逐串copy+NUL/尾插链、timestamp/tick/过期原值不猜单位。即时D/K均栈、P0x558先交a011c0da后free。flush P0x559/builder0x558、锁内跳pending/expired先unlink再free；retry>0且旧id非零才替当前id；序列化失败继续且不标pending；首成功写R+74/id与byte+70后break/解锁，一次最多1项；a0113340后无论返回都freeP，非0只重新锁调用a0116ad0(H,id,0)到API，不能声称删记录/清pending/retry已证。normal R不直接free、只有过期本层free；callbacks0xa0116db0/0xa0116b5a仅指针，外部copy/完成未知。root ok仅记录返回0，与即时/flush发送成败不同。
+
+9完整vendor word按原字段与已有SINC分账，不NOP、不执行/改模型。止a011c0da/a0113340/a0116ad0/formatter/JSON/queue/allocator内部，不抢S24已删除的event恢复body，不扩C生命周期/并发/云接收。输出app-event-review-01-0041-20261025报告/analysis，branch codex/app-event-review-01-20261025，event-review01，最新基线。阶段<1/1–2/1–2/1=4–6分钟中置信，作者268.609秒采样前读未知/Q18相近差集参照。最小派发：`Q19同认领非作者，只owned输入/即时旁路/单项flush及本层归还，a0116ad0止边不猜语义，首工具clock，静态独占commit。`
+
+### 可派S-P27：Q20正常subscription删边/过期清理非作者
+
+候选app_subscription_review_01，同Q20，作者64326568681c7d1970e911e92a4e49de31cca825已停。必要绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-subscription-research-01-0041-20261025.md` 与analysis verify.py/原字，未合并时subscription01同路径。独立核7窗1780B和upper-miio-b、upper245/48的root锁/flag/响应，不同profile分账，不重做sub创建/失败缺陷。
+
+验收G=0x62fcab6c九word类型计数/peer-topic哨兵与双方独立edge；精确erase非0才各侧减1，空P先/空T后释放，typecount先Tfree；找到T最终0非至少删边保证。aggregate flag0使type5/6跳过，缓存next/不同类型target偏移，返回忽略。a0113c8a本层dump但入口0xa0113ca8先a011bffe stale清理，失败root也可能变更其它peer；stale每peer重读now、unsigned差>0x78而非>=，无单位假设，不看erase返回直接减/T signed新值<=0，与精确==0分别核。0xa01188a6只九类word+delta，没有外部callback注册注销。
+
+6UNKNOWN全部raw保留，四preincrement编码族只按已有规则/字段及普通callsite支持作限定，不执行/改模型，不升级为独立ISA认证；0xa0113e54/58只日志未知不当graph依赖。删边/sharedcleanup先于100B响应，outer0不当删成功/送达；公共unlink/free/matcher语法止API，不扩fanout/Gwriter/并发/总manager销毁。输出app-subscription-review-01-0041-20261025报告/analysis，branch codex/app-subscription-review-01-20261025，subscription-review01，最新基线。阶段<1/1–2/1–2/1=4–6分中置信；作者只有结束17:25:43.373、开始未知，不能算全耗时；Q18/Q16相近窗口复核估算作参照。最小派发：`Q20同认领非作者，只正常graph删边及stale/dump/typecount差异和6unknown限定，首工具clock，静态独占commit，不运行作者脚本。`
+
+第五轮实际消耗补注：主窗曾确认S25/S26/S27短暂3/3，随后取走S25/Q18与S26/Q19补位，最新库存仅S27，1/3、缺2；Q21作者未交复核只条件项。Q16非作者06a5197e446727c7b1475a48156d6b2fc8e18b9a，语义纠正0，仅L+0x10=-33001/通知M+payload精化，采样17:25:38.086–17:27:42.687，前读未知。Q17非作者d646b3c2dd39ac365484d25170acc887f067a94e，纠正/新增0，采样17:25:42–17:27:50=128秒，前读未知，不冒充全工时。
