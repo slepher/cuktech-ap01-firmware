@@ -1,0 +1,46 @@
+{
+  "claim": "Q-30",
+  "author_commit": "138119aece4883d73f0af4c1f9045f3fa5b198d5",
+  "review_baseline": "5a5b732235c5b0d1654c8bc543b92c9cc5331e0b",
+  "rom_length": 6769704,
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "windows": [
+    {
+      "va": "0xa00bdb74",
+      "offset": 781172,
+      "length": 1064,
+      "sha256": "a82223f5726ea2b10b95982b912f73318ac19820c69af2ec37c87a8baadb89e3",
+      "instructions": 346,
+      "undecoded_bytes": 0
+    },
+    {
+      "va": "0xa00ba712",
+      "offset": 767762,
+      "length": 174,
+      "sha256": "25161c9e749760495c3c344eae8a0b433c62f713b16932d57d8899726313d92e",
+      "instructions": 53,
+      "undecoded_bytes": 0
+    },
+    {
+      "va": "0xa00ba4b4",
+      "offset": 767156,
+      "length": 130,
+      "sha256": "3cfce82c1f61ab824c87596e209bc83f826aea9f63989ab4090226e48c14bcbe",
+      "instructions": 46,
+      "undecoded_bytes": 0
+    },
+    {
+      "va": "0xa00ba7c0",
+      "offset": 767936,
+      "length": 242,
+      "sha256": "e89b6acdc5ed29a52ee4f39855fa2b061b1e4f6086e550b8969e6199f3ec8895",
+      "instructions": 85,
+      "undecoded_bytes": 0
+    }
+  ],
+  "total_bytes": 1610,
+  "string_checks": 19,
+  "dispatch_entries": 13,
+  "execution": "static only",
+  "conclusion": "bounded stage accepted; no behavior correction; no new body"
+}
