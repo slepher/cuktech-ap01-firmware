@@ -11,10 +11,10 @@
 | [roms/CATALOG.md](roms/CATALOG.md) | 原厂镜像及实验候选的版本、长度、哈希与验证范围 |
 | `roms/0031/`、`roms/0041/` | Git 收录的未修改原厂 0031 / 0041 镜像；实验候选须另行准备 |
 | [reverse/reports/ap01/](reverse/reports/ap01/README.md) | 研究索引、阶段报告和交接；`knowledge/` 保存专题结论 |
-| [reverse/analysis/](reverse/analysis/README.md) | 必要语义合同、资源清单、来源摘要及复验脚本；逐指令导出不入库 |
-| `reverse/raw/` | 保留原始探针源码；交叉反汇编及历史测量输出存本地归档 |
+| [reverse/analysis/](reverse/analysis/README.md) | 必要语义合同、资源清单、来源摘要及复验脚本；逐指令导出留在本地，Git 不跟踪 |
+| `reverse/raw/` | 保留原始探针源码；交叉反汇编及历史测量输出保留原路径，Git 不跟踪 |
 | `reverse/sdk/` | 用于交叉核对的 SDK 头文件和少量源码摘录 |
-| `reverse/nuttx-sim/` | SIM 配置和验证记录；历史诊断构建产物另存本地归档 |
+| `reverse/nuttx-sim/` | SIM 配置和验证记录；历史诊断构建产物位于本地 reverse/app-0031，Git 不跟踪 |
 | [reverse/migration/](reverse/migration/README.md) | 历史迁移清单及停用的迁移、文档同步、业务尺寸探针 |
 | [tooling/scripts/](tooling/scripts/README.md) | 分析、ROM 打包、QEMU 模型、模拟运行及验证脚本 |
 | [tooling/firmware-modules/](tooling/firmware-modules/README.md) | 实验载荷、链接脚本、APX1 加载器、OTA 和诊断模块源码 |
@@ -31,7 +31,7 @@
 
 Git 检出不包含全部运行证据、工具链或第三方依赖。RISC-V 工具链、WSL/QEMU、NuttX/LVGL、REA/Ghidra 和只读上游材料按各实验需要另行配置。文档中的历史命令不代表已在当前机器重跑。
 
-2026-10-24 起，逐指令 JSON、整段反汇编、重复工具导出及构建输出取消 Git 跟踪，并从本地提交历史清除。生成 JSON 仍保留在本地项目原路径，供研究和复验使用；其他输出按本地归档解释。Git 保留结论、合同、原件身份和复验源码。规则及归档位置见 [分析材料说明](reverse/analysis/README.md)，处理记录见 [仓库清理](reverse/reports/ap01/repository-cleanup-20261024.md)。
+2026-10-24 起，逐指令 JSON、整段反汇编、重复工具导出及构建输出取消 Git 跟踪，并从本地提交历史清除。所有导出文件仍保留在本地项目原路径，供研究和复验使用。Git 保留结论、合同、原件身份和复验源码。规则及归档位置见 [分析材料说明](reverse/analysis/README.md)，处理记录见 [仓库清理](reverse/reports/ap01/repository-cleanup-20261024.md)。
 
 ## 证据边界与来源
 
