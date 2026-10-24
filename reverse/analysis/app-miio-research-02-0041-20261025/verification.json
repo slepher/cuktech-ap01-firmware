@@ -1,0 +1,74 @@
+{
+  "artifact": "roms/0041/ap01-1.0.2_0041.bin",
+  "size": 6769704,
+  "sha256_inherited": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "mapping": {
+    "rom_start": "0xa00027d4",
+    "ram_start": "0x62fc2cc0",
+    "ram_end_exclusive": "0x62fc5610",
+    "object_ram": "0x62fc4944",
+    "object_rom": "0xa0004458",
+    "initial_words": [
+      "0x0",
+      "0x0",
+      "0xa02585b8",
+      "0xa011860a",
+      "0x0",
+      "0x0"
+    ]
+  },
+  "raw_windows": [
+    {
+      "va": "0xa0004458",
+      "length": 24
+    },
+    {
+      "va": "0xa0029d2e",
+      "length": 28
+    },
+    {
+      "va": "0xa0029e40",
+      "length": 12
+    },
+    {
+      "va": "0xa011860a",
+      "length": 264
+    },
+    {
+      "va": "0xa0110c76",
+      "length": 264
+    },
+    {
+      "va": "0xa0121886",
+      "length": 182
+    },
+    {
+      "va": "0xa011f186",
+      "length": 114
+    },
+    {
+      "va": "0xa006929a",
+      "length": 28
+    }
+  ],
+  "total_raw_bytes": 916,
+  "source_ids": [
+    {
+      "evidence_id": "ev_0d6acb4558537efb6e333ea0eaa1fce1c3ce1981c5e0a01d84a5292ef29173eb",
+      "profile": "4825fb58a33a3e7d618557975b153b8318cf7e833d190ad16bcbf8bd441ae621"
+    },
+    {
+      "evidence_id": "ev_0069d25e97d82b1d926080b00bb63e6c0fa2cb15b6a149cf89b87c5d0e1af328",
+      "profile": "4825fb58a33a3e7d618557975b153b8318cf7e833d190ad16bcbf8bd441ae621"
+    }
+  ],
+  "ignored_exports": [
+    "bounded-raw.json.tmp",
+    "retained-selection.json.tmp"
+  ],
+  "limits": [
+    "No runtime observation or slot replacement exclusion",
+    "No new REA session or provider analyses",
+    "Public allocator, string comparison/copy and JSON internals remain boundaries"
+  ]
+}
