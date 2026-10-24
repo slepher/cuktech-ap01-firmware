@@ -1,0 +1,98 @@
+{
+  "claim": "Q-07",
+  "verdict": "accept bounded stages; full interface remains partial",
+  "author_commit": "ac561dacf470ea380445a9886a42eace223b3537",
+  "baseline": "f02343739f6c18af24e8d989cc15609f93776f67",
+  "rom_size": 6769704,
+  "sha256_inherited": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "mapping": {
+    "P": "0x62fc4944",
+    "ROM": "0xa0004458",
+    "words": [
+      "0x0",
+      "0x0",
+      "0xa02585b8",
+      "0xa011860a",
+      "0x0",
+      "0x0"
+    ]
+  },
+  "checks": [
+    {
+      "va": "0xa0004458",
+      "bytes": 24,
+      "retained_raw_match": true,
+      "decoded_instructions": 4
+    },
+    {
+      "va": "0xa0029d2e",
+      "bytes": 28,
+      "retained_raw_match": true,
+      "decoded_instructions": 7
+    },
+    {
+      "va": "0xa0029e40",
+      "bytes": 12,
+      "retained_raw_match": true,
+      "decoded_instructions": 0
+    },
+    {
+      "va": "0xa011860a",
+      "bytes": 264,
+      "retained_raw_match": true,
+      "decoded_instructions": 98
+    },
+    {
+      "va": "0xa0110c76",
+      "bytes": 264,
+      "retained_raw_match": true,
+      "decoded_instructions": 86
+    },
+    {
+      "va": "0xa0121886",
+      "bytes": 182,
+      "retained_raw_match": true,
+      "decoded_instructions": 66
+    },
+    {
+      "va": "0xa011f186",
+      "bytes": 114,
+      "retained_raw_match": true,
+      "decoded_instructions": 42
+    },
+    {
+      "va": "0xa006929a",
+      "bytes": 28,
+      "retained_raw_match": true,
+      "decoded_instructions": 12
+    }
+  ],
+  "total_bytes": 916,
+  "strings_matched": 6,
+  "semantic_checks": [
+    "six-register ABI",
+    "OR predicate &3 ==3",
+    "P sentinel and full strcmp",
+    "handler return ignored; hook 0",
+    "rejected hook -1 regardless of reply result",
+    "stack header and two callback gates",
+    "three strlen calls; len+9; insert order",
+    "unlink before free"
+  ],
+  "inherited": [
+    "D04 copy semantics including vendor words",
+    "Q04 installation and six-argument consumer"
+  ],
+  "new_business_findings": 0,
+  "ignored_exports": [
+    "independent-raw.json.tmp"
+  ],
+  "restrictions": "Static only, no REA switching, no target/model execution, no external network, no production changes",
+  "time": {
+    "start_utc": "2026-10-24T16:46:35Z",
+    "token_usage": "unavailable; not estimated",
+    "end_utc": "2026-10-24T16:48:30Z",
+    "wall_seconds": 115,
+    "waits": "Shell waiting included; not independently accumulated. No external blocker or provider wait."
+  }
+}
