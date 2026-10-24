@@ -1,0 +1,16 @@
+{
+  "task":"F31",
+  "claim":"F11/11",
+  "baseline":"bd457a6",
+  "decision":"limited independent acceptance of F30 four-byte cursor loop",
+  "preconditions":["same-Q s3/request7 s6 established by inherited F27/F28 normal prefix", "valid current cursor bytes", "eventual non-slash byte and inherited normal lookup/type/clear/preservation conditions for downstream write composition"],
+  "new_effect":["a010e43c C.ADDI a3,+1 low32", "a010e43e C.J target a010e38e"],
+  "inherited_join":"LBU a4,0(a3); a5=47; BEQ equal->e43c, unequal->e396",
+  "preserved_registers":"local loop has no s3/s6 definition; new arm no callee, memory write or return",
+  "conditional_write":"if inherited normal public block reaches e3fc, SW s6,0(s3) writes7; bit0x40 clear only at that write point",
+  "not_proved":["cursor exit or lookup success for every name", "creation/permission/error arms e440 and later", "mode persistence over all successful returns", "cleanup alias effects/later writers/runtime F23 mode"],
+  "author_read_boundary":"initial80B includes unanalysed76B; F31 rereads only4B and does not review extra bytes/callees",
+  "checks":{"static":10,"new_ROM_bytes":4,"inherited_anchors":6},
+  "semantic_corrections":0,
+  "new_business":0
+}

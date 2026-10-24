@@ -1,0 +1,30 @@
+{
+  "claim": "F11/5",
+  "review": "F18",
+  "reviewer": "/root/f12",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of F17",
+  "semantic_corrections": 0,
+  "new_business": 0,
+  "domain": "0xa000589c n=4; normal valid word-aligned source and destination; no arbitrary overlap/interference certification",
+  "route": [
+    "unsigned 7<n false at 0xa00058a4",
+    "n==4 at 0xa00058aa -> 0xa000591c/591e -> 0xa00058f6",
+    "three byte load/store pairs with old-address access then independent source/destination postincrement1",
+    "final ordinary LBU/SB at source/destination offset3; JR ra returns original dst in unchanged a0"
+  ],
+  "direct_ownership": "No calls, stack use or direct storage of src/dst parameter addresses in this route; copying payload pointer values does not retain or deep-copy their pointed objects",
+  "evidence_layers": [
+    "original 0041 raw fields and ordinary Capstone decode",
+    "vendor semantics inherited from existing local th.lbuia/th.sbia model, not independent upstream ISA authentication",
+    "upper-complete records76 Evidence ev_32725e49dc86c4d072d48e396f5c14986a521284bea8c8ff59cd533fc995a848, profile 4825fb58a33a3e7d618557975b153b8318cf7e833d190ad16bcbf8bd441ae621"
+  ],
+  "unknowns": [
+    "actual F11 queue destination storage validity/capacity/alignment/noninterference/lifetime",
+    "actual setup, later writes, target execution and consumer delivery",
+    "arbitrary length/unaligned/overlap/full helper/library-source certification",
+    "unconditional caller stack expiry"
+  ],
+  "next_seed": "0xa0194a14/18 actual Msg+0xc destination provenance/storage prerequisites; management registration required before followup",
+  "generated_evidence": "evidence.json stays local ignored at original relative path"
+}

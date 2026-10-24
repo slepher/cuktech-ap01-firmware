@@ -1,0 +1,60 @@
+{
+  "task": "A72",
+  "claim": "J08/10",
+  "kind": "conditional composition of accepted contracts; no new ROM",
+  "baseline": "bd457a6",
+  "new_business": 0,
+  "preconditions": [
+    "source class is 1 and actual first matching node selects this D",
+    "accepted initialization/registration/slot paths complete normally with callee-saved conventions",
+    "D fields and callbacks used by each operation have the required actual values; no blanket immutability claim",
+    "valid source/suffix, stack workspaces, reader/cache/destination storage and compatible nonaliasing where copy/free need it",
+    "normal allocation/constructor success and normal opaque IO returns with the stated storage/effect contracts",
+    "H comes from the paired open; decoded fd has not been closed or reused; no incompatible concurrent mutation"
+  ],
+  "objects": {
+    "source": {"role": "borrowed source and suffix for selection/open", "reader_prefix_owns": false, "global_retention_proved": false},
+    "D": {"address": "0x62fc974c", "role": "borrowed registered driver descriptor", "freed_by_reader": false},
+    "slot_base": {"address": "0x62fc96fc", "relation": "D-0x50", "is_cache_buffer": false},
+    "H": {"role": "low32(fd+1) numeric value", "heap_object": false, "freed_by_reader": false},
+    "C": {"prefix_offset": 8, "bytes_requested": 16, "buffer_field": 12},
+    "cache_buffer": {"role": "lazy allocation held by C+0xc", "allocation_request": "current k", "copied_by_W_to_O": false},
+    "W": {"role": "stack reader workspace", "copied_bytes": 1636, "stack_pointer_retained_by_O_contract": false},
+    "O": {"role": "separate outer heap object holding copied reader state", "owns_separate_cache_copy": false}
+  },
+  "binding": {
+    "initial_letter": 47,
+    "initial_config": 4096,
+    "slots": {"12": "0xa00ef468", "16": "0xa00ef502", "20": "0xa00ef55e", "28": "0xa00ef632"},
+    "mode2_open": ["D", "pathSuffix", 2],
+    "close": ["D", "H"],
+    "format_output_proved": false
+  },
+  "sequence": [
+    "select D by source first byte with optional ready/open gates; save W+4",
+    "ordinary open(D,pathSuffix,2); accepted H -> W+0; configuration reread; nonzero config -> C allocation held at W+8",
+    "ordinary cache reads borrow D/H and destinations; lazy B request k held at C+0xc; callback then C rereads; count/status remain separate",
+    "constructor success shallow-copies current W state to O; C and cache_buffer not duplicated; W workspace can expire under accepted copy contract",
+    "normal replacement calls close(D,H) if D and slot nonzero; callback return value does not gate generic cleanup",
+    "reread O+4 -> D+4 and O+8; config nonzero and C nonzero gate cleanup; config != 0xffffffff and C+0xc nonzero -> return cache_buffer; reread O+8 -> return C",
+    "after invoked callback path clear O+0/+4/+8; outer caller separately returns O and clears owner fields"
+  ],
+  "ordinary_config_domain": "current k != 0 and k != 0xffffffff; initialization4096 is not substituted for later rereads",
+  "count_boundaries": ["read status differs from got/filled", "cache position update uses original status==0 gate", "cross-tail copy preserves low31 mask separately from full-word total", "seek return is not an added generic read gate"],
+  "pending_dependencies": {
+    "A68_A69": "actual read/seek result protocol author available; independent acceptance pending at dispatch; no detailed result closure here",
+    "A70_A71": "A70 author report integrated; A71 independent review pending; negative paths excluded from composed normal r>=0 domain"
+  },
+  "not_proved": ["actual IO or actual source type1 photo", "default five ROM photos mode1", "actual formatter output", "all producers/registry later changes", "fd/path/storage exclusivity and heap reuse", "all failure arms", "final DELETE"],
+  "sources": {
+    "A49": "photo-reader-mode-review-a49-0041-20261024.md",
+    "A52": "photo-reader-consumer-review-a52-0041-20261024.md",
+    "A57": "reader-driver-selection-review-a57-0041-20261024.md",
+    "A61": "reader-driver-global-init-review-a61-0041-20261024.md",
+    "A63": "reader-driver-register-review-a63-0041-20261024.md",
+    "A65": "reader-driver-slot-review-a65-0041-20261024.md",
+    "A67": "reader-driver-open-close-review-a67-0041-20261024.md",
+    "A68_pending": "reader-driver-read-seek-a68-0041-20261024.md",
+    "A70_pending": "reader-driver-result-map-a70-0041-20261024.md"
+  }
+}

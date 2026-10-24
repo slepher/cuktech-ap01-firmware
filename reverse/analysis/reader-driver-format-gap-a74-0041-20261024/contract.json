@@ -1,0 +1,24 @@
+{
+  "claim": "J08/11 A74",
+  "rom": "0041",
+  "entry": "0xa0053252",
+  "parameters": ["a0=buf", "a1=count_word", "a2=fmt", "a3=va_package"],
+  "stream_S": "entry_sp-0x28; 24 bytes of local slots",
+  "count_nonzero": {
+    "stores_in_order": ["S+4=0xa002b536", "S+8=0xa002b4d8", "S+12=0xa002af2e", "S+0=0", "S+16=buf", "S+20=count_word-1 modulo 2^32", "U8(*buf)=0"],
+    "call": "0xa005329c -> 0xa002d770(S,fmt,va_package)"
+  },
+  "count_zero": {
+    "stores_in_order": ["S+4=0xa002b554", "S+8=0xa002b578", "S+12=0xa002af2e", "S+0=0"],
+    "unassigned_by_this_arm": ["S+16", "S+20"],
+    "join": "0xa0053296"
+  },
+  "retained_adapter": {
+    "entry": "0xa002d770",
+    "call": "0xa002d780/784 -> 0xa01a37d2(S,0,0,fmt,va_package)",
+    "return": "normal engine a0 word passes through both adapters unchanged"
+  },
+  "proved_output": "nonzero count arm stores initial zero byte before lower call; no post-call output store in either adapter",
+  "not_proved": ["engine uses callback pointers", "slash or suffix bytes emitted", "final NUL", "truncation", "returned word meaning/signedness", "va advancement", "lower retention/global effects"],
+  "status": "author static result; independent review pending"
+}

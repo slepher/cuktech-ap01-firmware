@@ -1,0 +1,11 @@
+{
+ "task":"A81", "claim":"J08/14", "reviewer":"/root/a56",
+ "decision":"limited acceptance of A80 n1 finite domain",
+ "semantic_corrections":0, "new_business":0,
+ "domain":{"n":1,"source":"original source1B readable","destination":"original destination1B writable","conditions":"suitable separation, no interference, normal byte access/return convention","word_alignment_required":false,"extra_padding_required":false},
+ "route":["inherited entry misses n>7/n4", "new dispatcher misses4<n/n2/n3 and sets a5=originaldst", "n1 BEQ at58c2 selects590e", "inherited LBU590e at originalsrc; SB5912 at originaldst; RET5916"],
+ "effects":{"read_bytes":1,"write_bytes":1,"return":"unchanged originaldst in a0","direct_pointer_retention":"none on this finite path; no callee/stack/persistent pointer store"},
+ "evidence":{"new_ROM_bytes":24,"window":"[0xa00058ae,0xa00058c6)","independent_checks":24,"old_record":76,"accepted_endpoints":"F18, not new ROM read"},
+ "not_accepted":["n2..7 other routes","n8..255 alignment/padding/bulk routes","arbitrary overlap/atomicity","actual storage validity merely from caller expressions","complete format output/engine ABI or whole copy algorithm"],
+ "closure":"A80 limited n1 delivery reviewed; other functional edges remain open; no followup work authorized"
+}

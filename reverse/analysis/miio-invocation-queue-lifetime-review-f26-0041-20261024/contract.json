@@ -1,0 +1,31 @@
+{
+  "schema": "ap01.conditional-lifetime-review.v1",
+  "claim": "F11/9",
+  "review": "F26",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of F25 conditional composition",
+  "new_business": 0,
+  "semantic_corrections": 0,
+  "accepted_source": "reverse/analysis/miio-invocation-queue-lifetime-f25-0041-20261024/contract.json",
+  "accepted_effects": [
+    "queue transfers four pointer-value bytes; no I/R deep copy",
+    "direct native source-slot borrow ends at send copy return only under explicit no-other-borrow/domain assumptions",
+    "receive uses actual Msg U16 length, with runtime-identity/length4/stability premises retained",
+    "Msg kind-based return precedes consumer reload/dispatch and selected worker0 I interface",
+    "R/request-message/session lifetimes remain their separate F11/F12 contracts"
+  ],
+  "actual_state_update": {
+    "F24": "independently accepted core with caller-scope correction and pseudocode ordering refinement",
+    "source": "reverse/analysis/miio-queue-send-wait-review-f24-0041-20261024/contract.json",
+    "handling": "F25 pending-F24 is historical; old F22 caller_flag_condition excluded, no state-service execution premise added"
+  },
+  "limits": [
+    "same runtime Msg, actual execution/delivery, all producer/header writers or length4 for all receives",
+    "post-setup mapping/size stability, valid storage/capacity/alignment/nonaliasing/exclusivity or release/reuse timing",
+    "arbitrary copy length, atomic pointer snapshot, complete waiting/timeout/diagnostic/scheduler behavior",
+    "physical allocator release, generic callback ownership, R/ctx/user complete lifetime or business/cloud success"
+  ],
+  "new_ROM_bytes": 0,
+  "new_helper_bodies": 0,
+  "new_execution": false
+}

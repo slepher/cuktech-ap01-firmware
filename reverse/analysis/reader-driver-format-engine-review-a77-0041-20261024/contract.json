@@ -1,0 +1,20 @@
+{
+  "task":"A77",
+  "claim":"J08/12",
+  "baseline":"bd457a6",
+  "decision":"limited independent acceptance of A76 delivered partial contract; review may close, fixed percent-s remains open",
+  "inherited_input_words":["a0=S","a1=0","a2=0","a3=fixed /%s NUL","a4=va package whose first word is suffix"],
+  "entry":{"frame_bytes":160,"saved":"ra and s0..s11; s1=S, s6=va, s2=0; fmt in a3 until first LBU","parameter_limit":"only explicit five words inherited A75; no formal prototype inferred"},
+  "literal":{"actual_call":"word(S+4)(S,47) via C.JALR a5 at3852","order":["save fmt+1 locally","increment s2","load S+4 and place S/character arguments","call normally","ignore callback a0 and jump to4408"],"counter":"engine-local s2, not automatically S.count or accepted byte count"},
+  "continuation":"4408 loads saved next fmt into a3;440c->3832",
+  "zero_return":"3836 fmt U8==0->4410; restore saved registers;4428 moves s2 to a0 before restoring original s2;RET442e; no S count read/callback/NUL write in epilogue",
+  "fixed_s_selected_edges":["3858 reads s3=0x73; saves fmt+2; not doubled percent","s4/s5/s10=0;38b4 false;38b8 false;38bc->38e4","38e4 false;38e8->38c8","38c8/cc normalized0x43;38d0 unsigned9<0x43->3a78","3a78 skips star->3aa8;3aa8 skips dot->3a46","3a4a z false;3a4e t false;3a52 j inequality->3aba","3aba mask0xdf->0x53;3abe not0x4c->3ae0"],
+  "va_boundary":"saved in s6; no va register use in selected post-save fragments, no suffix fetch/advance shown",
+  "offpath_unknowns":["0xa01a38f4","0xa01a38dc","0xa01a3a80","0xa01a3ad2","0xa01a3a5e"],
+  "preconditions":["valid separated S/buffer/fmt/va/suffix storage at relevant uses", "normal callback return and required callee-saved/local stack preservation", "A75 adapter and A79 callback opinions retained conditionally; n1 copy A81 independent"],
+  "not_proved":["reachability of zero epilogue after full fixed /%s conversion", "3ae0 or suffix va fetch/advance", "S+8/+12 actual calls or parameters", "actual output/path/terminal NUL/truncation", "counter equality to stored S.count or standard printf return", "arbitrary copy length/retention or full formatter version"],
+  "checks":{"independent_static":65,"registered_windows":7,"ROM_bytes":560,"new_callee_bodies":0,"author_script_runs":0,"input_or_model_execution":false},
+  "semantic_corrections":0,
+  "new_business":0,
+  "stop":"review and close only; no new research or successor dispatch"
+}

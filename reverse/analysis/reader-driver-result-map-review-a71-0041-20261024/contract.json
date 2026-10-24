@@ -1,0 +1,17 @@
+{
+  "task": "A71",
+  "claim": "J08/9",
+  "baseline": "bd457a6",
+  "review": "independently-limited-accepted-A70",
+  "input": "actual raw 32-bit a0 word; A66/A68 second getter-read value",
+  "static_pairs_decimal": {"0":0,"2":3,"5":1,"12":10,"13":6,"14":2,"16":7,"22":11,"28":4,"38":9,"110":8,"114":5},
+  "other_32_bit_words": 12,
+  "ordering": "signed BLT thresholds16/12/38; BEQ/BNE equality and C.BNEZ zero gate",
+  "return": "common epilogue moves a5 to RV32 a0",
+  "effects": "16-byte local frame; only s0 stack save/restore; no callee or external memory access",
+  "premises": ["normal valid local stack and RV32 return ABI", "caller second getter-read word need not equal original IO result or first getter-read word"],
+  "not_certified": ["formal enum or errno names/version", "actual IO/error word", "getter value stability", "negative IO always yields nonzero callback status"],
+  "semantic_corrections": 0,
+  "new_business_findings": 0,
+  "checks": {"encoding_constant_control":53,"effect_inventory":3,"bytes":140,"target_or_input_execution":false}
+}

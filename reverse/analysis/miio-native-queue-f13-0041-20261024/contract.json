@@ -1,0 +1,37 @@
+{
+  "claim": "F11/3",
+  "task": "F13",
+  "baseline": "bd457a6",
+  "authority": "original-0041-static-bytes-and-bounded-inherited-contracts",
+  "review_status": "author-delivered-awaiting-independent-review",
+  "scope": "caller wait=-1; Q from loop+0x18; source is address of caller-local invocation pointer",
+  "objects": {
+    "Q": "word(loop+0x18)",
+    "F": "word(Q+0x0c)",
+    "K": "word(F+0x18)",
+    "S": "address of caller-local I pointer",
+    "n": "word(Q+0x18), actual value unknown",
+    "M": "nonzero candidate message returned by opaque 0xa01318de"
+  },
+  "observed_connections": [
+    "0xa005f480/484 -> 0xa0197a8e(Q,S,n); adapter does not dereference S on actual wait=-1 path",
+    "0xa0197b1a -> 0xa01949f0(K,M,S,n)",
+    "0xa0194a14/18 -> 0xa000589c(M+0x0c,S,n), after SH n at M+0x0a and SB 0 at M+9",
+    "copy interface returns before message M is linked and signed halfword count K+0x22 is incremented",
+    "observed common lower epilogue returns 0; upstream restores mstatus; adapter arithmetic-shifts return by 31"
+  ],
+  "copy_inference": {
+    "status": "conditional-only",
+    "inherited_domain": "G03/G04 and G21/G22 certify valid separated word-aligned 16/20-byte paths, not arbitrary n",
+    "conditional_conclusion": "If source/destination and actual n satisfy inherited copy contract, source values are copied synchronously before publication of M",
+    "not_established": "n=4, full actual copy domain, independent valid M storage, caller stack may unconditionally expire"
+  },
+  "boundaries": [
+    "0xa0197b32 timeout path not restored",
+    "0xa01318de candidate-message and 0xa0131920 wait service bodies remain opaque",
+    "notification, allocator, scheduler, concurrency, consumer execution, and complete queue lifecycle remain unknown",
+    "no target execution, runtime success, or complete ROM claim"
+  ],
+  "next_seed": "Q=word(loop+0x18) identity bridge to writer of Q+0x18; register before initializer investigation",
+  "evidence": "evidence.json is a local ignored generated file at the original analysis path; verify.py is retained source"
+}

@@ -1,0 +1,13 @@
+{
+  "task": "F30",
+  "claim": "F11/11",
+  "baseline": "bd457a6",
+  "preconditions": ["F27/F28 same-Q s3 and request7 s6 prefix inherited", "actual branch e392 takes byte==0x2f", "cursor reads valid and chosen loop eventually takes nonmatching fallthrough for downstream composition"],
+  "new_body": ["a010e43c: a3=low32(a3+1)", "a010e43e: jump a010e38e"],
+  "join": "old a010e38e LBU a4,0(a3); e392 compares a4 with a5=0x2f; equal repeats new arm, unequal falls e396",
+  "same_Q_request": "new arm and old compare/load loop do not define s3/s6; no new callee or local return",
+  "conditional_write": "if old lookup>=0/type5/clear/preservation route completes, old e3fc SW s6,0(s3) gives Q.word0=7 at write point",
+  "not_proved": ["every name reaches normal write", "other creation/permission/error arm behavior", "success return mode persistence", "optional cleanup alias effects", "later writer or runtime mode at F23"],
+  "new_business": 0,
+  "new_semantic_scope": "four-byte normal slash-byte skip loop and exact join to accepted prefix"
+}

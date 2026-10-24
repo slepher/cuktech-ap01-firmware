@@ -1,0 +1,83 @@
+{
+  "schema": "ap01.conditional-lifetime.v1",
+  "claim": "F11/9",
+  "task": "F25",
+  "baseline": "bd457a6",
+  "authority": "semantic synthesis of independently limited static contracts; no new ROM or execution",
+  "review_status": "author-delivered-awaiting-F26",
+  "effective_dependencies": {
+    "F12": "F11 request R, heap invocation I, type1 executor and local cleanup",
+    "F14": "normal send source/length transfer, Msg header and copy-before-publication",
+    "F16": "same-manager normal setup and matching-thread attach: ctx+4=L, L+0x18=Q, initial Q+0x18=4",
+    "F18": "valid word-aligned n=4 byte copy, original-dst return, no direct pointer-parameter retention",
+    "F20": "finite nonempty receive uses actual Msg length; copy precedes kind-based Msg return; caller reload precedes dispatch",
+    "F22": "getter and valid sentinel removal only; no capacity or runtime identity inferred"
+  },
+  "pending_dependency": {
+    "claim": "F11/8",
+    "author": "F23",
+    "review": "F24 pending at synthesis",
+    "excluded_from_accepted_premises": "F22 caller_flag_condition as an all-predecessor guard, F23 new state/return body and caller coverage correction",
+    "handling": "The selected trace starts at a normal send that actually reaches copy/publication; it imposes no global flag or scheduling path claim. Frozen F21/F22 guard wording is not generalized."
+  },
+  "objects": {
+    "Manager": "setup instance; L=Manager+0x128, ctx0/1=Manager+0x174/+0x968",
+    "R": "separately allocated request; I payload contains ctx and R pointers; R and its message have separate lifetimes",
+    "I": "heap invocation; queue transfers its RV32 pointer value, not I object bytes",
+    "send_slot": "sender stack word containing I pointer; source=&send_slot",
+    "Msg": "native queue internal header/node, payload at +0x0c and U16 length at +0x0a; distinct logical role from I/R/Manager",
+    "receive_slot": "consumer caller localI word at its s0-0x34",
+    "receive_msg_slot": "finite service local outMsg word at its own s0-0x24; holds Msg pointer, not I pointer"
+  },
+  "preconditions": {
+    "send": [
+      "the identified same-Manager normal setup/config/thread and matching-thread attach conditions hold",
+      "the resolved send mapping ctx->L->Q is that instance and actual n at copy is 4; initialization alone does not exclude later writes",
+      "the selected normal send reaches copy(Msg+0x0c,&send_slot,4), publication, and its known normal return; a generic adapter zero alone does not prove this trace",
+      "send_slot and Msg payload are valid for four bytes, word-aligned, have sufficient capacity, and satisfy noninterference/appropriate separation conditions of F18",
+      "Msg header/link storage and opaque-service ABI are valid; no independent Msg capacity, exclusivity or alias proof is supplied"
+    ],
+    "relay": [
+      "if comparing this send with this receive, the popped Msg is the very same runtime message, not merely same queue, kind or size",
+      "its four payload bytes and length have not been changed before receive reads them; actual U16(Msg+0x0a)=4",
+      "the stored pointer names the same valid heap I, whose lifetime continues until its later dispatcher/owner cleanup",
+      "logical distinctions among Msg, I, R and local slots are accompanied by the necessary effective storage separation; different expressions alone are not proof"
+    ],
+    "receive": [
+      "the finite normal nonempty receive trace and its opaque intermediate services return as specified",
+      "actual copy length read from Msg is 4, independently of Q.size, and payload/receive_slot satisfy the F18 input domain with four-byte capacity",
+      "Msg kind is an accepted normal release branch (0,1,2), and returning/reusing Msg cannot invalidate or alter I or receive_slot through aliases",
+      "the selected post-copy receive returns to its caller; caller ignores status and reloads a nonzero receive_slot"
+    ],
+    "dispatch": [
+      "the reloaded pointer is valid I and has the inherited type1 dispatcher/executor binding",
+      "the relevant executor follows F11 normal return0, while ctx/R/user and payload accesses remain valid",
+      "generic callback return1/ownership transfer and all other cleanup paths are outside this selected case"
+    ]
+  },
+  "effects": {
+    "send_payload": "At send copy return, Msg payload contains the four pointer-value bytes read from send_slot in byte order; neither I nor R is deep-copied by the queue.",
+    "send_slot_expiry": "The direct native payload-copy borrow of send_slot ends at send copy return. The slot can then expire for this data path only if no other borrower/alias requires it; this does not permit I, R, user or ctx to expire.",
+    "receive_payload": "At receive copy return, receive_slot contains the pointer-value bytes read from this Msg payload. The internal outMsg slot remains a different Msg-pointer slot.",
+    "Msg_return": "After receive copy returns, kind0/2 insert Msg into gp+0xb8/gp+0xc0 respectively; kind1 calls the existing return interface with Msg. Physical heap release is not certified.",
+    "I_return": "After Msg return and consumer reload/type1 dispatch, the selected executor normal return0 causes inherited local I return; return1 transfers ownership and is excluded.",
+    "R_lifetime": "Returning Msg or I does not itself return R. F11 normal worker can save R in session; R message may be returned earlier; R object/response cleanup remains its separate inherited contract."
+  },
+  "ordered_events": [
+    "send_copy_return",
+    "publish_Msg",
+    "receive_this_Msg",
+    "receive_copy_return",
+    "Msg_return_interface_or_pool_writes",
+    "consumer_reload_I",
+    "type1_dispatch",
+    "executor_normal_return0",
+    "I_return_interface"
+  ],
+  "not_established": [
+    "same runtime Msg, actual execution/delivery, all producer/header writers or length4 for all receives",
+    "post-setup mapping/size stability, valid storage/capacity/alignment/nonaliasing/exclusivity or release/reuse timing",
+    "arbitrary copy length, atomic pointer snapshot, complete waiting/timeout/diagnostic/scheduler behavior",
+    "physical allocator release, generic callback ownership, R/ctx/user complete lifetime or business/cloud success"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "task": "A79",
+  "claim": "J08/13",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of A78 three callback bodies",
+  "domain": ["S nonzero valid writable fields; candidate cap255 and unsigned count<=255", "source/destination capacity and suitable separation including stream fields; no incompatible alias or mutation", "normal opaque copy interface with callee-saved s1/s2; actual selected-n body effects not certified"],
+  "callbacks": {
+    "0xa002b536": {"inputs_used":"a0=S, low8(a1)","call":"a002b4d8(S,&own_stack_byte,1)","return":"nested a0 preserved","direct_retention":"no persistent stack-byte pointer publication; deeper copy retention remains a premise"},
+    "0xa002b4d8": {"fields":{"0":"count word","16":"buffer pointer","20":"capacity word"},"n":"unsigned_min(requested,low32(cap-count))","gate":"signed32(n)>0","positive_order":["copy interface(oldbuf+oldcount,src,n)","reread word(S) then word(S+16)","SW low32(reread_count+n) to S", "indexed byte0 at reread_buf+newcount"],"nonpositive":"no body copy/count/NUL update","return":"chosen n word","copy_callee":"0xa000589c interface only; no arbitrary0..255 body acceptance"},
+    "0xa002af2e": {"return":0,"effects":"local s0 stack save/restore only; no S/buffer access or callee"}
+  },
+  "vendor_evidence":"raw fields + retained local th.mvnez/th.srb short rules; no model execution or external ISA certification",
+  "not_proved":["A74 initialization review or end-to-end output", "engine actual ABI/order/repetition (A76 separate)", "arbitrary selected-n copy body or deeper retention", "actual formatted string/path/truncation/return convention", "full formatter/version/IO"],
+  "semantic_corrections":0,
+  "new_business":0,
+  "checks":{"static":49,"bytes":138,"ordinary_positions":52,"vendor_positions":2,"author_scripts_run":false,"input_trials":false}
+}

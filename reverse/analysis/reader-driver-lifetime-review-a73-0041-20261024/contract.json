@@ -1,0 +1,16 @@
+{
+  "task": "A73",
+  "claim": "J08/10",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of A72 conditional composition",
+  "preconditions": ["source class1 actually first-matches D=0x62fc974c and passes optional/open gates", "required D fields hold at each actual read; initialization is not immutability", "normal services and accepted allocation/copy contracts; valid storage, capacity and compatible alias/lifetime effects", "paired encoded H and unreused fd for resource-identity interpretation"],
+  "objects": {"D":"borrowed global descriptor; not freed", "slot_base":"0x62fc96fc=D-0x50; not cache_buffer", "H":"low32(fd+1) value; no independent heap object/free(H)", "C":"separate16B cache state held by reader+8", "cache_buffer":"lazy request of current k, held at C+c; no content duplication by state copy", "W":"stack workspace whose current0x664 bytes are copied", "O":"separate heap root holding copied state; owner+5c; outer return is separate"},
+  "cleanup_order": ["D and close slot required; invoke close(D,H)", "callback normal return, regardless of returned status", "reread reader+4 then current D+4 and reader+8", "config0 skips C/B; nonzero plus C enters cleanup", "config!=0xffffffff and C+c nonzero returns buffer", "reread reader+8 and return C", "invoked-callback path clears reader+0/+4/+8", "outer caller separately returns O and clears owner+5c/+74"],
+  "preserved_boundaries": ["config4096 initial write is not substituted for current reads", "count/status separate; low31 copy mask distinct from full-word consumed total", "status==0 position gate retained; seek return not added as read gate", "same C/B release identity requires field preservation and compatible effects", "normal lower r>=0 domain only; callback0 cannot prove IO success"],
+  "dependency_refresh": {"A69":"limited acceptance of A68", "A71":"limited acceptance of A70; input second getter actual word; 0->0"},
+  "unknown": ["actual source1 instance and runtime registry selection", "actual format output/truncation/NUL or A74 downstream closure", "actual IO/physical resource close", "later writers/unregister/heap reuse", "all failure paths and final DELETE"],
+  "default_five_ROM_photos": "mode0 unchanged",
+  "semantic_corrections": 0,
+  "new_business": 0,
+  "checks": {"source_anchors":32,"contract_consistency":12,"ROM_bytes":0,"author_scripts_run":false}
+}

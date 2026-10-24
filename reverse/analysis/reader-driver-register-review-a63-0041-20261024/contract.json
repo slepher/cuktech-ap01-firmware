@@ -1,0 +1,29 @@
+{
+  "claim": "J08/5",
+  "review": "A63",
+  "reviewer": "/root/f12",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of A62",
+  "semantic_corrections": 0,
+  "new_business": 0,
+  "preconditions": [
+    "normal straight initializer prefix starting with s1 high constant0x62fc9000",
+    "normal returns of inherited helpers obey callee-saved s1",
+    "insert-head returns nonzero node N"
+  ],
+  "observed_connections": [
+    "0xa008e7d8/e7de actual list argument a0=0x62fc9740",
+    "0xa008e7e2 calls inherited insert-head0xa008aec0",
+    "0xa008e7e6 nonzero N branches directly to e826, skipping null-path s1 rewrite at e7e8",
+    "0xa008e826 forms D=0x62fc974c from preserved s1 high constant; e82a word(N+0)=D"
+  ],
+  "ordering": "helper publishes linked node before returning; caller stores D pointer afterward; no reordered initialization or concurrent visibility claim",
+  "initialization_inheritance": "A60 now limited-accepted by A61; A62 pending-state text is historical, no initializer revalidation here",
+  "unknowns": [
+    "D letter/callback slots/source instance and actual service success",
+    "s2-to-D callback-write-base identity",
+    "node/D lifetime, later writers, unregister and concurrency"
+  ],
+  "next_seed": "e77a s2+0x180 -> registered D0x62fc974c; already assigned J08/6 A64 to /root/g23, not this reviewer",
+  "generated_evidence": "evidence.json local ignored at original relative path"
+}

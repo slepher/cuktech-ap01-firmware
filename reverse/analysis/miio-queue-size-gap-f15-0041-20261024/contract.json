@@ -1,0 +1,40 @@
+{
+  "claim": "F11/4",
+  "task": "F15",
+  "baseline": "bd457a6",
+  "review_status": "author-delivered-awaiting-independent-review",
+  "scope": "one normal master initializer/setup and matching-thread attach instance",
+  "identity": {
+    "M": "master 0xa0064368 manager object",
+    "L": "M+0x128",
+    "queue_output_slot": "M+0x140 = L+0x18",
+    "user": "M+0xe8",
+    "ctx0": "user+0x8c = M+0x174",
+    "ctx1": "user+0x880 = M+0x968"
+  },
+  "observed_connections": [
+    "retained 0xa006544c calls 0xa005f0b0(&L.queue,0x80,4)",
+    "creator 0xa005f0c6 saves original a2; normal 0xa005f144 stores it as word Q+0x18; 0xa005f148 publishes same Q to caller output",
+    "retained master configures L+0x10 vtable with wrapper 0xa011e08e and user L; config at L+0x3c has start 0xa01106f2 and user M+0xe8",
+    "retained thread -> wrapper -> start passes same L and user; 0xa0110708/718 attach ctx0/ctx1 to same L",
+    "normal matching-thread attach 0xa01ab5de writes same L as word ctx+4; nonempty normal tail joins same write"
+  ],
+  "conditional_conclusion": "After this successful normal initialization/configuration/attach, both F11 ctx candidates in M read L through ctx+4; L+0x18 yields Q whose initialized word at +0x18 is 4",
+  "preconditions": [
+    "same M instance and normal successful setup path",
+    "valid aligned separated 16-byte callback configuration copy under inherited copy contract",
+    "normal thread startup and matching-thread attach; no later writer assumed by this local conclusion"
+  ],
+  "unknowns": [
+    "whether a particular runtime send used this setup and whether later writes/replacements occurred",
+    "0xa000589c actual 4-byte branch, message destination validity/alignment/lifetime",
+    "allocator/open/diagnostic/duplicate-registration/queue-wait and consumer behavior",
+    "full event-loop and queue lifecycle or runtime success"
+  ],
+  "next_seed": "0xa0194a14/18 -> 0xa000589c(Msg+0xc,&localI,4) bounded normal copy branch; management already assigned F11/5 F17 to /root/a56, not this author",
+  "evidence": {
+    "retained_locator": "evidence.json (local ignored)",
+    "creator_fields": "creator-evidence.json (local ignored)",
+    "attach_and_callback_identity": "bridge-evidence.json (local ignored)"
+  }
+}

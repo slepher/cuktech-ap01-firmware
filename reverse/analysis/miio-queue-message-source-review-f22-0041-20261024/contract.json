@@ -1,0 +1,31 @@
+{
+  "claim": "F11/7",
+  "review": "F22",
+  "reviewer": "/root/f12",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of F21",
+  "semantic_corrections": 0,
+  "new_business": 0,
+  "getter": [
+    "entry overwrites original a0 with gp+0xb8; nonzero normal remove-last result returned unchanged",
+    "only first-empty path rereads word(0x62fc6034)",
+    "nonzero reread -> remove-last(gp+0xc0) then direct return, including empty0",
+    "zero reread -> request0x14c from 0xa002fcc8; nonzero result gets byte+8=1; raw result returned"
+  ],
+  "list_helper": {
+    "precondition": "normal valid sentinel/node pointers and service ABI",
+    "empty": "N=word(H+4); N==H returns0",
+    "nonempty": "P=word(N+4), R=word(N); P.next=R; reread N+4; R.prev=P; clear N+4 then N+0; return original N",
+    "no_callee": true,
+    "identity_limits": "gp+0xb8/gp+0xc0 pools, G11 backend+0x3c and F19 K+0x18 containers are distinct"
+  },
+  "caller_flag_condition": "F13 caller enters getter after first flag read nonzero; stable flag/no alias/asynchronous changes are extra unproven premises, so do not exclude getter allocation branch",
+  "unknowns": [
+    "gp absolute base and pool initialization/fill writer",
+    "node actual size/capacity/alignment/exclusivity/alias/lifetime",
+    "allocator storage guarantee, actual allocation or320-byte usable region",
+    "actual runtime candidate, queue publication and consumer behavior"
+  ],
+  "next_seed": "gp-relative sentinel node initialization/fill writer to actual backing storage; register before new investigation",
+  "generated_evidence": "evidence.json stays ignored at original local analysis path"
+}

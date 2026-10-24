@@ -1,0 +1,30 @@
+{
+  "claim": "J08/8",
+  "task": "A68",
+  "baseline": "bd457a6",
+  "review_status": "author-awaiting-independent-review",
+  "read": {
+    "entry": "0xa00ef55e",
+    "source_ABI": "(D,H,buffer,want_word,out_count_word_pointer)",
+    "explicit_lower_registers": "a0=low32(H-1), a1=original buffer, a2=original want word; no buffer dereference in callback",
+    "lower": "0xa003f6a2",
+    "nonnegative": "signed32(a0)>=0 -> store32(original out_count,a0), callback returns0; a0=0 uses same arm",
+    "negative": "no callback store to out_count on this arm; getter/read for log, getter/read again -> opaque0xa00ea524; return its a0"
+  },
+  "seek": {
+    "entry": "0xa00ef632",
+    "source_ABI": "(D,H,position_word,origin_word)",
+    "gate": "unsigned origin_word>2 returns numeric11 before frame/IO",
+    "explicit_lower_registers": "a0=low32(H-1), a1=original position word, a2=original origin word; a3 remains original origin, not an independently constructed parameter",
+    "lower": "0xa00281d8",
+    "nonnegative": "signed32(lower a0)>=0 -> callback0; absolute resulting position is not returned",
+    "negative": "two getter reads separated by log; second word -> opaque0xa00ea524; return map a0"
+  },
+  "limits": [
+    "A64 slot and A66 encoded-H bodies pending A65/A67 at task start; this body decodes H independently",
+    "No formal off_t/ssize_t definition inferred: callback moves one position/count word and tests a0 signed only; lower ABI may require further proof",
+    "No underlying IO, mapper, logger, copy or getter body read; no IO execution",
+    "Callback has no direct buffer/H allocation/free or global pointer retention; lower service retention and aliases remain unknown",
+    "Error out-count claim is callback-local stores only, not absence of all alias/service side effects"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "task":"A80",
+  "claim":"J08/14",
+  "baseline":"bd457a6",
+  "status":"author n1 finite contract awaiting independent review",
+  "callsite":"0xa002b512 ->0xa000589c(oldbuf+oldcount,src,n), actual selected positive n<=255 given candidate valid S/count",
+  "accepted_new_domain":{"n":1,"alignment":"no word alignment needed on ordinary-byte route","storage":"source1B readable; destination1B writable; suitable separation and no interfering effects","footprint":"exact byte read at original src then byte write at original dst; no extra padding","return":"unchanged original dst in a0","direct_retention":"no callee/stack/persistent parameter-address publication on finite route"},
+  "route":["589c..58aa inherited F18: n1 misses7<n and n4", "58ae unsigned4<n false", "58b4 n2 false;58ba a5=originaldst", "58bc n3 false;58c0 constant1;58c2 n1 true->590e", "inherited F18 ordinary LBU590e/SB5912/RET5916"],
+  "evidence":{"old_record":76,"old_EID":"ev_32725e49dc86c4d072d48e396f5c14986a521284bea8c8ff59cd533fc995a848","old_profile":"4825fb58a33a3e7d618557975b153b8318cf7e833d190ad16bcbf8bd441ae621","retained_checks":19,"retained_rows":33,"new_raw_window":"[0xa00058ae,0xa00058c6)","new_raw_bytes":24,"raw_checks":16},
+  "old_domain_matrix":{"F18":"n4 valid word-aligned; not generalized","G03_G04":"n16/20 separated word-aligned","B25_B26":"n12 caller interface; not full copy body acceptance"},
+  "open_seeds":["n2..7 other byte dispatcher arms", "n8..255 destination alignment then current source%4:0->599c,1->5950,2->5af2,3->5be2", "source%4==1 old5950 aligns source down before5952 word load; extra access footprint must be verified, never assumed padding"],
+  "not_proved":["arbitrary positive n<=255 copy body/alignment","full1080B algorithm","actual formatting output/engine ABI","source/destination validity merely from different expressions","arbitrary overlap, atomicity or runtime resource lifetime"],
+  "semantic_corrections":0,
+  "new_business":0
+}

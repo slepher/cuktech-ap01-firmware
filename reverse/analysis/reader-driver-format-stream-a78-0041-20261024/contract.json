@@ -1,0 +1,17 @@
+{
+  "task": "A78",
+  "claim": "J08/13",
+  "baseline": "bd457a6",
+  "initialization_dependency": "A74 count256 S fields are candidate pending independent review at dispatch; not independently accepted here",
+  "engine_call_ABI": "J08/12 A76 separate; not examined",
+  "domain": ["S nonzero valid writable stream fields", "ordinary candidate capacity255 and 0<=count<=capacity", "source readable for chosen n; buffer writable through terminator; no harmful overlap", "copy returns normally and obeys callee-saved s1/s2; no incompatible S/buffer mutation during copy"],
+  "fields": {"0": "stored byte count word", "16": "buffer pointer word", "20": "capacity word"},
+  "callbacks": {
+    "0xa002b536": {"used_inputs": ["a0=S", "low8(a1)"], "action": "SB low8(a1) to own stack; call a002b4d8(S,&byte,1)", "return": "helper a0 unchanged", "direct_retention": "stack byte only lives across nested call; no persistent publication"},
+    "0xa002b4d8": {"used_inputs": ["a0=S", "a1=src", "a2=requested word"], "chosen_n": "unsigned_min(requested,low32(word(S+20)-word(S)))", "gate": "signed32(n)>0", "positive_sequence": ["load old buffer pointer; copy(old_buf+old_count,src,n)", "reread count and buffer from saved S", "new_count=low32(reread_count+n); SW new_count to S+0", "SB0 to reread_buf+new_count"], "nonpositive": "return n without local copy/count/NUL write", "return": "chosen n word, not requested length or post-count", "copy_boundary": "a000589c body not read; actual byte effects conditional on its selected-n interface contract", "direct_retention": "src only passed to copy; S stores selected count; no new persistent src/S pointer store"},
+    "0xa002af2e": {"used_inputs": [], "action": "own stack save/restore s0 only", "return": 0, "stream_or_buffer_write": false, "callee": false}
+  },
+  "candidate_capacity_implications": ["with stable valid count<=255, n is 0..255", "n>0 copies selected data bytes then terminates at buf+new_count", "n==0 does not refresh NUL", "count reflects accepted stored bytes, not total desired formatting length"],
+  "not_proved": ["A74 initialization independent acceptance", "engine actual argument mapping/order/repetition", "arbitrary copy-n body contract", "no deeper retention by copy", "actual formatted bytes/path/truncation/status", "count0 discard callbacks", "complete formatter or library version"],
+  "new_business": 0
+}

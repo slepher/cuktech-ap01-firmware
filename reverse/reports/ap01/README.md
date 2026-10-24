@@ -2,8 +2,17 @@
 
 流程入口：[逆向工作流程与全部注意事项](reverse-design.md)；唯一认领位置：[管理记录的链条认领表](rolling-management-0041-20261023.md#链条认领表)；转达现有任务：[防重复规则通知 prompt](chain-claim-notice-prompt-20261024.md)。以下运行状态与带日期记录属于历史快照，实际状态由当前管理窗口核实。
 
-当前状态（2026-10-24，仓库清理后）：用户确认没有正在进行的修改，本轮仅清理生成物与本地历史，不继续派发逆向任务。59 个关联工作树的成果经逐文件等价核对后已清理，当前只保留主工作树。F12、G23、A56 等任务及其复核、认领和未闭项保留为历史记录，不因清理自动认证完成；见[管理记录](rolling-management-0041-20261023.md)及[清理结果](repository-cleanup-20261024.md)。
+当前状态（2026-10-24，复核完成）：A77/A81/F33三项非作者复核均限定接受，共173项静态检查通过，A76/A80/F32待复核状态已关闭。%s取参/输出、其它copy长度、实际quit/queued I排空/最终free仍未闭；不恢复滚动派发。详见[管理记录](rolling-management-0041-20261023.md)。未提交、未推送，本地忽略证据仍保留原路径。
 
+
+
+
+
+最新接口连线：[A63](reader-driver-register-review-a63-0041-20261024.md)接受真实header→node→D注册桥，[A65](reader-driver-slot-review-a65-0041-20261024.md)接受D首byte`/`、config4096及四槽绑定；[A66](reader-driver-open-close-a66-0041-20261024.md)/[A67](reader-driver-open-close-review-a67-0041-20261024.md)确认H为fd+1编码而非可free对象，路径仅证`/%s`与varargs接口，实际格式输出仍未闭。[A68](reader-driver-read-seek-a68-0041-20261024.md)恢复read/seek返回及参数word协议，A69复核中，下层IO/off_t未认证。MiIO的[F25](miio-invocation-queue-lifetime-f25-0041-20261024.md)/[F26](miio-invocation-queue-lifetime-review-f26-0041-20261024.md)给出显式存储/消息身份前提下的I指针值与内部Msg独立生命周期；[F24](miio-queue-send-wait-review-f24-0041-20261024.md)已纠正旧整体caller guard及1处伪码读清顺序，getter本体不变。[F27](miio-queue-mode-init-gap-f27-0041-20261024.md)只证同Q写点7，F28待复核，不推完整返回后mode不变。三席继续滚动，不改变默认五照片mode0或任何实机/完整ROM边界。
+
+继续滚动的局部闭包：[F15同队列size身份桥](miio-queue-size-gap-f15-0041-20261024.md)由[F16](miio-queue-size-review-f16-0041-20261024.md)限定接受，正常同M setup/attach下两ctx保存同L、L持Q且Q.size初值4；[F17有效对齐n4复制](miio-queue-copy4-f17-0041-20261024.md)由[F18](miio-queue-copy4-review-f18-0041-20261024.md)限定接受，实为byte顺序拷贝而非一次word操作。二者不认证Msg存储有效/容量/寿命或实际执行。[A59](reader-driver-writer-review-a59-0041-20261024.md)限定接受A58有界候选排除；[A60两槽初始化writer](reader-driver-global-init-a60-0041-20261024.md)找到真实stride4/head0写端，尚待A61非作者复核，节点登记/真实D/slot仍未闭。三席已补到F19接收端、F21消息来源、A62注册caller旧证据定位，管理表维护实时状态。
+
+当前滚动新增（bd457a6续作）：[F13队列接口与发布顺序](miio-native-queue-f13-0041-20261024.md)由[F14](miio-native-queue-review-f14-0041-20261024.md)限定接受；[G25实际op3实例化](pogo-poll-op3-g25-0041-20261024.md)由[G26](pogo-poll-op3-review-g26-0041-20261024.md)限定接受，新增独立body0；[G27返回槽来源](pogo-poll-error-slot-g27-0041-20261024.md)由[G28](pogo-poll-error-slot-review-g28-0041-20261024.md)限定接受，稳定/别名/异步及正常可达性仍未知；[A58注册writer旧证据消歧](reader-driver-writer-gap-a58-0041-20261024.md)排除一个同偏移栈对象候选，真实writer仍未闭。F15正在补同queue size身份桥、F17核n4对齐copy域、A59非作者复核A58；实时状态继续以唯一管理表为准。
 
 本次三席恢复成果：[MiIO请求寿命独立复核F12](miio-request-ownership-review-f12-0041-20261024.md)限定接受F11/1–2，新增业务0；[环服务G23](pogo-poll-ring-consume-g23-0041-20261024.md)恢复counter门、局部复制与完成记录消费，后段可达性/成功提交仍未知；[driver选择A56](reader-driver-selection-a56-0041-20261024.md)恢复路径首字节到首个匹配D的动态链遍历，实际注册实例/slot目标仍未知。[G24](pogo-poll-ring-consume-review-g24-0041-20261024.md)与[A57](reader-driver-selection-review-a57-0041-20261024.md)已分别独立限定接受G23/A56差集，复核新增0。三位subagent已停止，成果未提交，临时工作区/本地任务分支已清理；完整ROM目标仍未完成。
 

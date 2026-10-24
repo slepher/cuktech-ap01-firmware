@@ -26,7 +26,7 @@ reverse/app-0031/deps/
 *.obj
 *.jar
 *.whl
-*.pyc
+*.py[cod]
 *.class
 *.db
 *.gbf
@@ -55,6 +55,11 @@ __pycache__/
 !/reverse/analysis/usb-ota-payloads-0041-20261023.json
 !/reverse/analysis/buzzer-backlight-round2-20261023/mapping-and-boundaries.json
 !/reverse/analysis/whole-rom-summary-0041.json
+# 即使目录内存在源码/合同同名文件，也不收录本地工具缓存和虚拟环境。
+/reverse/analysis/**/__pycache__/
+/reverse/analysis/**/.pytest_cache/
+/reverse/analysis/**/.mypy_cache/
+/reverse/analysis/**/.venv/
 /reverse/raw/**/*
 !/reverse/raw/**/
 !/reverse/raw/**/*.c

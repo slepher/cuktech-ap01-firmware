@@ -1,0 +1,38 @@
+{
+  "claim": "F11/6",
+  "task": "F19",
+  "baseline": "bd457a6",
+  "review_status": "author-delivered-awaiting-independent-review",
+  "scope": "native receive callsite/adapter and finite normal nonempty message output/release",
+  "objects": {
+    "L": "same event-loop input of 0xa011e3d6",
+    "Q": "word(L+0x18)",
+    "K": "word(word(Q+0x0c)+0x18)",
+    "outI": "caller local I word slot at s0-0x34",
+    "outMsg": "finite service local internal Msg slot at its own s0-0x24",
+    "Msg": "normal node returned from sentinel helper for H=K+0x18",
+    "actual_len": "U16(Msg+0x0a), not automatically word(Q+0x18)"
+  },
+  "observed_connections": [
+    "caller clears localI; native call only without synchronous head; Q,outI,timeout(default10000 or first timer word+4) -> 0xa005f508",
+    "finite adapter -> 0xa0197954(Q,outI,n=word(Q+0x18),&deadline); adapter folds sign to0/-1 but caller ignores a0",
+    "finite nonempty -> 0xa01319e8(K,word(Q),outMsg); same Msg published to outMsg after count decrement and optional notification",
+    "0xa0197a62/66 -> 0xa000589c(outI,Msg+0x0c,U16(Msg+0x0a)); then 0xa0131b68(original Msg)",
+    "release kind byte Msg+8: 0 inserts same Msg in gp+0xb8 list, 2 in gp+0xc0 list, 1 calls 0xa002e14e(Msg), others diagnostic boundary",
+    "common finite return restores mstatus and returns length/status; caller reloads localI and dispatches only if nonzero"
+  ],
+  "inherited_list_helper": {
+    "source": "F21 author report; F22 independent review pending when inherited",
+    "contract": "valid sentinel H -> normal remove-last N, neighbor repair with N+4 reread, clear N+4 then N+0, return same N; empty sentinel returns0",
+    "identity_limit": "F19 H=K+0x18; F21 H=gp+0xb8/gp+0xc0; distinct containers"
+  },
+  "copy_condition": "Only if actual_len and addresses satisfy an inherited verified copy domain may actual output values be inferred; Q.size4 alone is insufficient",
+  "unknowns": [
+    "same runtime send and received Msg, all producer/header-length writers",
+    "actual message/output validity, capacity, alignment, separation, lifetime and actual execution",
+    "pool initialization/node size/reuse, clock/wait/scheduler/timeout/cancel behavior",
+    "full queue or I lifecycle, physical heap return and consumer/business success"
+  ],
+  "next_seed": "same Q producer identity -> writers of pop Msg+0x0a; registration required before new caller/producer investigation",
+  "generated_evidence": "locator/adapter/receive/message-evidence.json stay ignored at original local analysis path"
+}

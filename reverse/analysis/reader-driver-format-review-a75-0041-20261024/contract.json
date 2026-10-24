@@ -1,0 +1,15 @@
+{
+  "task": "A75",
+  "claim": "J08/11",
+  "reviewer": "/root/a56",
+  "decision": "limited acceptance of A74 adapter difference",
+  "semantic_corrections": 0,
+  "new_business": 0,
+  "parameters": ["a0=buf", "a1=count word", "a2=format", "a3=va package"],
+  "count256": {"S": "entry_sp-0x28", "slots_in_store_order": ["S+4=a002b536", "S+8=a002b4d8", "S+12=a002af2e", "S+0=0", "S+16=buf", "S+20=255"], "before_call": "SB0 at buf", "call": "a002d770(S,format,va)"},
+  "retained_d770": {"evidence_record": 67, "evidence_id": "ev_2fc7174be7213a9616dc6d46d18c0831acd1c06324cba526633b36c29ab2f22e", "engine_arguments": ["S", 0, 0, "format", "va"], "target": "0xa01a37d2", "source": "old assembly14 rows/32B, no new wrapper ROM"},
+  "normal_return": "engine a0 passes unchanged through both adapters; no local post-call buffer or S store",
+  "count0_boundary": "S+4=a002b554,S+8=a002b578,S+12=a002af2e,S+0=0; no assignment S+16/S+20 and no local buffer write; joins common call",
+  "preconditions": ["count256 caller values inherited A67", "valid writable buffer and local S/va storage", "lower services return normally and obey required ABI"],
+  "not_accepted_here": ["pointer target semantics or engine ABI beyond wrapper arguments", "actual formatted bytes", "post-call NUL", "count/truncation/return meaning", "no retention or alias effects by engine/callbacks", "complete formatter/library origin"]
+}

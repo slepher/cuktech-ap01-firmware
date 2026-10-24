@@ -1,6 +1,168 @@
 # 0041 六路滚动管理（2026-10-23恢复）
 
-## 当前三席恢复（2026-10-24，本会话最新授权）
+## 当前限定复核已完成并关闭（2026-10-24，用户最新授权）
+
+收尾核对PASS：三位非作者均完成并停止；3份报告及同名analysis共12文件（含忽略证据）逐字节保存在主仓原路径，全部JSON解析、23个相对引用、独占文件范围及diff检查通过。本轮3个review-close工作树及对应本地分支已安全清理，先核解析路径在本batch内再删除，无force。HEAD仍bd457a6，未提交推送；没有新派任务。
+
+三项非作者复核已完成：A77接受A76（65项），A81接受A80的n1域（24项），F33接受F32（84项），共173项静态检查PASS；语义纠正/新增业务均0。三个待复核状态已关闭，所有功能断边保留；未补位或开展后继。
+
+用户要求“为我复核以及关闭”。本轮只恢复三项待复核差集的非作者独立复核：A77挂J08/12核A76；A81挂J08/14核A80；F33挂F11/12核F32。没有滚动补位或新逆向链授权，不展开未闭功能边（包括3ae0、广copy、实际quit）。复核通过则关闭该交付的待复核状态，并独立保留未闭功能边；不冒称完整ROM恢复。固定基线bd457a6，原件/映射及静态限制沿原记录；仅独占报告/analysis，不提交、不推送，完成后整合清理本轮工作区/分支。
+## 前次收尾（2026-10-24，历史）
+
+用户要求“当前分发的任务结束后，不再派发新任务”。立即停止新派发/补位；F31已交付的/root/f12保持停止，当前/root/g23 A76和/root/a56 F32只在已授权范围内收敛、保存现有证据及精确断边。A76尚未登记的新分支窗不再展开，不为闭合固定format扩大引擎；F32不新增ROM/callee。未派A77/A81及其它准备项冻结，不因旧滚动文字自动恢复。
+
+管理窗口继续整合已交付的报告/源码/合同/本地忽略证据、检查引用/差异，并在作者停止及全部产物逐字节保存主树后，按路径边界/无force规则清理本批完成和未派工作区及本地分支。主树成果仍未提交、不推送；原件/生产/配置/模型不改，不运行固件/模拟器/构建/设备或外部服务。仍待独立复核的作者成果不因本次收尾标已验，整个ROM目标未完成。以下持续滚动及预备文字自此均为历史，以本节与行内最新状态为准。
+
+最终收尾（2026-10-24）：实时确认3个subagent均completed，运行0；停止补位指令后没有新派任务、没有启动A77/A81复核。F31已限定接受F30四字节回环。最后A76仅完成7个已授权窗560B/59项静态检查，断边0xa01a3abe→0xa01a3ae0，未读未授权3ae0窗口；F32仅旧证据同M退出绑定/线程创建失败caller，45项检查、ROM0B。A76/A80/F32仍待独立复核，不能借管理整合标已验；固定%s取参/输出/最终NUL、广copy域、实际quit/queued I排空/最终free及完整ROM目标未闭。
+
+尾批17个已停止任务68个全部独占文件（含ignored JSON）逐字节保存主树、JSON解析及173相对引用通过，已安全清理这些树/分支。A76最后4文件也逐字节保存、两JSON/8链接通过；A77/A81从未派发且tracked/untracked/ignored均空，均安全移除工作树及本地分支。全部删除都在解析后本会话batch绝对路径内、无force、分支仅指固定bd457a6无新commit，不动主仓原件/成果或其它批次。最后单任务PowerShell数组展平曾被路径存在性校验拦下、未执行删除；显式嵌套及形状断言修正后才成功清理。
+
+主树保存全部本轮报告、复验源码、必要合同与原路径本地忽略生成物，未提交、未推送；生产代码/ROM/配置/分析器模型未改，没有执行固件/指令模型/SIM/QEMU/构建/历史回放/设备/外部服务。用户后续若要求恢复，必须重新查重登记并以当时基线开独占树；本文旧滚动队列不自动恢复。
+
+最终整合核对PASS：本轮47个已创建任务引用逐一检查，45份交付报告及同名analysis共177文件仍在主仓原路径（含本地忽略产物），全部JSON可解析、671个本地相对引用可定位（支持既有:行号链接）。本batch工作树0、对应本地分支0、目录无遗留、表内活动认领0，HEAD仍bd457a6；A77/A81两准备任务从未派发/无报告。diff检查通过，仅报告/analysis/研究索引和管理文档改动，未暂存/提交/推送。
+
+## 前一阶段三席持续滚动（2026-10-24，历史）
+
+用户明确要求“继续逆向，按照三个并行，完成就补位”。本管理窗口/root恢复3个研究席位，完成即安排已查重的新差集或非作者复核，不按一批完成自动收尾；旧停止/清理和上一批运行0记录均为历史。当前基线为主仓HEAD `bd457a6`，本轮不提交、不推送；遵循最新reverse-design及analysis/README的本地原路径保留规则：导出证据仍保留原路径并受Git忽略，源码/合同/结论单独维护。只做0041有种子静态分析，不运行目标/固件/模型/SIM/QEMU/构建/历史回放/设备/外部服务，不修改生产、ROM、配置或分析器。
+
+首发三席：F13在F11/1的native queue断边补指针复制/持有问题；G25在G19/5补G24已定位的实际op3消费/持有；A58在J08/3仅查head/stride槽的旧writer metadata以定位真实注册桥，尚不新取无边界ROM。已搜索近期报告与认领表，三个问题未有已验本体合同、无活动作者；F11/1–2、G19/3–4、J08/1已验部分全部继承，不重新恢复。任何超范围caller/callee只报种子，由管理窗口先查重登记再展开。管理表只由主窗口写；研究者不自行接后继或创建下级agent。完成后回报并停止该任务，管理窗口串行整合、登记、补位，最多3席运行。
+
+F13必要增量登记（2026-10-24）：作者核0xa005f464的正常−1路线，仅转交a1并把word(queue+0x18)作a2，返回折成0/−1；adapter未复制。新增唯一连接0xa005f480/484→0xa0197a8e，对同一源pointer/长度的消费是原F11/3问题所必需。作者所查functions5812仅164B extent/directcall，无dossier；主窗近期非管理报告搜索a0197a8e/a01949f0/a0197b32无命中，和G19/J08无对象交集。准该正常callee必要稀疏窗口，不扩定时/其他下层服务；新调用边再报登记。
+
+
+F13二次必要增量登记（2026-10-24）：正常非零message路径到0xa0197b1a→0xa01949f0，source仍作为a2、原长度作a3转交，回答F11/3必须追其最小复制/持有接点。旧functions5771仅366B extent及directcall、无dossier；主窗近期非管理报告a01949f0/a01318de/a0131920搜索无命中。准0xa01949f0正常源/长度消费的必要原字段，候选message来源/等待保持opaque，不扩allocator、全queue、调度或其他输入；同queue长度=4身份仍未知。新依赖再报，不能沿helper名称证明复制。
+
+
+G27必要增量（2026-10-24）：0xa00267c0本层call0xa0026784后，非零返回其+4、零返回固定0x62fc604c；本层除栈无已见写，未知callee副作用不抹去。主窗近期报告精确a0026784/0x62fc604c无命中，作者旧functions431仅38B extent/directcall无dossier/contracts。准同G19/6补0xa00267c8→0xa0026784返回对象来源的必要原字段，不追0xa002671a或全TLS/调度，新边另报。
+
+G26预登记（2026-10-24）：G25已交付停止，原G19/5挂非作者/root/a56，在A58交付停止后立即补位。只核实际op3实例化、旧完成I与新提交j及record来源区别、E+0x18/E+0x20、符号扩展/直接持有限定；不重验共用body/递归/其他op。独占pogo-poll-op3-review-g26报告及同名analysis，研究基线bd457a6。G25新增独立body0，复核新增0如实写。
+
+
+G27二次增量登记（2026-10-24）：0xa0026784本层仅以(0,&out)调用0xa002671a，非负返回时取out+4为B，负时B=0，尚无对象来源。准0xa0026792→0xa002671a对out+4写入/返回的必要106B服务窗口；作者旧functions430仅extent/directcall无dossier/contracts，主窗近期精确a002671a报告搜索无命中。0xa002661e/诊断/全调度均不展开，不以路径候选推TLS或稳定B。
+
+
+滚动复核队列（2026-10-24，最多3运行席）：F13已交付，挂F11/3非作者/root/g23，G27交付停止后在新树执行F14，只核Q→F→K、source/length实际转交、copy服务先于接链/计数、符号返回及copy域限定；不重验全copy/allocator/wait。G27交付后挂G19/6非作者/root/a56，G26交付停止后执行G28，只核getter的global T→out+4→B+4/fallback链与正常a0=0绕下层分支、局部out写/稳定性条件，不扩TLS调度。独占miio-native-queue-review-f14和pogo-poll-error-slot-review-g28报告/analysis，基线bd457a6，复核新增0如实写；未收到作者交付不提前把预登记算运行。
+
+
+F15新窗口登记（2026-10-24）：作者旧upper-complete record248定位0xa0064f4a s7=M+0x128；0xa0065438/3a/48/4c以(M+0x140,0x80,4)调用0xa005f0b0，输出槽=s7+0x18；0xa006556a/6c把s7交线程入口0xa011e3d6。主窗近期精确creator/callsite地址报告搜索未有该size写入合同，旧functions1451仅158B metadata无dossier。准0xa005f0b0入口参数绑定、成功Q→Q+0x18与输出槽写入必要稀疏原字段，不展开queue开/allocator；F11请求ctx+4→该候选loop仍未知，只认证候选同loop输出size4，不冒称全部实际F11路径已绑定。可继续旧留存必要身份桥，新callee另报。
+
+滚动整合清理（2026-10-24）：G25/A58/F13/G27四作者均交付停止，13个全部独占报告/源码/合同/本地忽略JSON已逐字节保存主树原路径，JSON解析及47相对链接通过。核4树tracked/staged无改、未跟踪及忽略恰为已保存成果，解析后路径均在本会话batch根内，移除临时副本后用无force的worktree remove及branch -d回收codex/re-0041-g25/a58/f13/g27（均无新commit，只指bd457a6）。主树成果仍未提交，忽略导出保留原路径，三运行席F15/F14/G28不受影响；G26作者复核已交付待整合。
+
+A59预登记：同J08/3挂非作者/root/g23，F14交付停止后补位，只核A58有限搜索边界、0xa005a8f4基址来自caller栈局部的排除与必要旧dossier，不重搜全载体、不新ROM/不推全局无writer；独占reader-driver-writer-review-a59报告/analysis，复核新增0如实写。
+
+
+F15身份桥必要增量（2026-10-24）：creator原字段已证保存a2并在成功后写Q+0x18、*out=Q；旧record248/195/96/27又定位同L的start callback/user链，0xa0110708/718实际以(L,M+0x174)/(L,M+0x968)调用0xa01ab55a。旧functions6143仅218B metadata无dossier，主窗近期精确地址无已有合同。准该attach入口参数与正常ctx+4保存L的必要稀疏原字段，不能凭调用名认同；其他log/memset/callback保持opaque。两个ctx与F11来源仍需此次存槽证据后才限定接受，新callback本体不随之展开。
+
+
+复核补位预备：F15交付后在F11/4挂非作者F16，仅同queue正常size4/ctx+4保存loop身份桥、实际存槽及成功门，F13copy域不搭便车；F17交付后在F11/5挂非作者F18，仅n4且有效word对齐路径的copy/返回/持有与前提，旧n16/20不重复。独占miio-queue-size-review-f16、miio-queue-copy4-review-f18报告/analysis，实际作者停止和复核者在派发前更新本行，无新agent/并发增加。
+
+
+第二组完成复核清理（2026-10-24）：G26/F14/G28已交付停止并整合，9个独占文件与各树逐字节一致、JSON/31相对引用通过，tracked/staged无改、untracked/ignored均已保存。核解析路径在本会话batch内后，清理三个已保存临时副本、无force移除worktree，branch -d删除codex/re-0041-g26/f14/g28（仅bd457a6，无新commit）；本地忽略证据仍在主仓原路径，不删除原件/历史导出。F15/F17/A59三运行席不受影响。
+
+A60输入与工具边界：A58/A59仅旧metadata/有限排除不能回答已知G使用指令里的两槽初始化，后继A60改读三已定位owner的必要旧assembly定义/用途，差集明确，禁止再全盘同头负搜。管理窗口只读REA binary_session观察当前open=false，未打开/切换target、未建分析数据库；不为此任务修复/修改共享REA/profile或运行模型。旧assembly不足时只报确切owner/地址及需取得的xref，不将缺facet当全局无writer。
+
+
+A60必要旧证据增量（2026-10-24）：0xa005cd36→0xa008e3ac是A25/A26已验callsite，A21/A22及A25已有清零G=0x62fc957c、长度0x210合同；覆盖两槽的初始清零直接继承，不计新writer。准只读该initializer在A21/A25已存证据中与两槽清零/可能stride初始化有关的必要行，旧index functions2121 extent1226B不能作body合同，不新ROM/反编译、不整段重导initializer、不读新callee。该增量仅补J08/4已知初始化callsite的两槽用途，和A21/25既验PNG/像素内存合同不重开。
+
+
+A60精确缺窗升级登记（2026-10-24）：三owner与A21/A25旧留存只解释已验G清零，缺0xa008e4c4..0xa008e612的定义/用途片段；0xa008e4c0已知s4=G+0x100，而右侧s2+0x18来源未留存。主窗按a008e3ac在旧pass1..5精确检索仅pass3两条caller，无新增callee body。为回答同J08/4两精确槽初始化，准仅缺窗[0xa008e4c4,0xa008e612)最多334B，按短窗从已知基址追到两槽的地址构造/调用端，定位即收缩停止，不扩其他G字段、整1226B initializer、全ROM/新callee body；没有真实身份依然标未知。新输入为确切旧窗口缺口及两端锚点，非重复metadata负搜索；厂商未知须保留，不修模型。
+
+第三组整合清理（2026-10-24）：A59/F17/F15三作者/复核者已交付停止，14个全部独占源码/合同/报告及忽略证据已逐字节存主树，JSON/39链接通过，tracked/staged无改、所有untracked/ignored均纳入。路径核本batch内，已回收对应worktree与codex/re-0041-a59/f17/f15分支（均仅bd457a6，无新提交），主仓本地导出原路径保留；A60/F16/F18运行席不变。
+
+
+F19接收adapter增量（2026-10-24）：旧record195定位无同步链时0xa011e5fa→0xa005f508(Q=word(L+0x18),&localI,timeout)，localI预清零，timeout为10000或旧timer项+4；call返回后不比较a0，直接读localI非零才进入既验分派。functions1461仅164B extent/directcall、无dossier，主窗近期精确a005f508/a01978a2/a0197954未有本体合同。准该adapter的正常输出槽/长度/timeout转交与返回最小原字段，不展开下层两服务、clock/timer或整个consumer，新边另报。
+
+
+F21池候选必要增量（2026-10-24）：本层覆盖原a0、依次用gp+0xb8、条件gp+0xc0调用0xa010d70e，另臂仅把0x14c作为a0交0xa002fcc8并给非零M写byte(M+8)=1。G11只有从backend+0x3c取节点的调用角色，不能据同callee认池同一。准先核G11/G12旧callee留存/合同，若无正常取节点body合同，仅补0xa010d70e(gp+两偏移)节点取出/返回必要字段；不展开allocator0xa002fcc8/调度/等待/池初始化，不把332请求或非零M当容量/实际分配认证。其他报告对a002fcc8的既有接口角色只引用，事实/推断分列。
+
+
+F19有限receive下层增量（2026-10-24）：adapter实际timeout=10000走finite路线，以(Q,out,word(Q+18),&deadline)在0xa005f59e/5a2调0xa0197954，返回经SRAI31；−1路线a01978a2仅锚点。functions5811仅314B metadata无dossier，主窗近期精确地址无已有body合同。准该正常finite service对out/n及消息copy/归还调用端的必要字段，不展开新下层caller/clock或−1服务。a005f56a的原字8b97d420未知转换具体保留，不NOP、不推deadline单位/时钟精度。
+
+A61预登记：A60作者已交付停止，J08/4待非作者，只核两槽确切writer、正常分支/s1保存前提及第三次同序SW锚点，不重验G清零/PNG/caller/节点登记。独占reader-driver-global-init-review-a61报告/analysis，复核者在派发前更新，新增0如实写。A62继承A60仅作待复核候选，不提前标初始化已验。
+
+
+F19消息输出/归还必要增量（2026-10-24）：finite非空分支0xa0197a36→0xa01319e8(K,word(Q),&localMsg)，返回0后以Msg+0xc、U16(Msg+0xa)作copy源/长度，copy到原out后才0xa0197a6c→0xa0131b68(Msg)。实际copy长度是Msg字段不是直接Q.size，不能把F15初值4替代。主窗近期两服务精确地址无已验报告，准同F11/6仅正常非空pop/out写入、Msg字段是否保持及正常归还分支/下一跳参数的必要字段；不接空队列等待/调度/新下层heap/helper，新边先报。发送端M与本次首Msg是否同一运行实例仍未知，只恢复条件静态连接，不借参数/类型名认同。
+
+
+A62登记缺窗原字段增量（2026-10-24）：旧helper逆directcall仅9个caller，PNG/display/group/animation等已验不同header直接排除不重做。真实caller候选a008e3ac有fs.c诊断源xref0xa008e800/0xa008e820及insert-head边；A21 BIN选窗止e768、PNG选窗始e82c，之间196B缺失，不能单凭路径推注册。准仅[0xa008e768,0xa008e82c)逐短窗从已知G基址找a0=G+1c4调用与返回node.word0保存D，定位即收缩，保留未知/诊断门；不读其他caller、新helper或D槽目标body，遇新连接先报。新输入为确切caller/缺窗/两端和目标header种子，非无种子fsdrv扫描。
+
+
+F19/F21共用helper去重（2026-10-24）：F21作者已交付停止，a010d70e正常取链42B合同只在F11/7一次研究；F19不得重读/重验相同body。主窗已整合F21报告/同名analysis原路径供F19只读继承待复核合同，标明F21尚待非作者F22；实际F21 H=gp+b8/c0，F19 H=K+18，是不同容器实例，不能因共helper认同。允许在给定有效哨兵/链接前提下实例化返回节点/摘链原序，未经验收部分保留条件；F19自身out/length/归还字段差集继续独占。
+
+
+下一轮复核补位预登记（最多3运行席）：F19交付后在F11/6挂F20非作者，只核finite接收adapter/out/Msg长度与正常pop/归还分支，F21共用helper不重复取；F21已交付，在F11/7挂F22非作者只核候选M三来源/当前caller flag门、gp两池取链/清槽与申请332请求边界；A62交付后在J08/5挂A63非作者只核header0x62fc9740→insert-head成功node→D0x62fc974c保存及s1/正常分支前提，不读slots。实际作者停止及复核人派发前更新对应行。独占miio-queue-receive-review-f20、miio-queue-message-source-review-f22、reader-driver-register-review-a63报告/analysis，基线bd457a6，复核新增0如实写。
+
+
+F23必要原字段增量（2026-10-24）：旧caller已证flag6034为0时，经K计数门到0xa0197af8→0xa0131920(a0=K,a1=word(Q))；返回0重试快速getter，非零直达恢复mstatus/原值返回，source/n仍保存在s3/s4。没有outM参数或返回值直作M，先前任务问题中的outM只是待找端假设，已纠正。F13缺[0xa0197ad2,0xa0197ae8)22B，且服务旧index200B extent无dossier，近期报告仅opaque引用；准这22B caller缺口和该服务正常状态/返回必要原字段，不读下层等待/调度/其他输入/定时send。新callee先报，不能从名称解释阻塞/成功。
+
+F24预登记：F23作者交付停止后，在F11/8挂非作者只核正常send flag/count→状态服务→0重试getter/非零退出、source/n持有、缺窗控制及本体正常返回/下一跳，不借名补outM/阻塞/成功。独占miio-queue-send-wait-review-f24报告/analysis，实际复核者派发前登记，复核新增0如实写。
+
+
+F23对F21/F22 caller覆盖的纠正登记（2026-10-24，待F24独立核）：新旧caller行定位flag6034==0且signed count<max时，0xa0197af0仍可回0xa0197acc调用getter。因此F21/F22“caller第一次flag非零才进getter”的整体表述过强，应仅限0xa0197aca的直接落入边；不能用它覆盖所有正常前驱，稳定flag0的该回边仍允许第一池空后到332请求。两gp链/flag重读/申请接口/helper42B本体合同继续保留，不因caller覆盖纠正推翻。旧冻结报告/合同不静默改写，F23保存新边/字段及明确范围纠正，F24须独立核af0目标及count/flag前提；不作任何输入实验或缺陷验证。后续F25必须继承新旧边并集，不重复旧有限前驱错误。
+
+
+A64必要原字段登记（2026-10-24）：旧A25/A21目前只留s2在e3c4的高位62fc9000，A60/A62最小锚点不足证明之后定义。准先[0xa008e536,0xa008e612)最多220B逐短窗找s2普通定义，找到即停，不读其他字段/helper；若定义不在该首gap先报精确下一候选，不猜。证明e77a s2+180=已登记D后，才准[0xa008e770,0xa008e7de)最多110B中盘符/config和已验open/close/read/seek槽四个必要写入/常量，不读任何callback body。若A60探索末尾有未留存定义需先指出小缺口，不能把最小锚点缺失当无定义。
+
+F25合成边界：只综合已验F11/F14/F16/F18/F20/F22等正常typed接口，F23状态路径及caller覆盖纠正目前待F24，必须标明未验依赖不提前闭合；不能借同size4/同field合并运行Msg或补消息存储有效/容量/不别名/对齐/寿命。新增应是旧native queue断边在限定域内的语义连接，不以重读字节/文件数计恢复。
+
+
+A64基址式与缺段收敛（2026-10-24）：e5da实际ADDI候选使s2=G=0x62fc957c；e77a中间B=s2+0x180=0x62fc96fc，本身不是D974c，B+0x5c等有效地址才对应D+0xc。先前“中间基址等于D才读slot”的门条件撤销，改为精确有效地址相等，不能为类型名强行重命名寄存器。核正常定义连续性仅补[0xa008e4b8,0xa008e4bc)4B、[0xa008e52a,0xa008e536)12B、[0xa008e5f6,0xa008e612)28B、[0xa008e628,0xa008e6ea)194B必要定义/控制短窗；A60原探索无保留字段不当连续性证明，旧A21/A25其它两端直接继承。不读正常流跳过的诊断/其他helper/字段，若遇call仅保留正常callee-saved约定。连续性核完再应用已登记slot110B，发现别的定义先报不猜。
+
+F24在进行的原序精确化：a0131972先LW(T+0xc)存寄存器，1974才SH0到T+0x22，1978比较旧读值；F23表内地址正确但末伪码应保留v=load→clear→compare(v)，不能clear后重读。F24最终意见列此限定伪码纠正，旧字节/本体不变；F25继承时用正确原序，不静默修改冻结F23。
+
+
+F26/A65复核预备：F25交付后在F11/9挂非作者F26，只核条件合成/原F11 native断边、I指针值与I对象/Msg/两个局部槽区分、证据域与未闭前提，不新取ROM/重跑作者脚本；A64交付后在J08/6挂非作者A65，只核s2正常连续性/B+offset有效地址到已注册D、盘符/config/four-slot实际写端，继承注册/selector不重验，不读target body。独占miio-invocation-queue-lifetime-review-f26与reader-driver-slot-review-a65报告/analysis，派发前更新实际复核人/作者停止，最多3运行席。
+
+A64指令边界记录：e5f6落在e5f4四字节ADDI中部；仅回到已授权首gap内真实e5f4边界重读前2B，按30B窗至e612，未采用中途伪压缩解码。此为必要边界校准非新模型/语义/范围授权；正常s2连续性条件与callee保存前提保留。
+
+F24最终已限定接受：65项/288B独立检查，caller范围纠正1、F23伪码load→clear→compare旧值精确化1，新增业务0。F25写作时F24待验属历史，后续非作者可继承最新F24条件，不推mode名/T运行身份/循环进展/交付/存储寿命；旧冻结报告不改。
+
+A66派发依据：A64报告前原字进展已给真实候选open/close target a00ef468/a00ef502，亦为J08/2原ROM source_path已存owner，足以按精确函数种子独立恢复正常body；对D槽绑定仍标A64待A65，不提前验收。两callback本体与A64初始写入窗口互不重叠，新callee另登记。
+
+
+F27创建参数必要增量（2026-10-24）：F15只保留attrs/调用，调用前[a005f10a,a005f11a)16B参数缺失；旧functions5799对a01974de仅48B metadata无dossier，主窗近期两个精确wrapper/下层地址无已有mode写入合同。准16B caller组和a005f122/126→a01974de正常参数/返回最小48B wrapper，先明确同Q及真实flags/varargs，不读a010e320新body、不执行open或FS。只有请求flags事实尚不等于Q.word0，下一写端另报登记，不补正式bit名/后续无writer。
+
+
+F27首word写端增量（2026-10-24）：creator已核(a0=Q,a1=&name,a2=7,a3=0x180,a4=&attrs)，a01974de把原a3..a7装本地包，转(a0同Q,a1同name,a2=7,a3=0,a4=&包,a5=0)到a010e320。wrapper不写Q首word；旧functions3840仅530B metadata无dossier，近期无该写端合同。准仅a0197502→a010e320同Q/flags7的首word初始化/正常控制必要片段，定位写端即收缩，保持后续callback/writer效应未知，不读新FS/allocator/driver callback。
+
+A66路径数据/wrapper增量（2026-10-24）：准仅literal a06371e4的NUL字符串最多64B且遇NUL停；及a00ef4a4→a008ab4c的42B格式化wrapper参数/返回桥（旧metadata→a0053252无body合同）。下层formatter算法仍不准展开，区分实际format字符串/argv事实与按格式family解释的推断；不以wrapper调用当输出字节已证。底层a003f4f6 pathname/flags与fd角色继承D03，a0026888接口/归还边界继承F05/F06，不新读它们或errno-map。H=fd+1的低word编码/close减1和无free(H)按callback原字段解释，非FILE*。
+
+
+A67/F28复核预备：A66交付后在J08/7挂非作者A67，仅mode2路径接口/format argv与literal事实、H=fd+1/close−1及返回/无free(H)正常条件，不读formatter/底层IO；F27交付后在F11/10挂非作者F28，仅同Q flags/首word写端身份和成功/后续writer边界，不把请求7自动当最终word(Q)，不读FS/driver body。独占reader-driver-open-close-review-a67、miio-queue-mode-init-review-f28报告/analysis，作者停止/实际复核者在派发时登记。
+
+
+第四/五组滚动整合清理（2026-10-24）：F16/F18/A60/F21/A61共16文件逐字节保存、JSON/62引用验证后，已回收5树及codex/re-0041-f16/f18/a60/f21/a61；F19/A62/F22/F20共20文件逐字节保存、JSON/49引用通过，已回收4树及同名本地分支；F23/A63/F24/F25共17文件逐字节保存、JSON/57引用通过，已回收4树及同名分支。各组均先确认作者/复核者停止、tracked/staged无改、全部untracked/ignored已保存、解析路径在本batch内，再无force移除worktree/branch -d（均仅基线bd457a6无新commit）。所有主仓本地忽略导出仍保留原路径，未提交/推送，运行中的3席和未派准备树不动。F24/F25之pending状态按写作历史，最新复核/补位仍以本表为准。
+
+A69预登记：A68作者交付停止后，同J08/8挂非作者只核真实callback ef55e/ef632入口、H−1、buffer/position/out字段宽度、read成功才写out/零读同门、seek unsigned whence>2原11、只判a0 signed返回及error前后重读，不套邻近write边界、不读新IO/errno-map。独占reader-driver-read-seek-review-a69报告/analysis，实际复核人派发前更新。
+
+A68精确target校准：callback0xa00ef632的0xa00ef64e原JAL独立取位后真实下层为0xa00281d8；中途速报a00221d8/对应无entry查询已弃用，未登记或读取错误目标，最终报告/合同/字段检查均281d8。后续A69只核原字段，不据标准off_t补ABI，不扩大IO。
+
+A71预登记：A70交付后在J08/9挂非作者仅核a00ea524静态signed树/常数/default/返回宽度与外部写，不能命正式enum/版本，不运行输入枚举/目标或host模拟。独占reader-driver-result-map-review-a71报告/analysis，实际作者停止和复核者派发前更新。
+
+第六组整合清理：F26/A64/A66/F27四已停止任务16文件含所有本地忽略产物逐字节保存主树，JSON/53相对链接通过；tracked/staged无改、untracked/ignored全部保存，解析路径在本batch后，无force回收4树及同名codex本地分支（均仅bd457a6）。未提交/推送，主仓导出原路径保留，运行席/准备树不动。
+
+A74必要适配层增量：C13/C14/C23/C24只验两遍调用/candidate语境未验真实输出，不重开已验部分；functions1350 a0053252仅120B metadata无dossier。准其正常参数/输出流/返回必要原字段，并仅复用a002d770既存32B historical dossier ev_2fc7174…（profile4825）作必要参数/返回桥；a01a37d2新body先不读，不展开任意格式/输入枚举/模型。
+
+A73/A75预登记：A72交付后在J08/10挂非作者A73仅核实际D条件生命周期合成/边界与引用，不新ROM；A74交付后在J08/11挂非作者A75只核count256适配层/S结构/初始SB0/旧32B桥ABI与原返回，不读engine/writer。独占reader-driver-lifetime-review-a73、reader-driver-format-review-a75报告/analysis，实际复核者派发前更新，复核新增0如实写。
+
+A76入口增量：旧procedure仅两不连续extent总3144B、13条direct edges，无dossier/合同；upper/近期精确种子无body。准[0xa01a37d2,0xa01a3852)128B五参数保存/首fmt字节/literal或percent入口，固定fmt实际地址与S域继承A74候选，不整engine/补满间隙/读A78三个指针body。实际后继地址再报，保留direct/indirect遗漏及body边界限制。
+
+A76固定literal入口续窗：已核S→s1、va→s6、逻辑计数s2=0，fmt首U8为/走非percent门，S+4加载callback并以a1=该byte/a0=S准备；入口窗恰止实际call前。准仅[1a3852,1a38c0)110B核真实间接调用与percent入口控制，frame搬运的无关doubleword不提取/不解释float路径，结束4410先只留锚点；A78 callback本体不重读。
+
+A79登记：同J08/13非作者/root/f12仅核A78三精确入口的参数、unsigned min/signed n门、copy调用后重读/计数先写再NUL、n0无更新、noop返回，无新copy/engine/任意输入；独占reader-driver-format-stream-review-a79报告/analysis。A76续窗：literal S+4(S,47)真实JALR后J→4408，固定s经38bc unsigned门→38e4；准[38e4,3950)108B及[4408,4430)40B只核固定转换入口/续读与终止返回，不读跳过38c0..e4或其它fmt分支。
+
+A77预登记：A76在当前固定format问题交付后，同J08/12挂非作者核已交付入口/真实间接ABI/固定s分支/计数与返回，不读未登记engine旁支或A78 bodies。独占reader-driver-format-engine-review-a77报告/analysis，实际作者停止/复核者派发前更新。
+
+A76固定s缺口续窗：38e8 BNE('s',0x30)实际跳回38c8，原按范围未读此段；准[1a38c8,1a38e4)28B只核此真实门，不推进38f4旁支停解或修模型。4408/440c已核回3832，zero fmt到4410/4428 a0=s2/442e RET，无终止callback；计数s2与S.word0保持区分。
+
+
+A80 n1必要增量：旧record76已定位n1从589c小量门经58ae..58c2到590e LBU/5912 SB/5916 RET，F18两端已有字段，缺24B dispatcher。准仅[58ae,58c6)核n1门/原dst设置，不触n8..255其它alignment body。旧B25 n12仅caller接口不是算法域认证，后续域矩阵须明确，不将src向下对齐读的padding可达性补猜或做异常试验。
+
+A76固定s续窗：38c8减0x30后ANDff，38d0 unsigned比较9<0x43真跳3a78；准[1a3a78,1a3ad8)96B固定s实际调度，数字支路38dc停解保留未解释但该固定路径不执行，不补未知/NOP或修模型。
+
+A76下一50B实际控制：3a78对0x2a不等→3aa8，对0x2e不等又回3a46，准[1a3a46,1a3a78)50B只核固定s实际门；3a80/3ad2未选旁支未知保留，不伪造连续覆盖。F31/A81预登记：分别同F11/11/J08/14非作者只核F30四字节回环与A80已交付n1域，独占miio-queue-mode-name-review-f31及reader-driver-format-copy-review-a81报告/analysis，待作者停止/实际派发更新，不重复old prefix或1080B算法。
+
+## 上一批三席恢复（2026-10-24，历史）
 
 用户已明确要求继续逆向并按3个subagent启动，覆盖下方旧停止/六席派发规则。当前管理窗口/root串行登记，以主树HEAD `32f9c9e` 为研究基线；本轮不提交、不推送。保留主树已有README、reverse-design及通知prompt改动。只做原厂0041有界静态取证，沿本表统一原件身份及VA映射；不执行固件、构建、SIM/QEMU、设备或外部服务，不修改生产/ROM/配置/分析器。
 
@@ -65,6 +227,30 @@
 
 |认领 ID／关联任务|版本／原件身份引用|具体连接、对象身份及问题|独占范围／继承范围及证据|负责人／非作者复核者|状态|查重结论／相交行／后续断边及重开理由|
 |---|---|---|---|---|---|---|
+|G19/6（G27）|0041原件，沿本表统一身份/VA映射|已验0xa009e016/0xa009e01e→0xa00267c0，两次a0作为可写word槽，待找该服务返回地址来源/正常返回及是否能支撑G23稳定槽假设|仅pogo-poll-error-slot-g27报告/同名analysis；先旧dossier/metadata与必要原字段；不扩diagnostic/日志/native系统、counter初始化或异常输入；仅补0xa00267c8→0xa0026784的返回对象来源/必要副作用，旧functions431为38B metadata无dossier；二次增量仅0xa0026792→0xa002671a(0,&out)对out+4写入/返回及必要副作用，旧functions430仅106B metadata无dossier；不展开0xa002661e/diagnostic或全调度|作者/root/g23、非作者/root/a56均已交付停止|已验（G28限定接受，稳定/别名/异步未知）|近期报告仅G23/G24调用形状及未知副作用，无此本体合同；与G19/4共享callee调用端但问题是独立返回地址来源，不重验counter门或宣称同线程两次必同槽。新下层边先报登记|
+|J08/10（A72）|0041原件，沿本表统一身份/VA映射|合成A47/A49、A50/A52、A56/A57、A60..A71已有合同，问给定source类型1匹配已注册slash driver、正常open/read/seek/close下D/H/C/cache-buffer/W/O的表示、借用/持有及归还边界|仅reader-driver-lifetime-a72报告/同名analysis；不新ROM/新helper/重跑旧脚本，目标是实际D实例到既有reader通用生命周期的条件连线，未验A69/A71标依赖不提前接受|作者/root/a56、非作者/root/f12均已交付停止|已验（A73仅条件生命周期，不补实际IO/DELETE）|D全局借用、H低word fd+1非可free对象、C/B/O分别持有，slot_base=D−50不可混cache buffer；config重读不折初值，format输出/实际mode1照片/IO及注销继续未知|
+|J08/12（A76）|0041原件，沿本表统一身份/VA映射|A74实参桥a005329c→旧a002d770→a01a37d2(S,0,0,fmt,va)，其中fmt为固定/%s、count256流S；待找引擎相关literal/%s分支与S+4/+8/+c间接调用的真实ABI/旧材料覆盖|仅reader-driver-format-engine-gap-a76报告/同名analysis；首阶段仅旧metadata/dossier相关固定format必要片段，仅升级入口[0xa01a37d2,0xa01a3852)128B五参保存/首fmt字节/literal-percent控制，不整engine/任意fmt/输入实验，再准[0xa01a3852,0xa01a38c0)110B真实indirect call/percent入口最小控制，再准[0xa01a38e4,0xa01a3950)108B固定s入口，及[0xa01a4408,0xa01a4430)40B续读/结束控制返回；再准[0xa01a38c8,0xa01a38e4)28B固定s真实回跳门；再准[0xa01a3a78,0xa01a3ad8)96B固定s实际调度；再准[0xa01a3a46,0xa01a3a78)50B实际s回跳门，不读数字余路/整switch，新分支另报|作者/root/g23、非作者/root/f12均已停止；[A77](reader-driver-format-engine-review-a77-0041-20261024.md)|已验（A77限定接受，待复核关闭；%s功能边未闭）|与J08/11适配层不同连接，字符串输出未因函数名闭合；S新writer targets由J08/13独占，不能并行重取同body；保持varargs推进/返回边界|
+|J08/14（A80）|0041原件，沿本表统一身份/VA映射|A78明确0xa002b512→0xa000589c(buf+old_count,src,n)，给定有效S/count<=255时n>0且<=255；prefix-char实际n1、suffix后续dst常为buf+1，任意alignment的实际copy域仍未验|仅reader-driver-format-copy-gap-a80报告/同名analysis；首阶段只upper record76旧完整assembly必要dispatcher/已验G03/G04/F17/F18等合同，定位n1及n<=255/alignment分支的最小缺口，仅升级[0xa00058ae,0xa00058c6)24B n1实际dispatcher原字段，其余旧F18端点/record76继承，不重导1080B/任意length或host输入试验|作者/root/f12、非作者/root/a56均已停止；[A81](reader-driver-format-copy-review-a81-0041-20261024.md)|已验（A81限定接受，待复核关闭；其它copy域未闭）|与F11/5仅n4域、G03仅n16/20不同问题；不可把函数同名推广全域，不把src/dst表达式不同当分离/有效证明；S有效容量/分离前提保留，新原字段或helper先报|
+|J08/13（A78）|0041原件，沿本表统一身份/VA映射|A74 count256流S初始化字段+4=a002b536/+8=a002b4d8/+c=a002af2e/+10=buf/+14=255；问三个实际callback本体的参数、内存写/计数/终止/返回域，不按slot名先命writer|仅reader-driver-format-stream-a78报告/同名analysis；先旧留存/合同，必要原字段仅三callback与count256给定有效S域，不读格式engine/新copy/helper，不跑字符串输入或target/模型|作者/root/a56、非作者/root/f12均已交付停止|已验（A79仅stream本体，任意n copy仍边界）|与J08/12 parser角色不同、与J08/11只交初始化pointer值；ABI只有本体字段或engine已验调用端支撑时才认证，新callee先报，不由buffer255推实际输出/截断已证|
+|J08/11（A74）|0041原件，沿本表统一身份/VA映射|A66/A67已验a008ab4c→a0053252(buf,256,ROM literal /%s,指向suffix的varargs包)，问有效分离NUL输入短路径下实际输出/返回/终止契约的最小缺口|仅reader-driver-format-gap-a74报告/同名analysis；首阶段仅旧a0053252 metadata/dossier/已有合同定位真实参数/下层，仅升级a0053252自身120B正常参数/输出流/返回必要字段，复用a002d770旧32B历史dossier（profile4825）核参数/返回，不新读a01a37d2，不恢复任意格式/全printf，不执行字符串输入试验|作者/root/g23、非作者/root/a56均已交付停止|已验（A75仅adapter/旧桥，不补engine输出）|与A66 wrapper argv不同连接，是原路径输出未闭边；不能由标准sprintf名字替实现，不读IO/allocator/外部服务；新字段/新callee先报登记|
+|J08/9（A70）|0041原件，沿本表统一身份/VA映射|A66/A68失败返回都从第二次getter读取error_word交0xa00ea524；问该函数实际比较/默认分支/数值status映射及返回宽度，不以标准enum名补原值|仅reader-driver-result-map-a70报告/同名analysis；先旧metadata/合同（functions3328仅140B/no callees/no dossier），若未覆盖只该纯数值函数必要原字段；不执行目标或输入枚举实验、不读errno getter/IO/其他driver|作者/root/g23、非作者/root/f12均已交付停止|已验（A71限定接受数值表，不命正式enum/IO）|与J08/7-8仅共享opaque调用端，差集为返回数值协议；旧POSIX/LVGL候选来源不认证精确enum/版本，静态分支重建保持signed/unsigned与默认值，非漏洞/异常输入验证|
+|J08/8（A68）|0041原件，沿本表统一身份/VA映射|A64实际slot候选D+0x14→0xa00ef55e、D+0x1c→0xa00ef632，继承A50/A52五参read/四参seek及A66 H=fd+1候选；问正常read/seek参数转换、count/position宽度、返回/借用原序|仅reader-driver-read-seek-a68报告/同名analysis；先旧留存/精确callback入口，必要新原字段仅两body正常路径，不读底层IO/copy/errno-map；若旧owner/边界冲突以callback入口/原字为准，不套邻近write owner0xa00ef5c8|作者/root/g23、非作者/root/f12均已交付停止|已验（A69限定read/seek接口，不补下层IO/ABI）|与A50 generic cache/read分流、J08/6 slot写、J08/7 open-close不同连接；不默认off_t/FILE或library版本，不执行IO/设备，不扩dir/write/cache算法；新callee先报|
+|J08/7（A66）|0041原件，沿本表统一身份/VA映射|A64已原字段定位D+c→0xa00ef468、D+10→0xa00ef502但整项待A65；继承A47真实(D,pathSuffix,2)/(D,H)接口，问正常mode2 open→H表示/持有→close的路径处理、参数/返回/归还原序|仅reader-driver-open-close-a66报告/同名analysis；先J08/2旧owner/source_paths与既有callee留存，必要原字段只两callback正常body；新增数据仅a06371e4处NUL字符串最多64B、遇NUL即停，及a00ef4a4→a008ab4c的42B格式化wrapper参数/返回，先旧留存；下层a0053252及底层open/close/allocator不新读，D03/F05/F06已验接口直接继承，不执行文件IO，不读read/seek/dir|作者/root/a56、非作者/root/f12均已交付停止|已验（A67限定接受mode2/H编码/format接口）|与A47/A49通用槽调用、J08/6具体槽写绑定不同问题；旧POSIX路径只能佐证家族，不能套版本/标准FILE类型或实机成功。默认五ROM照片mode0保留，不证source1实际运行|
+|J08/6（A64）|0041原件，沿本表统一身份/VA映射|A62偶遇initializer 0xa008e77a以s2+0x180形成callback写基址，已验/待复核登记D=0x62fc974c；待证s2定义→该基址是否同D，以及实际盘符/配置/已验read槽绑定|仅reader-driver-slot-bind-a64报告/同名analysis；先A21/A25/A60/A62旧必要寄存器定义/基址及slot写锚点，未准新ROM/全initializer/slot目标body，新原字段仅准[0xa008e536,0xa008e612)最多220B逐短窗寻找s2定义，找到即停；e5da候选s2=G的定义链只补[0xa008e4b8,0xa008e4bc)4B/[0xa008e52a,0xa008e536)12B/[0xa008e5f6,0xa008e612)28B/[0xa008e628,0xa008e6ea)194B必要连续性，跳过正常流外片段；再核已登记slot110B的有效地址B+offset映D字段，不强求B==D、不读target body|作者/root/g23、非作者/root/a56均已交付停止|已验（A65限定接受D字段/four-slot绑定）|与J08/5节点D保存不同连接；D已登记不证明s2+180同对象，A47接口及J08/2 POSIX路径不替代真实slot绑定。不读a00ef468等目标body，不默认五ROM照片mode1|
+|F11/12（F32）|0041原件，沿本表统一身份/VA映射|F15同M/L/Q身份已验，L+0x3c配置16B/start已验；待找同配置其它callback在旧worker0xa011e3d6退出段的真实使用及Q归还caller身份/参数|仅miio-loop-exit-gap-f32报告/同名analysis；首阶段只旧master record248/worker195及upper-miio-b必要配置/退出行，先查父级complete/较晚合同，不新ROM/新callback/close body，不预设offset即stop角色|作者/root/a56、非作者/root/g23均已停止；[F33](miio-loop-exit-review-f33-0041-20261024.md)|已验（F33限定接受，待复核关闭；实际quit等功能边未闭）|与F11/4 start/size/mode及F11/9消息正常dispatch不同连接；旧generic退出已覆盖则直接引用不重恢复，同名loop不能合对象，不推实际quit/queued I排空或最终free|
+|F11/11（F30）|0041原件，沿本表统一身份/VA映射|F27/F28正常prefix已验，未读0xa010e392→0xa010e43c name臂到common Q首word写端的控制/寄存器变化；问给定同Q/请求7，该正常臂的mode写入/汇合或返回边界|仅miio-queue-mode-name-branch-f30报告/同名analysis；先旧F27/F28与metadata，再仅[0xa010e43c,0xa010e532)最多246B逐短窗到真实汇合/正常返回即停，common prefix只继承；新FS/创建/allocator/driver callee先报，不执行open|作者/root/a56、非作者/root/f12均已交付停止|已验（F31限定4B回环，创建/保持仍未闭）|与F11/10写点初值不同路径；新输入是原明确未读arm，不重复530B函数；不能要求其结果必7，按实际s3/s6变化/位40事实，返回/后续writer未知保留|
+|F11/10（F27）|0041原件，沿本表统一身份/VA映射|已验同Q creator0xa005f0b0与Q.size4，F23实际传mode=word(Q)&0x40；待找creator正常创建参数/接口返回到Q首word mode的写入身份，以限定typed调用选择，不预设正式flag名|仅miio-queue-mode-init-gap-f27报告/同名analysis；首阶段只旧F15 creator caller/原件身份和已存必要metadata定位创建flags/word(Q)写端，现仅准creator缺窗[0xa005f10a,0xa005f11a)16B实参及0xa005f122/126→0xa01974de的48B wrapper正常参数/返回，二次只准a0197502→a010e320同Q/flags7到Q首word的初始化字段/正常控制最小片段，旧530B extent无dossier；不展开下层FS/allocator/driver open callback，新callee再报|作者/root/f12、非作者/root/a56均已交付停止|已验（F28限定写点7，不补所有返回/后续保持）|与F11/4 size+18不同字段/问题，与F11/8使用&40不同写入端，旧size4不证明mode位值或无后续writer；不执行queue/file open，不扩文件系统/调度/全heap|
+|F11/9（F25）|0041原件，沿本表统一身份/VA映射|将F11/F13/F15/F17/F19/F21及相应独立复核的同L/Q、source=&localI、n4、copy域、Msg.len/out及Msg归还与I分派连接，回答正常typed消息的局部I槽/heap I/内部Msg各自持有和可失效边界|仅miio-invocation-queue-lifetime-f25报告/同名analysis；只合同/原证据必要连线，不新ROM/新helper/重跑作者脚本；F23另一分支及待复核服务不提前当已验，不把不同运行Msg认同|作者/root/a56、非作者/root/g23均已交付停止|已验（F26仅限定域条件合成，不补运行/存储前提）|真正差集是原F11 native队列未闭边在现有size4/copy4/receive证据下的条件合成；不重计功能/字节数，不认证有效存储/对齐/不别名/容量/调度执行/云端或全producer稳定，只给精确前提与未闭|
+|J08/5（A62）|0041原件，沿本表统一身份/VA映射|已验选择容器head0x62fc9744/stride槽0x62fc9740；A60待复核初始化write作候选；继承A21/A22的0xa008aec0(list*)→node角色，待找以真实list参数0x62fc9740调用insert-head并将D写node.word0的注册caller身份|仅reader-driver-register-gap-a62报告/同名analysis；本阶段只旧索引对a008aec0的direct-call caller及对应旧dossier最小实参metadata，不新ROM/新反编译/全fsdrv，仅升级已知initializer缺窗[0xa008e768,0xa008e82c)最多196B逐短窗核G+1c4实参/insert调用/返回node.word0保存D，找到即停；其他caller/新helper本体不读|作者/root/g23、非作者/root/f12均已交付停止|已验（A63限定接受注册桥，slots另归A64）|与J08/1选择/J08/4初始化不同连接，A21是别的header G+110/28B payload不能套fsregistry；只筛a0真实G+1c4的insertcaller/节点D保存，未知保持，不能由同helper认同对象|
+|J08/4（A60）|0041原件，沿本表统一身份/VA映射|A58旧dossier已知G=0x62fc957c的实际owner/source：0xa005cc1e@cc6c/cc70/cc74/cd62/ced6、0xa005a736@be3a/be58/c8ae、0xa00b2f6c@b2f98；只问这些已知G定义在同owner必要旧指令流能否形成G+0x1c4/0x1c8写入/初始化调用端|仅reader-driver-global-init-a60报告/同名analysis；改变输入为三已知owner旧assembly必要寄存器定义/用途，A58只metadata不足直接继承；不重读a005a8f4栈对象消歧、不新ROM/全fsdrv/全ROM扫描、不扩G其他字段；必要旧增量仅已验a005cd36→a008e3ac的A21/A22/A25/A26留存中与G清零/两槽初始化直接相关行，旧片段缺失已定位后，仅准新原字段0xa008e4c4..0xa008e612（不含终点、最多334B）逐短窗寻找两槽初始化地址构造/实参，既验G/s4基址继承；定位两槽端即停，不读新callee/整initializer|作者/root/g23、非作者/root/a56均已交付停止|已验（A61限定接受两槽初值writer）|与J08/3相交G引用metadata但问题/证据层不同；只从实际G锚点沿必要旧指令核两槽初始化callsite，无slot/注册身份即保留断边；不是重复旧负搜索或全global重建|
+|F11/8（F23）|0041原件，沿本表统一身份/VA映射|F13已定位0xa0197a8e正常−1 send服务的另一0xa0131920等待服务连接，F21揭示flag0x62fc6034对取M来源的分支；问该实际send分支如何取得M并保留source到copy|仅miio-queue-send-wait-gap-f23报告/同名analysis；首阶段只旧F13 caller/evidence必要行定位flag门、实际callsite/a0..aN及outM、成功返回到copy连接，不新ROM/下层body首阶段禁止；现仅准缺caller[0xa0197ad2,0xa0197ae8)22B及实际0xa0197af8→0xa0131920(K,word(Q))正常状态/返回的必要200B服务前缀/路径，不预设outM；无新的等待/调度callee本体|作者/root/a56、非作者/root/f12均已交付停止|已验（F24核心接受；caller范围纠正1/伪码原序精确化1）|与F11/3只交copy发布端，与F11/7取M快速来源不同连接；不假设MiIO线程必走某flag值、0xa0131920名称证明等待行为或当前typed调用已成功。具体下层增量先报登记|
+|F11/6（F19）|0041原件，沿本表统一身份/VA映射|已验同loop入口0xa011e3d6及Q=word(loop+0x18)，问正常接收端把队列内容交局部I到既有dispatcher前的实际服务/实参/返回门及与Q的身份连接|仅miio-queue-receive-gap-f19报告/同名analysis；首阶段只旧record195同函数/必要metadata定位receive callsite，不新ROM/新callee；继承既有type1 callback/free语义不重复，具体新原字段仅准0xa011e5fa→0xa005f508(Q,&localI,timeout)适配层对输出槽/长度/timeout转交及返回；timeout正常10000或word(firstTimer+4)来源直接继承，不展开timer；仅补正常finite实际a005f59e/5a2→a0197954(Q,out,n,&deadline)对out/n、消息copy/归还调用端必要字段；−1的a01978a2不展开，0xa005f56a转换仅按既有th.mula局部规则条件解释；二次增量仅正常非空0xa0197a36→0xa01319e8(K,word(Q),&localMsg)的Msg来源/out保存/length保留与0xa0197a6c→0xa0131b68(Msg)正常归还分支/调用端，先旧留存后必要字段，新下层服务不展开|作者/root/f12、非作者/root/g23均已交付停止|已验（F20限定接受finite/nonempty，不补实际消息/容量）|与F11/3 send、F11/4 init、F11/5 copy4不同连接；旧generic dispatcher不证明下层如何复制/归还internal M。无真实callee前只盘点，不全队列或超时/取消扩展|
+|F11/7（F21）|0041原件，沿本表统一身份/VA映射|F13已验0xa0197acc→0xa01318de，非零返回M后0xa0197b1a以M交下层copy(M+0xc,source,n)；问正常候选M来源/持有及可定位的存储容量边界|仅miio-queue-message-source-f21报告/同名analysis；先旧callee/dossier/index与caller实际实参，再只核本callee正常返回来源必要原字段，新allocator/调度/等待callee先报，不扩全heap；必要增量仅0xa01318ea/18fe→0xa010d70e(gp+0xb8或gp+0xc0)正常节点取出/返回合同，先继承G11调用角色和旧留存，再必要原字段；0xa002fcc8仅332B请求调用端不读allocator|作者/root/a56、非作者/root/f12均已交付停止|已验（F22 helper本体；F24已接受F23 caller范围纠正）|与F13只共用opaque调用端，本题差集是M来源/正常持有，不重验copy4/接链；不能由M非零或queue size4推存储有效/不别名/容量。新callback边保留原序|
+|F11/5（F17）|0041原件，沿本表统一身份/VA映射|F13已证0xa0194a14/18→0xa000589c(M+0xc,source,n)，F15旧caller创建候选n=4；只问该helper在n=4且src/dst正常有效word对齐时的必要读写、是否持有参数及返回|仅miio-queue-copy4-f17报告/同名analysis；先旧G03/G04及其他copy合同/留存，已有16/20B不覆盖4B；若4B未验，只取到n=4路径必要旧assembly/原字段，不重导1080B/任意length/未对齐算法|作者/root/a56、非作者/root/f12均已交付停止|已验（F18限定接受n4有效对齐域，不补目的存储前提）|主窗G03/G04只见16/20B明确域，“copy4”另有业务helper需消歧；新n4是已定位候选创建输入，差集是实际小长度路径，不解决F11真实loop身份/源目标对齐及容量；不扩heap/全libc|
+|F11/4（F15）|0041原件，沿本表统一身份/VA映射|F11已验type1跨线程caller的Q=word(loop+0x18)，F13已证size=word(Q+0x18)经0xa005f464/0xa0197a8e传给copy服务；待找同Q的创建/初始化→size值身份桥|仅miio-queue-size-gap-f15报告/同名analysis；先旧event-loop caller/constructor/queue初始化留存metadata，不新ROM/不扫全queue；新窗口仅准0xa005f0b0 creator入口/正常成功Q字段和输出槽必要原字段，实际候选来自旧record248的a0065438..a006544c，s7=M+0x128与输出槽s7+0x18；不读分配器/queue开服务；二次增量只准0xa0110708/718→0xa01ab55a正常ctx+4=L存槽及入口参数必要原字段，旧callbacks/start/user身份桥直接继承，不展开log/memset/callback|作者/root/f12、非作者/root/a56均已交付停止|已验（F16限定接受正常setup/attach的身份/size4）|继承F11/F12/F13调用及对象，差集是同Q的size写入身份；没有4B初始化证据，不能由a1=&I推4B。与F11/3copy消费不同连接，不接allocator/wait/整个事件系统|
+|F11/3（F13）|0041原件，沿本表统一身份/VA映射|0xa011e33e→0xa005f464(queue,&局部I指针,−1)，问正常send如何消费a1、同步复制pointer word还是持有栈地址及返回原序|仅miio-native-queue-f13报告/同名analysis；继承F11/F12的I构造、type1提交和caller实参；先旧留存callee，再必要稀疏原字段，不扩全队列/transport/heap；本轮扩范围登记仅−1路线0xa005f480/484→0xa0197a8e(queue,原a1,word(queue+0x18))：恢复该callee对源pointer与长度的正常消费/复制/持有，先旧留存再必要字段，不展开定时0xa0197b32；二次必要增量仅0xa0197b1a→0xa01949f0(a0=word(word(queue+0xc)+0x18),a1=候选message,a2=原源pointer,a3=原长度)对a2/a3的复制或持有/返回；0xa01318de/0xa0131920保持opaque，不扩allocator/wait/调度|作者/root/f12、非作者/root/g23均已交付停止|已验（F14限定接受接口/顺序，copy实际4B域另题）|精确地址在近期报告仅为F11/F12未闭建议，未有本体合同；与F11/1只共享queue调用端，差集为native adapter对局部pointer的消费；新callee本体先报锚点|
+|G19/5（G25）|0041原件，沿本表统一身份/VA映射|0xa009e0e2→0xa009e0e6(backend_fd,C,S,3,high,local16+(index<<4))，只问实际op3下对record的复制/持有、entry字段、返回及条件下一跳|仅pogo-poll-op3-g25报告/同名analysis；继承G21/G22 op2共用前缀/copy/zero和G23/G24条件调用端，不套op2最终字段；只核op3真实差集，不展开native/fallback诊断/其他op|作者/root/g23、非作者/root/a56均已交付停止|已验（G26限定接受，语义纠正/新增body0）|与G19/3共享函数但实际op输入不同，G11只覆盖fallback；近期G23/G24只有op3 callsite无body合同。新callsite/递归仅记录，不扩服务/初始化/完成全闭包|
+|J08/3（A58）|0041原件，沿本表统一身份/VA映射|J08/1已验word(0x62fc9744)为head、word(0x62fc9740)+4为动态next偏移；待找两槽初始化/注册writer→N.word0=D的真实身份桥|仅reader-driver-writer-gap-a58报告/同名analysis；继承A56/A57选择144B及A47接口；本阶段仅旧留存xref/owner/caller/写入metadata，不新ROM/反编译、不全fsdrv扫描；新窗口另登记|作者/root/a56、非作者/root/g23均已交付停止|已验（A59仅有界盘点排除；真实writer未闭）|与J08/1只共享已验reader容器读取端，差集为writer/注册连接；J08/2 POSIX路径端尚无绑定不能替代。本轮搜索近期报告两槽仅A56/A57读端，无已验writer；无种子不推具体D或slot|
 |J05（盘点已结束）|0041原件，见本表身份引用|C06 type8 close→0xa009f972；0xa009f986→0xa009f442(L,P+0x34,0x17)；0xa009f9a8→0xa009e212(L,word(P+0x58))。W=P+0x34且W.fd@+0x24，确认同poll的已存调用/字段种子，非callee本体语义|仅transport-reuse-gap-j05同名报告/analysis；[J05](transport-reuse-gap-j05-0041-20261024.md)，0fa2089整合；盘点新增0|/root/k03已停止；主窗口范围核对，不冒称技术复核|已验（仅盘点定位）|与C06/1、G07/1、G09/1相交已验上层直接继承；新本体问题已移G19/1、G19/2，不再派同一盘点|
 |J06（盘点已结束）|0041原件，见本表身份引用|0xa01b6146@0xa01b632a栈D→0xa0111ff6→0xa011f9da→0xa011f86c及0xa005f222回调；旧pending head 0x62fca4c8、32B记录callback+0x10/fd+0x14→0xa01977cc的callback(fd,message,length)已解释。仅筛尚缺copy/retain/对象寿命接入|仅miio-reuse-gap-j06同名报告/analysis；[J06](miio-reuse-gap-j06-0041-20261024.md)，ee220d8；upper-complete records197/91/13/163/278/282与旧miio-rpc reply_matching，盘点新增0|/root/b25已停止盘点，另持F11；无盘点技术验收冒称|已验（仅盘点定位）|原pending三参ABI候选撤销为继承；F11/1只补D复制/持有，F11/2补R/S回调对象连接。与G19的loop名称不构成同对象，不能套fd watcher布局|
 |J07（盘点已结束）|0041原件，见本表身份引用|0xa00afd5c→global byte 0x62fc403a；0xa00af262尾部0xa00afa78/0xa00afab0两次读同byte→0x62fcbcc4/0x62fcbcc8。s2=0x62fc402c全局，非timer borrowed app；只筛原字段顺序独立认证不足|仅input-idle-reuse-gap-j07同名报告/analysis；[J07](input-idle-reuse-gap-j07-0041-20261024.md)，327d557；main-knob records1、screen-host-append functions4、guide父级，盘点新增0|/root/l03已停止；主窗口范围核对|已验（仅盘点定位）|与E05/1及guide阈值/唤醒旧合同相交直接继承；userdata候选已撤销。具体精度问题归P01/1，不新派完整timer/idle题|

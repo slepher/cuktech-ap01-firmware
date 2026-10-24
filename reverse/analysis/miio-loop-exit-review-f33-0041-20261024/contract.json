@@ -1,0 +1,19 @@
+{
+  "task": "F33",
+  "claim": "F11/12",
+  "author_task": "F32",
+  "baseline": "bd457a6",
+  "result": "limited acceptance",
+  "semantic_corrections": 0,
+  "new_business": 0,
+  "new_rom_bytes": 0,
+  "preconditions": ["same M normal setup/configuration inherited from F15/F16", "valid separated aligned 16B configuration copy under inherited contract", "normal callee-saved conventions and returns", "configuration/current table and fields remain compatible; no assumed permanent immutability"],
+  "identities": {"L": "M+0x128", "user": "M+0xe8", "vtable": "M+0x158=L+0x30", "queue_slot": "M+0x140=L+0x18"},
+  "accepted_binding": ["16B config second/third/fourth words become L+0x40=a0110788,L+0x44=a010f984,L+0x48=user", "vtable+4=a011e0ac,vtable+8=L", "worker e436/e440/e444/e446/e448 invokes current vtable+4(L,L)", "e0ac uses its second argument L, calls current word(L+0x40)(L,word(L+0x48))", "given configuration this is a0110788(L,M+0xe8)", "adapter both normal return arms force a0=0, worker stores this a0 in s2"],
+  "separate_role": "L+0x44=a010f984 is inherited external-RPC-receive role, not the selected exit slot",
+  "observed_return_caller": {"site": "a00655b8/55ba -> a011fd3c(L)", "restriction": "shown thread-create nonzero path only, additional signed logging-level branches retained; not every failure or global caller enumeration", "zero_thread_return": "a006557c jumps a00655da", "queue_interface_sequence": ["fd3c reads L+18 at entry", "fdc2 checks current L+18", "if reaches fdc6 rereads L+18 into a0", "fdd0 calls a01b3c64", "after normal return fdd4 clears L+18"]},
+  "profile_separation": {"retained_assembly": "4825fb58a33a3e7d618557975b153b8318cf7e833d190ad16bcbf8bd441ae621", "inherited_local_contracts": "04b34bbb41e8ff5d0cbbc2c7471d390693c40fe70f2e21519e2b21d268c9237d"},
+  "not_proved": ["actual quit/finished execution", "normal-run caller to a011fd3c with same L", "all lower callback/helper success", "queued I objects drained or all resources returned", "a01b3c64 physical resource effects", "stable Q pointer across later writes or concurrency", "M/L final free"],
+  "review": {"checks": 84, "kind": "independent retained assembly/identity/reference consistency; no fresh byte/ISA validation", "author_checker_executed": false},
+  "status": "review delivered and stopped; local F32 difference may close, functional frontier remains"
+}

@@ -1,0 +1,9 @@
+{
+ "task":"F32", "claim":"F11/12", "baseline":"bd457a6", "new_business":0,
+ "preconditions":["same M normal setup/configuration accepted by F15/F16", "configuration/table/current pointers remain compatible", "normal callee-saved conventions and service return"],
+ "identities":{"L":"M+0x128","user":"M+0xe8","Q":"word(L+0x18)","vtable":"M+0x158=L+0x30"},
+ "configuration":{"L+0x40":"0xa0110788","L+0x44":"0xa010f984 (other callback role; not exit slot)","L+0x48":"user","vtable+4":"0xa011e0ac","vtable+8":"L"},
+ "exit_binding":["worker e436/e440 reads vtable and +4", "e448 indirect call(L,L)", "e0ac loads second argument L+0x40, calls callback(L,word(L+0x48))", "a0110788 actual callback receives(L,M+0xe8)", "adapter returns0 regardless of nested callback value"],
+ "queue_return_caller":{"callsite":"a00655b8/a00655ba -> a011fd3c(L)","path":"observed thread-create return nonzero path; zero at557c skips to55da", "same_Q_interface":"old fd3c reloads Q=word(L+0x18) atfdc6 -> a01b3c64; then clears L+0x18", "role":"existing generic group drain/queue-return contract inherited, not executed or body re-recovered"},
+ "not_proved":["actual quit or worker finished", "all callback helpers completed", "queued I objects drained/returned", "a01b3c64 full resource effects", "L/M final free", "later writer, stable Q identity, concurrency"]
+}

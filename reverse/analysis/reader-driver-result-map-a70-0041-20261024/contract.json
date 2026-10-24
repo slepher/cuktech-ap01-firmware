@@ -1,0 +1,28 @@
+{
+  "claim": "J08/9",
+  "task": "A70",
+  "baseline": "bd457a6",
+  "review_status": "author-awaiting-independent-review",
+  "input": "raw RV32 a0 numeric error word, not a dereferenced pointer",
+  "return_width_bits": 32,
+  "exact_pairs_decimal": {
+    "0": 0,
+    "2": 3,
+    "5": 1,
+    "12": 10,
+    "13": 6,
+    "14": 2,
+    "16": 7,
+    "22": 11,
+    "28": 4,
+    "38": 9,
+    "110": 8,
+    "114": 5
+  },
+  "default": 12,
+  "default_domain": "every other 32-bit input word; no external lookup",
+  "comparisons": "signed BLT thresholds16/12/38; BEQ/BNE equality; C.BNEZ zero split",
+  "memory": "only local16B frame with save/restore s0; no external read/write or calls",
+  "naming": "numeric facts only; errno/LVGL enum/source-version names not certified",
+  "callsite_use": "A66/A68 pass the second getter-read value after log, not necessarily the first word or original negative IO result"
+}

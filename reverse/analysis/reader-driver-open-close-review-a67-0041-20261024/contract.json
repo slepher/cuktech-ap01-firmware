@@ -1,0 +1,35 @@
+{
+  "claim": "J08/7",
+  "review": "A67",
+  "reviewer": "/root/f12",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of A66 body contract",
+  "semantic_corrections": 0,
+  "new_business": 0,
+  "open_mode2": [
+    "flags numeric1; suffix is original arg1 captured as first vararg",
+    "stack buf, bound256, exact4B literal2f257300 ->42B wrapper0xa008ab4c ->0xa0053252 with saved-args pointer",
+    "callback ignores format return then calls fd-open interface(buf,1,0x1b6)",
+    "compute low32(fd+1); signed nonnegative fd returns this numeric H; negative normal log-return path returns0"
+  ],
+  "close": [
+    "low32(H-1) from second argument is given to fd-close interface0xa0026888",
+    "signed nonnegative close result folded to0",
+    "negative path logs first getter error word, then repeats getter/read and passes current value to0xa00ea524; return preserved",
+    "no callback free(H), H allocation or FILE* representation"
+  ],
+  "evidence_layers": [
+    "literal and call/argument/H arithmetic are original-byte facts",
+    "slash-prefix formatting intent is printf-family inference; actual output/truncation/NUL unverified",
+    "D03/F05/F06 fd interface roles inherited, lower IO/body not reread",
+    "D-slot binding A64/A65 is independent and conditional at dispatch baseline"
+  ],
+  "unknowns": [
+    "formatter output/return contract and actual path/inode/filesystem/IO success",
+    "fd runtime identity/reuse/concurrency and physical close outcome",
+    "error mapper full numeric protocol, D/path/resource lifetime and actual mode1 usage",
+    "binding independent acceptance, default photos remain historical mode0"
+  ],
+  "next_seed": "0xa00ef550 ->0xa00ea524(current second-read error_word), already prepared as J08/9 A70 by management, not dispatched here",
+  "generated_evidence": "evidence.json local ignored at original relative path"
+}

@@ -1,0 +1,32 @@
+{
+  "claim": "F11/10",
+  "task": "F27",
+  "baseline": "bd457a6",
+  "review_status": "author-delivered-awaiting-independent-review",
+  "scope": "same-Q creator parameters/wrapper and selected normal prefix to actual Q.word0 initialization store",
+  "parameter_bridge": [
+    "creator actual values: Q,name,7,0x180,attrs",
+    "wrapper packs original args3..7; explicitly gives lower a2=7,a3=0,a4=&packed_args,a5=0; a0=Q,a1=name unchanged",
+    "0xa0197502 ->0xa010e320; wrapper returns unmodified lower a0"
+  ],
+  "write_bridge": [
+    "lower saves same Q in s3 and request7 in s6",
+    "selected prefix lookup nonnegative and low4 object-type field==5 reach normal common block",
+    "after clear_interface(Q,0,0x18), 0xa010e3fc SW s6,0(s3) stores full word7 to same Q.word0",
+    "at this exact write under normal preservation/path premises, word(Q)&0x40==0; Q.size at+0x18 is a different field",
+    "local success tail has optional cleanup boundary then restore/status0 return; no direct local Q.word0 rewrite observed"
+  ],
+  "preconditions": [
+    "selected inspected prefix reaches common block, valid normal Q/object/gates",
+    "normal opaque interfaces preserve callee-saved Q/request registers",
+    "unread name/creation arms are not silently joined"
+  ],
+  "unknowns": [
+    "full successful-interface return mode persistence and optional cleanup alias effects",
+    "other normal/control/error arms, later writer/replacement/close and actual execution",
+    "formal mode/OS flag names, complete variadic ABI and resource lifecycle",
+    "runtime mode at F23 use site or universal mode0 statement"
+  ],
+  "next_seed": "0xa010e392 ->0xa010e43c name arm to same-Q mode-write block; registration required before further body",
+  "generated_evidence": "parameter-evidence.json and mode-write-evidence.json stay ignored at original local paths"
+}

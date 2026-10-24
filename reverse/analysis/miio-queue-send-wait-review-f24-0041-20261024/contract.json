@@ -1,0 +1,31 @@
+{
+  "claim": "F11/8",
+  "review": "F24",
+  "reviewer": "/root/f12",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of F23 core with one pseudocode ordering refinement",
+  "new_business": 0,
+  "prior_caller_scope_correction": "F21/F22 first-nonzero flag premise applies only to7aca direct fallthrough; signed BLT7af0 and service-zero7afc also enter getter7acc. Stable flag0/count<limit/first-pool-empty permits332 request without flag change.",
+  "pseudocode_order_refinement": "1972 loads T+c, then1974 clears T+22, then1978 tests the previously loaded value; do not reorder or add post-clear reread",
+  "caller": [
+    "source/n values saved in outer s3/s4; normal callee ABI restores these values, not their pointed storage lifetime",
+    "clean direct service call is 0xa0131920(K,word(Q)); no explicit outM argument constructed",
+    "service0 retries getter; nonzero returns unchanged through mstatus restore; only getter nonzero result becomes M for copy",
+    "getter-zero22B diagnostic edge targets0xa0019672; ordinary continuation/register validity unknown"
+  ],
+  "service": [
+    "entry mode=a1&0x40; each loop reloads signed halfwords K+22 and K+20",
+    "count<limit returns0; otherwise nonzero mode returns-11",
+    "normal mode0 gets T from0x62fc6c18, writes K to T+44, increments U16 K+10 and SH back, loads T+c then clears T+22",
+    "normal positive saved T+c value ->0xa002772e(T,1), save result; SB8 T+1c ->0xa00272d4(T,K+8)",
+    "first result nonzero ->0xa001ad30(reread global,T), not presumed same pointer",
+    "signed LH T+22 zero retries fresh counters; nonzero returns32-bit opposite, which need not be negative"
+  ],
+  "unknowns": [
+    "formal mode/error enums, full ABI parameter count and diagnostic behavior",
+    "opaque service state/pointer effects, T/global lifecycle and actual thread identity",
+    "loop progress, source memory lifetime, actual candidate/copy/queue consumer success"
+  ],
+  "next_seed": "0xa01319a8/19ac ->0xa00272d4(T,K+8) normal state/return edge; registration required before new body",
+  "generated_evidence": "evidence.json stays local ignored at original relative path"
+}

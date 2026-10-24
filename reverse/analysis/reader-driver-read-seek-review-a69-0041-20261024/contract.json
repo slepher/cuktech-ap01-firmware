@@ -1,0 +1,30 @@
+{
+  "claim": "J08/8",
+  "review": "A69",
+  "reviewer": "/root/f12",
+  "baseline": "bd457a6",
+  "decision": "limited acceptance of A68",
+  "semantic_corrections": 0,
+  "new_business": 0,
+  "read": [
+    "actual entry0xa00ef55e; low32(H-1), original buffer/count words ->0xa003f6a2",
+    "original out_count pointer word saved/reloaded across lower call",
+    "signed a0>=0 including0 ->word(out_count)=a0 then callback0",
+    "negative callback path does not directly write/clear out_count; log then second getter/read ->opaque0xa00ea524, result preserved"
+  ],
+  "seek": [
+    "actual entry0xa00ef632, unsigned origin>2 returns numeric11 before stack frame/IO",
+    "low32(H-1), original position word/origin word explicitly placed in a0/a1/a2",
+    "ef64e raw ef80b3b8 ->0xa00281d8, not old speed-report0xa00221d8",
+    "only returned a0 word signed-tested; nonnegative folded0; negative log then second getter/read ->opaque mapper"
+  ],
+  "abi_limit": "No independently constructed position high word or sign extension in callback; this does not certify lower off_t/ssize_t/full parameter count or return pair",
+  "inheritance": "A64/A65 slot binding and A66/A67 H encoding limited opinions referenced without revalidation; A70 map independent",
+  "unknowns": [
+    "actual lower IO, return widths/prototype, count/position domain and error map protocol",
+    "buffer/output validity/capacity/separation/lifetime or lower pointer retention",
+    "runtime fd/source/path identity, reuse, actual FS/resource success"
+  ],
+  "next_seed": "ef64e ->0xa00281d8 actual word transfer to lower88B service ABI; registration required before new body",
+  "generated_evidence": "evidence.json local ignored at original relative path"
+}
