@@ -1,0 +1,103 @@
+{
+  "status": "author-static-stage-awaiting-independent-review",
+  "rom_sha256": "972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9",
+  "base": "0x9ffff000",
+  "windows": [
+    {
+      "va": "0xa00bec0c",
+      "length": 676,
+      "offset": 785420,
+      "sha256": "4af6baee45bfb0d8ee292f9a232b3f4dbb97b9d55eb405f8419f8aa46a3fa8b6"
+    },
+    {
+      "va": "0xa00c5b8c",
+      "length": 664,
+      "offset": 813964,
+      "sha256": "c85cba386961727ec061fc699fca677d3b959a2b4512fdfee2d42dd23fa3d1be"
+    },
+    {
+      "va": "0xa00bd924",
+      "length": 20,
+      "offset": 780580,
+      "sha256": "b79758ab93f205478e8b67f7cf2814ad8ec8d25782b8d408a277a215ba688ea3"
+    },
+    {
+      "va": "0xa00c0b5a",
+      "length": 20,
+      "offset": 793434,
+      "sha256": "22942f7c069ecde80fcf7efd2d5cfb204b7cc2f84da31942b7e5e45908ac453b"
+    },
+    {
+      "va": "0xa00bd7fa",
+      "length": 278,
+      "offset": 780282,
+      "sha256": "c94be0d3c1775bf95cd52637b873108f6ee96e8051835a38063d58726e5a16b9"
+    }
+  ],
+  "result_abi": [
+    "a0=ctx",
+    "a1=mutable NUL-terminated ACK text"
+  ],
+  "reply_abi": {
+    "target": "ctx+0x64",
+    "a0": "40-byte stack descriptor",
+    "a1": "*(ctx+0x68)",
+    "descriptor": {
+      "0x00": "*(ctx+0x3c) request id",
+      "0x1c": "bounded output strlen",
+      "0x20": "*(ctx+0x74) buffer",
+      "other_fields": "zero"
+    }
+  },
+  "ordinary": {
+    "result": "0xa00bec0c",
+    "error": "0xa00bd924",
+    "tokens": "n>=3 and odd; capacity 64 requested",
+    "ids": [
+      "ctx+0x258",
+      "ctx+0x25c"
+    ],
+    "status_token": 2,
+    "out": "pairs of token piid/value; each emitted raw"
+  },
+  "v3": {
+    "result": "0xa00c5b8c",
+    "error": "0xa00c0b5a",
+    "tokens": "n>=4; inherited tokenizer at most 64",
+    "ids": [
+      "ctx+0x254",
+      "ctx+0x258",
+      "ctx+0x25c"
+    ],
+    "status_token": 3,
+    "out": "individual raw value tokens, each wrapped as object"
+  },
+  "shared_error": {
+    "address": "0xa00bd7fa",
+    "abi": [
+      "ctx",
+      "signed status",
+      "optional NUL-terminated message"
+    ],
+    "range": [
+      -10000,
+      -5000
+    ],
+    "fallback": -10000,
+    "invalid_ack_status": -9998,
+    "invalid_ack_message": "user ack invalid"
+  },
+  "ownership": {
+    "ack": "tokens borrow ACK; consumed synchronously during serialization",
+    "buffer": "borrow ctx+0x74, min(ctx+0x78,0x558)",
+    "descriptor": "stack valid only across reply call",
+    "local_free": "none; no per-action staged list",
+    "ctx_clear": "none in five windows"
+  },
+  "unknowns": [
+    "Custom 0x453b460b at 0xa00c5d74: index load interpretation remains inferred",
+    "reply retention/copy and asynchronous transmission",
+    "numeric and JSON/raw helper validation beyond call boundary",
+    "upstream activation/state/deadline, actual action, permission, cancellation"
+  ]
+}
