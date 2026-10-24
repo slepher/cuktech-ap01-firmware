@@ -595,3 +595,29 @@ SDK0xa0111ff6旧完整合同见绝对同目录miio-recovered.md §桥接RPC段ev
 前置模板快照：S48/S49/S50未交付不计库存，ready仍只有已成熟S42/S43/S44。模板在本组三作者执行期间落盘，不等其完成后从零组包。
 
 主窗确认检查点：Q-30/Q-31/Q-32均running，三者基线5f50102e56012e2e1e0fa8f9d8010d3c8e8214fd。可派库存保留S42/Q-27、S43/Q-28、S44/Q-29共3/3；S48/Q-30、S49/Q-31、S50/Q-32只条件模板。此后本批仅消耗/交付转ready/实际时钟校准，不另扩域，不重复初始三研究包充库存。
+
+
+条件模板运行中校正（不转ready、不扩原字）：Q-30/S48 mode1经0xa00ba4b4安装result0xa00bda7c/error0xa00bd910，mode0经0xa00ba7c0安装result0xa00bd938/error0xa00bd7fa。S45/S48范围只原四窗1610B的安装/输出到callback API，**不读这四新callback**，result消费具体内容保持未知，不能把旧通用cmd.result卡当新callback body证明。
+
+Q-32/S50实字校正：cmd.call submit0后serial ok但不写busy1；json_send旧根busy1仍独立继承。两个callback finalize后写ctx+0x1fc=2（return0）或3（non0），失败/无有效result也写3，**没有清0**。原S47/S50“busy复位”只作调查问题，当前不称复位/清闲；idle消费端未知，不能从2/3推设备动作完成。两模板仍作者live条件项；等待实际SHA/最终差集/完整UTC转ready，不为闭idle另加原字。
+
+
+### S-P48转可派：Q-30串行downstream非作者
+
+作者138119aece4883d73f0af4c1f9045f3fa5b198d5已停，S48旧577行父级/四窗/独占报告branch和600行mode安装止边保留，状态转ready。实际1610B四窗unknown0；完整18:14:23→技术18:18:39 256秒、停止18:19:01总278秒，技术/提交末检查不得混称有效工时。必要绝对作者报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-serial-downstream-research-01-0041-20261025.md` 及同stem实际原窗/校验留存；未合并只用主窗提供的作者树同路径，不运行作者脚本。
+
+独立核poll mode0/1、消息借用/归还/真实handled返回、state/timeout/槽安装/输出和MQfallback格式。mode1经0xa00ba4b4装result0xa00bda7c/error0xa00bd910，mode0经0xa00ba7c0装result0xa00bd938/error0xa00bd7fa，只本层安装及已知cmd.result调用接口，**四新callback body不在本题**；不能将mode1名字json当成功消费保证。旧根network/recovery分支/通用result/timeAPI不重读，不为关闭异步copy或真实MCU执行扩SDK/MQ。实际回传内容/完整ctx/并发/clock wrap仍未闭。阶段定位<1、poll/mode/state1–2、三adapter/MQ/原字1–2、交付1=3–5分钟中置信，作者总278秒/技术256秒、近非作者174–233秒参照。第一工具UTC clock，静态独立原字/未知保留、精确独占路径本地commit不推送。最小派发：`Q-30同认领S48非作者，沿577/600及本段，1610B四窗止mode回调安装API，核借用/state/返回/MQ，首clock，静态commit。`
+
+### S-P49转可派：Q-31 OT owner接入非作者
+
+作者a5abd029fc1a59b550c4c20b5a45ab73892e2fb2已停；S49旧583行父级/独占报告branch/范围保留，状态转ready。实际3658B七函数八片段1139指令；0xa01129be两片段中间12B非body不补NOP，7厂商word未知保raw/限定，不能推ISA模型已认证。完整18:14:37→技术18:18:58 261秒、停止18:19:27总290秒。必要绝对作者报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-ot-integration-research-01-0041-20261025.md` 及同stem analysis；未合并由主窗给只读作者树，不执行作者脚本。
+
+独立核实际对象等式**E=B+0x880=C+0x968**及owner/child/callback实参，不能用旧“owner”泛名替代真实基址；0xa01109d6为同步 `_otc.info` serializer，别把它叫独立异步任务或另ctx。其余event数字门/状态缓存/字段构造、周期请求与取消/重排调用、栈payload/SDKcopy和ctx浅持有以作者最终实际合同为准；七body的本地调用不等完整owner析构/已排任务退出。公有JSON/事件框架/SDK请求接口继承，未读生产者/真实调度/并发/云接收/未知ISA继续未闭，不扩0xa010d8ca等容器body。阶段材料/对象1、事件/七word1–2、周期/解除/原字1–2、交付1=4–6分钟中置信，作者3658B总290秒/技术261秒已显著快于原9–13分预测，按实际校准，不用字节机械加倍。第一工具clock、独立静态精确路径本地commit不推送。最小派发：`Q-31同认领S49非作者，3658B八片段/7unknown、12B非body不补，核E=B+880=C+968与09d6同步serializer/事件周期交接，公共API止边，首clock，静态commit。`
+
+### S-P50转可派：Q-32串行uplink非作者
+
+作者f51ccd053ff7386420558c00aa303b9a0519cc64已停；S50旧589行范围/独占报告branch和602行busy校正保留，状态转ready。实际818B三窗、1厂商word保raw未认证；完整18:14:49→技术18:17:51 182秒、停止18:18:14总205秒。必要绝对作者报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-serial-uplink-research-01-0041-20261025.md` 及同stem analysis，未合并只读主窗给的作者树，不运行脚本。
+
+独立核call参数/descriptor/真callback literal、submit0 serial ok但**不写busy1**，json_send旧根busy1行为独立保留；两个callback finalize后ctx+1fc写2(return0)或3(non0)，失败/无有效result也3，**没有清0**，idle消费端未知不扩。两个回包形状/字段门和borrow/解析doc/临时buffer归还、SDK同步copy与ctx浅持有分别核；不能从2/3状态或serial ok推云执行成功。旧根/body/API不重计，1vendor保持raw/限定，不改模型，SDK取消/完整ctx/并发/实际动作未闭。阶段定位<1、call/descriptor1、双callback/busy/归还1–2、原字交付1=3–4分钟中置信，据作者总205秒/技术182秒及同域短复核实测，不重新报6–10分。第一工具UTC clock、独立静态精确路径本地commit不推送。最小派发：`Q-32同认领S50非作者，只818B三窗，核call不写1/两callback仅写2或3无清0、1vendor限定及回包借用，SDK/API止边，首clock，静态commit。`
+
+第十版当前队列检查点：主窗取旧ready S42/Q-27、S43/Q-28、S44/Q-29补三非作者执行席；本次已交作者让S48/Q-30、S49/Q-31、S50/Q-32转成熟ready，后备仍**3/3**。旧ready与新ready不可叠加称6；三研究初包均已消耗，模板已在运行中前置而不是交付后重组。后续仅同批消耗/复核纠正/实际计时滚动，不扩新域。
