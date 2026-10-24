@@ -1,0 +1,37 @@
+{
+  "static_only": true,
+  "windows": 7,
+  "bytes": 1780,
+  "unknown": [
+    {
+      "address": "0xa01abe7e",
+      "hex": "8bc7994c"
+    },
+    {
+      "address": "0xa0113e54",
+      "hex": "8b48d380"
+    },
+    {
+      "address": "0xa0113e58",
+      "hex": "770587df"
+    },
+    {
+      "address": "0xa0113e8c",
+      "hex": "8b47994c"
+    },
+    {
+      "address": "0xa0118b1a",
+      "hex": "8bc7944c"
+    },
+    {
+      "address": "0xa011c05e",
+      "hex": "8b479a4c"
+    }
+  ],
+  "byte_matches": 7,
+  "branch_checks": 26,
+  "type_terminal_paths": 9,
+  "direct_call_checks": 11,
+  "new_private_bodies": 0,
+  "profiles_separate": true
+}
