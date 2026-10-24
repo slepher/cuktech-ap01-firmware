@@ -208,3 +208,87 @@ app_protocol_review_02，作者1f3f86fa7f376d0bbd78d94b17f0e3ce9f19fb9b已停并
 阶段旧覆盖/四wrapper1–2、typed收集/consumer3–5、正常send寿命1–2、原字交付1–2=6–11分，中低置信；按近期充分定位约1K代码任务240秒校准，不把30分目标抄成预测。最小派发：`登记0041新认领/最新基线，沿144/159/024/021真body和四已知typed wrapper短入口恢复同count/20槽数组的收集→延后result构造→正常send边界；reset只已有写端，不扩截断a00a12d0，不读公共formatter/MQ内部。有效count前提和跨事务断边明确，静态独占commit，不推送，6–11分钟。`
 
 最新消耗：S-P15已登记Q15 app_property_research_01在7f7c37a派发，当前库存0/3、缺3，Q15复核未交付只条件项。Q13非作者7f8caefd4d90db88f244164e9afe9a4329c933ff接受f935f1c，行为纠正0/范围表述纠正1；结束17:08:15，暂停/补修等待不能精确拆分，不能当有效工时。当前有界后备尚未形成新的完整可派包；连续2–4分短任务消耗超过准备速度，不能靠短配置/公共库或无种子搜索冒充3包。
+
+## 第四轮：相关完整阶段与3份提前队列
+
+本轮已取走S-P16/Q16 OTA bridge、S-P17/Q17网络政策、S-P18/Q15复核、S-P19/Q18 RPC property、S-P20/Q19 event、S-P21/Q20 subscription。当前新备S-P22/Q16非作者、S-P23/Q17非作者及S-P24 named-property研究三份；主窗未取走时为3/3，实际派发后按消耗更新。Q18/Q19/Q20未交成果的复核仍只是条件项。
+
+以下均继承本报告首节0041身份、静态限制、原件绝对路径、派发前唯一管理登记及最新管理基线；PREP本树基线不移动。研究者必须是独立上下文/独占输出、本地精确路径commit、不推送。预调研只查足以定题的父级卡、现有body/metadata和确切表，不完成作者业务取证。为Q16定题额外只读ROM0xa060fd34的24B表，未执行任何目标。
+
+### 已消耗S-P16：Q16 constructor持有与六槽→七槽adapter
+
+app_ota_research_03，commit3972bfa0277a9496961d498cc71d07eee8c8544c已停。问题Q13 D提交→request复制/借用→HTTP六槽adapter对应用T/C七槽的真实桥接。必要证据绝对路径 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-complete.evidence.json` records313/205/185/271及主仓app-ota-research-01/02、review-01/02；`D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/miio-recovered.md` §10已解释HTTP六槽引擎调用侧，upper-miio-a/b/routing无本批adapter/constructor完整合同。Q08/Q13均明确止边，不读live作者未完成果。
+
+真固定表0xa060fd34 24B为 `763a11a000000000ac3a11a04e3b11a0025711a0f8f910a0`，六word `[0xa0113a76,0,0xa0113aac,0xa0113b4e,0xa0115702,0xa010f9f8]`。新研究入口只有extent/directcall，未找到旧body：constructor0xa012193c..1dc1 1158B、open0xa0113a76..3aab54B、write0xa0113aac..3b4d162B、HTTP close0xa0113b4e..3ba9 92B、error0xa0115702..57fd252B、stats0xa010f9f8..fadb228B，共1946B；shared0xa011398a..3a75 236B仅这些adapter真实T状态/应用槽交接。允许必要新原窗，不能把extent当正文。
+
+有限依赖：D值/URL字符串复制和指针例外、T userdata、R本层分配/入队失败回收、adapter ABI/长度/返回/状态及正常完成/错误归还的原序；shared状态及业务通知只到调用边。止HTTP worker0xa0123dca、FS/hash/TLS/JSON/queue/allocator内部；不重做Q08 F/file-open或Q13 start，不展开install/签名/board。error中0xa01143de/0xa01ac65c新callee只参数/返回，跨owner另报。验收D/T真实寿命、六槽到七槽不能按同名硬接、缓冲借用/状态先后/失败回收；保留并发取消/T销毁/安装未知。
+
+阶段覆盖1–2、constructor4–6、五adapter/shared3–5、原字交付2–3=10–16分，中低置信，约2KB新原窗/多callback，不抄Q13仅308B的预测。作者可测17:12:46→17:17:36=290秒，前读未知；Q16实际发现HTTP close→T+40 install，而error先T+44普通close，不能拼接正常HTTP结束为Q08归还；D/URL复制、TLS/T浅持有、queue失败freeR等为作者待复核结论。独占app-ota-research-03-0041-20261025，同名branch、ota03。最小派发：`仅上述原始constructor与table五adapter/shared的正常持有/归还接口，旧引擎调用侧继承，新原窗2182B有界，未知指令原字留存，不执行，独占commit交付。`
+
+### 已消耗S-P17：Q17同N ready、外部门与probe
+
+app_network_research_03，bc4ed028de4aa5d60f0fc88578f2f66bd278192e已停。继承Q09及非作者4计时门/monitor，不重做716B或5644B。绝对种子 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-complete.evidence.json#/records/89/normalized_result`，ev_4150d456a78d9d2a6c00fda793101e8915ff107084a8356d31e91552e2b072de；主仓miio-recovered §6/10及app-network-research-02/review-03。真实caller ready→0xa0067be6(N)、B=1→0xa0195ce4(M,N)、state2触发0xa006e768→0xa0067c20()，保留state1例外。三个只有extent的新入口58/128/374B共560B，分别0xa0067be6..7c1f、0xa0067c20..7c9f、0xa0195ce4..5e59。
+
+查较晚qemu-ota-validation及qemu-rtc-display已确认0xa0069356安排4000ms reboot，26B直接继承、不重读、不运行QEMU；不能再以动作未知为新题。upper卡无三helper合同；前两directcalls锁/日志，第三为业务适配，下游0xa0119638/socket/format只API。对象N=0x62fca7f8/M=word(N)，另有callee真实外部owner必须区分；不预设三函数同owner。
+
+范围只字段宽度/复位/许可原义、probe局部描述符和请求数据来源/借用/返回、本层资源及已有caller动作门；止G生产者、a0119638、callback、新私有callee/网络/driver/crypto/全writer。验收请求≠联网/完成，保留单位/外部copy未知。阶段1–2/3–5/1–2/1–2=6–11分，中低置信，Q09采样250秒作类比；作者可测166.031秒，前读未知。其作者结果为ready SW0/解锁后SH1，另G政策，probe20B及7000原值，不先当单位ms。输出app-network-research-03-0041-20261025，同名branch、network-research03。最小派发：`三精确入口及同caller正常接合，旧reboot叶继承，真实N/M/外owner分账，API止边，静态独占commit。`
+
+### 已消耗S-P18：Q15 typed collector非作者
+
+app_property_review_01，作者bfed293a5b32c7d0538e41786a2ece71eeccfe82已merge/转存，绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-property-research-01-0041-20261025.md`，analysis同stem verify.py/bounded-evidence.json.tmp。三真body1294B沿144/159/021、四wrapper130B、024局部consumer(0)，不运行作者脚本、不重验deferred/Q11业务。
+
+验收stride0x20=32B而非十进制20；count signed>=20门/六参/完整type比较与byte存储；SH0状态由LH消费；type1/2 byte/type3 half/type4 word复制、type0 string借用到consumer完，flag取caller低byte。consumer每轮重读count/最多20、mode0/nonzero、prefix过长早退/value过长只省value继续、type5/9无完整构造链；513/512不是B容量证明。send附CR/0x101 format、unsigned返回<=256门、queue handle重读、仅−1失败、consumer忽略返回。止formatter/MQ、count reset/截断a00a12d0/并发/云端，不将命令文本当JSON或collector调用当云通知。
+
+阶段<1/1/1–2/1=3–5分中置信；作者采样222秒、成稿190秒不同端点，Q12review总130秒作类比。独占app-property-review-01-0041-20261025，同名branch、property-review01。最小派发：`Q15同认领非作者仅typed收集→consumer→send给定有效count阶段，独立原字/字符串，不运行作者脚本，保留reset/队列完成未知，静态commit。`
+
+### 已消耗S-P19：Q18 RPC property staged生命周期
+
+app_rpc_property_research_01。问题cmdrpc get/set_properties输入→72B staged record/raw值持有→result/error回调→同list归还；不是Q15 UI数组。领域父级绝对文件 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-miio-a.md` §0xa00bb880/0xa00bbb6c已解释根局部，EIDs ev_ccf8947ba0ace57f9a4011dc3f0596e163b52e67c237c5a2e8e0ab7161b3f7a0 / ev_356b7dc60bc5a619a8c2c7af6a983114de52ca84bdf70843a8c5379ef8af65ce，明确留下record/value/callback cleanup边。另一profile真root在绝对upper-complete.evidence.json records59/164，ev_29f77800b52f12cedb687a2038119b3cf1012aabd3390128a8e525a327669e0a / ev_7de861b43b55102a6679af754b6a5508870ea194da05c0545639ff53ec2960c3，各profile分账。
+
+对象ctx+0x228/+0x22c staging head；根用局部72B DID/IDs/raw value+len调0xa00bb67e，成功装ctx+6c result/get0xa00be8ca/set0xa00bea78、+70 error0xa00bb0c2/0xa00bb0dc；失败a01afb26。准新精确原窗（只有extent，无旧body）：stage0xa00bb67e..bb6d9 92B、两result0xa00be8ca..bea77 430B及0xa00bea78..bec0b404B、两个error各26B；shared0xa00bb6da..bb80d308B仅同property响应适配。0xa00bb80e格式层及generic allocator/listclear到接口，不读a0058386/a01afb26公共库补量。作者发现必要matcher0xa01adc0e(head,&local_record,status)96B只同head正常匹配更新，已由主窗另核登记；预调研仅给metadata无旧卡，不并行完整取证。
+
+有限回答record拷贝/raw string深copy或借用、doc与原JSON寿命分界、回调ABI/记录匹配/状态和输出、成功/错误清链时点/字段归属及callback槽保持。排除v3/其它action/全handler/真实云应用/权限实验；ctx全寿命并发未知不追。验收不能从doc释放推raw已copy，不能把callback0当设备已应用。阶段1–2/2–3/4–6/2–3=9–14分中低置信，约1.3KB新回调，提前即交付。独占app-rpc-property-research-01-0041-20261025，同名branch、rpc-property01。最小派发：`继承两root卡/真body，只同staged head输入到result/error和归还闭包，必要新helper/回调原窗，公共JSON/list边界停止，静态commit。`
+
+### 已消耗S-P20：Q19 cmd.event输入与flush
+
+app_event_research_01。父级绝对upper-miio-a.md §0xa00ba444 cmd.event，ev_a443a9d8aa26648e225c4f146153d31ea375d78457793653893e2aac63e5e293，明确borrow argv、0xa011408a回0才0xa01af798/ok，留下queued ownership。另一profile真root绝对upper-complete.evidence.json record233，ev_b7f9c05652b41f5486cbdecf96f07079792f9d25bf48dcfb216ec0448259d9a0。不重做root/tokenizer，近期无callee专项。
+
+只准四metadata入口新原窗：0xa011408a..4149 192B、0xa0113f6c..4089 286B、0xa011c204..c3af428B、0xa01af798..fa2b660B，共1566B。对象从component参数追实head/entry，不因同event名认F11对象；name/argv copy/保留、record字段/时戳、分支与锁、flush描述符、本层回收/返回/callback ctx为一个完整输入到handoff阶段。不得按名字猜即时/队列分支。止0xa0110984/0xa0113340/0xa0116ad0参数返回、公共JSON/formatter/allocator/queue/transport；不扩真实设备/云接收/认证。与Q18 staged head、Q15结果数组不同。
+
+验收借用输入到owned/callee边界和归还，root ok不等event被处理；保留外部submit复制/并发未知。阶段1–2/3–4/3–5/2–3=9–14分中低置信，1566B新callback；独占app-event-research-01-0041-20261025，同名branch、event01。最小派发：`四真实新入口正常event记录/分支/flush原序，根borrow继承，API到边即止，静态独占commit，跨owner先报。`
+
+### 已消耗S-P21：Q20 subscription正常移除
+
+app_subscription_research_01。父级绝对 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/upper-miio-b.md` §0xa0115f7e/§0xa011d202，EIDs ev_c9c083522ddaa5a7c350aad4fd271a4e9fd7998e751e2f4db869cbe71d44272a / ev_d4942aedf1d2ed7b7ee29db9fb686a68f9f7155c6d5706b91f8c5b96da16a7c8；另一profile真root为绝对upper-complete records245/48，ev_c22e8476e961b1745b154b77d021ebafc0cedf6d943f1eb10ef9c9b712f6e21b / ev_221426fb577a1866be99a4825a47510530b45aec1e8d468aed90c0e391e9f036。根成功创建/请求门/88B descriptor已有，不重做已知allocation-failure缺陷或任何异常验证。
+
+对象peer head0x62fcab94/topichead0x62fcaba0/mutex0x62fcaba8。有限新入口0xa011d10e..d201244B、0xa01abe54..befd170B、0xa0113c8a..3f6b738B、必要0xa0118b08..8b5376B、0xa011bffe..c0d9220B/0xa011bfc4..bffd58B、0xa01188a6..89b7274B，均metadata非旧body，约1.8KB。问题精确/aggregate有效移除→双向边/计数/空对象/类型登记原序；matcher0xa0118a40及generic allocator/unlink/formatter止API，不扩fanout/全部topic语法/OTA/无线/crypto。N03 UiIFace/Q07 policy P是其它头，Q19只生产事件不做本graph更新。
+
+**作者原字纠正准备假设：0xa0113c8a是只读graph diagnostic dump，无unlink/free，不能按旧父级“cleanup”或本包问题名称当已证清理；真删边/归还在d10e/bffe/bfc4。** 0xa01abe7e原word8bc7994c未知完整保留，不改模型。后续复核须核dump只读与调用时点，这不是新body/扩库许可。验收正常有效peer/topic到graph变更/归还/status，外层0不当移除成功，保留并发/真实投递/manager销毁未知。阶段1–2/3–4/3–5/2–3=9–14分中低置信。输出app-subscription-research-01-0041-20261025，同名branch、subscription01。最小派发：`已有有效root/descriptor前提下，仅上述具体graph移除/归还/登记与dump边，原字未知保留，公共库停止，静态commit。`
+
+### 可派S-P22：Q16 OTA bridge非作者
+
+app_ota_review_03，作者3972bfa0277a9496961d498cc71d07eee8c8544c已停止。主树merge后绝对报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-ota-research-03-0041-20261025.md` 与analysis collect.py/verify.py/raw-windows.json；源前提沿S-P16。只核2182B七窗口/24B表、Q08/Q13/HTTP调用侧必要继承，不运行作者脚本。
+
+验收D/URL及四串复制、TLS/T浅持有；R单分配布局/timeout min/queue&R及非0freeR原错不freeT/C；5完整厂商word原字段/旧SINC分账；open读*total→T+38、write T+3c借可写buf/要求len推进却返callback原值；HTTP close先state4/统计→T+40 install，0才可T+48 completion，不能接Q08普通close；error先T+44普通close再有限重试/state7/selector；stats64B不补NUL/不持有S；shared先状态/非负进度、解锁后通知栈snapshot未知。止install/完成内部、a01143de/a01ac65c、snapshot消费、HTTPworker/FS/hash/queue；保留正常F/H/fd归还/T销毁/配置寿命/取消重入未知。
+
+阶段<1/1–2/2–3/1=4–7分钟中置信，作者2KB新窗290秒可测非完整。独占app-ota-review-03-0041-20261025，同名branch、ota-review03。最小派发：`Q16同认领非作者，独立原字/5vendor/表/ABI与有限归还，重视close→install纠正而非同名硬接，静态commit。`
+
+### 可派S-P23：Q17网络政策非作者
+
+app_network_review_04，作者bc4ed028de4aa5d60f0fc88578f2f66bd278192e已停。主树绝对报告app-network-research-03-0041-20261025.md与analysis verify.py/verification.json/inspection.txt；真源与有限旧caller沿S-P17。只核560B/20关键字段及caller门，不重验Q09716B或旧reboot叶，不执行作者脚本/模型。
+
+验收ready锁内SW0 N+1d0、解锁后SH1 N+1d4且非bool返回；许可另G=0x62fcad78/G+0锁/G+8 byte，15/20/30位掩码与50→1，state2返回0才请求/state1不套门，不命名G枚举/找writer；probe prefix3/domain16/DNS成功才R20B：ip、u16 8053、cb0xa0068a26、N、7000原值/padding未知；0xa0119638(M+128,4,"otn.ntp",R,20,M+e8)原返回/caller忽略。三对象不强合、7000不假设ms，R/buf寿命及APIcopy/callback未闭。止a0119638/callback/DNS/formatter/调度/锁/日志，不新callee或Gwriter，probe0不是联网完成。
+
+阶段<1/1/1/1=2–4分钟中置信，作者166.031秒可见非完整，Q12review总130/Q14review142秒参照。独占app-network-review-04-0041-20261025，同名branch、network-review04。最小派发：`Q17同认领非作者，三helper及必要caller对象/宽度/返回/局部借用，独立静态原字，保留全部外部持有断边，commit交付。`
+
+### 可派S-P24：cmd.props named-property条目阶段
+
+候选app_named_property_research_01。问题正常cmd.props name/value更新→组件条目持有/替换→即时报告调用及显式归还阶段，独立于Q18 MIOT staged72B/ctx228和Q15结果32B数组。领域父级绝对upper-miio-a.md §0xa00ba35a根卡ev_32e5d4799b24d8b2676f0461c9349f5a6ec6980ea777ad502e1b14f4c1c04785只解释偶数pair循环/首非0停止/既更新不回滚，明确typing/retention/duplicate/persistence未闭。另一profile真root绝对upper-complete.evidence.json record256，ev_cae45a84ae40a1571e17792b4854ee16d8f5d44a3f6fe046f24ad031b85410da。root/tokenizer不重做。
+
+真实callee0xa0116a3a(component,name,value)→0xa0116900/0xa011c3b0；0xa0116ad0被Q19 flush调用但Q19明确止调用端、不读body。仅四metadata新入口（无已定位旧body）：0xa0116a3a..6acf150B、0xa0116900..6a39314B、0xa011c3b0..c513356B、0xa0116ad0..6b59138B，共958B。对象从component真实head/entry决定，不按和event函数形状相似认同。Q19独占0xa01af798及event四body，本包不读/重验/依赖其未交结论；本包独占named-property四helper。发现同event节点/跨owner须报冲突并暂停增量，不以名称先认同或先否认。
+
+有限typing接受到JSON/解析API；同名更新/替换/复制或借用、node字段/长度/旧值归还、锁/即时报告参数/返回、0xa0116ad0真实对象/计数/逐条行为。不要预断cleanup函数角色。止0xa0110984/0xa011c0da参数/返回/局部buffer、generic allocator/JSON/formatter/queue/transport，不追全部props/source writer/persistence/云送达。验收name/value borrow到条目/报告/归还原序、status/共享头身份与并发下游copy未知；不能只因listclear名称说已free全部字段。近期报告除Q19止边无四helper合同，upper卡只有root引用，无未交作者依赖。
+
+阶段coverage/对象1–2、update/typing/retention2–3、report/归还2–4、原字交付1–2=6–11分钟中低置信，958B新私有字段/两路径，参考Q15齐材222秒但新body增加不确定性，不追库凑20–40。独占app-named-property-research-01-0041-20261025，同名branch、named-property01。最小派发：`登记新认领，继承cmd.props根，只四确切helper的正常名称值更新/持有/报告调用与真实归还，Q19 flush不读、跨owner先报、API止边，静态独占commit。`
+
+第四轮最终状态（主窗确认）：S-P22 OTAreview、S-P23 NETreview、S-P24 named-property均未派，真实库存3/3；当前执行Q18/Q19/Q20，不把它们的未来复核算库存。Q20作者二次实字核正覆盖上述中间说法：a0113c8a本层为dump，但0xa0113ca8入口先调用a011bffe，shared stale-peer清理有副作用（now−peer+0x10按unsigned差>78）；所以不能称整个调用只读或无清理。0xa01188a6仅9类计数与delta，并非外部callback注册/注销。前次‘cleanup’→‘只读dump’两项历史表述保留作纠正轨迹，当前Q20验收/复核必须采用本段最终事实，不因中间说法漏掉callee清理。
