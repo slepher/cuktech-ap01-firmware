@@ -4,13 +4,15 @@
 
 用户明确：继续推进，上一批无新种子不能当成整体无事可做；用3个subagent从其他未闭领域的既有报告/留存去重盘点，取得真实地址/字段/callback种子后继续研究及独立复核。不重复已验合同，不无种子扩扫，静态限制不变。本节覆盖下方上一批运行0/无新种子的范围快照，历史结论保留而非全局终止条件。
 
-当前3席盘点均已实际派发；新树基线a462ff5，根D:/CodexHome/visualizations/2026/10/24/01a16bef-15d6-7830-875b-f181b475b4d4。
+原3席盘点基线a462ff5，均已整合并按真实种子转入研究/精度复核；当前3席实际运行见下表。根D:/CodexHome/visualizations/2026/10/24/01a16bef-15d6-7830-875b-f181b475b4d4。
 
 |任务|agent/独占树|拥有范围|
 |---|---|---|
-|J05|/root/k03；re0041-j05|UART/Pogo/dock正常生命周期/资源接入的既有证据去重盘点；transport-reuse-gap-j05同名报告与analysis|
-|J06|/root/b25；re0041-j06|MiIO/绑定正常应用事件与请求持有的既有证据去重盘点；miio-reuse-gap-j06同名报告与analysis|
-|J07|/root/l03；re0041-j07|正常输入/idle/屏保进入唤醒控制器的既有证据去重盘点；input-idle-reuse-gap-j07同名报告与analysis|
+|G19（J05种子）|/root/k03；re0041-g19|运行：Pogo同watcher取消/同fd同步；基线0fa2089；独占pogo-poll-cancel-backend-g19报告/analysis|
+|F11（J06种子）|/root/b25；re0041-f11|运行：MiIO普通栈descriptor复制/请求队列持有→callback寿命；基线ee220d8；独占miio-request-ownership-f11报告/analysis|
+|P01（J07种子）|/root/l03；re0041-p01|运行：旧activity→双counter清零/重读/清byte原字段精度复核，新增功能0；基线327d557；独占input-idle-activity-p01报告/analysis|
+
+盘点整合J05 a81502c→0fa2089、J07 fe78562→327d557、J06 561a90e→ee220d8；功能新增0。J06原pending三参ABI、J07原timer userdata候选因旧合同已覆盖被撤下，不能新计。F09/F10编号已有历史event-array分支，未覆盖/复用，MiIO新题使用F11。
 
 盘点不新增ROM读取/反编译，不重跑既有负搜索/历史回放，先父级complete/final/SIM再较晚专项和独立复核，按地址/字段/callback/对象身份去重。首个可靠候选尽早回报；管理者筛重后另派独占研究与非作者技术复核，不把元数据/旧地址当新功能，不按领域单份无种子终止整体推进。所有生产/ROM/配置/模型和执行限制继续适用。
 
