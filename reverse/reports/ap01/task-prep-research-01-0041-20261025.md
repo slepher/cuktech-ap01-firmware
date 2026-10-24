@@ -143,3 +143,68 @@ app_network_review_03，作者675db193a57e78bebb787d5a388b3a5ffcc3d391已停止�
 第二轮计量：可得UTC采样16:37:50.275781→16:54:39.652564约1009.377秒，仅为该采样区间，完整任务开始仍未知；期间持续补包/即时交接和文档，不等于有效计算工时。全部工具为正常本地读取、JSON定位/文档/git提交；未逐项完整汇总等待、无sleep/外部排队，token不可得。中间queue.json继续忽略留存；报告本地追加commit交付，之后同题等待主窗真实消耗/新结果再补。
 
 最新消耗补注（主窗消息）：三包曾同时达到3/3，随后S-P08/Q10非作者app_weather_review_01、S-P07/Q12 app_settings_research_01均在11c90bc派出，现库存仅S-P09，1/3、缺2。Q08补修620f779经非作者db3e7b475e3fe2d1256c917db810eeb7789a59ce限定接受，flags真实修正1；首精确快照16:50:03、恢复16:52:22、提交16:54:34，暂停/补修等待无法精确拆分，不当有效工时。Q11作者7ab7fd20e8c765db2433abddda2ea606e4ddb53f完成，采样240秒非完整总时长，复核包另补。
+
+## 第三轮滚动快照
+
+S-P09已作为Q13、S-P10作为Q11复核、S-P11作为Q14研究、S-P12作为Q12复核、S-P13作为Q13复核、S-P14作为Q14复核全部取走。本报告第三次更新时只有S-P15新包已备、待主窗登记；若尚未取走则库存1/3，缺2。不能把进行中的作者后续复核算库存。屏保slide_param/time仅有短冷启动读默认、缺完整消费种子，已停止，不派微任务。
+
+### 准备覆盖错误与技术复核修正
+
+Q13原S-P09称offer0xa010f7e8“仅extent无旧body”错误：预调研核了upper-complete与round1 metadata/报告目录，漏核领域upper-miio-b父级语义卡，且实际upper-complete record271已有真body。作者找到upper-miio-b中offer ev_acec13eb19b12621a674a56b842b3cba123fc76d98212eca7676f53ea1e76459和selector ev_4999424dc25eab1cd88751ca3fc153972ea5a2e3496073c25e5fdb8d7c368f04；它们应继承，不重计原字134/308B或新业务。真新增缩为M/L接合及start308B/D/T关联。此处保留原准备错误，不静默回写成当时已核；后续定题加上对应upper父级卡核对，不能只查报告标题/精确地址。
+
+Q13非作者另指出“本题未见T/C alloc/free”过宽，record313明确alloc T 0x2e0及注册失败free T。主窗暂停复核后同题作者补f935f1c9602c6767998cde2f3289c26067ab3474，只收窄为handler/offer/selector/start段未做该行为，C来源寿命未知；5旧行复核、无新原字，作者停止后恢复非作者。补修不是新包或新取证阶段。
+
+### 已消耗S-P10：Q11 packed配置非作者复核
+
+app_protocol_review_01，作者输入7ab7fd20e8c765db2433abddda2ea606e4ddb53f，主窗取走后非作者交1a2651dfb78016268ca884ec9c01daa754db817c限定接受/纠正0/新增0。可测144秒，之前读取未计。对象和来源沿S-P05：主仓完整报告app-protocol-research-01-0041-20261025.md、analysis同stem合同/verify.py/原字，whole-rom-private-008/006真824/364B、deferred functions/1 caller。
+
+复核范围是两属性共u32 setter→C1/C2 refresh/变化门→已验cmd67调用及通知低8位；只核bits0–3/8–11→各byte0高4位/SB保留→反向0xb8；refresh比较完整byte2、NULL不改/未映射位更新byte2但bool可false；setter不写byte2，重复可抑制非确认；镜像完整u32而通知p&ff。继承B10/B11 getter及charge-complete record22，止a00a533a/a01951e2/公共API，不核item14生产或物理生效。输入按值、静态槽、borrow item、wrapper栈payload寿命与规格名限制。独占app-protocol-review-01-0041-20261025及同名branch，protocol-review01。预测3–5分钟，阶段<1/1–2/1/1，据作者240秒/Q07非作者115秒；最小派发为同Q11非作者合批核以上差集、独立原字/旧卡片、不运行作者脚本、静态独占本地commit。
+
+### 已消耗S-P11：Q14 cmd59状态生产及refresh可见性
+
+app_protocol_research_02，交1f3f86fa7f376d0bbd78d94b17f0e3ce9f19fb9b。独立真seed为 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/analysis/uart-response-0041-20261023.json#/functions/0/normalized_result`，EID ev_6f9f82e5daf0540a1c24a0b85daa2e394785391692765e5e3e100eb7b37ed94c、原profile bcefdee5092076e55636e077b45523e203f4b870ae7b7ab547945ed1b8162279。0xa00a874e..8756比较0x59→0xa00a973e；正常writer窗口0xa00a973e..983e。S=load32(0x62fcb6c4)为raw缓存，T=load32(0x62fcb2cc)、A+index*0x1a8为item。0xa00a97bc indexed byte→97ce SB item14，97f4→9800 SB item15；9828直接赋mask1000/2000，9830同步notify(i&ff)。这不是cmd67因果确认。
+
+既有N02仅51/52/56、P17仅63/65、P10仅查询调度、UART response14用例不含59、E07只是消费者引用；upper-MiIO卡不覆盖硬件writer。相交Q11是已交作者的另一读端，不重验其转换/submit，两个writer窗口不同。有限只copy请求表达式/count重读/两byte/通知/既验refresh条件接合；继承a0191652、B19/B21正常CRC与活动cmd门、E01/E02借用、P10慢组59。止MCU/copy/queue、S/T全局数量与寿命；不做异常回放或无种子找67。
+
+验收copy n与实际loop数不同来源、mask覆盖非OR、相等仍query推进、S缓存但T/count/A重读、借用/后续refresh非即时必达/非物理确认。独占app-protocol-research-02-0041-20261025、branch codex/app-protocol-research-02-20261025，protocol02。预测5–9分，阶段1–2/2–3/1–2/1–2；实际可测154.379秒前读未知，说明仍高估，不因此扩量。最小派发为同协议完整正常观测阶段，上述旧seed/有限差集，静态独占commit。
+
+### 已消耗S-P12：Q12 sysconfig非作者复核
+
+app_settings_review_01，作者6abd0bbd749d8e34634bf819c294df50fb33b811已merge/转存。主仓报告 `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/reverse/reports/ap01/app-settings-research-01-0041-20261025.md` 与同stem verify.py/result.json；旧072 reader、071 writer、L03–L06/M01–M02是必要继承。只核reader332B/default32B及接合，不运行作者脚本、不重验算法/FS。
+
+验收头{8,0,0}/callback实参只调用边；read返回不检查；完整u32 a0比零扩展G+6 u16；非零读H两分支先close再keep/reset；默认SW0到G0..3再SH0164于G4，仅覆盖6B；失败writer独立新H、init无setter通知/保存成功门；G2/G3默认0接消费者。FS实际保证/subscriber寿命/100单位保持未知。输出app-settings-review-01-0041-20261025、同名branch，settings-review01。预测2–4分，阶段<1/1/1/1；据作者可见216秒、Q10非作者131秒。非作者最终交3e66b968c63b61c92bf505be7096b7b9378d94cc，新增/修正0；总130秒、分析106秒，不能混同。最小派发为Q12同认领限定非作者独立原字/合同核，静态独占commit。
+
+### 已消耗S-P13：Q13 manager-T启动交接非作者复核
+
+app_ota_review_02，初始作者63dc73afe87399d6405d0a612db75bea3cc0298d已merge，修正输入f935f1c9602c6767998cde2f3289c26067ab3474待同题确认。主仓报告app-ota-research-02-0041-20261025.md及analysis verify.py/raw-windows.json；主仓upper records205/185/271/313、upper-miio-b旧offer/selector真合同。只核M/L/T参数同一性与旧接合、新308B start，原offer134B不算新。
+
+验收B=*(arg3+4)、M=B−0x128、L=M+0x1b90、T+8=L；offer可多T接受/params同步borrow；selector首start0停，失败先state0再锁内T+48(T,C)后继续；start stackD0x120借T+b0 URL、四63B字符串/末NUL、u16/u8写宽度、0xa01148bc→a012193c(*(L+c),D,0xa060fd34,T)且L非service；清T+270/70后写T+2b4；接受数/start/selector/RPC返回分层。止a012193c/table targets/HTTP/F/sink/验签/安装/取消，D复制/T异步持有/完成仍未知。对象alloc/free范围按上述补修收窄。独占app-ota-review-02-0041-20261025、同名branch，ota-review02。预测3–4分，阶段<1/1/1/1；作者195秒采样非完整总。最小派发为Q13同认领独立非作者上述合批、旧卡片及原字，不运行作者脚本，静态commit。
+
+### 已消耗S-P14：Q14 cmd59非作者复核
+
+app_protocol_review_02，作者1f3f86fa7f376d0bbd78d94b17f0e3ce9f19fb9b已停并merge/转存。主仓报告app-protocol-research-02-0041-20261025.md与analysis verify.py/原字；原seed及profile沿S-P11。独立核358B之外本题74边界/3indexed/2SB/3JAL及正常writer合成，不重做Q11转换器/公共API。
+
+验收copy n=(u8[62fcb01c]<<3)&f8非T.count*8；S为pointer且helper后加载；T/count/A每轮重读、S缓存；S[8i]/[8i+1]完整u8→item14/15；mask直接覆盖/同步notify(i&ff)，相等仍推进；Q11同14读端仅后续refresh时可见/受byte2门，无即时边或特定67因果。止S/T全局寿命/数量不变量、item15新消费者、底座物理确认。独占app-protocol-review-02-0041-20261025、同名branch，protocol-review02。预测2–4分，阶段<1/1/<1/1；据Q14作者可见154秒、Q11review144秒、Q10review131秒。最小派发为Q14同认领非作者独立原字/正常合同、静态独占commit。
+
+### 可派S-P15：应用typed结果收集、延后消费与发送边界
+
+候选app_property_research_01，新认领由主窗串行登记；同接口整阶段不是为库存拆四wrapper。问题正常wrapper输入→20槽收集→延后result/properties_changed构造→发送调用边/必要持有。真实对象count=0x62fcb044、数组base0x62fcb048、stride0x20、输出buffer0x62fda0a8。既有deferred/F01/Q11仅核caller实参并笼统称通知，未解释收集/延后消费；本预调研不先作业务纠正。upper-miio-a/b/routing领域卡已按接口精确核，无该完整合同。
+
+必要绝对真body材料：
+
+- `D:/Documents/PlatformIO/Projects/cuktech-ap01-firmware/evidence/rea-0041-20261017/evidence/whole-rom-private-20261023-144.json#/structuredContent/normalized_result`，0xa0195034..50e3 176B，ev_89e3ae9d1a09935389925ac12a464c788cae672e9b1631dccf95d099355d501f。
+- 同绝对目录 `whole-rom-private-20261023-159.json`，0xa01b5d70..606b 764B，ev_d130f16f50acaa43d7f20c98370e94baef9d75355aea1e27d2af68d7ebee7db2。
+- 同绝对目录 `whole-rom-private-20261023-024.json`，0xa00a2578正常GET/SET两处真实a01b5d70(0)调用；只必要前后窗口，不重导整个dispatcher/接收parser。
+- 同绝对目录 `whole-rom-private-20261023-021.json`，0xa00a116e..12cf 354B，ev_e56e7bf85b43acfb10c1c6065be0dd6f8d6ff82cbb1c1c92f3665a396e97610e，只正常字符串持有与queue API调用边。
+
+独立JSON无structuredContent时解析content[0].text同字段，旧Evidence/profile各自保留。0xa01950e4..5105 34B、0xa0195106..5121 28B、0xa0195122..5143 34B、0xa0195144..5165 34B四typed wrapper只有extent和direct a0195034，准这四入口必要新原字，不宣称旧body存在。formatter/JSON/strlen/queue算法公开API止步。
+
+有限依赖：type/param6/result flag、byte/short/word内嵌及string指针保留、count>=20门与递增时点；consumer count重读/最多20、状态halfword有符号消费、mode0/1、512/0x201边界及早退；必要a00a116e正常调用参数/返回和消息借用/持有。止formatter、MQ、接收parser、全部属性、云/设备执行，不取真实配置或安全材料。
+
+**count reset没有已证写端，不能虚构。** 144是递增writer，159为延后reader；024的GET前置真实调用0xa00a12d0(0)只保留锚点，022为bad-instruction截断且E07明确旧extent不覆盖后面的未知owner，禁止据reset假设展开它。验收将“外部给定有效count”的收集/消费独立阶段与reset/并发/共享buffer寿命未闭分开。只在已有144/159/021精确写端中回答有无本层清count，未取得即保留未知，不全ROM负搜。此包不宣称完整跨事务接口闭合。
+
+验收wrapper实际类型/宽度；数值复制与指针borrow延续至consumer的区别；result flag的消费；buffer/length边界与发送前后资源/返回门；caller调用不等云通知或云成功。相交Q11/Q14仅引用caller参数/peer item来源，不读其业务转换/原字窗口；Q12 G、Q13 T不同对象，无live作者后续依赖。独占app-property-research-01-0041-20261025报告/analysis，branch codex/app-property-research-01-20261025，property01。
+
+阶段旧覆盖/四wrapper1–2、typed收集/consumer3–5、正常send寿命1–2、原字交付1–2=6–11分，中低置信；按近期充分定位约1K代码任务240秒校准，不把30分目标抄成预测。最小派发：`登记0041新认领/最新基线，沿144/159/024/021真body和四已知typed wrapper短入口恢复同count/20槽数组的收集→延后result构造→正常send边界；reset只已有写端，不扩截断a00a12d0，不读公共formatter/MQ内部。有效count前提和跨事务断边明确，静态独占commit，不推送，6–11分钟。`
+
+最新消耗：S-P15已登记Q15 app_property_research_01在7f7c37a派发，当前库存0/3、缺3，Q15复核未交付只条件项。Q13非作者7f8caefd4d90db88f244164e9afe9a4329c933ff接受f935f1c，行为纠正0/范围表述纠正1；结束17:08:15，暂停/补修等待不能精确拆分，不能当有效工时。当前有界后备尚未形成新的完整可派包；连续2–4分短任务消耗超过准备速度，不能靠短配置/公共库或无种子搜索冒充3包。
