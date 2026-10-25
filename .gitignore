@@ -2,11 +2,8 @@
 # ROM 镜像（下方明确放行的原厂 0031 / 0041 除外）
 roms/**/*.bin
 roms/**/*.json
-# 逆向运行证据（REA Evidence、QEMU 运行、Ghidra 安装、私有 profile）
 evidence/
 # 可再生成的构建产物与第三方依赖
-reverse/rehost/
-reverse/app-0031/deps/
 # 二进制与打包物
 *.bin
 !/roms/0031/ap01-1.0.2_0031.bin
@@ -26,7 +23,7 @@ reverse/app-0031/deps/
 *.obj
 *.jar
 *.whl
-*.pyc
+*.py[cod]
 *.class
 *.db
 *.gbf
@@ -35,8 +32,56 @@ reverse/app-0031/deps/
 *.pypredef
 *.gpr
 *.rep
-# Ghidra 13 位十六进制资源头（每份 15–17 MB，由 rehost-assets.py 生成）
-reverse/**/ap01-assets.h
-reverse/**/round*-ap01-assets.h
 # 本地缓存
 __pycache__/
+
+# 构建目录、依赖与缓存（置于放行规则之后，避免其中的源码被重新收录）
+build/
+cmake-build-*/
+dist/
+out/
+.pio/
+CMakeFiles/
+node_modules/
+.venv/
+venv/
+.cache/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# 编译、链接、覆盖率与构建工具中间产物
+CMakeCache.txt
+compile_commands.json
+.sconsign*
+*.a
+*.so
+*.so.*
+*.dll
+*.exe
+*.d
+*.map
+*.su
+*.lst
+*.gcda
+*.gcno
+*.gcov
+.coverage
+.coverage.*
+htmlcov/
+
+# 运行日志、进程记录与编辑临时文件
+*.log
+*.pid
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+
+# Research now lives in the adjacent cuktech-ap01-firmware-reverse repository.
+/roms/0031/reverse-archive/

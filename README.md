@@ -1,41 +1,15 @@
-# CUKTECH AP01 固件逆向
+# CUKTECH AP01 固件平台
 
-本项目独立研究 CUKTECH AP01 的 `1.0.2_0031` / `1.0.2_0041` 固件，保存机器码分析、原厂行为复查、模拟模型及实验性 ROM 构建工具。没有原厂完整源码，更新包也不是整片 Flash 备份。
+本仓库维护 AP01 固件模块、原厂接口适配、离线构建、ROM 打包及诊断客户端。逆向研究已拆分到相邻的 [cuktech-ap01-firmware-reverse](../cuktech-ap01-firmware-reverse/README.md)。
 
-外部项目可以引用本项目的结论和工具，将自己的程序编译、链接并打包进 ROM。程序的业务需求、产品协议和发布状态由外部项目维护；本项目维护固件基线、注入约束、打包方法及验证证据。
-
-## 文件位置
-
-| 位置 | 用途 |
+| 目录 | 内容 |
 | --- | --- |
-| [roms/CATALOG.md](roms/CATALOG.md) | 原厂镜像及实验候选的版本、长度、哈希与验证范围 |
-| `roms/0031/`、`roms/0041/` | Git 收录的未修改原厂 0031 / 0041 镜像；实验候选须另行准备 |
-| [reverse/reports/ap01/](reverse/reports/ap01/README.md) | 研究索引、阶段报告和交接；`knowledge/` 保存专题结论 |
-| `reverse/analysis/` | 地址索引、反汇编、资源映射、硬件模型和工具导出 |
-| `reverse/raw/` | 原始探针、交叉反汇编及历史尺寸测量，按原始哈希解释 |
-| `reverse/sdk/` | 用于交叉核对的 SDK 头文件和少量源码摘录 |
-| `reverse/app-0031/`、`reverse/nuttx-sim/` | 历史诊断程序构建产物、SIM 配置和验证记录 |
-| [reverse/migration/](reverse/migration/README.md) | 历史迁移清单及停用的迁移、文档同步、业务尺寸探针 |
-| [tooling/scripts/](tooling/scripts/README.md) | 分析、ROM 打包、QEMU 模型、模拟运行及验证脚本 |
-| [tooling/firmware-modules/](tooling/firmware-modules/README.md) | 实验载荷、链接脚本、APX1 加载器、OTA 和诊断模块源码 |
-| `evidence/` | 本机私有实验输出、QEMU/REA/Ghidra 会话；不随 Git 分发 |
-| `reverse/rehost/` | 本机应用重宿主生成物；不随 Git 分发 |
-| [checksums/SHA256SUMS.txt](checksums/SHA256SUMS.txt) | 历史全量归档指纹，不是当前 Git 检出的文件清单 |
+| [tooling/firmware-modules/](tooling/firmware-modules/README.md) | 共享屏幕宿主、平台服务、维护、OTA、链接脚本与模块测试 |
+| [tooling/scripts/](tooling/scripts/README.md) | 构建、打包、诊断与相关回归检查 |
+| [roms/](roms/CATALOG.md) | 原厂镜像和本地候选；保留 0041 构建基线 |
 
-## 阅读与复现
+0041 原厂基线为 `roms/0041/ap01-1.0.2_0041.bin`，6,769,704 字节，既有 SHA256 标识为 `972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9`。逆向仓库也保存相同基线；本仓库的正常构建不依赖逆向仓库。
 
-- [研究索引](reverse/reports/ap01/README.md)：按版本和主题查找证据。
-- [外部程序打包进 ROM](reverse/reports/ap01/design.md)：基线、编译、链接、注入、资源与镜像校验。
-- [工具说明](tooling/scripts/README.md)：现用命令与环境要求；命令从仓库根目录执行。
-- [0041 逆向交接](reverse/reports/ap01/0041-handoff.md)：原厂上层恢复与 QEMU 缺口。
-- [0031 槽尾版实机记录](reverse/reports/ap01/knowledge/0031-tail-physical-success-20261018.md)及[2026-10-19 镜像准入记录](reverse/reports/ap01/ota-image-admission-20261019.md)：已记录的单次实机结果，不代表其他候选均可安装。
+外部 `codex_status` 继续使用本仓库的 `tooling/firmware-modules/` 与 `tooling/scripts/build-native-app-rom-0041.py`。研究报告、语义合同、分析源码、QEMU/Ghidra/REA 工具和历史中间产物归逆向仓库维护。实验依赖与私有输出需按各工具要求准备。
 
-Git 检出不包含全部运行证据、工具链或第三方依赖。RISC-V 工具链、WSL/QEMU、NuttX/LVGL、REA/Ghidra 和只读上游材料按各实验需要另行配置。文档中的历史命令不代表已在当前机器重跑。
-
-## 证据边界与来源
-
-原厂字节、源码标签、静态推断、模拟结果和实机结果分别记账。0041 原厂代码已在必要 Mock 下运行部分初始化和 OTA 往返；原厂完整主界面、真实无线网络、Boot2 回滚和掉电恢复仍不能由模拟结果推出。NuttX SIM 的界面重建也不等于整 ROM 已在真实硬件运行。
-
-日志、反汇编、JSON 导出和迁移清单保留生成时的路径、名称和哈希；它们是冻结证据，不作为当前目录或外部产品需求的定义。历史文档中的缺失材料会明确标注，不能据此声称当前仓库包含该证据。
-
-原厂 ROM 及资源、第三方源码和本仓库自有内容的归属见 [NOTICE.md](NOTICE.md) 与 [LICENSE](LICENSE)。账号、密钥和私有会话不提交。
+[拆分记录](REPOSITORY-SPLIT.md)说明两仓边界和历史路径。来源与许可见 [NOTICE.md](NOTICE.md) 和 [LICENSE](LICENSE)。
