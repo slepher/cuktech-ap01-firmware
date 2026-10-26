@@ -3,6 +3,9 @@ An unverified candidate remains flashable=false. No tool here contacts hardware.
 """
 from pathlib import Path
 import argparse,hashlib,json,struct,subprocess,zlib,shutil
+from importlib.util import spec_from_file_location,module_from_spec
+_spec=spec_from_file_location('ap01_native_build',Path(__file__).with_name('native_build_0041.py'))
+_native=module_from_spec(_spec);_spec.loader.exec_module(_native)
 ROOT=Path(__file__).resolve().parents[2]
 BASE=0x9ffff000
 OFFSET=0x675000
@@ -89,13 +92,13 @@ def main():
     original_path=a.original.resolve()
     original=original_path.read_bytes();payload=bytearray((out/'ap01-native-0041.module.bin').read_bytes())
     linked=json.loads((out/'native-link-report.json').read_text(encoding='utf-8'))
-    audit=json.loads((out/'native-core-audit.json').read_text(encoding='utf-8'))
-    for item in audit['objects']:
-        if sha(Path(item['source']).read_bytes())!=item['source_sha256']:p.error('source changed: rerun native audit/link')
-    for item in audit['input_headers']:
-        if sha(Path(item['path']).read_bytes())!=item['sha256']:p.error('header changed: rerun native audit/link')
+    audit=_native.validate_audit(out)
     if not linked.get('linked') or sha(payload)!=linked.get('module_sha256') or sha((out/'native-core-audit.json').read_bytes())!=linked.get('audit_sha256'):
         p.error('current module/audit/link fingerprints do not agree')
+    if sha((out/'ap01-native-0041.elf').read_bytes())!=linked['elf']['sha256']:
+        p.error('linked ELF changed: rerun link')
+    if 'linker_script' in linked and sha(Path(linked['linker_script']['path']).read_bytes())!=linked['linker_script']['sha256']:
+        p.error('linker script changed: rerun link')
     if payload[:256]!=bytes(256):p.error('linked module must have a zero manifest')
     tool=a.tool_prefix
     nm=str(tool)+'nm';nm=nm+'.exe' if not Path(nm).is_file() and Path(nm+'.exe').is_file() else nm
@@ -105,7 +108,21 @@ def main():
     entry=symbols['ap01Register0041'];assert symbols['ap01_native_manifest']==BASE+OFFSET
     abi_file=out/'native-runtime-abi.bin'
     subprocess.run([objcopy,'-O','binary','--only-section=.abi',str(out/'ap01-native-0041.elf'),str(abi_file)],check=True)
-    abi_raw=abi_file.read_bytes();abi=struct.unpack('<'+str(len(abi_raw)//4)+'I',abi_raw);assert abi[0]==1 and len(abi) in (17,23)
+    abi_raw=abi_file.read_bytes();abi=struct.unpack('<'+str(len(abi_raw)//4)+'I',abi_raw)
+    if not ((len(abi)==23 and abi[0]==1) or (len(abi)==4 and abi[0]==2)):
+        p.error('unsupported runtime ABI (expected App ABI 1 or platform ABI 2)')
+    if abi[0]==2:
+        runtime_metadata={'runtime':'platform','applications':[],
+            'platform_abi':{'version':2,'runtime_bytes':abi[1],'window_offset':abi[2],'heartbeat_offset':abi[3]}}
+    else:
+        runtime_metadata={'runtime':'application',
+            'screen_host':{'abi':1,'roots_per_template':True,'timer_context_direct':True,'host_offset':abi[17],'phase_offset':abi[18],'slot_bytes':abi[19],'slot_root_offset':abi[20],'slot_child_offset':abi[21],'slots_offset':abi[22],'template_capacity':8},
+            'native_abi':{'calendar':hex(symbols['_Z12ap01CalendarlR2tm']),'wall_time':hex(symbols['time']),
+                'ui_timer':hex(symbols['_ZN12_GLOBAL__N_17Runtime5timerEPv']),
+                'ui_event':hex(symbols['_ZN12_GLOBAL__N_17Runtime13eventCallbackEPvS1_']),
+                'lv_obj_send_event':'0xa00d831a',
+                'instance_bytes':dict(zip(('runtime','business','bundle_store','application'),abi[1:5])),
+                'runtime_offsets':dict(zip(('root','content','dialog','image','pairPending','pairWoken','focused','shownGeneration','templateCount','retired','ready','uiStage'),abi[5:17]))}}
     length=((OFFSET+len(payload)+15)&~15)+40
     h=bytearray(256);h[:8]=b'AP01APP1';struct.pack_into('<7I',h,8,1,length,OFFSET,len(payload),entry,zlib.crc32(payload[256:]),0)
     h[36:52]=hashlib.sha256(payload[256:]).digest()[:16];struct.pack_into('<3I',h,52,7,18080,18081)
@@ -135,13 +152,7 @@ def main():
         'elf':{'path':str(elf_path),'sha256':sha(elf_path.read_bytes()),'bytes':elf_path.stat().st_size},
         'audit':{'path':str(audit_path),'sha256':sha(audit_path.read_bytes())},
         'link':{'path':str(link_path),'sha256':sha(link_path.read_bytes())},
-        'screen_host':{'abi':1,'roots_per_template':True,'timer_context_direct':True,'host_offset':abi[17],'phase_offset':abi[18],'slot_bytes':abi[19],'slot_root_offset':abi[20],'slot_child_offset':abi[21],'slots_offset':abi[22],'template_capacity':8},
-        'native_abi':{'calendar':hex(symbols['_Z12ap01CalendarlR2tm']),'wall_time':hex(symbols['time']),
-            'ui_timer':hex(symbols['_ZN12_GLOBAL__N_17Runtime5timerEPv']),
-            'ui_event':hex(symbols['_ZN12_GLOBAL__N_17Runtime13eventCallbackEPvS1_']),
-            'lv_obj_send_event':'0xa00d831a',
-            'instance_bytes':dict(zip(('runtime','business','bundle_store','application'),abi[1:5])),
-            'runtime_offsets':dict(zip(('root','content','dialog','image','pairPending','pairWoken','focused','shownGeneration','templateCount','retired','ready','uiStage'),abi[5:]))},
+        **runtime_metadata,
         'settings_menu_hooks':[{'offset':hex(offset),'target':hex(target),'span':span,'original_hex':MENU_HOOKS[offset][1]} for offset,target,span in menu_hooks(payload)],
         'image':{'path':str(output),'sha256':sha(image),'bytes':len(image)},
         'preserved':['boot header/entry','original ROMFS and rcS','all five pet GIFs','all original bytes outside UI hook, NULL-safe timer-delete hook, four pinned Settings calls and unsigned OTA branch'],

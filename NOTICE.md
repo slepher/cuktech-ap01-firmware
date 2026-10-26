@@ -8,6 +8,9 @@
 
 ## 第三方与厂商材料
 
+- **ArduinoJson 7.4.3**（Benoit BLANCHON，MIT）：独立构建所需头文件保存在 `tooling/vendor/ArduinoJson/src/`，原始许可见 [LICENSE.txt](tooling/vendor/ArduinoJson/LICENSE.txt)。版本固定，不在构建期间下载依赖。
+- `native_sha256_0041.cpp` 复用 Codex Status contributors 的既有 MIT 字节工具实现，独立构建不需要读取外部 App 源码。
+
 - **CUKTECH AP01 固件**（`1.0.2_0031` / `1.0.2_0041`）：版权归 CUKTECH / 小米生态链所有。
   本仓库收录未经修改的 `roms/0031/ap01-1.0.2_0031.bin` 和 `roms/0041/ap01-1.0.2_0041.bin`，文件名、字节数与 SHA256
   见 `roms/CATALOG.md`。该厂商镜像及其内含资源不适用本仓库自有代码的 MIT 许可；

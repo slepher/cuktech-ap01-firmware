@@ -50,6 +50,7 @@ bool sendAll(const Ap01Stream &io, const uint8_t *bytes, size_t length, uint64_t
     return true;
 }
 bool reply(const Ap01Stream &io, int status, bool frame, const char *body, size_t bytes, uint64_t deadline) {
+    // Optional App frame wire format; platform handlers return JSON (frame=false).
     char headers[256];
     int n = snprintf(headers, sizeof(headers), "HTTP/1.1 %d Response\r\nContent-Type: %s\r\nContent-Length: %u\r\nConnection: close\r\nCache-Control: no-store\r\n\r\n",
         status, frame ? "application/vnd.codex-status.frame" : "application/json", unsigned(bytes));

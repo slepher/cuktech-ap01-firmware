@@ -4,14 +4,16 @@ Caller precreates --out; no device/network access or App linkage.
 from pathlib import Path
 import argparse,hashlib,json,subprocess
 parser=argparse.ArgumentParser()
-parser.add_argument('--app-repo',type=Path,required=True)
+parser.add_argument('--app-repo',type=Path,help='Deprecated compatibility argument; no App files are read')
 parser.add_argument('--out',type=Path,required=True)
 a=parser.parse_args();out=a.out.resolve();assert out.is_dir(),'Precreate output directory with elevation'
 modules=Path(__file__).resolve().parents[1]/'firmware-modules'
-app=a.app_repo.resolve();json_headers=app/'.pio/libdeps/esp32-s3-epaper-154g/ArduinoJson/src'
+json_headers=modules.parent/'vendor/ArduinoJson/src'
 assert (json_headers/'ArduinoJson.h').is_file()
 flags=['g++','-std=c++17','-O1','-g','-fsanitize=address,undefined','-fno-omit-frame-pointer']
-for path in (modules,json_headers,app/'bridge/crates/render/shim'):flags+=['-I',str(path)]
+flags+=['-DARDUINOJSON_ENABLE_STD_STRING=0','-DARDUINOJSON_ENABLE_STD_STREAM=0',
+        '-DARDUINOJSON_ENABLE_ARDUINO_STRING=1']
+for path in (modules,json_headers):flags+=['-I',str(path)]
 report={'passed':False,'scope':'production core and native adapter with explicit ROM/PSM/VFS fixtures, no RF/App/device','cases':[]}
 path=out/'wifi-host-report.json';path.write_text(json.dumps(report),encoding='utf-8')
 for name in ('test_native_wifi_switch_0041','test_native_wifi_switch_port_0041','test_native_diagnostic_0041'):

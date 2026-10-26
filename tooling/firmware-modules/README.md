@@ -2,6 +2,8 @@
 
 ## 0041 共享屏幕宿主与平台代码
 
+`native_platform_0041.cpp` 提供默认无 App 启动入口：保持原厂页面与事件注册，通过独立窗口观察器/50ms timer 保存服务生命周期，在后台启动维护服务；窗口 DELETE 后解除订阅，下一次创建窗口时复用服务。`native_sha256_0041.cpp` 为独立构建提供已有字节工具实现。构建/打包入口为 `tooling/scripts/build-firmware-0041.py`，不依赖 `codex_status` 或逆向仓库；外部 App 的整合构建仍可使用下述平台模块。
+
 `screen_host_0041.h/.c` 是不依赖LVGL/ROM地址的宿主核心：调用方提供实际容量的root槽位和应用清单，每应用按稳定screen ID替换屏幕集，支持异步进入准备、双向导航、焦点锁/3秒逃生和隐藏态UI轮询。物理root不删除或重排；逻辑顺序与物理索引分开。只读 `ap01_host_api` 和 `ap01_lvgl_0041` 提供版本与结构长度。
 
 `screen_port_0041.h/.cpp` 绑定精确0041的原厂窗口、普通页面、标签、定时器和LVGL/I4图像；为每页保留独立root/descriptor，图像帧按需分配，离开动画完成才退役源帧。实际draw回调与切入完成分开。普通控件在 `prepare` 中按需创建，`unbind` 清理逻辑页面资源；物理窗口整体由mount/unmount管理。动画期间依赖原厂idle标志，不用300ms固定延迟替代完成。
@@ -23,7 +25,7 @@
 | `native_http_0041.h`、`native_json_0041.h`、`native_integrity_0041.h` | 业务无关的HTTP值类型、请求局部分配器与完整性工具声明 |
 | `native_application_0041.ld` | XIP布局、原厂运行库导入及禁止可写静态/TLS/构造器的链接约束 |
 
-维护模块依赖调用方提供的ArduinoJson头文件和已有 `syncSha256` 字节工具，不依赖 `Ap01Business` / `Ap01Application` / C2协议头。维护鉴权调度仍由调用方接入，只启动一个维护执行器。`codex_status` 保留绑定、Bundle、共享渲染与业务HTTP，并通过兼容头引用这里的实现。平台函数地址不能混用于0031。
+维护模块使用ArduinoJson头文件和 `syncSha256` 字节工具；独立构建由本仓库提供，外部 App 可沿用自己的依赖和同名字节工具（只链接一份实现）。它不依赖 `Ap01Business` / `Ap01Application` / C2协议头。维护鉴权调度由平台或 App 启动入口接入，只启动一个维护执行器。`codex_status` 保留绑定、Bundle、共享渲染与业务HTTP，并通过兼容头引用这里的实现。平台函数地址不能混用于0031。
 
 纯宿主检查（Linux现有C编译器，产物目录须已授权）：
 
@@ -81,6 +83,6 @@ APX1 为112字节显式小端头：magic/format/header/total/ABI/flags、固定X
 
 外部 `codex_status` 仅拥有 Bridge 配对/绑定、C2 业务和模板显示。平台通过 `native_app_port_0041.h` 的配对、principal 复制、在线回调连接 App；App 只观察系统 busy 门。`native_services_0041.h` 为启动/生命周期连接，不允许在 App 入口重新实现 Flash/切槽/切网策略。菜单通过既有 window/timer 的 services 指针定位固件服务，不读取 App 私有布局，不新增全局可写 singleton 或线程。
 
-完整 ROM 打包和四个固定 Settings hooks 由 `tooling/scripts/build-native-app-rom-0041.py` 负责；外部 `tools/build-ap01-rom.py` 仅为兼容入口。输出包含原 NULL timer guard 与原 OTA/恢复校验。构建采用两个相邻仓库，外部已有 RV32 audit/link/test 工具编排本目录源；不需要历史隔离源码副本。`test_native_maintenance_0041.cpp` 保留维护回归，并通过 `AP01_MAINTENANCE_ONLY_TEST=1` 在不链接 App/渲染器时验证八位码 OTA、轮换/重放、重启恢复和无稳定记录切槽；SHA256 复用外部通用字节工具。
+完整 ROM 打包和四个固定 Settings hooks 由 `tooling/scripts/build-native-app-rom-0041.py` 负责；外部 `tools/build-ap01-rom.py` 仅为兼容入口。输出包含原 NULL timer guard 与原 OTA/恢复校验。`build-firmware-0041.py` 与 `native_build_0041.py` 统一负责独立版及 App 版的平台编译、审计、预算提取、链接与打包；接入外部 App 时只需传入 `--app-config`，App 的旧 audit/link 命令仅转发。`test_native_maintenance_0041.cpp` 保留维护回归，并通过 `AP01_MAINTENANCE_ONLY_TEST=1` 在不链接 App/渲染器时验证八位码 OTA、轮换/重放、重启恢复和无稳定记录切槽。
 
 本次是源码职责迁移，不是设备部署。Wi-Fi 菜单原有未完成验收仍留待办；不把编译或 App 回归通过当作菜单/RF/物理救援验收。

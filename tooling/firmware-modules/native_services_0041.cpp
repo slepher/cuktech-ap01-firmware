@@ -15,6 +15,8 @@ struct Ap01NativeServices0041::State {
     Flash updateFlash;
     char firmwareBuild[33]={};
     int bootSlot=-1;
+    // Historical on-device namespace: keep existing OTA/slot journals readable.
+    // VFS prepare creates it when absent; no App installation is required.
     LittleFSClass fs{ap01RomVfs(),"/resource/codex-status"};
     std::unique_ptr<Ap01Maintenance0041> maintenance;
     Ap01WifiTrace0041 trace;

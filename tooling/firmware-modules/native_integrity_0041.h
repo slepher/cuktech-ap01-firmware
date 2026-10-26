@@ -1,8 +1,8 @@
 #pragma once
 #include <stddef.h>
 #include <stdint.h>
-/* Supplied by the application's shared SHA256 utility at final link time.
-   This byte-oriented dependency does not import any business wire protocol. */
+/* Standalone builds use native_sha256_0041.cpp. App builds may supply the same
+   byte-oriented utility instead; link exactly one implementation. */
 void syncSha256(const uint8_t *bytes,size_t length,uint8_t digest[32]);
 /* IEEE CRC32 used by the existing APS1/AMT1 records and partition tables. */
 static inline uint32_t ap01_native_crc32(const uint8_t *data,size_t n) {
