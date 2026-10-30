@@ -1,6 +1,7 @@
 /* Offline-only probe: real guest TCP loopback, native NSH and FD cloning.
  * Requires --native-loopback; never install this probe on a device. */
 #include "diagnostic_console.h"
+#include "device_code_0031.h"
 #include <stdint.h>
 #include <stddef.h>
 #define F(a,t) ((t)(uintptr_t)(a))
@@ -43,9 +44,11 @@ failed:F(0xa0026788,int(*)(int))(fd);return -1;
 }
 static int connect_authenticated(void)
 {
+    char code[9];ap01_code_io_0031 io=ap01_code_native_0031();
+    if(ap01_code_load_0031(&io,code))return -1;
     int fd=connect_plain();if(fd<0)return -1;
     char line[256];
-    int n=snprintf(line,sizeof(line),"GET /diagnostic HTTP/1.1\r\nAuthorization: Bearer %.64s\r\nConnection: Upgrade\r\nUpgrade: ap01-diag/1\r\n\r\n",ota_0031_manifest+64);
+    int n=snprintf(line,sizeof(line),"GET /diagnostic HTTP/1.1\r\nAuthorization: Bearer %.8s\r\nConnection: Upgrade\r\nUpgrade: ap01-diag/1\r\n\r\n",code);
     if(n<=0||write_all(fd,line,(unsigned)n))goto failed;
     if(read_line(fd,line,sizeof(line))<0||!same(line,"HTTP/1.1 101 Switching Protocols\r\n"))goto failed;
     do{if(read_line(fd,line,sizeof(line))<0)goto failed;}while(!same(line,"\r\n"));
@@ -54,10 +57,12 @@ failed:F(0xa0026788,int(*)(int))(fd);return -1;
 }
 static int http_query(const char *method,const char *path,char *out,unsigned capacity)
 {
+    char code[9];ap01_code_io_0031 io=ap01_code_native_0031();
+    if(ap01_code_load_0031(&io,code))return -1;
     int fd=connect_plain();if(fd<0)return -1;
-    char request[256];int n=snprintf(request,sizeof(request),"%s %s HTTP/1.1\r\nAuthorization: Bearer %.64s\r\nContent-Length: 6804520\r\nX-ROM-CRC32: 00000000\r\n\r\n",method,path,ota_0031_manifest+64);
+    char request[256];int n=snprintf(request,sizeof(request),"%s %s HTTP/1.1\r\nAuthorization: Bearer %.8s\r\nContent-Length: 6804520\r\nX-ROM-CRC32: 00000000\r\n\r\n",method,path,code);
     /* GET must not claim an upload body. */
-    if(same(method,"GET"))n=snprintf(request,sizeof(request),"GET %s HTTP/1.1\r\nAuthorization: Bearer %.64s\r\n\r\n",path,ota_0031_manifest+64);
+    if(same(method,"GET"))n=snprintf(request,sizeof(request),"GET %s HTTP/1.1\r\nAuthorization: Bearer %.8s\r\n\r\n",path,code);
     if(n<=0||write_all(fd,request,(unsigned)n))return -1;
     unsigned used=0;
     while(used+1<capacity){n=F(0xa003f5f4,int(*)(int,void*,size_t))(fd,out+used,capacity-used-1);if(n<0)return -1;if(!n)break;used+=(unsigned)n;}
@@ -65,8 +70,10 @@ static int http_query(const char *method,const char *path,char *out,unsigned cap
 }
 static int pending_upload(void)
 {
+    char code[9];ap01_code_io_0031 io=ap01_code_native_0031();
+    if(ap01_code_load_0031(&io,code))return -1;
     int fd=connect_plain();if(fd<0)return -1;
-    char request[256];int n=snprintf(request,sizeof(request),"POST /firmware HTTP/1.1\r\nAuthorization: Bearer %.64s\r\nContent-Length: 6804520\r\nX-ROM-CRC32: 00000000\r\n\r\nBFNP",ota_0031_manifest+64);
+    char request[256];int n=snprintf(request,sizeof(request),"POST /firmware HTTP/1.1\r\nAuthorization: Bearer %.8s\r\nContent-Length: 6804520\r\nX-ROM-CRC32: 00000000\r\n\r\nBFNP",code);
     if(n<=0||write_all(fd,request,(unsigned)n))return -1;
     return fd;
 }
@@ -115,6 +122,8 @@ static int upload_read(uint32_t offset,unsigned char *data,unsigned count)
 }
 static int full_upload(void)
 {
+    char code[9];ap01_code_io_0031 io=ap01_code_native_0031();
+    if(ap01_code_load_0031(&io,code))return -1;
     unsigned char image[8192];
     uint32_t length=(uint32_t)ota_0031_manifest[12]|(uint32_t)ota_0031_manifest[13]<<8|
         (uint32_t)ota_0031_manifest[14]<<16|(uint32_t)ota_0031_manifest[15]<<24;
@@ -129,7 +138,7 @@ static int full_upload(void)
         offset+=count;
     }
     int fd=connect_plain();if(fd<0)return -1;
-    char request[256];int n=snprintf(request,sizeof(request),"POST /firmware HTTP/1.1\r\nAuthorization: Bearer %.64s\r\nContent-Length: %u\r\nX-ROM-CRC32: %08x\r\n\r\n",ota_0031_manifest+64,length,~crc);
+    char request[256];int n=snprintf(request,sizeof(request),"POST /firmware HTTP/1.1\r\nAuthorization: Bearer %.8s\r\nContent-Length: %u\r\nX-ROM-CRC32: %08x\r\n\r\n",code,length,~crc);
     if(n<=0||write_all(fd,request,(unsigned)n))return -1;
     for(uint32_t offset=0;offset<length;){
         unsigned count=length-offset;if(count>8192)count=8192;

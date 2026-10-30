@@ -51,8 +51,9 @@ static const char *stage_name(enum ota_stage stage)
 }
 static const char *error_name(enum ota_error error)
 {
-    static const char names[][15] = {"ok","bad_config","timeout","eof","io",
-        "bad_header","unauthorized","too_large","crc_mismatch","busy","writer","result_unknown"};
+    static const char names[][20] = {"ok","bad_config","timeout","eof","io",
+        "bad_header","unauthorized","too_large","crc_mismatch","busy","writer","result_unknown",
+        "rate_limited","auth_unavailable"};
     return names[error];
 }
 static enum ota_error reply(const ota_channel_io *io, uint64_t deadline,
@@ -62,6 +63,7 @@ static enum ota_error reply(const ota_channel_io *io, uint64_t deadline,
     const char *content = body;
     int status = r->error == OTA_OK ? 200 : r->error == OTA_UNAUTHORIZED ? 401 :
                  r->error == OTA_TOO_LARGE ? 413 : r->error == OTA_BUSY ? 409 :
+                 r->error == OTA_RATE_LIMITED ? 429 : r->error == OTA_AUTH_UNAVAILABLE ? 503 :
                  r->error == OTA_BAD_HEADER || r->error == OTA_BAD_CRC ? 400 : 500;
     if (logs && r->error == OTA_OK)
         content = io->logs(io->ctx);
@@ -96,8 +98,8 @@ static enum ota_error reply(const ota_channel_io *io, uint64_t deadline,
 
 /* No dynamic allocation: 1025-byte header +1024-byte body scratch. Header reads
  * deliberately stop at CRLFCRLF, so no body byte is lost to a header prefetch. */
-ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
-                                      uint64_t deadline)
+static ota_channel_result handle(const ota_channel_io *io, const char *key,
+                                ota_channel_authenticate authenticate,uint64_t deadline)
 {
     ota_channel_result r = { OTA_STAGE_HEADER, OTA_OK, OTA_OK, 0, 0, 0, 0 };
     char header[1025];
@@ -105,14 +107,14 @@ ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
     size_t used = 0;
     int begun = 0, health = 0, logs = 0, diagnostic = 0;
     uint32_t length = 0, expected_crc = 0;
-    if (!io || !key || !io->read || !io->write || !io->now_ms ||
+    if (!io || (!key && !authenticate) || !io->read || !io->write || !io->now_ms ||
         !io->begin || !io->chunk || !io->commit || !io->abort) {
         r.error = OTA_BAD_CONFIG; return r;
     }
-    for (unsigned i = 0; i < 64; ++i) {
+    for (unsigned i = 0; key && i < 64; ++i) {
         if (!key[i] || hex(key[i]) < 0) { r.error = OTA_BAD_CONFIG; return r; }
     }
-    if (key[64]) { r.error = OTA_BAD_CONFIG; return r; }
+    if (key && key[64]) { r.error = OTA_BAD_CONFIG; return r; }
     while (used < 1024) {
         uint32_t timeout = remaining(io, deadline);
         if (!timeout) { r.error = OTA_TIMEOUT; goto done; }
@@ -132,6 +134,7 @@ ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
     diagnostic = !strcmp(header, "GET /diagnostic HTTP/1.1");
     if (!health && !logs && !diagnostic && strcmp(header, "POST /firmware HTTP/1.1")) { r.error = OTA_BAD_HEADER; goto done; }
     unsigned have_length = 0, have_auth = 0, have_crc = 0, have_upgrade = 0, connection_upgrade = 0;
+    const char *token = NULL; size_t token_length = 0;
     char *line = line_end + 2;
     while (*line) {
         if (!strcmp(line, "\r\n")) break;
@@ -158,10 +161,15 @@ ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
             }
         } else if (equal(line, "Authorization")) {
             if (have_auth++) { r.error = OTA_BAD_HEADER; goto done; }
-            if (strlen(value) != 71 || memcmp(value, "Bearer ", 7)) { r.error = OTA_UNAUTHORIZED; goto done; }
-            unsigned difference = 0;
-            for (unsigned i = 0; i < 64; ++i) difference |= (unsigned char)value[i+7] ^ (unsigned char)key[i];
-            if (difference) { r.error = OTA_UNAUTHORIZED; goto done; }
+            size_t n = strlen(value);
+            if (authenticate) {
+                if (n >= 7 && !memcmp(value,"Bearer ",7)) { token=value+7;token_length=n-7; }
+            } else {
+                if (n != 71 || memcmp(value, "Bearer ", 7)) { r.error = OTA_UNAUTHORIZED; goto done; }
+                unsigned difference = 0;
+                for (unsigned i = 0; i < 64; ++i) difference |= (unsigned char)value[i+7] ^ (unsigned char)key[i];
+                if (difference) { r.error = OTA_UNAUTHORIZED; goto done; }
+            }
         } else if (equal(line, "X-ROM-CRC32")) {
             if (have_crc++ || strlen(value) != 8) { r.error = OTA_BAD_HEADER; goto done; }
             for (unsigned i = 0; i < 8; ++i) {
@@ -178,6 +186,11 @@ ota_channel_result ota_channel_handle(const ota_channel_io *io, const char *key,
             r.error = OTA_BAD_HEADER; goto done;
         }
         line = end + 2;
+    }
+    if (authenticate && (!health || have_auth)) {
+        r.error = authenticate(io->ctx,token,token_length);
+        if (!remaining(io,deadline)) r.error = OTA_TIMEOUT;
+        if (r.error != OTA_OK) goto done;
     }
     if (health) {
         if (length) { r.error = OTA_BAD_HEADER; goto done; }
@@ -249,3 +262,9 @@ done:
     if (r.error == OTA_OK && r.response_error != OTA_OK) { r.stage = OTA_STAGE_SEND; r.error = r.response_error; }
     return r;
 }
+
+ota_channel_result ota_channel_handle(const ota_channel_io *io,const char *key,uint64_t deadline)
+{ return handle(io,key,NULL,deadline); }
+ota_channel_result ota_channel_handle_authenticated(const ota_channel_io *io,
+    ota_channel_authenticate authenticate,uint64_t deadline)
+{ return handle(io,NULL,authenticate,deadline); }

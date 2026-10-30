@@ -12,6 +12,8 @@
 
 默认构建不带业务 App：保留原厂页面，接入设备码菜单、Wi-Fi、维护/诊断和 OTA 平台服务。ArduinoJson 7.4.3 头文件已随仓库保存，只需另行安装 Python 3 和支持 `rv32imafc/ilp32f` 的 RISC-V GCC 工具链。
 
+上述统一构建能力针对 0041。0031 独立 OTA/诊断基础 ROM 已接入本地 `Access / 18080` 菜单，按 0041 机制生成、持久保存和轮换八位设备码，已移除构建时内置密钥并加入认证限流；离线检查通过，实机验收尚待完成，见 [0031 接入菜单与维护凭据](tooling/firmware-modules/access-menu-0031.md)。
+
 ```sh
 python -B tooling/scripts/build-firmware-0041.py --output build/standalone-0041/ap01-platform-0041.bin
 python -B tooling/scripts/test-firmware-0041.py --manifest build/standalone-0041/ap01-platform-0041.manifest.json

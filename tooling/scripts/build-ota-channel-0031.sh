@@ -12,7 +12,12 @@ version=${4:-ap01-ota/2}
 mode=${5:-release}
 [[ "$mode" == release || "$mode" == probe || "$mode" == full-upload || "$mode" == recovery ]]
 extra_flags=()
-units=(channel port image diagnostic_console diagnostic_console_0031)
+units=(channel port image diagnostic_console diagnostic_console_0031 device_code_0031 device_code_native_0031)
+menu_objects=()
+if [[ "$mode" == release ]]; then
+    units+=(access_menu_0031)
+    menu_objects+=("$out/$prefix.access_menu_0031.o" "$out/$prefix.access_menu_hooks_0031.o")
+fi
 if [[ "$mode" != release ]]; then extra_flags+=(-DOTA_PORT_NO_ENTRY -DAP01_HTTP_PROBE); units+=(probe_network_console_0031); fi
 if [[ "$mode" == full-upload ]]; then extra_flags+=(-DAP01_HTTP_FULL_UPLOAD); fi
 if [[ "$mode" == recovery ]]; then extra_flags+=(-DAP01_HTTP_RECOVERY_PROBE); fi
@@ -36,6 +41,10 @@ for unit in "${units[@]}"; do
     "$tool-as" -march=rv32imafc_zicsr -mabi=ilp32f \
         "$out/$prefix.$unit.s" -o "$out/$prefix.$unit.o"
 done
+if [[ "$mode" == release ]]; then
+    "$tool-as" -march=rv32imafc_zicsr -mabi=ilp32f \
+        "$source_dir/access_menu_hooks_0031.S" -o "$out/$prefix.access_menu_hooks_0031.o"
+fi
 cat > "$out/$prefix.manifest.s" <<'ASM'
 .section .ota_manifest,"a"
 .global ota_0031_manifest
@@ -70,7 +79,7 @@ fi
 probe_objects=()
 if [[ "$mode" != release ]]; then probe_objects+=("$out/$prefix.probe_network_console_0031.o"); fi
 "$tool-ld" -m elf32lriscv --gc-sections --no-relax --defsym="ota_base=$base" -T "$source_dir/ota_0031.ld" \
-    "$out/$prefix.channel.o" "$out/$prefix.port.o" "$out/$prefix.image.o" "$out/$prefix.diagnostic_console.o" "$out/$prefix.diagnostic_console_0031.o" "$out/$prefix.manifest.o" "${probe_objects[@]}" \
+    "$out/$prefix.channel.o" "$out/$prefix.port.o" "$out/$prefix.image.o" "$out/$prefix.diagnostic_console.o" "$out/$prefix.diagnostic_console_0031.o" "$out/$prefix.device_code_0031.o" "$out/$prefix.device_code_native_0031.o" "$out/$prefix.manifest.o" "${menu_objects[@]}" "${probe_objects[@]}" \
     -Map="$out/$prefix.map" -o "$out/$prefix.elf"
 "$tool-objcopy" -O binary "$out/$prefix.elf" "$out/$prefix.bin"
 [[ -z $("$tool-nm" -u "$out/$prefix.elf") ]]

@@ -23,7 +23,8 @@ def main():
     with tempfile.TemporaryDirectory(prefix='diagnostics-',dir=args.output.parent) as temporary:
         work=Path(temporary)
         for name,files in [('auth',['diagnostic_console.c','test_diagnostic_console.c']),
-                           ('journal',['test_ota_0031_log.c','ota_channel.c','ota_image.c'])]:
+                           ('journal',['test_ota_0031_log.c','ota_channel.c','ota_image.c',
+                                       'device_code_0031.c','device_code_native_0031.c'])]:
             binary=work/name
             command=[args.cc,'-std=c11','-Wall','-Wextra','-Werror','-O1','-g',
                      '-fsanitize=address,undefined','-fno-pie','-no-pie',
@@ -31,7 +32,7 @@ def main():
             subprocess.run(command,check=True,capture_output=True,text=True,timeout=30)
             run=subprocess.run([str(binary)],check=True,capture_output=True,text=True,timeout=20)
             assert not run.stderr;cases.append(dict(name=name,result=json.loads(run.stdout)))
-        key='0123456789abcdef'*4;keyfile=work/'test.key';keyfile.write_text(key)
+        key='12345678';keyfile=work/'test.key';keyfile.write_text(key)
         script=root/'tooling/scripts/diagnostic-console-0031.py'
         def case(mode,expected,operation='shell'):
             transcript=work/(mode+'.out');observed=[];errors=[]
@@ -61,6 +62,9 @@ def main():
                                 headers.append(header)
                             assert b'Authorization: Bearer '+key.encode()+b'\r\n' in headers
                             if mode=='rejected':c.sendall(b'HTTP/1.1 401 Error\r\n\r\n');return
+                            if mode in ('rate_limited','unavailable'):
+                                status=429 if mode=='rate_limited' else 503
+                                c.sendall(f'HTTP/1.1 {status} Error\r\n\r\n'.encode());return
                             c.sendall(b'HTTP/1.1 101 Switching Protocols\r\nConnection: Upgrade\r\nUpgrade: ap01-diag/1\r\n\r\n');observed.append(read_line(c).decode().strip())
                             if mode=='busy':c.sendall(b'ERR busy\n');return
                             if operation=='status':c.sendall(json.dumps({'protocol':'AP01-DIAG/1','padding':'x'*400}).encode()+b'\n');return
@@ -90,15 +94,21 @@ def main():
             assert result.returncode==expected,(mode,result.stderr)
             assert key.encode() not in result.stdout+result.stderr+transcript.read_bytes()
             if mode in ('shell','spawn_failure'):assert observed==['SHELL','ps','exit']
+            if mode in ('rejected','rate_limited','unavailable'):assert observed==[]
             if mode=='logs':assert transcript.read_bytes()==log
             if mode=='flash':assert transcript.read_bytes()==bytes(range(32))
             if mode in ('flash_crc_failure','flash_truncated'):assert not transcript.read_bytes()
             cases.append(dict(name=mode,passed=True))
-        for mode,expected,operation in [('shell',0,'shell'),('rejected',2,'shell'),('busy',2,'shell'),
+        for mode,expected,operation in [('shell',0,'shell'),('rejected',2,'shell'),('rate_limited',2,'shell'),
+                ('unavailable',2,'shell'),('busy',2,'shell'),
                 ('spawn_failure',2,'shell'),('status',0,'status'),('logs',0,'logs'),
                 ('truncated_logs',2,'logs'),('interrupt',0,'interrupt'),('close',0,'close'),
                 ('flash',0,'flash'),('flash_crc_failure',2,'flash'),('flash_truncated',2,'flash')]:
             case(mode,expected,operation)
+        # Existing rescue slots remain reachable during migration.
+        key='0123456789abcdef'*4;keyfile.write_text(key)
+        case('legacy_status',0,'status')
+        key='12345678';keyfile.write_text(key)
         # Cross a 64 KiB boundary: the second authenticated request must use
         # the next physical address; a single-chunk fixture cannot prove it.
         listener=socket.socket();listener.bind(('127.0.0.1',0));listener.listen(2)
@@ -134,7 +144,7 @@ def main():
         assert not thread.is_alive() and not errors,errors
         assert run.returncode==0 and transcript.read_bytes()==expected,run.stderr
         cases.append(dict(name='flash_multichunk',passed=True))
-    sources=[source/f for f in ('diagnostic_console.c','diagnostic_console.h','diagnostic_console_0031.c','test_diagnostic_console.c','ota_0031.c','test_ota_0031_log.c')]
+    sources=[source/f for f in ('diagnostic_console.c','diagnostic_console.h','diagnostic_console_0031.c','test_diagnostic_console.c','ota_0031.c','test_ota_0031_log.c','device_code_0031.c','device_code_native_0031.c')]
     sources+=[script,Path(__file__).resolve()]
     result=dict(passed=True,cases=cases,device_accessed=False,
                 native_task_isolation_verified=False,physical_boot_verified=False,

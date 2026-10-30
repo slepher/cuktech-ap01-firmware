@@ -77,6 +77,8 @@ def assemble(base, payload, mode, gif=b'', extra_padding=0):
     if mode not in ('diagnostics','http','gif-http'):
         out[CLOUD_OFFSET:CLOUD_OFFSET+4] = bytes.fromhex('41558280')
         allowed.append((CLOUD_OFFSET,CLOUD_OFFSET+4))
+    if mode not in ('bridge','gif-http'):
+        allowed.extend(legacy.apply_menu(out,base,payload))
     struct.pack_into('<I',out,len(out)-4,legacy.recovery_crc(out))
     # Preserve all original bytes except explicitly reviewed hooks/bridge resources.
     comparison_end = len(base) if mode in ('bridge','gif-http') else len(base)-40
@@ -113,16 +115,16 @@ def validate_candidate(data, manifest_path):
     h=bytearray(payload[:256]); stored=struct.unpack_from('<I',h,32)[0];struct.pack_into('<I',h,32,0)
     offset=legacy.OFFSET if m['mode'] in ('bridge','gif-http') else TAIL_OFFSET
     magic=b'AP01HTTP' if unified else b'AP01DIA1' if diagnostic else b'AP01OTA1'
-    if payload[:8]!=magic or struct.unpack_from('<I',payload,8)[0]!=1 or zlib.crc32(h)!=stored or struct.unpack_from('<I',payload,16)[0]!=offset:
+    if payload[:8]!=magic or zlib.crc32(h)!=stored or struct.unpack_from('<I',payload,16)[0]!=offset:
         raise ValueError('invalid module manifest')
     entry=struct.unpack_from('<I',payload,24)[0]
     if not legacy.BASE+offset+256 <= entry < legacy.BASE+offset+len(payload) or entry & 1:
         raise ValueError('invalid module entry')
     parameters=(8192,18080,2) if unified else (8192,18081,1) if diagnostic else (8192,18080,0)
-    if struct.unpack_from('<3I',payload,52)!=parameters or payload[128:256]!=bytes(128):
+    legacy.menu_hooks(payload)
+    if struct.unpack_from('<3I',payload,52)!=parameters:
         raise ValueError('invalid module service parameters')
-    if any(c not in b'0123456789abcdefABCDEF' for c in payload[64:128]) or legacy.sha(payload[64:128])!=m['auth_key_sha256']:
-        raise ValueError('module auth key identity mismatch')
+    legacy.validate_credentials(payload,m)
     if struct.unpack_from('<I',payload,20)[0]!=len(payload) or zlib.crc32(payload[256:])!=struct.unpack_from('<I',payload,28)[0]:
         raise ValueError('code length/CRC mismatch')
     gif=base64.b64decode(m.get('placeholder_gif',''),validate=True)
@@ -142,7 +144,7 @@ def validate_candidate(data, manifest_path):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    for name in ('original','payload','elf','output','auth-key-file'):
+    for name in ('original','payload','elf','output'):
         p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--mode',choices=('bridge','tail','http','gif-http'),required=True)
     p.add_argument('--legacy-manifest',type=Path,help='placeholder GIF provenance for bridge only')
@@ -159,14 +161,14 @@ def main():
     offset=legacy.OFFSET if a.mode in ('bridge','gif-http') else TAIL_OFFSET
     if symbols['ota_0031_manifest']!=legacy.BASE+offset:p.error('ELF mapping mismatch')
     length=len(base) if a.mode in ('bridge','gif-http') else ((offset+len(payload)+15)&~15)+a.extra_padding+40
-    key=a.auth_key_file.read_text(encoding='ascii').strip()
-    if len(key)!=64 or any(c not in '0123456789abcdefABCDEF' for c in key):p.error('64hex key required')
     diagnostic=a.mode=='diagnostics'
     unified=a.mode in ('http','gif-http')
     h=bytearray(256);h[:8]=b'AP01HTTP' if unified else b'AP01DIA1' if diagnostic else b'AP01OTA1'
-    struct.pack_into('<7I',h,8,1,length,offset,len(payload),symbols['ota_0031_main'],zlib.crc32(payload[256:]),0)
+    struct.pack_into('<7I',h,8,2,length,offset,len(payload),symbols['ota_0031_main'],zlib.crc32(payload[256:]),0)
     h[36:52]=hashlib.sha256(payload[256:]+a.label.encode()).digest()[:16]
-    struct.pack_into('<3I',h,52,8192,18081 if diagnostic else 18080,2 if unified else 1 if diagnostic else 0);h[64:129]=key.encode()+b'\0';struct.pack_into('<I',h,32,zlib.crc32(h));payload[:256]=h
+    struct.pack_into('<3I',h,52,8192,18081 if diagnostic else 18080,2 if unified else 1 if diagnostic else 0)
+    legacy.menu_manifest(h,symbols,required=True)
+    struct.pack_into('<I',h,32,zlib.crc32(h));payload[:256]=h
     gif=b''
     if a.mode in ('bridge','gif-http'):
         if not a.legacy_manifest:p.error('legacy manifest required for bridge')
@@ -178,10 +180,12 @@ def main():
            image=dict(path=str(output),bytes=len(data),sha256=legacy.sha(data)),
            payload=dict(path=str(paths[2]),bytes=len(payload),sha256=legacy.sha(payload),entry=hex(symbols['ota_0031_main']),
                         elf=str(a.elf.resolve()),elf_sha256=legacy.sha(a.elf.read_bytes())),
-           build_id=bytes(h[36:52]).hex(),auth_key_sha256=legacy.sha(key.encode()),
+           build_id=bytes(h[36:52]).hex(),
            placeholder_gif=base64.b64encode(gif).decode(),cloud_ota_dispatch_modified=not (diagnostic or unified),
            original_gif_preserved=a.mode not in ('bridge','gif-http'),allowed_ranges=allowed,
            flashable=False,physical_device_verified=False)
+    m.update(local_access_menu=True,credential_source='device-menu-8digit',
+             per_device_credential=True)
     if markers is not None:m.update(native_recovery_compatible=True,recovery_marker_offsets=markers)
     if unified:m.update(independent_ota_enabled=True,diagnostic_port=18080,startup_mapping_verified=False)
     if diagnostic:m.update(independent_ota_enabled=False,diagnostic_port=18081,startup_mapping_verified=False)

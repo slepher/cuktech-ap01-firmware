@@ -22,10 +22,12 @@ def host_path(value):
     return value
 
 
-def health(host, port, key):
+def health(host, port, key=None):
     connection=http.client.HTTPConnection(host,port,timeout=4)
     try:
-        connection.request('GET','/health',headers={'Authorization':'Bearer '+key,'Connection':'close'})
+        headers={'Connection':'close'}
+        if key is not None:headers['Authorization']='Bearer '+key
+        connection.request('GET','/health',headers=headers)
         response=connection.getresponse();body=response.read(4096)
         if response.status!=200:raise RuntimeError('health rejected')
         return json.loads(body)['version']
@@ -45,7 +47,8 @@ def main():
     marker=directory/'task.json'
     if marker.exists() and not a.check_only:p.error('existing task; do not redispatch')
     manifest=json.loads(a.manifest.read_text(encoding='utf-8'))
-    if manifest.get('format')!='ap01-ota-channel-0031-v2':p.error('expanded format required')
+    if manifest.get('format') not in ('ap01-ota-channel-0031-v2','ap01-http-0031-v1','ap01-http-gif-0031-v1'):
+        p.error('supported 0031 OTA image required')
     data=a.image.read_bytes();digest=hashlib.sha256(data).hexdigest()
     evidence=json.loads(a.validation_report.read_text(encoding='utf-8'))
     if not evidence.get('passed') or digest not in evidence.get('validated_images',[]):
@@ -58,8 +61,11 @@ def main():
     builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
     builder.validate_candidate(data,relocated)
     key=a.auth_key_file.read_text(encoding='ascii').strip()
-    if len(key)!=64 or hashlib.sha256(key.encode('ascii')).hexdigest()!=manifest['auth_key_sha256']:
-        p.error('authentication key identity mismatch')
+    if not ((len(key)==8 and all(c in '0123456789' for c in key)) or
+            (len(key)==64 and all(c in '0123456789abcdefABCDEF' for c in key))):
+        p.error('current device menu code (8 digits), or historical rescue key (64 hex), required')
+    # Authentication belongs to the currently running device, independently of
+    # the target image. A target credential is neither shipped nor derivable.
     # A valid miIO hello binds the specified address to the selected device ID.
     with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as probe:
         probe.settimeout(4);probe.sendto(bytes.fromhex('21310020')+b'\xff'*28,(a.host,54321))
@@ -69,6 +75,7 @@ def main():
     if health(a.host,a.port,key)!=a.expect_version:p.error('running version changed')
     record=dict(host=a.host,device_id=a.device_id,image_sha256=digest,image_bytes=len(data),
                 expected_before=a.expect_version,expected_after=a.new_version,
+                target_credential_source=manifest.get('credential_source','historical-image-manifest'),
                 created_epoch=int(time.time()),state='checked',redispatch_allowed=False)
     if a.check_only:
         print(json.dumps(record));return
@@ -95,16 +102,20 @@ def main():
     deadline=time.monotonic()+120
     while time.monotonic()<deadline:
         try:
-            version=health(a.host,a.port,key)
+            # A migration may replace a legacy key with a newly generated code.
+            # Public health proves the advertised version, never authentication.
+            version=health(a.host,a.port)
             if version==a.new_version:
-                record.update(state='new_service_verified',health_version=version,verified_epoch=int(time.time()))
+                record.update(state='new_service_observed',health_version=version,observed_epoch=int(time.time()),
+                              authentication_verified=False,
+                              next_action='Read the device menu code and verify an authenticated operation.')
                 marker.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
                 print(json.dumps(record),flush=True);return
         except (OSError,ValueError,KeyError,http.client.HTTPException,RuntimeError):pass
         time.sleep(3)
     record['state']='outcome_unknown'
     marker.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
-    raise RuntimeError('new service not verified; observe only, no retry')
+    raise RuntimeError('new service version not observed; observe only, no retry')
 
 
 if __name__=='__main__':

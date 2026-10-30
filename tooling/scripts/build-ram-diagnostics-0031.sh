@@ -11,7 +11,7 @@ flags=(-march=rv32imafc_zicsr_zifencei -mabi=ilp32f -Os -ffreestanding -fno-buil
     -mno-relax -msmall-data-limit=0 -nostdlib -nostartfiles -Wall -Wextra -Werror -fstack-usage)
 mode=${3:-release}
 [[ "$mode" == release || "$mode" == probe || "$mode" == full-upload ]]
-units=(ota_channel ota_0031 ota_image diagnostic_console diagnostic_console_0031)
+units=(ota_channel ota_0031 ota_image diagnostic_console diagnostic_console_0031 device_code_0031 device_code_native_0031)
 if [[ "$mode" != release ]]; then
     flags+=(-DOTA_PORT_NO_ENTRY -DAP01_HTTP_PROBE)
     units+=(probe_network_console_0031)

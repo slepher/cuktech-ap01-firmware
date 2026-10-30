@@ -68,7 +68,8 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--host',required=True)
     parser.add_argument('--port',type=int,default=18080)
-    parser.add_argument('--auth-key-file',type=Path,required=True)
+    parser.add_argument('--auth-key-file',type=Path,required=True,
+                        help='current device menu code (8 digits); historical rescue 64hex keys also accepted')
     parser.add_argument('--command',action='append',default=[],help='explicit native NSH command; sent once')
     parser.add_argument('--operation',choices=('shell','status','logs','flash','interrupt','close'),default='shell')
     parser.add_argument('--address',type=lambda v:int(v,0),default=0,help='physical NOR offset for flash reads')
@@ -78,7 +79,9 @@ def main():
     parser.add_argument('--timeout',type=float,default=120)
     args=parser.parse_args()
     key=args.auth_key_file.read_text(encoding='ascii').strip()
-    if len(key)!=64 or any(c not in '0123456789abcdefABCDEF' for c in key):parser.error('64 hex key required')
+    if not ((len(key)==8 and all(c in '0123456789' for c in key)) or
+            (len(key)==64 and all(c in '0123456789abcdefABCDEF' for c in key))):
+        parser.error('8 digit device menu code or historical 64 hex key required')
     if not 1<=args.port<=65535 or not 1<=args.timeout<=3600:parser.error('invalid port/timeout')
     if any('\n' in c or '\r' in c or '\0' in c for c in args.command):parser.error('one command per --command')
     if args.command and args.operation!='shell':parser.error('commands require shell operation')

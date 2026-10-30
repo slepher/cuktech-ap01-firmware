@@ -6,7 +6,6 @@ import hashlib
 import io
 import json
 from pathlib import Path
-import secrets
 import struct
 import subprocess
 import sys
@@ -27,6 +26,76 @@ RCS_LEN = 97
 VOL_OFF = 0x1bada0
 VOL_SIZE = 480
 TAG = b'0x5245434f56455259544147'
+MENU_HOOKS = ((0xbe8da, 'efc0ce7db7450fa0', 'ap01_access_register_hook_0031'),
+              (0xbe9e6, 'efa0fd6e814523a4a900', 'ap01_access_list_hook_0031'))
+
+
+def menu_manifest(header, symbols, required=False):
+    present = [name in symbols for _, _, name in MENU_HOOKS]
+    if not any(present):
+        if required:
+            raise ValueError('0031 release requires the local device-code menu')
+        return
+    if not all(present):
+        raise ValueError('incomplete 0031 access menu symbols')
+    header[192:200] = b'AP31MNU1'
+    struct.pack_into('<I', header, 200, 2)
+    for i, (offset, original, name) in enumerate(MENU_HOOKS):
+        struct.pack_into('<3I', header, 204+12*i, offset, symbols[name], len(bytes.fromhex(original)))
+
+
+def menu_hooks(payload):
+    if len(payload) <= 256 or any(payload[128:192]) or any(payload[228:256]):
+        raise ValueError('invalid 0031 manifest reserved bytes')
+    if struct.unpack_from('<I', payload, 8)[0] == 2 and any(payload[64:192]):
+        raise ValueError('device-code images cannot contain embedded credentials')
+    if not any(payload[192:228]):
+        return []  # Historical/probe modules remain reconstructible.
+    if payload[192:200] != b'AP31MNU1' or struct.unpack_from('<I', payload, 200)[0] != 2:
+        raise ValueError('invalid 0031 menu header')
+    start = BASE + struct.unpack_from('<I', payload, 16)[0]
+    records = []
+    for i, (site, original, _) in enumerate(MENU_HOOKS):
+        offset, target, span = struct.unpack_from('<3I', payload, 204+12*i)
+        if offset != site or span != len(bytes.fromhex(original)) or target & 1 or not start+256 <= target < start+len(payload):
+            raise ValueError('invalid 0031 menu hook bounds')
+        records.append((offset, target, span))
+    return records
+
+
+def validate_credentials(payload, manifest, require_menu=True):
+    """Version 1 is reconstruction-only; all new builds use device storage."""
+    version = struct.unpack_from('<I', payload, 8)[0]
+    if version == 1:
+        key = payload[64:128]
+        if len(key) != 64 or any(c not in b'0123456789abcdefABCDEF' for c in key):
+            raise ValueError('historical key encoding mismatch')
+        if 'auth_key_sha256' in manifest and sha(key) != manifest['auth_key_sha256']:
+            raise ValueError('historical key identity mismatch')
+    elif version == 2:
+        if any(payload[64:192]) or 'auth_key_sha256' in manifest:
+            raise ValueError('embedded credential or credential hash is forbidden')
+        if manifest.get('credential_source') != 'device-menu-8digit' or manifest.get('per_device_credential') is not True:
+            raise ValueError('device credential metadata missing')
+        if require_menu and not menu_hooks(payload):
+            raise ValueError('0031 release requires the local device-code menu')
+    else:
+        raise ValueError('unsupported module version')
+    return version
+
+
+def apply_menu(out, base, payload):
+    allowed = []
+    for (site, target, span), (_, original, _) in zip(menu_hooks(payload), MENU_HOOKS):
+        if base[site:site+span] != bytes.fromhex(original):
+            raise ValueError('0031 menu stock callsite mismatch')
+        delta = target - (BASE+site)
+        hi = (delta+0x800) >> 12
+        lo = delta - (hi << 12)
+        out[site:site+span] = struct.pack('<II', ((hi & 0xfffff) << 12) | 0x97,
+                                        ((lo & 0xfff) << 20) | 0x80e7) + b'\x01\x00' * ((span-8)//2)
+        allowed.append((site, site+span))
+    return allowed
 
 
 def sha(data):
@@ -94,12 +163,13 @@ def assemble(base, payload, gif, payload_limit=LIMIT):
     struct.pack_into('>I', vol, 12, 0)
     words = struct.unpack('>%dI' % (VOL_SIZE // 4), vol)
     struct.pack_into('>I', out, VOL_OFF + 12, (-sum(words)) & 0xffffffff)
+    menu_ranges = apply_menu(out, base, payload)
     struct.pack_into('<I', out, len(out) - 4, recovery_crc(out))
     image_metadata(bytes(out), require_identity=False)
     allowed = [(GIF_START, GIF_START + len(gif)), (GIF_DESC, GIF_DESC + 4),
                (OFFSET, OFFSET + len(payload)), (BUILTIN_ENTRY, BUILTIN_ENTRY + 4),
                (RCS_OFF, RCS_OFF + RCS_LEN), (VOL_OFF + 12, VOL_OFF + 16),
-               (len(out) - 4, len(out))]
+               (len(out) - 4, len(out))] + menu_ranges
     for i, (before, after) in enumerate(zip(base, out)):
         if before != after and not any(a <= i < b for a, b in allowed):
             raise ValueError(f'unexpected modification at {i:#x}')
@@ -121,6 +191,7 @@ def validate_candidate(data, manifest_path):
     struct.pack_into('<I', header, 32, 0)
     if payload[:8] != b'AP01OTA1' or zlib.crc32(header) != stored:
         raise ValueError('OTA manifest CRC mismatch')
+    validate_credentials(payload, m)
     if struct.unpack_from('<I', payload, 20)[0] != len(payload) or zlib.crc32(payload[256:]) != struct.unpack_from('<I', payload, 28)[0]:
         raise ValueError('OTA code CRC/length mismatch')
     expected, _ = assemble(base, payload, gif)
@@ -135,13 +206,10 @@ def main():
     p.add_argument('--payload', type=Path, required=True, help='zero-manifest linked binary')
     p.add_argument('--elf', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--auth-key-file', type=Path, help='reuse an existing 64hex key without logging it')
     p.add_argument('--label', default='ota0031a')
     a = p.parse_args()
     output = a.output.resolve()
     paths = [output, output.with_suffix('.manifest.json'), output.with_suffix('.payload.bin')]
-    if not a.auth_key_file:
-        paths.append(output.with_suffix('.auth-key'))
     if not output.parent.is_dir() or any(x.exists() for x in paths):
         p.error('all outputs must be new files in an existing directory')
     base = read_base(a.original.resolve())
@@ -154,15 +222,12 @@ def main():
     entry = symbols['ota_0031_main']
     if symbols['ota_0031_manifest'] != BASE + OFFSET:
         p.error('ELF manifest mapping mismatch')
-    key = a.auth_key_file.read_text(encoding='ascii').strip() if a.auth_key_file else secrets.token_hex(32)
-    if len(key) != 64 or any(c not in '0123456789abcdefABCDEF' for c in key):
-        p.error('auth key must contain exactly 64 hex characters')
     m = bytearray(256)
     m[:8] = b'AP01OTA1'
-    struct.pack_into('<7I', m, 8, 1, IMAGE_SIZE, OFFSET, len(payload), entry, zlib.crc32(payload[256:]), 0)
+    struct.pack_into('<7I', m, 8, 2, IMAGE_SIZE, OFFSET, len(payload), entry, zlib.crc32(payload[256:]), 0)
     m[36:52] = hashlib.sha256(payload[256:] + a.label.encode('utf-8')).digest()[:16]
     struct.pack_into('<3I', m, 52, 8192, 18080, 0)
-    m[64:129] = key.encode('ascii') + b'\0'
+    menu_manifest(m, symbols, required=True)
     struct.pack_into('<I', m, 32, zlib.crc32(m))
     payload[:256] = m
     from PIL import Image
@@ -179,7 +244,8 @@ def main():
                     image=dict(path=str(output), bytes=len(data), sha256=sha(data)),
                     payload=dict(path=str(paths[2]), bytes=len(payload), sha256=sha(payload),
                                  entry=hex(entry), elf=str(a.elf.resolve()), elf_sha256=sha(a.elf.read_bytes())),
-                    build_id=bytes(m[36:52]).hex(), auth_key_sha256=sha(key.encode('ascii')),
+                    build_id=bytes(m[36:52]).hex(), credential_source='device-menu-8digit',
+                    per_device_credential=True, local_access_menu=True,
                     placeholder_gif=dict(bytes=len(gif), sha256=sha(gif), base64=base64.b64encode(gif).decode('ascii')),
                     allowed_ranges=[dict(start=x, end_exclusive=y) for x, y in allowed],
                     cloud_ota_dispatch_modified=False,
@@ -190,9 +256,6 @@ def main():
     for path, content in ((paths[2], bytes(payload)), (output, data)):
         with path.open('xb') as f: f.write(content)
     with paths[1].open('x', encoding='utf-8') as f: json.dump(manifest, f, indent=2); f.write('\n')
-    if not a.auth_key_file:
-        with paths[3].open('x', encoding='ascii') as f: f.write(key + '\n')
-        paths[3].chmod(0o600)
     validate_candidate(data, paths[1])
     print(json.dumps(dict(image=str(output), bytes=len(data), sha256=sha(data),
                           build_id=manifest['build_id'], manifest=str(paths[1]), flashable=False)))

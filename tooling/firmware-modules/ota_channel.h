@@ -16,7 +16,8 @@ enum ota_stage { OTA_STAGE_HEADER, OTA_STAGE_BEGIN, OTA_STAGE_BODY, OTA_STAGE_CR
                  OTA_STAGE_COMMIT, OTA_STAGE_SEND, OTA_STAGE_DONE };
 enum ota_error { OTA_OK, OTA_BAD_CONFIG, OTA_TIMEOUT, OTA_EOF, OTA_IO,
                  OTA_BAD_HEADER, OTA_UNAUTHORIZED, OTA_TOO_LARGE, OTA_BAD_CRC,
-                 OTA_BUSY, OTA_WRITER, OTA_COMMIT_UNKNOWN };
+                 OTA_BUSY, OTA_WRITER, OTA_COMMIT_UNKNOWN,
+                 OTA_RATE_LIMITED, OTA_AUTH_UNAVAILABLE };
 typedef struct {
     void *ctx;
     int (*read)(void *, void *, size_t, uint32_t timeout_ms);
@@ -45,4 +46,11 @@ typedef struct {
  * key must be exactly64 hex chars plus NUL; it is never echoed/logged. */
 ota_channel_result ota_channel_handle(const ota_channel_io *, const char *key,
                                       uint64_t absolute_deadline_ms);
+/* Device-managed credentials: authenticate once after a complete bounded
+ * header, before any protected action. Missing/malformed Bearer => NULL/0.
+ * Callback reads current persistent code and applies a shared rate gate.
+ * Anonymous /health remains discovery-only; supplied auth is checked. */
+typedef enum ota_error (*ota_channel_authenticate)(void *,const char *,size_t);
+ota_channel_result ota_channel_handle_authenticated(const ota_channel_io *,
+    ota_channel_authenticate,uint64_t absolute_deadline_ms);
 #endif

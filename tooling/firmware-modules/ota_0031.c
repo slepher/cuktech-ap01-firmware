@@ -10,6 +10,7 @@
 #include "ota_image.h"
 #include "diagnostic_console.h"
 #include "module_manifest_0031.h"
+#include "device_code_0031.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -52,6 +53,7 @@ typedef struct {
     diagnostic_console_state diagnostic;
     uint32_t last_ms;
     uint64_t high_ms;
+    ap01_code_gate_0031 auth_gate;
     unsigned log_used;
     int log_errno,log_needs_reset,log_reported_errno;
     char log[LOG_LIMIT+1];
@@ -308,6 +310,31 @@ static unsigned pointer_value(const char *s)
 {unsigned v=0;for(;*s;s++){if(*s<'0'||*s>'9')return 0;v=v*10+(unsigned)(*s-'0');}return v;}
 static int diagnostic(void *opaque)
 {connection *c=opaque;return diagnostic_console_0031_handle(c->fd,&c->owner->diagnostic,logs,c);}
+/* All four workers share one rate gate; never hold the scheduler lock over
+ * filesystem IO. Accepted requests finish with their original authorization;
+ * rotation affects subsequent requests, not an already-open diagnostic shell. */
+static uint64_t auth_time(server *s)
+{
+    uint32_t n=FN(0xa0059c62,uint32_t (*)(void))();
+    if(n<s->last_ms)s->high_ms+=(uint64_t)1<<32;
+    s->last_ms=n;return s->high_ms+n;
+}
+static enum ota_error authenticate(void *opaque,const char *token,size_t length)
+{
+    connection *c=opaque;server *s=c->owner;
+    FN(0xa01b19e4,void (*)(void))();
+    int limited=auth_time(s)<s->auth_gate.retry_at;
+    FN(0xa01b1948,void (*)(void))();
+    if(limited)return OTA_RATE_LIMITED;
+    ap01_code_io_0031 code_io=ap01_code_native_0031();
+    char code[9]={0};int loaded=ap01_code_load_0031(&code_io,code);
+    FN(0xa01b19e4,void (*)(void))();
+    int result=ap01_code_auth_0031(&s->auth_gate,loaded?NULL:code,token,length,auth_time(s));
+    FN(0xa01b1948,void (*)(void))();
+    memset(code,0,sizeof(code));
+    return result==AP01_CODE_OK?OTA_OK:result==AP01_CODE_LIMITED?OTA_RATE_LIMITED:
+        result==AP01_CODE_UNAVAILABLE?OTA_AUTH_UNAVAILABLE:OTA_UNAUTHORIZED;
+}
 static int request_task(int argc,char **argv)
 {
     if(argc!=2)return -1;
@@ -321,7 +348,7 @@ static int request_task(int argc,char **argv)
     if(!FN(0xa010b966,int(*)(int,int,int,const void*,unsigned))(c->fd,1,10,tv,8)&&
        !FN(0xa010b966,int(*)(int,int,int,const void*,unsigned))(c->fd,1,14,tv,8)){
         ota_channel_io io={c,receive,transmit,now,begin,chunk,commit,abort_store,logs,diagnostic};
-        ota_channel_result result=ota_channel_handle(&io,(const char*)ota_0031_manifest+64,now(c)+LIMIT_MS);
+        ota_channel_result result=ota_channel_handle_authenticated(&io,authenticate,now(c)+LIMIT_MS);
         if(result.authenticated_update)event(c,result.committed?"response_committed":"response_rejected",result.error);
         if(c->flash.fd>0)abort_store(c);
         /* Finish the response connection before requesting reset, as in the

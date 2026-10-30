@@ -18,7 +18,7 @@ int diagnostic_loader_0031(int argc,char **argv)
     uint32_t h[64];
     if(!slot||F(0xa0057eaa,int(*)(uint32_t,void*,uint32_t))(address,h,256))return -1;
     uint32_t size=h[5],entry=h[6],check=h[8];h[8]=0;
-    if(h[0]!=0x31305041u||h[1]!=0x314d4152u||h[2]!=1||h[4]!=0x67e000u||
+    if(h[0]!=0x31305041u||h[1]!=0x314d4152u||h[2]!=2||h[4]!=0x67e000u||
        size<=256||size>65536||entry<256||entry>=size||(entry&1)||crc((void*)h,256)!=check)return -2;
     unsigned char *memory=F(0xa002fc1a,void*(*)(size_t))(size);
     if(!memory)return -3;
