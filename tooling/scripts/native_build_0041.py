@@ -11,8 +11,15 @@ ROOT = Path(__file__).resolve().parents[2]
 MODULES = ROOT / 'tooling/firmware-modules'
 PLATFORM_SOURCES = (
     'native_io_0041.cpp', 'screen_host_0041.c', 'screen_port_0041.cpp',
-    'native_vfs_0041.cpp', 'native_calendar_0041.cpp', 'native_runtime_0041.cpp',
-    'native_sha256_0041.cpp', 'native_device_code_0041.cpp', 'native_wifi_profiles_0041.cpp',
+    'native_vfs_0041.cpp', 'native_calendar_0041.cpp', 'native_runtime_0041.cpp', 'runtime_libc_0041.cpp',
+    'native_sha256_0041.cpp', 'app_tasks_0041.cpp', 'native_device_code_0041.cpp', 'native_wifi_profiles_0041.cpp',
+    'apx2.cpp', 'app_lifecycle_0041.cpp', 'app_image_0041.cpp',
+    'app_update_record_0041.cpp', 'app_selection_0041.cpp', 'app_runner_0041.cpp',
+    'app_download_0041.cpp', 'app_http_0041.cpp', 'app_installer_0041.cpp',
+    'app_core_0041.cpp', 'app_core_native_0041.cpp',
+    'app_files_0041.cpp',
+    'app_network_0041.cpp', 'app_network_native_0041.cpp',
+    'app_heap_0041.cpp',
     'native_wifi_profiles_port_0041.cpp', 'native_diagnostic_0041.cpp', 'native_firmware_0041.cpp',
     'native_ota_image_0041.c', 'native_slot_0041.cpp', 'native_wifi_switch_0041.cpp',
     'native_wifi_switch_port_0041.cpp', 'native_maintenance_0041.cpp', 'native_services_0041.cpp',
@@ -21,7 +28,8 @@ PLATFORM_SOURCES = (
 FLAGS = ['-march=rv32imafc', '-mabi=ilp32f', '-Os', '-std=c++17', '-ffreestanding', '-fno-builtin',
          '-fno-exceptions', '-fno-rtti', '-fno-pic', '-mno-relax', '-msmall-data-limit=0',
          '-ffunction-sections', '-fdata-sections', '-fstack-usage', '-nostdlib',
-         '-DARDUINOJSON_ENABLE_STD_STRING=0', '-DARDUINOJSON_ENABLE_STD_STREAM=0']
+         '-DARDUINOJSON_ENABLE_STD_STRING=0', '-DARDUINOJSON_ENABLE_STD_STREAM=0',
+         '-D_USE_LONG_TIME_T']  # Freeze the existing 0041 32-bit long time ABI on newlib.
 FORBIDDEN = ('.data', '.bss', '.sdata', '.sbss', '.got', '.tdata', '.tbss',
              '.init_array', '.fini_array', '.ctors', '.dtors')
 
@@ -69,11 +77,13 @@ def read_app_config(path):
     return config
 
 
-def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=None):
+def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=None, boot_app_v3=False):
     out = out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     executable = tools(prefix)
     config = read_app_config(app_config) if app_config else None
+    if boot_app_v3 and config:
+        raise ValueError('ABI 3 boot platform cannot embed a resident business App')
     if screen_host_probe and not config:
         raise ValueError('--screen-host-probe requires an App configuration')
     json_header = (json_header or ROOT / 'tooling/vendor/ArduinoJson/src').resolve()
@@ -81,7 +91,10 @@ def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=Non
         raise ValueError('ArduinoJson src directory required')
     includes = [MODULES, json_header] + (config['include_dirs'] if config else [])
     sources = [MODULES / name for name in PLATFORM_SOURCES]
-    sources += config['plain_sources'] + config['sources'] if config else [MODULES / 'native_platform_0041.cpp']
+    sources += config['plain_sources'] + config['sources'] if config else [MODULES / ('native_platform_v3_0041.cpp' if boot_app_v3 else 'native_platform_0041.cpp')]
+    if boot_app_v3:
+        sources += [MODULES/name for name in ('app_boot_v3.cpp','app_binding_v3.cpp','app_files_v3.cpp',
+                                             'app_network_v3.cpp','native_app_platform_v3.cpp')]
     if screen_host_probe:
         sources.append(MODULES / 'test_screen_peer_0041.cpp')
     if len({p.stem for p in sources}) != len(sources):
@@ -90,6 +103,7 @@ def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=Non
     headers = sorted({p for directory in includes for p in directory.rglob('*')
                       if p.is_file() and p.suffix in ('.h', '.hpp', '.inc')})
     report = {'passed': False, 'scope': 'firmware-owned RV32 audit; execution verified separately',
+              'boot_app_v3': boot_app_v3, 'executable_backend_verified': False,
               'runtime': 'application' if config else 'platform', 'firmware_target': 'cuktech-ap01-0041',
               'flashable': False, 'hardware_verified': False, 'flags': flags, 'objects': [],
               'compiler': subprocess.check_output([executable('g++'), '--version'], text=True).splitlines()[0],

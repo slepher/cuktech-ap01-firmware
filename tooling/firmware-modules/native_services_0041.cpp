@@ -30,6 +30,7 @@ struct Ap01NativeServices0041::State {
     std::atomic<bool> listening{false},stop{false},ready{false};
     void *healthContext=nullptr;
     bool (*healthy)(void *)=nullptr;
+    Ap01MaintenanceBridge0041 appBinding;
     static bool wifiBlocked(void *p) {auto &s=*(State *)p;return ap01_native0041::firmwareBusy()||(s.maintenance&&s.maintenance->active());}
     static bool firmwareBusy(void *p) {return ap01_native0041::firmwareBusy()||((State *)p)->wifi.busy();}
     static bool diagnosticBusy(void *p) {return firmwareBusy(p)||wifiBlocked(p);}
@@ -66,7 +67,8 @@ struct Ap01NativeServices0041::State {
     static int selectSlot(void *,unsigned slot) {return ap01SelectSlot0041(slot);}
     static bool bootHealthy(void *p) {
         auto &s=*(State *)p;
-        return s.listening.load(std::memory_order_acquire)&&s.healthy&&s.healthy(s.healthContext);
+        Ap01MaintenanceCall0041 call(s.appBinding);
+        return call&&s.listening.load(std::memory_order_acquire)&&s.healthy&&s.healthy(s.healthContext);
     }
 
     static void *run(void *p) {
@@ -92,7 +94,7 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
     if(state)return false;
     auto s=std::unique_ptr<State>(new(std::nothrow) State);if(!s)return false;
     char mac[13];if(!wifiMac(mac)||!s->fs.begin(false,"/resource",10,"resource"))return false;
-    s->healthContext=context;s->healthy=healthy;s->bootSlot=ap01SelectedSlot0041();
+    s->appBinding=bridge;s->healthContext=context;s->healthy=healthy;s->bootSlot=ap01SelectedSlot0041();
     const char *hex="0123456789abcdef";
     for(unsigned i=0;i<16;++i){uint8_t v=ap01_native_manifest[36+i];s->firmwareBuild[2*i]=hex[v>>4];s->firmwareBuild[2*i+1]=hex[v&15];}
     Ap01MaintenancePort0041 port{s.get(),
@@ -111,6 +113,7 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
     live.store(state.get(),std::memory_order_release);return true;
 }
 bool Ap01NativeServices0041::busy() const {auto *s=live.load(std::memory_order_acquire);return s&&(!s->ready.load(std::memory_order_acquire)||s->maintenance->active()||s->wifi.busy());}
+bool Ap01NativeServices0041::listening() const {auto *s=live.load(std::memory_order_acquire);return s&&s->listening.load(std::memory_order_acquire);}
 int Ap01NativeServices0041::selectWifi(const char *ssid) {
     auto *s=live.load(std::memory_order_acquire);if(!s||!s->ready.load(std::memory_order_acquire)||State::wifiBlocked(s))return -16;
     return s->wifi.request(ssid,uint32_t(nowMs()));

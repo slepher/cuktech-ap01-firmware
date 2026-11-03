@@ -1,0 +1,10 @@
+# Runtime only for the already-built, SHA-pinned AP01 QEMU binary on james.local.
+# Resolve BASE_IMAGE to a recorded digest when building. No host package installs.
+ARG BASE_IMAGE=debian:trixie-slim
+FROM ${BASE_IMAGE}
+ARG DEBIAN_MIRROR=deb.debian.org
+RUN sed -i "s/deb.debian.org/${DEBIAN_MIRROR}/g" /etc/apt/sources.list.d/debian.sources \
+    && apt-get update && apt-get install -y --no-install-recommends \
+    python3 libglib2.0-0t64 libpixman-1-0 libpng16-16t64 libcurl4t64 \
+    && rm -rf /var/lib/apt/lists/*
+ENV PYTHONDONTWRITEBYTECODE=1

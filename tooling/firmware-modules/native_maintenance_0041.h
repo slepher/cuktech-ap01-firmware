@@ -12,6 +12,8 @@ struct Ap01MaintenancePort0041 {
     Ap01WifiProfilesPort wifiProfiles{};
     Ap01DiagnosticPort diagnostic{};
     int (*deviceCode)(void *,char out[9])=nullptr;
+    // Firmware-owned installation handler; never a pointer into unloadable App code.
+    Ap01HttpReply (*appUpdate)(void *,const Ap01HttpRequest &,const char *,uint64_t)=nullptr;
 };
 class Ap01Maintenance0041 {
     LittleFSClass &fs;

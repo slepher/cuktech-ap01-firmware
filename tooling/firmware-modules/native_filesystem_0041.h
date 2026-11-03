@@ -1,24 +1,11 @@
 #pragma once
 #include "native_string_0041.h"
+#include "native_vfs_api_0041.h"
 
 // Explicit kernel VFS boundary. All paths are below the caller-owned private
 // root on the already-mounted /resource volume; this port never formats it.
-// write returns bytes only after sync; rename commits the filesystem metadata.
-struct Ap01VfsOps {
-    void *context;
-    int (*prepare)(void *, const char *);
-    int (*open)(void *, const char *, unsigned); // 0 read, 1 truncate, 2 append
-    int (*close)(void *, int);
-    int (*read)(void *, int, void *, size_t);
-    int (*write)(void *, int, const void *, size_t);
-    int32_t (*seek)(void *, int, int32_t, unsigned);
-    int32_t (*size)(void *, int);
-    int (*exists)(void *, const char *);
-    int (*mkdir)(void *, const char *);
-    int (*remove)(void *, const char *);
-    int (*rename)(void *, const char *, const char *);
-    int (*statfs)(void *, const char *, uint64_t *, uint64_t *);
-};
+// write returns bytes only after sync (also for a zero-length write);
+// rename commits the filesystem metadata.
 class File {
     const Ap01VfsOps *io = nullptr;
     int fd = -1;
@@ -34,6 +21,12 @@ public:
     }
     ~File() { close(); }
     explicit operator bool() const { return io && fd >= 0; }
+    bool length(uint32_t &out) const {
+        int32_t n=*this?io->size(io->context,fd):-1;
+        if(n<0)return false;
+        out=uint32_t(n);return true;
+    }
+    bool sync() { return *this && io->write(io->context,fd,nullptr,0)==0; }
     void close() { if (*this) { io->close(io->context, fd); fd = -1; } }
     size_t size() const { int32_t n = *this ? io->size(io->context, fd) : -1; return n < 0 ? 0 : (size_t)n; }
     size_t position() const { int32_t n = *this ? io->seek(io->context, fd, 0, 1) : -1; return n < 0 ? 0 : (size_t)n; }

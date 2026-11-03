@@ -219,7 +219,10 @@ bool Ap01Firmware::load() {
 }
 void Ap01Firmware::failed(const char *reason) {close();record->phase=Failed;record->error=reason;save();}
 bool Ap01Firmware::begin(uint64_t now) {
-    __attribute__((used,section(".ap01_firmware_budget"))) static const uint32_t budget[]={
+#if defined(__riscv)
+    __attribute__((used,section(".ap01_firmware_budget")))
+#endif
+    static const uint32_t budget[]={
         sizeof(Ap01Firmware),sizeof(Record),32768,6145,1036,1024};
     if(!available())return true;
     if(!load()){corrupt=true;record.reset();return false;}

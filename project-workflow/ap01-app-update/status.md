@@ -1,0 +1,119 @@
+# 当前状态
+
+更新：2026-11-03，D1 非实机纵向验收完成。真实 Runtime 消费 ABI 3.0 直接 C 表，最终 ELF/APX2 零导入、72 项 BASE32、双链接基址归一化一致，两次独立构建包字节一致。最终包 203,696 B，SHA256 `581eafe33e3e524a3aefdb32e30905be75be304cfa202f14efcdbda113de1dcc`；见 [D1 记录](d1-direct-app.md)、[接口合同](../../docs/app-platform-api-v3.md) 和 `build/app-install/artifact-report.json`。
+
+平台拥有维护/host/window/provider，固定文件先维护后 App 的加载路径已接通。完整平台候选 `d1-platform-v3-02.bin` 为 6,897,352 B，SHA256 `53629b54908e6681c73dad6f256c299a9d0245a800e9301c4b5fb7d0e0ab141c`，镜像检查通过。生产加载器宿主验证、六种坏 relocation、平台 ASan/UBSan 10 场景与跨仓边界通过。
+
+james.local Docker QEMU 已执行真实包，两个地址均完成三入口、宿主注册、业务/发现线程、正常窗口销毁与重建，未重复启动线程。报告 `build/app-install/qemu-james/d1-v3-run02.json`。ROM I/O、维护监听、LVGL 和调度等仍为模型替身，不是完整原厂 ROM 启动。
+
+**不可部署、未部署、未访问设备**：生产执行内存 backend 显式不可用，拒绝 reserve 并保留维护；H 尚未验证。QEMU 只在 james.local Docker 运行，未安装宿主依赖。
+
+当前目标为复用现有多 App screen_host，使用直接 C 函数表和开机完整集合加载，支持单个/批量 App 更新，commit 后重启、集合级成功或回退。见 [新设计](../../docs/ap01-app-update-design.md) 与 [当前任务](task.md)。在线热卸载不再是目标。
+
+已有证据：多 App 界面宿主及双 App 测试；统一构建和工具链；旧 APX2/单包日志/下载/HTTP/CLI 模块及宿主测试；旧真实 24 源 PIE 审计（当时剩 53 项导入；新 ABI 3 最终链接已为零）；james.local Docker 中小样本双基址 RV32 执行。它们不是新集合更新方案的完成证据。
+
+尚未完成：D2 多包 Manifest/启动/全局输入仲裁/资源与健康监督，D3 集合日志/重启切换与整集回退，D4 HTTP/CLI/Bridge 单更/批更端到端。生产安装服务默认 501 的缺口未改变；实机可执行内存/cache/容量与掉电准入未通过。
+
+文档迁移：总设计、计划和任务已重整；APX2 增补 ABI 3 编码，AUT2/HTTP 保留旧实现合同和版本提示。下列全部为历史记录，其中“最新”“下一步”“未实施”等按各自记录时间理解，不覆盖本节。
+
+## 历史实施记录（修订前，保留证据）
+
+
+更新：2026-11-02。
+
+最新：按用户要求在 james.local Docker 内复用现有 AP01 QEMU 10.1.0。模型基线 55 项通过；同一最小映像在模型片内 RAM/PSRAM 两处执行通过，与 Unicorn 结果一致，SP/s0/s1 保持。依赖仅安装在容器内，无宿主安装、无设备访问。报告已取回，S1 实机准入仍未通过。见 [远端 QEMU 验证](s1-qemu-james.md)。
+
+S0 设计完成；S1 已恢复本机平台/App 可复现构建，并完成真实 App PIE 编译清点；实机执行可行性未通过。S2–S5 未实施。未连接设备、未部署，本轮新增修改未提交。
+
+本轮用户明确：不增加双槽，但允许失败回退，成功后可清理旧 App。设计已采用单运行实例、临时 previous 文件、持久试运行/回退记录和成功后清理。
+
+本轮确认：0041 原件哈希匹配；App 配置的 24 个源文件和 include 目录存在；APX1 宿主测试通过 ASan/UBSan。当前 XIP 与 APX1 均不提供 0041 文件代码加载。本次仅针对 0041；0031 不部署 App，只保留为救援底座，不参与 App 加载验证。
+
+按用户要求已完整快进合并 origin/master 至 `69015e7`，本地 README 与设计文档保留、无内容冲突。统一构建与依赖已补齐；固定 xPack GCC 12.5.0-1，修复时间 ABI 参数和 App 显式 time.h include。平台 6,879,560 B、App 7,052,968 B，候选验收与隔离平台构建通过；同路径重复完整构建 App 的 ROM 字节一致。产物保持不可部署候选。
+
+真实 App 24 个源文件 PIE 编译通过；存在 105 个外部导入、GOT 与虚表/指针数据，尚未满足稳定 C ABI 或文件加载条件。下一步收敛服务边界及离线修正布局，并核实 0041 可执行内存和缓存机制；实机容量、两基址执行及存储掉电语义仍待验证。详细命令、哈希、兼容修复及验收边界见 [S1 构建记录](s1-build.md)。
+
+证据与限制：[设计](../../docs/ap01-app-update-design.md)、[审阅](review.md)。现场仍以 codex_status/PROGRESS.md 为准。
+
+S1 继续推进：最小 C++ 映像经两处离线链接归一化后相同，在两处 RV32 模拟加载地址执行通过，覆盖函数指针/虚表/data/bss/服务回调及 9 项拒绝检查；原 OTA Unicorn 检查 8 项通过。确认一次本对话 Python/Unicorn 宿主初始化 SIGILL，后续独立重跑通过，无设备访问或残留进程。从本地 Git 历史找回 0041 堆区域证据，23 条指令与原件逐字节匹配；多区域堆不能推导可执行性。见 [加载实验与内存证据](s1-load-probe.md)。
+
+2026-11-03 离线实现进展：新增 APX2 包校验/加载核心、Python 包生成器与流式 SHA256。ASan/UBSan 下两基址、36 类损坏字段、全部截断位置与读失败通过；11 组独立 SHA 对照、15 项打包端拒绝通过。GCC 12.5 RV32 两个生产源文件编译通过。见 [包格式](../../docs/apx2-package-format.md) 与 `build/app-install/apx2/apx2-report.json`。这推进了 S1 格式与 S2 加载核心，尚未集成运行服务；事务、ABI 服务、真实 App/Bridge 接入仍未完成。上文“S2–S5 未实施”为此前状态，不能再理解为没有任何 S2 代码。
+
+2026-11-03 生命周期进展：新增固件常驻 `app_generation_0041.h` 执行门与 RAII lease。close 后不接受新调用；只有已关闭且引用为零才能卸载/开始下一代；旧代际回调拒绝，代际计数不回绕。四线程 2,000 次卸载/重载竞争测试分别通过 ASan/UBSan 与 ThreadSanitizer；RV32 编译没有未定义符号，不依赖 libatomic。证据 `build/app-install/generation/generation-report.json` 和 `build/app-install/generation-tsan/generation-report.json`。尚未将真实 App 所有任务/UI/维护回调接到此门，也未实现资源取消与排空协调器，不能宣称停止/卸载已完成。已有 maintenance.c 的 AMT1 是早期实验，只能作为复用参考，缺少本需求的持久 trial/rollback 状态。
+
+2026-11-03 维护调用点接入：Ap01MaintenanceBridge0041 增加代际快照，pairing/principal/online 与服务启动健康回调持有 lease。真实路由 ASan/UBSan 测试证明 close 后拒绝 App 回调，而设备码 health 仍返回正常；旧绑定不能进入新代际。独立维护回归通过设备码 OTA、轮换/重放、重启回执及无稳定记录切槽。平台候选 `build/app-install/platform-gate.bin` 为 6,880,248 字节，SHA256 `b0c17c520741ddfe9fa27882df2d73b4f40dce8a27cc9eb88ab7a0e7bf6ecb13`，完整镜像验收通过；跨仓边界检查通过。为本机宿主检查将 ELF 固件预算 section 限定到 RV32，目标预算保留。现有 App 仍 XIP，动态替换、任务/UI lease、持久事务和真实文件 App 接入仍待完成。
+
+同轮带真实 XIP App 的完整构建及镜像验收也通过：`build/app-install/app-gate.bin`，7,053,656 字节，SHA256 `4f78e092ea1325226c9fd661dfa51f79c0b1818234c2fc9b7044b0c5c6fd2f6a`。这是现有入口兼容性回归，不是文件 App 执行证据。无实机访问。
+
+2026-11-03 S3 日志基础：新增 AUT2 双元数据记录、序号/CRC/设备身份校验、读回提交和 Unknown 后重新加载规则。同事务身份不可变、计数不倒退、非法阶段跳转拒绝；新事务限无待清理终态。ASan/UBSan 下 256 个截断写入位置、逐字节损坏、丢失回执、重启次数和重置拒绝通过，RV32 编译通过。规范 [AUT2 日志](../../docs/app-update-journal.md)，报告 `build/app-install/journal/journal-report.json`。尚未接入下载、启动裁决、改名/清理、健康判据，不能称为已可安装 App。
+
+2026-11-03 S3 下载接入：app_download_0041 将真实文件、AUT2 日志和 APX2 校验器连接。1024 字节连续块/一致重复块，部分尾部恢复，重新同步后读回再推进日志；Ready 需要完整 APX2 校验与原事务摘要一致。161 种部分写入/重启、日志 ACK 丢失、偏移未提交、同步失败、内容冲突/摘要拒绝通过 ASan/UBSan，RV32 编译通过。报告 `build/app-install/download/download-report.json`。未接入 HTTP/鉴权、空间预留、取消/清理或启动执行器。
+
+2026-11-03 S3 启动选择/清理核心：app_selection_0041 按 APX2 完整摘要查找两个实际包的角色，先持久消耗 trial/rollback 再返回 Launch；重启后不重复同类启动，首装/旧包失败进入 Recovery。成功日志提交后才删除旧包并规范化 current，改名回执丢失可重放，不因旧文件存在撤销成功。7 组宿主流程含重复 commit、丢失启动记录 ACK、回退失败、清理失败通过 ASan/UBSan，RV32 编译通过；下载故障回归通过。报告 `build/app-install/selection/selection-report.json`。执行后端、资源排空、健康计时/业务写冻结、取消和接口接入仍未完成。
+
+2026-11-03 健康判据接入选择器：公开 observe 取代直接 confirm，10 秒入口初始化、30 秒连续事件/原厂调度/维护计数推进、1 秒最大采样间隔、40 秒总预算；粘性失败不被后续好样本清除。当前代际业务写门在试运行/回退和 Unknown 时关闭，成功/回退终态后开放。15 组宿主流程覆盖三类计数停滞、缺口、时钟倒退、资源失败、身份拒绝、持续观察与写门，ASan/UBSan、RV32 编译通过。尚未接入真实计数源/执行器与全部业务写服务，不代表设备级冻结或运行健康已验证。
+
+2026-11-03 S3 取消：Receiving/Ready 提交 Cancelled 后仅清理 incoming；切换/试运行取消转持久回退意图，已回退/成功状态重放不重启、不删 current。RecoveryRequired 清理失败候选后允许显式新事务，首装失败不依赖旧 App 即可重装。新增 7 组取消/回执丢失/清理故障流程通过；选择、下载与日志回归及 RV32 编译通过。接口仍未接入运行服务。
+
+2026-11-03 维护协议离线接入：新增 app_http_0041，连接下载/日志/启动选择核心到真实 HTTP parser 与固件设备码鉴权。覆盖六条 App API，逐次 MAC/事务身份、序号/当前摘要围栏、块 SHA、principal 回执隔离、存储预算、stop_pending 与提交重放。HTTP 链 ASan/UBSan、RV32 核心编译通过；原独立维护 OTA 回归及跨仓边界检查通过。当前平台服务尚未绑定安装执行器，设备路径明确 501，不承诺已可部署安装。协议见 docs/app-update-http.md。
+
+HTTP 路由改动后的完整独立平台构建及镜像检查通过：`build/app-install/platform-http.bin`，6,880,568 字节，SHA256 `96eddca0b029a62e83a622a77ad5116ceaf4fc137c616d40bcae373fe77bce85`。候选未部署，App handler 仍需执行器绑定。
+
+2026-11-03 CLI：新增 app-update-client-0041.py，标准库 install/status/result/cancel，首次 mutation 前持久回执与原始围栏；同回执重连查询/续传、块 SHA、MAC/目标/偏移检查、终态回退拒绝、固定预算退避。注入对端测试通过 begin/chunk/commit/cancel ACK 丢失、无新 ID/重复提交、失败终态与预算/身份围栏。未联网或部署；尚待 CLI 与运行中 C++ 服务整体联调、真实执行器和 Bridge 接入。
+
+2026-11-03 CLI/C++ 交叉联调完成：客户端真实 HTTP 构造经管道进入持续运行的 C++ parser、菜单鉴权、文件下载、日志和健康选择器。正常/丢 begin ACK/丢 chunk ACK/丢 commit ACK 四组均成功，begin/chunk/commit 各一次，重新打开成功回执只查询一次。服务侧 ASan/UBSan，候选文件逐字节等于输入。报告 `build/app-install/client-http/client-http-report.json`。无网络/设备，健康计数模拟、未执行 App 指令；实际 App C ABI、加载后运行、真实资源排空与 Bridge 仍未完成。
+
+2026-11-03 真实 App 边界核对：native_0041.cpp 的 Runtime 当前拥有 Ap01NativeServices0041、业务/发现线程和 UI 回调，因此不能只设置 stop 再释放 Runtime。新增 C ABI v2 五入口与生命周期协调器，事件/健康持 lease，先 prepare_stop 再排空，stop 成功才可释放，超时/失败保留代码要求受控重启。宿主 ASan/UBSan、C11 头、RV32 布局/编译通过。真实 App 源码尚未改接，维护服务生命周期仍需从 App 中分离，服务编号/载荷也未冻结。
+
+2026-11-03 真实 App 任务改接：固件 app_tasks_0041 以驻留跳板持有 generation lease，App 入口完整返回后再释放；上限 4 个任务，创建失败回收。codex_status 的业务/bootstrap 与 discovery 两任务已接入，维护回调带同一 gate/generation；新增内部任务停止/排空钩子，不宣称完成 UI 撤销或完整卸载。宿主/任务预算/RV32 检查、跨仓边界、统一构建测试通过。实际 App 候选 `build/app-install/app-tasks-v2.bin`，7,054,584 字节，SHA256 `2c3ebddac45eccc3658741697a794c481f8b33b16571e7bdde19427fa64e5a48`，完整镜像验收通过。未部署。
+
+2026-11-03 UI 绑定生命周期保护：screen_port_0041 记录原生 event_root 和嵌套 dispatch_depth；重复同根绑定幂等，旧订阅仍在时拒绝换根；unbind 改为返回成功/拒绝，活动订阅或回调栈未退出时保留 timer/window。根 DELETE 回调返回后清除根记录，可复用 timer 重新绑定。宿主生产代码配假 ROM 调用的 ASan/UBSan 检查覆盖创建失败、重复绑定、嵌套 timer、DELETE、重绑定；RV32 编译和跨仓边界检查通过。完整 App 候选 `build/app-install/app-window.bin` 7,054,744 字节、SHA256 `4608dba5ce185895f80fd839f751557d59fc275c552d1b0275dde19ea23efad1`；独立平台候选 `build/app-install/platform-window.bin` 6,880,728 字节、SHA256 `7826471e1bf41724fbfe199818f1bd78eb85bc794b65913373627eddc9fe9448`；两份完整镜像验收通过。报告 `build/app-install/screen-binding/screen-binding-report.json`。这是拒绝不安全解绑的保护，不是运行中撤销原生事件的实现；子对象 draw 回调和维护服务仍需独立生命周期，真实 App 还不能释放。未运行 QEMU、未访问设备、未部署。
+
+2026-11-03 映像内存所有权：新增 app_image_0041，将 APX2 校验/加载与五入口生命周期连接，要求后端先预留预算、发布缓存后才允许 start；失败启动仍走正常停止排空，超时/停止失败保留内存，禁止旧代际与重入。13 组宿主故障场景通过 ASan/UBSan、RV32 编译通过，报告 `build/app-install/image/image-report.json` 明确使用宿主入口，未执行包内指令。加入统一平台源清单，3 项构建测试与完整平台候选验收通过：`build/app-install/platform-image.bin` 6,880,728 字节，SHA256 `b9b6a28ed061f7b31978f8af063070311bb005857652fc159fd494537afe21ae`。当前尚无生产调用，链接器会裁掉未引用逻辑；真实执行后端、事务执行器与平台 handler 接入仍未完成。没有设备访问或部署。
+
+2026-11-03 事务执行器：新增 app_runner_0041，串行连接选择/文件读取/映像加载/健康观察/停止排空与失败回退。8 组真实宿主文件日志 + 宿主入口流程通过 ASan/UBSan、RV32 编译；运行旧 App 的停止等待不会提前提交切换，Unknown 健康提交停止业务，停止失败/超时不释放也不启动第二 App。报告 `build/app-install/runner/runner-report.json`。统一平台源清单加入执行器/选择/日志，修正 paths 指针表为只读以满足 XIP 无可写静态数据约束。3 项构建测试、跨仓边界与完整平台镜像检查通过：`build/app-install/platform-runner.bin`，6,880,728 字节，SHA256 `ba3a38ab9fa5f4d1fe3fd3d5fbb818e4ef29af429ee56008a5e333d1a832dcd5`。尚未有生产调用，未接维护 handler、真实执行后端和真实 App C ABI，未执行包内 RV32 指令，无设备访问。
+
+2026-11-03 维护 HTTP 与执行器组合：新增 app_installer_0041，统一持久日志、下载、选择、runner、HTTP，stop_pending 保持旧 App 停止而不在 Ready 查询时重启，成功后自动归位清理文件。客户端/C++ framed HTTP 联调换用该生产组合对象，四组首次安装/回执丢失 + 各一组运行中升级通过；升级 prepare_stop Pending 后查询原事务，commit 两次完成，最终 current 文件逐字节匹配。入口为宿主函数，实际调用 start/event/health/stop，未执行包内 RV32；报告 `build/app-install/client-http/client-http-report.json`，服务 ASan/UBSan。HTTP 回归、RV32 HTTP 编译、统一构建 3 项、跨仓边界通过。完整平台候选 `build/app-install/platform-installer.bin` 为 6,881,160 字节，SHA256 `0e7560b96c0ee7a3accc00f89830acf8dbb341dc3eb619f690e43844d8e0bb40`，验收通过。原生服务尚未构造安装服务/提供执行后端，设备默认 501 未解除；共享平台执行序列、业务服务写门与真实 App 仍待完成。无网络/设备访问。
+
+2026-11-03 包内 RV32 执行：新增正式五入口 APX2 小样本与 RV32 验证程序，将生产 APX2 加载器/映像所有者/生命周期/SHA 编译进 guest。在 james.local Docker 内两基址（0x62fca000、0xa8000000）均通过两代加载、服务回调、event/health、prepare_stop Pending、引用排空/释放和错误摘要拒绝，全部整数保存寄存器与 SP 保持。最终 `build/app-install/qemu-james/abi-run02.json` 指纹核对通过；重建容器下 55 项模型基线通过。旧镜像已清理，本次依赖只在 Docker 重建，无宿主安装。详见 s1-qemu-james.md。仍是小样本与模型后端，不是完整业务 App、生产执行内存/cache 准入或完整安装服务在 QEMU 运行，目标未完成。
+
+2026-11-03 成功回执补齐运行实例：HTTP port 增加执行器快照，返回 runtime_reporting 与当前 state/generation/写许可/加载摘要/版本；未 Running 不冒充运行，跨 principal 不泄露实例。CLI 新事务要求报告能力，succeeded 同时验证当前运行摘要/版本/代际与写门，历史成功但实例不可用时只查询原事务至预算，不重新安装。新增故障/隐私检查、ASan HTTP 回归、四组首次安装+运行中升级交叉联调通过，RV32 HTTP 编译与统一构建检查通过。平台候选 `build/app-install/platform-runtime-status.bin`，6,880,776 字节，SHA256 `39ba0d1a8e4fa323ebe9305ede2431e140891f96b93b459382334fea10aa604f`，镜像检查通过。生产平台构造点/真实 App/执行后端仍未接入；未访问实机。
+
+2026-11-03 真实 App 开始改接 C 服务：增加 core service 1（单调毫秒/随机数/MAC）与 C11 助手，平台 invoke 持代际 lease，失败随机输出清零。codex_status 的配对随机回调及启动 MAC 查询已改走服务表。宿主 ASan/UBSan、C11、RV32、跨仓边界与 3 项统一构建检查通过；完整真实 App 候选 `build/app-install/app-core.bin` 7,055,576 字节、SHA256 `be044884b0424523bf7047954d9db7b0aa119544a0acabf4c0f54fb704ac0a32`，镜像验收通过。五入口样本接同一生产 core 服务，james.local Docker 两基址再次通过，报告 `build/app-install/qemu-james/abi-core-run01.json` 与本地输入摘要一致。当前仍 XIP Runtime 持 core/gate，不是完整独立服务所有权；网络/文件/内存/UI 及真实文件 App 生命周期继续待迁移。未部署、未访问实机。
+
+2026-11-03 真实 App 只读启动：发现现有启动会 mkdir/迁移旧 Bundle 并持久更新 context，补充 BundleStore/Ap01Business 只读恢复模式。可加载/显示已有内容但不改文件，未配置可启动；业务命令/本地激活/配对保存拒绝，持久批准后显式可写恢复刷新 context。实际业务/配对/Bundle/渲染源码 ASan/UBSan 测试统计变更性 VFS 为零、文件逐字节不变，有效配对请求确认为 maintenance_busy；跨仓边界和统一构建检查通过。完整 App 候选 `build/app-install/app-readonly.bin` 7,056,024 字节，SHA256 `0f1b1034d7e3d5e6caacedac8a22786c9c29d8c8accdda0bc07fd74fbdad688a`，镜像验收通过。当前 XIP 默认可写启动未改成试运行；文件 App 五入口与平台写服务门尚待连接，不宣称已完成设备级写冻结。报告 `build/app-install/readonly/readonly-report.json`。
+
+2026-11-03 底层文件服务：新增 service 2 固定 C ABI 与 app_files_0041，私有根路径验证、16 个带代际的 opaque 句柄、1 KiB 有界 I/O，写许可默认关闭；冻结与 VFS 操作同锁，未退出返回 Busy，已有写句柄不能绕过冻结。代际关闭/lease 排空后 drain 文件，关闭结果不确定时粘性保留要求重启。宿主 ASan/UBSan、C11、RV32 检查通过，报告 `build/app-install/files/files-report.json`。加入统一平台源，构建 3 项及完整平台镜像验收通过：`build/app-install/platform-files.bin` 6,880,776 字节、SHA256 `f8f2a13c8ccf106f55bab881cc1a442c6a6908ba48fb250728b95793e1643505`。尚未接真实 App VFS 客户端与安装执行器，设备级写冻结/文件资源排空仍未完成；无设备访问。
+
+
+2026-11-03 真实 App 文件客户端：LittleFS 已经由 app_vfs_client_v2 通过 C service 2 访问固件文件服务，真实 Bundle/配对/渲染测试通过 ASan/UBSan，覆盖 3073 字节分块、第二块失败不误报成功及冻结后的旧句柄拒写。完整 App 候选 `build/app-install/app-file-client.bin` 为 7,059,736 字节，SHA256 `6b8d2db9033d72d2ff9e1aec9c59c4c61fbc6c7284009d44d82cc47a3801ae83`，镜像验收与跨仓边界检查通过。随后映像后端新增 drainResources：stop/lease 排空后确认常驻资源回收，失败粘性保留映像要求重启；15 组映像故障测试、runner 回归及 RV32 编译通过。该候选构建早于 drainResources 修改，后者本轮只做独立编译/宿主验证。当前 XIP Runtime 仍拥有文件服务并显式开放启动写许可；安装器持久状态与文件写门、生产 drain 绑定和常驻所有权尚未完成。未运行新的 QEMU、未访问设备或部署。
+
+
+2026-11-03 执行器写许可联动：runner 按持久选择状态同步后端 writePermission，只有确认后才报告 business_writes；installer 每次 HTTP 操作后 reconcile，开放或撤权失败关闭代际门并停止排空。runner 测试接真实 app_files 与宿主文件系统，10 组流程含 start/试运行/回退/停止拒写、成功开放、开放失败、Unknown 后撤权失败通过 ASan/UBSan 和 RV32 编译。HTTP/CLI 四组首次安装及运行中升级回归通过。统一构建及完整平台镜像检查通过：`build/app-install/platform-write-gate.bin` 6,880,776 字节，SHA256 `18b43c51ab9b64e9846f06fc67051946c3f6c60a83d63e30bde8d3e25ef5e78d`。仍未构造生产常驻安装组合，镜像链接器会裁掉未调用逻辑；真实文件 App 的成功后可写恢复、生产资源绑定及完整包执行继续未完成。本轮未运行 QEMU、未访问实机或部署。
+
+
+2026-11-03 服务路由与整体联调：新增常驻 app_services_0041 汇集 core/files，保留调用代际，拒绝未知服务。真实 XIP App 的随机数/MAC/VFS 已共用同一服务表。HTTP/CLI 四组首装及运行中升级后端接入生产路由、实际 core/files、writePermission/drain，逐请求核对底层写权限；每代故意遗留一个 fd 给常驻 drain，确认释放前回收及旧代际拒绝。ASan/UBSan、HTTP RV32 编译、跨仓边界通过。真实 App 候选 `build/app-install/app-service-router.bin`，7,059,800 字节，SHA256 `2e94e2d06940c36cf5063927a2c165f7ebfab955a187b720c7fe711bb05d7ce4`，完整构建/镜像检查通过，兄弟仓交接卡更新。core 底层在联调中为宿主替身，入口为宿主函数；未新增 QEMU 或实机运行。完整文件 App、其余 C 服务与生产常驻构造仍未完成，目标继续推进。
+
+
+2026-11-03 网络服务底层：新增 service 3 固定 C ABI，8 个代际句柄、业务端口限制、TCP/UDP 类型校验、1 KiB 收发、AGAIN/EOF 区分和关闭不确定保护。原厂适配使用既有地址，poll 立即返回、收发非阻塞；accept 实际超时上限仍待模型/实机证据，不能由源码配置推出已验证。宿主 ASan/UBSan、C11、服务/适配 RV32 编译及 3 项统一构建测试通过。完整平台候选 `build/app-install/platform-network.bin` 6,880,776 字节，SHA256 `1cf9407c90940907d0b54bcf2a05c1244657468a95f95d0ea087826df560400a`，镜像验收通过。尚未接统一路由/真实 App 客户端；未引用代码可能被链接器裁掉。没有 QEMU/实机运行，目标仍未完成。
+
+
+2026-11-03 真实 App 网络改接：app_network_client_v2 与统一路由连接 TCP/UDP 服务；core YIELD 为 1 毫秒调度等待，重试保留 deadline、有时钟停滞预算，关闭代际退出。真实 XIP HTTP/发现流与关闭已改接，排空钩子加入 network drain。网络/core ASan/UBSan、C11/RV32、HTTP/CLI 回归、跨仓边界与构建测试通过。最终候选 `build/app-install/app-network-client-v2.bin` 7,063,192 字节，SHA256 `bd453ec3a4acf35d35920460a5875b56527c955c00bd2c114c84b90b55b5d273`，完整镜像验收通过。首次候选之后修正重试计数写法，原路径重建被脚本拒绝，使用新候选路径完成当前源码构建。没有 QEMU 或实机运行；完整 parser 经网络客户端联调、UI/任务/内存 C 服务及生产常驻平台仍未完成。
+
+
+2026-11-03 实际业务网络协议联调：扩展真实 App 只读测试，编译 http.cpp 和固件 parser，通过实际网络客户端/core/network/router 处理 wire 请求。8 组分段收发、AGAIN、3000 字节体、EOF、读写原期限、部分响应失败和关闭代际测试通过 ASan/UBSan，正常响应长度一致，异常 serve 返回 false；业务持久文件无变更，两个网络句柄经 drain 回收。报告 `build/app-install/readonly/readonly-report.json`。本轮修改测试与说明，不产生新 ROM 候选，无网络/实机访问。继续核对到 native_runtime 的 malloc/free/time/errno 仍含 ROM 依赖，需 App 私有分配入口和常驻预算服务，不能全局替换平台分配器。完整文件 App 与安装目标仍未完成。
+
+
+2026-11-03 受限堆：新增 service 4 固定 C ABI、app_heap_0041 arena 分配器与 App 私有客户端，全部元数据/对齐包含于 heap_bytes；无平台 malloc 回退。代际、内点/重复释放、增长失败保留、合并、零堆、Busy 上限、lease 排空/清零和损坏保留通过 ASan/UBSan，5000 次随机操作保持所有存活块内容。C11/RV32 与统一构建检查通过。安装 HTTP/CLI 后端按实际包 heap_bytes 绑定，宿主入口经客户端分配，event/stop 持有至 drain，四组首次安装/升级回归通过；网络/真实只读业务回归通过。平台候选 `build/app-install/platform-heap.bin` 6,880,776 字节，SHA256 `b297443142ffac6081da766b26ddd621dfee363de20ec6567c222e6a83e831d7`，镜像验收通过。真实 App malloc/new 与生产 arena 后端尚未接入，未执行 QEMU 或实机，目标未完成。
+
+
+2026-11-03 App 私有分配运行库：新增 app_runtime_heap_v2，绑定一次服务表，C malloc/calloc/realloc/free 与当前使用的 C++ nothrow new/delete 经受限堆；宿主验证不覆盖平台 malloc，RV32 PIC 符号/无静态初始化审计通过。当前实际 App 24 源 PIE 对象链接该运行库后分配引用全部解析，仍 98 项其他导入、35 个 GOT 重定位，报告 app-runtime-pic-v2/pic-report.json，不是完整包。APX2 小样本实际执行私有运行库，经生产 heap/router/image/lifecycle 在 james.local 既有 Docker 两基址通过，报告 `build/app-install/qemu-james/abi-heap-run01.json` 与本地输入指纹一致。guest 11936 字节 SHA c5c78102c164d7316e26c364e27239e49ab98520549180c41c99c0c63b695b98；包 SHA 7264196d304bfb1341dce0a2f5d2375c69a21701e5806e619c9cb05b291838c2。无宿主安装、无实机或部署。真实文件 App 入口、其他运行库/服务边界、GOT/最终打包与生产平台仍未完成。
+
+
+2026-11-03 纯运行库分离：runtime_libc_0041 从平台 runtime 提取既有内存/字符串/格式化支持，共享源码独立链接；平台分配器不变。calendar 改纯 UTC+8 Gregorian 实现，移除 ROM timesub 依赖；99422 个宿主独立对照样本（每日首尾、闰世纪）及 ASan/UBSan、RV32 PIE 通过，32 位 time_t ABI 不变。真实业务/HTTP/网络回归、跨仓边界、构建测试通过。完整候选 `build/app-install/app-pure-runtime.bin` 7,064,792 字节，SHA256 `e44a07c80314fb24ed3bef15bf02cb51c9adcad1dbf0d48ce74c7bb5ab73b4df`，镜像验收通过；交接卡更新。当前 24 源 PIE 链私有 heap+libc+calendar+SHA 后剩 86 项导入，仍有 GOT、格式化/系统时间/math、原生服务与显示/任务边界，完整文件 App 未完成。本轮无 QEMU/实机运行或部署。
+
+
+2026-11-03 UTC 服务与数学依赖核对：core 增加 UTC_SECONDS，App 私有 time() 通过不可变服务绑定调用，失败/关门/32 位越界返回 -1；宿主/C11/RV32 检查及 Docker QEMU 两基址实际调用通过，报告 abi-time-run01 指纹一致。完整 App 候选 `build/app-install/app-core-time.bin` 7,064,872 字节，SHA256 `d6fd33e51e0c2666bc5bf4dcc63f5508d5a5affe3f45687797b25faeb304de2d`，镜像/边界/构建测试通过。当前 App 24 源 PIE 对象接私有 heap/time/libc/calendar/SHA 与现有 libm/libgcc 后剩 54 项导入；新增组合重定位清单，仍有 GOT/RELAX/压缩分支等待最终规范化，不宣称数学或完整 App 已执行。snprintf、UI/任务及生产常驻服务/Bridge 仍未完成。没有宿主依赖安装、实机访问或部署。
+
+
+2026-11-03 App 私有格式化：新增 app_runtime_format_v2，覆盖当前实际调用的 d/i/u/x/X、s/c、l/ll、宽度及左对齐/零填充；不支持的格式显式失败，不替换平台 snprintf。宿主 libc 差分、截断哨兵、整数极值、超大宽度计数与 ASan/UBSan 通过，RV32 PIE 仅引用 libgcc 整数除法。真实 24 源 App 组合链接剩 53 项导入，snprintf 已解析，报告 `build/app-install/app-format-pic/pic-report.json`，仍不是完整可加载 App。五入口执行样本增加实际 64 位格式化，离线双基址归一化一致；检查器允许局部分支的 RVC 重定位，并仅接受紧随指令重定位的有效 RELAX 提示。样本映像预算扩为 8 KiB、总预算包含 512 字节堆和 4096 字节栈，包输入地址避开执行区；首次模型运行因旧总预算拒绝，修正后 james.local 既有 Docker 两基址、两代生命周期通过，报告 `build/app-install/qemu-james/abi-format-run02.json`。包 5580 字节 SHA256 `740a66af88078e13609d195bc99b94583c4ba8074dc815bc5fa493334841e1bd`，输入与远端报告指纹一致。未安装宿主依赖、未访问实机、未部署；平台源未改接此私有模块，无新 ROM 候选。UI/任务 C ABI、完整文件 App 入口/打包、生产常驻安装组合与 Bridge 仍未完成。

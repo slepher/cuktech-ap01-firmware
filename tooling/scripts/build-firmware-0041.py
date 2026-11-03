@@ -16,6 +16,7 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--app-config', type=Path, help='App source/configuration JSON; firmware compiles and links it')
     group.add_argument('--app-source-dir', type=Path, help='Compatibility: package existing audited/linked build')
+    group.add_argument('--boot-app-v3', action='store_true', help='Build resident ABI 3 fixed-file boot platform (unverified hardware backend refuses execution)')
     parser.add_argument('--stage', choices=('audit', 'link', 'rom'), default='rom')
     parser.add_argument('--screen-host-probe', action='store_true')
     parser.add_argument('--json-header', type=Path, help='Explicit ArduinoJson src override')
@@ -37,7 +38,7 @@ def main():
         out = (args.app_source_dir or args.build_dir).resolve()
         if not args.app_source_dir:
             if args.stage != 'link':
-                audited = native.audit(out, tool, args.app_config, args.screen_host_probe, args.json_header)
+                audited = native.audit(out, tool, args.app_config, args.screen_host_probe, args.json_header,args.boot_app_v3)
                 if args.stage == 'audit':
                     print(json.dumps({'passed': True, 'flashable': False,
                         'report': str(out / 'native-core-audit.json'), 'budget': audited['budget']}))

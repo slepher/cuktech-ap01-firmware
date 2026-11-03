@@ -5,6 +5,8 @@ struct Ap01HttpRequest {
     const char *requestId = "", *offset = "", *nonce = "";
     const uint8_t *body;
     size_t length;
+    const char *chunkSha256 = "";
+    const char *deviceMac = "";
 };
 struct Ap01HttpReply {
     int status = 500;

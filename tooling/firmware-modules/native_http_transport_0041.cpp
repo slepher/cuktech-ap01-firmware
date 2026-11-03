@@ -28,12 +28,14 @@ bool unescape(char *value) {
     *out = 0; return true;
 }
 bool query(char *value, Ap01HttpRequest &request) {
-    bool id = false, nonce = false, offset = false;
+    bool id = false, nonce = false, offset = false, digest = false, mac = false;
     while (value && *value) {
         char *next = strchr(value, '&'); if (next) *next++ = 0;
         char *equal = strchr(value, '='); if (!equal) return false; *equal++ = 0;
         if (!unescape(equal)) return false;
-        if (!strcmp(value, "request_id") && !id && strlen(equal) <= 64) { request.requestId = equal; id = true; }
+        if ((!strcmp(value, "request_id")||!strcmp(value,"operation_id")) && !id && strlen(equal) <= 64) { request.requestId = equal; id = true; }
+        else if (!strcmp(value,"sha256")&&!digest&&strlen(equal)==64) {request.chunkSha256=equal;digest=true;}
+        else if (!strcmp(value,"device_mac")&&!mac&&strlen(equal)==12) {request.deviceMac=equal;mac=true;}
         else if (!strcmp(value, "session_nonce") && !nonce && strlen(equal) <= 32) { request.nonce = equal; nonce = true; }
         else if (!strcmp(value, "offset") && !offset && strlen(equal) <= 10) { request.offset = equal; offset = true; }
         else return false;
@@ -112,7 +114,7 @@ bool ap01ServeNativeHttp0041(void *context, Ap01HttpHandler0041 handler, bool ma
             if (authSeen || strncmp(value, "Bearer ", 7)) return fail(io, 401, "authorization", deadline);
             const char *token = value+7;
             bool manual = maintenance && (!strncmp(request.path,"/api/wifi/",10) || !strncmp(request.path,"/api/diagnostic/",16) ||
-                !strncmp(request.path,"/api/firmware/",14) || !strcmp(request.path,"/health") || !strcmp(request.path,"/api/maintenance/status"));
+                !strncmp(request.path,"/api/firmware/",14) || !strncmp(request.path,"/api/app/",9) || !strcmp(request.path,"/health") || !strcmp(request.path,"/api/maintenance/status"));
             if (manual) {
                 // Let the common guard count invalid credentials, including missing ones.
                 if (strlen(token) > 32) return fail(io, 401, "authorization", deadline);

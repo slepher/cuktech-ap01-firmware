@@ -1,6 +1,14 @@
 # AP01 固件构建与诊断工具
 
+arm64 macOS 的已验证工具链、32 位时间 ABI、平台/App 构建命令及 S1 限制见 [S1 构建记录](../../project-workflow/ap01-app-update/s1-build.md)。`probe-app-pic-0041.py` 仅做真实 App 的离线 PIE 编译与重定位清点，不生成可加载包或访问设备。
+
+`test-app-pic-load-0041.py` 执行独立最小样本的两基址 RV32 加载与错误修正拒绝检查；依赖和实机边界见 [S1 加载实验](../../project-workflow/ap01-app-update/s1-load-probe.md)。
+
+`test-app-pic-qemu-0041.py` 与 `Dockerfile.ap01-qemu-runtime` 用于用户指定的 james.local Docker QEMU 交叉验证；[环境、结果与复现](../../project-workflow/ap01-app-update/s1-qemu-james.md)。不在 james.local 宿主直接安装依赖。
+
 从仓库根目录执行，模块源码位于 `tooling/firmware-modules/`。
+
+D1 真实 ABI 3 路径：`build-app-v3-0041.py` 生成独立 ELF/APX2，`test-app-v3-artifact-0041.py` 验证重复构建/重定位；`build-firmware-0041.py --boot-app-v3` 构建常驻平台固定路径加载候选，与 `--app-config` 互斥。`test-native-app-platform-v3.py` 验证宿主组合；`build-app-v3-guest-0041.py` 构建真实包模型 guest，`test-app-abi-qemu-0041.py --direct-v3` 仅在 james.local Docker 执行。命令、最终哈希与替身边界见 [D1 记录](../../project-workflow/ap01-app-update/d1-direct-app.md)。模型通过不等于硬件准入，平台候选的执行内存 backend 明确不可用，禁止部署。
 
 | 工具 | 用途 |
 | --- | --- |
@@ -16,6 +24,7 @@
 | `diagnostic-client-0041.py`、`diagnostic-console-0031.py` | 诊断客户端 |
 | `upload-ota-0031.py` | 显式设备 OTA 工具，拆分不执行它 |
 | `test*.py` | 固件模块、客户端与打包回归 |
+| `test-app-runtime-format-v2.py` | 文件 App 私有 snprintf 的宿主差分/ASan/UBSan 与 RV32 PIE 符号检查；参数为预建目录 `--out` 和 `--tool-prefix` |
 
 默认入口与可执行命令见[仓库说明](../../README.md)。`python -B tooling/scripts/build-firmware-0041.py --help` 查看参数；默认原件为本仓库 `roms/0041/ap01-1.0.2_0041.bin`。独立构建使用本仓库的平台入口、SHA256 和 ArduinoJson 头文件。`build-native-app-rom-0041.py` 是共享底层打包器，接受平台 ABI 2 或现有 App ABI 1，仍保留外部 App 原有调用方式。
 

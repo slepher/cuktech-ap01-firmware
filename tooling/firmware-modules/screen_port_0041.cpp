@@ -1,7 +1,10 @@
 #include "screen_port_0041.h"
 #include <new>
 #include <string.h>
+#ifndef ROM
 #define ROM(address,type) ((type)(uintptr_t)(address))
+#endif
+#ifdef __riscv
 static_assert(sizeof(ap01_page_tag_0041)==20&&sizeof(ap01_image_0041)==24,"0041 RV32 ABI");
 
 /* Power1's stock DELETE callback passes its optional, uncreated timer to
@@ -18,6 +21,7 @@ extern "C" __attribute__((naked,used)) void ap01TimerDelete0041(void *) {
         "jr t0\n"
         "1: ret\n");
 }
+#endif
 
 static void *create(void *parent) {
     /* lv_obj_create asserts on allocation failure. Use its two verified leaves. */
@@ -105,7 +109,7 @@ static int present(ap01_surface_0041 *s,void *parent,const uint8_t *pixels,const
 extern "C" const ap01_lvgl_api_0041 ap01_lvgl_0041={1,sizeof(ap01_lvgl_api_0041),create,destroy,size,align,hide,label,present,retire,draw,text,background,text_color,text_font};
 extern "C" unsigned ap01_event_code(void *e){return *(uint32_t *)((uint8_t *)e+8)&0xffff7fff;}
 extern "C" unsigned ap01_event_key(void *e){return ROM(0xa00d8af6,unsigned (*)(void *))(e);}
-extern "C" void *ap01_event_context(void *e){return *(void **)((uint8_t *)e+12);}
+extern "C" void *ap01_event_context(void *e){void *context;memcpy(&context,(uint8_t *)e+12,sizeof(context));return context;}
 extern "C" void *ap01_event_target(void *e){return *(void **)e;}
 extern "C" unsigned ap01_window_active(ap01_window_0041 *w){return ROM(0xa00b2ff4,unsigned (*)(void *))(w->win);}
 extern "C" int ap01_window_visible(ap01_window_0041 *w){return w->win&&!*(volatile uint8_t *)(uintptr_t)0x62fc4053&&
@@ -159,8 +163,18 @@ extern "C" void *ap01_window_overlay(ap01_window_0041 *w) {
 extern "C" void ap01_window_unmount(ap01_screen_slot *slots,ap01_page_0041 *pages,unsigned count) {
     while(count){--count;retire(&pages[count].surface);destroy(slots[count].root);slots[count].root=nullptr;}
 }
-static void timer(void *t){auto *w=*(ap01_window_0041 **)((uint8_t *)t+12);if(w&&w->poll)w->poll(w->context);}
-static void event(void *e){auto *w=(ap01_window_0041 *)ap01_event_context(e);if(w&&w->event)w->event(w->context,e);}
+static void timer(void *t){
+    ap01_window_0041 *w;memcpy(&w,(uint8_t *)t+12,sizeof(w));
+    if(w&&w->poll){++w->dispatch_depth;w->poll(w->context);--w->dispatch_depth;}
+}
+static void event(void *e){
+    auto *w=(ap01_window_0041 *)ap01_event_context(e);if(!w)return;
+    bool deleting=ap01_event_code(e)==0x29&&ap01_event_target(e)==w->event_root;
+    ++w->dispatch_depth;
+    if(w->event)w->event(w->context,e);
+    if(deleting){w->event_root=nullptr;w->win=nullptr;}
+    --w->dispatch_depth;
+}
 extern "C" void *ap01_window_find(void (*poll)(void *)) {
     /* Verified 0041 lv_ll: node size, head, tail; next follows node+size+4.
        Only inspect our timer callback before interpreting its user_data. */
@@ -187,8 +201,11 @@ extern "C" void *ap01_window_services(void) {
 }
 extern "C" int ap01_window_bind(ap01_window_0041 *w) {
     if(!w||!w->win||!w->event||!w->poll)return 0;
+    if(w->dispatch_depth)return 0;
+    if(w->event_root)return w->event_root==w->win;
     if(!w->timer)w->timer=ROM(0xa008bc64,void *(*)(void (*)(void *),unsigned,void *))(timer,50,w);
     if(!w->timer)return 0;
+    w->event_root=w->win;
     ROM(0xa01ad654,void (*)(void *,void (*)(void *),unsigned,void *))(w->win,event,0,w);return 1;
 }
 static unsigned stock_bindings(void *win,int remove) {
@@ -219,4 +236,8 @@ extern "C" void ap01_window_detach(ap01_window_0041 *w){
     if(w->win&&(*(uint16_t *)((uint8_t *)w->win+0x2a)&0x1000))stock_bindings(w->win,1);
     w->win=nullptr;
 }
-extern "C" void ap01_window_unbind(ap01_window_0041 *w){if(w->timer)ROM(0xa008ae58,void (*)(void *))(w->timer);w->timer=nullptr;w->win=nullptr;}
+extern "C" int ap01_window_unbind(ap01_window_0041 *w){
+    if(!w||w->event_root||w->dispatch_depth)return 0;
+    if(w->timer)ROM(0xa008ae58,void (*)(void *))(w->timer);
+    w->timer=nullptr;w->win=nullptr;return 1;
+}

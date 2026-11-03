@@ -13,6 +13,7 @@ public:
     ~Ap01NativeServices0041();
     bool start(const Ap01MaintenanceBridge0041 &,uint64_t boot,void *healthContext,bool (*healthy)(void *));
     bool busy() const;
+    bool listening() const;
     int selectWifi(const char *);
     int wifiState() const;
     void traceMenu(int,int,int,int,int);

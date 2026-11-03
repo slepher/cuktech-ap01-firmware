@@ -4,6 +4,8 @@
 
 | 目录 | 内容 |
 | --- | --- |
+| [docs/ap01-app-update-design.md](docs/ap01-app-update-design.md) | 重启切换与多 App 集合更新设计；D1 非实机验收完成，集合事务待实现 |
+| [docs/app-platform-api-v3.md](docs/app-platform-api-v3.md) | 真实 App 的 ABI 3.0 C 函数表与线程/所有权合同 |
 | [tooling/firmware-modules/](tooling/firmware-modules/README.md) | 共享屏幕宿主、平台服务、维护、OTA、链接脚本与模块测试 |
 | [tooling/scripts/](tooling/scripts/README.md) | 构建、打包、诊断与相关回归检查 |
 | [roms/](roms/CATALOG.md) | 原厂镜像和本地候选；保留 0041 构建基线 |

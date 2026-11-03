@@ -1,7 +1,7 @@
 #include "native_integrity_0041.h"
 #include <string.h>
 
-void syncSha256(const uint8_t *bytes, size_t length, uint8_t digest[32]) {
+void Ap01Sha256::block(const uint8_t *b) {
     static const uint32_t k[64] = {
         0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
         0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
@@ -12,39 +12,49 @@ void syncSha256(const uint8_t *bytes, size_t length, uint8_t digest[32]) {
         0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
         0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
     };
-    uint32_t h[8] = {0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,
-                     0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19};
     auto rotr = [](uint32_t x, unsigned n) { return (x >> n) | (x << (32 - n)); };
-    auto block = [&](const uint8_t b[64]) {
-        uint32_t w[64];
-        for (int i = 0; i < 16; ++i)
-            w[i] = ((uint32_t)b[4*i] << 24) | ((uint32_t)b[4*i+1] << 16)
-                 | ((uint32_t)b[4*i+2] << 8) | b[4*i+3];
-        for (int i = 16; i < 64; ++i) {
-            uint32_t a = w[i-15], c = w[i-2];
-            w[i] = w[i-16] + (rotr(a,7) ^ rotr(a,18) ^ (a >> 3)) + w[i-7]
-                 + (rotr(c,17) ^ rotr(c,19) ^ (c >> 10));
-        }
-        uint32_t a=h[0], c=h[2], d=h[3], e=h[4], f=h[5], g=h[6], q=h[7], z=h[1];
-        for (int i = 0; i < 64; ++i) {
-            uint32_t t1=q+(rotr(e,6)^rotr(e,11)^rotr(e,25))+((e&f)^(~e&g))+k[i]+w[i];
-            uint32_t t2=(rotr(a,2)^rotr(a,13)^rotr(a,22))+((a&z)^(a&c)^(z&c));
-            q=g; g=f; f=e; e=d+t1; d=c; c=z; z=a; a=t1+t2;
-        }
-        h[0]+=a; h[1]+=z; h[2]+=c; h[3]+=d;
-        h[4]+=e; h[5]+=f; h[6]+=g; h[7]+=q;
-    };
-    size_t offset = 0;
-    while (length - offset >= 64) { block(bytes + offset); offset += 64; }
-    uint8_t last[128] = {};
-    size_t tail = length - offset;
-    if (tail) memcpy(last, bytes + offset, tail);
-    last[tail] = 0x80;
-    uint64_t bits = (uint64_t)length * 8;
-    size_t padded = tail < 56 ? 64 : 128;
-    for (int i = 0; i < 8; ++i) last[padded-1-i] = (uint8_t)(bits >> (8*i));
-    block(last);
-    if (padded == 128) block(last + 64);
-    for (int i = 0; i < 8; ++i)
-        for (int j = 0; j < 4; ++j) digest[4*i+j] = (uint8_t)(h[i] >> (24-8*j));
+    uint32_t w[64];
+    for (int i = 0; i < 16; ++i)
+        w[i] = ((uint32_t)b[4*i] << 24) | ((uint32_t)b[4*i+1] << 16)
+             | ((uint32_t)b[4*i+2] << 8) | b[4*i+3];
+    for (int i = 16; i < 64; ++i) {
+        uint32_t a = w[i-15], c = w[i-2];
+        w[i] = w[i-16] + (rotr(a,7) ^ rotr(a,18) ^ (a >> 3)) + w[i-7]
+             + (rotr(c,17) ^ rotr(c,19) ^ (c >> 10));
+    }
+    uint32_t a=h[0], c=h[2], d=h[3], e=h[4], f=h[5], g=h[6], q=h[7], z=h[1];
+    for (int i = 0; i < 64; ++i) {
+        uint32_t t1=q+(rotr(e,6)^rotr(e,11)^rotr(e,25))+((e&f)^(~e&g))+k[i]+w[i];
+        uint32_t t2=(rotr(a,2)^rotr(a,13)^rotr(a,22))+((a&z)^(a&c)^(z&c));
+        q=g; g=f; f=e; e=d+t1; d=c; c=z; z=a; a=t1+t2;
+    }
+    h[0]+=a; h[1]+=z; h[2]+=c; h[3]+=d;
+    h[4]+=e; h[5]+=f; h[6]+=g; h[7]+=q;
+
+}
+
+void Ap01Sha256::update(const uint8_t *bytes, size_t n) {
+    length += n;
+    while (n) {
+        size_t take = 64 - used;
+        if (take > n) take = n;
+        memcpy(pending + used, bytes, take);
+        used += unsigned(take); bytes += take; n -= take;
+        if (used == 64) { block(pending); used = 0; }
+    }
+}
+void Ap01Sha256::finish(uint8_t digest[32]) {
+    uint64_t bits = length * 8;
+    pending[used++] = 0x80;
+    if (used > 56) {
+        memset(pending + used, 0, 64 - used); block(pending); used = 0;
+    }
+    memset(pending + used, 0, 56 - used);
+    for (unsigned i = 0; i < 8; ++i) pending[63-i] = uint8_t(bits >> (8*i));
+    block(pending);
+    for (unsigned i = 0; i < 8; ++i)
+        for (unsigned j = 0; j < 4; ++j) digest[4*i+j] = uint8_t(h[i] >> (24-8*j));
+}
+void syncSha256(const uint8_t *bytes, size_t length, uint8_t digest[32]) {
+    Ap01Sha256 hash; hash.update(bytes, length); hash.finish(digest);
 }

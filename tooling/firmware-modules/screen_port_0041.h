@@ -25,6 +25,8 @@ typedef struct ap01_window_0041 {
     void (*poll)(void *);
     void *timer;
     void *services; /* Firmware service, retained with this lifetime anchor. */
+    void *event_root; /* Retain this window until its native DELETE completes. */
+    unsigned dispatch_depth; /* UI-thread only; includes nested callbacks. */
 } ap01_window_0041;
 typedef struct ap01_lvgl_api_0041 {
     uint32_t abi_version,struct_bytes;
@@ -55,7 +57,10 @@ void *ap01_window_find(void (*poll)(void *));
 void *ap01_window_services(void);
 void ap01_window_detach(ap01_window_0041 *);
 unsigned ap01_window_binding_count(void *win);
-void ap01_window_unbind(ap01_window_0041 *);
+/* UI-thread only. Returns 0 while native event registration or dispatch lives.
+   A failed unbind requires retaining this object and all callback state/code.
+   Success only releases window bindings, not child draw callbacks/services. */
+int ap01_window_unbind(ap01_window_0041 *);
 ap01_screen_port ap01_window_port(ap01_window_0041 *);
 unsigned ap01_window_active(ap01_window_0041 *);
 int ap01_window_visible(ap01_window_0041 *);

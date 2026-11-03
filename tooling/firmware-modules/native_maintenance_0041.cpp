@@ -78,6 +78,11 @@ bool Ap01Maintenance0041::manualAuth(const Ap01HttpRequest &request, uint64_t no
 
 Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_t now) {
     Ap01HttpReply reply;tick(now);
+    if(!strncmp(request.path,"/api/app/",9)) {
+        if(!manualAuth(request,now,reply))return reply;
+        if(!port.appUpdate){error(reply,501,"app_install_unavailable","maintenance_router");return reply;}
+        return port.appUpdate(port.context,request,"ap01-menu-maintenance",now);
+    }
     bool wifi=!strncmp(request.path,"/api/wifi/",10), diagnostic=!strncmp(request.path,"/api/diagnostic/",16);
     if(wifi||diagnostic) {
         if(!manualAuth(request,now,reply))return reply;
@@ -85,7 +90,8 @@ Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_
                     ap01DiagnosticHttp0041(port.diagnostic,request,mac,boot);
     }
     if(!strncmp(request.path,"/api/pairing",12)) {
-        if(bridge.pairing)return bridge.pairing(bridge.context,request,now);
+        Ap01MaintenanceCall0041 call(bridge);
+        if(call&&bridge.pairing)return bridge.pairing(bridge.context,request,now);
         error(reply,503,"application_unavailable","pairing");return reply;
     }
     bool local=(!strncmp(request.path,"/api/firmware/",14)||!strcmp(request.path,"/health")||
@@ -93,7 +99,8 @@ Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_
     char principal[65]="ap01-menu-maintenance";
     if(local) {if(!manualAuth(request,now,reply))return reply;}
     else {
-        int status=bridge.principal?bridge.principal(bridge.context,request.token,principal):401;
+        Ap01MaintenanceCall0041 call(bridge);
+        int status=!call?503:bridge.principal?bridge.principal(bridge.context,request.token,principal):401;
         if(status!=200){error(reply,status,status==401?"unauthorized":"maintenance_busy",status==401?"maintenance_auth":"bindings");return reply;}
     }
     if(!strncmp(request.path,"/api/firmware/",14)) {
@@ -107,7 +114,10 @@ Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_
         NativeJsonAllocator0041 allocator;JsonDocument out(&allocator);
         out["device_mac"]=mac;out["fw_target"]="cuktech-ap01-0041";out["boot_id"]=boot;imageIdentity(out);
         out["service"]="ap01-maintenance";out["http_port"]=18080;
-        out["business_online"]=bridge.online&&bridge.online(bridge.context)&&!active();
+        {
+            Ap01MaintenanceCall0041 call(bridge);
+            out["business_online"]=call&&bridge.online&&bridge.online(bridge.context)&&!active();
+        }
         out["firmware_ota"]=firmware&&firmware->available()?"chunked-v1":"unavailable";
         out["firmware_update_policy"]="sequential_with_traditional_ota";
         reply.status=200;encode(out,reply);return reply;

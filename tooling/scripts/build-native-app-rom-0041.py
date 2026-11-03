@@ -114,6 +114,9 @@ def main():
     if abi[0]==2:
         runtime_metadata={'runtime':'platform','applications':[],
             'platform_abi':{'version':2,'runtime_bytes':abi[1],'window_offset':abi[2],'heartbeat_offset':abi[3]}}
+        if audit.get('boot_app_v3'):
+            runtime_metadata['app_loader']={'abi_major':3,'fixed_path':'/resource/app-current.apx2',
+                'maintenance_before_app':True,'hardware_backend':'unavailable','executable_backend_verified':False}
     else:
         runtime_metadata={'runtime':'application',
             'screen_host':{'abi':1,'roots_per_template':True,'timer_context_direct':True,'host_offset':abi[17],'phase_offset':abi[18],'slot_bytes':abi[19],'slot_root_offset':abi[20],'slot_child_offset':abi[21],'slots_offset':abi[22],'template_capacity':8},
