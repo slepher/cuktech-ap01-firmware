@@ -32,6 +32,8 @@ struct Ap01NativeServices0041::State {
     std::atomic_flag operation=ATOMIC_FLAG_INIT;
     static bool enterOperation(void *p){return !((State *)p)->operation.test_and_set(std::memory_order_acquire);}
     static void leaveOperation(void *p){((State *)p)->operation.clear(std::memory_order_release);}
+    void *updateContext=nullptr;
+    Ap01HttpReply (*updateHandler)(void *,const Ap01HttpRequest &,const char *,uint64_t)=nullptr;
     void *statusContext=nullptr;
     void (*statusSnapshot)(void *,Ap01SupervisorSnapshotV3 &)=nullptr;
     void *healthContext=nullptr;
@@ -104,6 +106,7 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
     auto s=std::unique_ptr<State>(new(std::nothrow) State);if(!s)return false;
     char mac[13];if(!wifiMac(mac)||!s->fs.begin(false,"/resource",10,"resource"))return false;
     s->appBinding=bridge;s->healthContext=context;s->healthy=healthy;s->bootSlot=ap01SelectedSlot0041();
+    s->updateContext=updateContext;s->updateHandler=updateHandler;
     s->statusContext=statusContext;s->statusSnapshot=statusSnapshot;
     const char *hex="0123456789abcdef";
     for(unsigned i=0;i<16;++i){uint8_t v=ap01_native_manifest[36+i];s->firmwareBuild[2*i]=hex[v>>4];s->firmwareBuild[2*i+1]=hex[v&15];}
@@ -115,6 +118,9 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
         [](void *,char out[9]){return ap01DeviceCodeLoad0041(ap01RomVfs(),out);}};
     if(statusSnapshot)port.appStatus=[](void *p,Ap01SupervisorSnapshotV3 &out){
         auto &s=*(State *)p;s.statusSnapshot(s.statusContext,out);
+    };
+    if(updateHandler)port.appUpdate=[](void *p,const Ap01HttpRequest &request,const char *principal,uint64_t now){
+        auto &s=*(State *)p;return s.updateHandler(s.updateContext,request,principal,now);
     };
     port.enterOperation=State::enterOperation;port.leaveOperation=State::leaveOperation;
     s->maintenance.reset(new(std::nothrow) Ap01Maintenance0041(s->fs,port,bridge,mac,boot));

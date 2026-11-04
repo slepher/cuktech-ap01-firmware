@@ -74,8 +74,9 @@ int main() {
     assert(strstr(observed.handle(health,8).bytes.c_str(),"\"automatic_reboot\":false"));
     snapshot.state=Ap01SupervisorStateV3::Healthy;snapshot.fault=Ap01SupervisorFaultV3::None;
     assert(strstr(observed.handle(health,9).bytes.c_str(),"\"business_online\":true"));
-    struct Operation {bool held=false;unsigned enters=0,leaves=0,updates=0;} operation;
+    struct Operation {bool held=false,busy=false;unsigned enters=0,leaves=0,updates=0;} operation;
     port.context=&operation;port.appStatus=nullptr;
+    port.firmware.context=&operation;port.firmware.busy=[](void *p){return ((Operation *)p)->busy;};
     port.enterOperation=[](void *p){auto &s=*(Operation*)p;++s.enters;if(s.held)return false;s.held=true;return true;};
     port.leaveOperation=[](void *p){auto &s=*(Operation*)p;assert(s.held);s.held=false;++s.leaves;};
     port.appUpdate=[](void *p,const Ap01HttpRequest &,const char *,uint64_t){auto &s=*(Operation*)p;
@@ -95,5 +96,9 @@ int main() {
     assert(coordinated.handle(unauthorized,14).status==401&&operation.held);
     coordinated.afterResponse(true);assert(!operation.held&&operation.leaves==2);
     coordinated.tick(15);assert(!operation.held&&operation.leaves==3);
+    operation.busy=true;
+    assert(coordinated.handle(update,16).status==409&&operation.updates==1);
+    coordinated.afterResponse(true);assert(!operation.held);
+    assert(coordinated.handle(health,17).status==200);coordinated.afterResponse(true);
     printf("maintenance gate: pairing/principal/online protected; manual health survives stop; stale bindings rejected\n");
 }

@@ -57,6 +57,17 @@ Ap01SetHealthDecisionV3 Ap01NativeAppFileBootV3::healthSelected(Ap01SetSelectorV
     if(decision==Ap01SetHealthDecisionV3::Reboot&&apps.writesDrained())reboot.request(now);
     return decision;
 }
+Ap01RuntimeSnapshotV3 Ap01NativeAppFileBootV3::runtime(){
+    Ap01RuntimeSnapshotV3 out;out.health=status();
+    auto result=bootResult.load(std::memory_order_acquire);
+    out.attempted=result!=Ap01AppSetResultV3::Waiting||phase.load(std::memory_order_acquire)==4;
+    if(result==Ap01AppSetResultV3::Waiting)return out;
+    // No mutable loader field is read before the UI publishes its result.
+    auto &execution=apps.execution();out.started=execution.startedCount();
+    out.complete=result==Ap01AppSetResultV3::Started;out.failed=execution.failedIndex();
+    if(out.started||out.complete)out.manifest=&execution.selection();
+    return out;
+}
 Ap01SupervisorSnapshotV3 Ap01NativeAppFileBootV3::status()const{
     auto out=supervisor.snapshot();out.reboot=reboot.state(uint32_t(ap01_native0041::nowMs()));
     uint32_t journal=journalSnapshot.load(std::memory_order_acquire);

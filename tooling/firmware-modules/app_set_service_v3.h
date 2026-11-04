@@ -6,6 +6,7 @@
 #include "app_set_cleanup_v3.h"
 #include "app_set_files_v3.h"
 #include <memory>
+#include "app_supervision_v3.h"
 // Called under the platform operation lease, after device-code authentication.
 // Journal is shared with the boot worker under that same lease.
 class Ap01SetServiceV3 {
@@ -18,12 +19,19 @@ class Ap01SetServiceV3 {
     std::unique_ptr<ManifestFile> previous,candidate;
     std::unique_ptr<Ap01SetDownloadV3> download;
     std::unique_ptr<Ap01SetCommitV3> commit;
-    bool frozen=false;
+    uint8_t commitTransaction[16]{};
+    void *runtimeContext=nullptr;
+    Ap01RuntimeSnapshotV3 (*runtimeSnapshot)(void *)=nullptr;
+    bool frozen=false,cleanupAttempted=false;
+    uint32_t cleanupAt=0;
     bool readManifest(std::unique_ptr<ManifestFile> &,const uint8_t *,uint64_t);
     bool hydrate();
     Ap01HttpReply reply(int,const char *,bool disclose=true);
 public:
     Ap01SetServiceV3(const Ap01VfsOps &,Ap01SetJournalV3 &,Ap01AppWriteGateV3 &,Ap01AppRebootV3 &,
         const Ap01ManifestLimitsV3 &,const uint8_t mac[6],uint64_t boot,uint64_t maintenanceReserve);
+    void runtime(void *context,Ap01RuntimeSnapshotV3 (*snapshot)(void *)){runtimeContext=context;runtimeSnapshot=snapshot;}
+    // Boot worker, under the same operation lease as handle().
+    void tick(uint32_t now);
     Ap01HttpReply handle(const Ap01HttpRequest &,const char *principal,uint32_t now);
 };

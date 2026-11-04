@@ -134,9 +134,9 @@ int main(int argc,char **argv){
         assert(starts==2&&ap01ModelV3.maintenanceStarts==1);
         Ap01NativeAppSharedV3::poll(&set.shared());assert(instances[0].ticks==2&&instances[1].ticks==2);
     }
-    for(unsigned fault=0;fault<12;++fault){
+    for(unsigned fault=0;fault<13;++fault){
         ap01ModelV3={};starts=0;mode=0;instances[0]=Instance{};instances[1]=Instance{};
-        Store backend;Disk disk;disk.scenario=fault;
+        Store backend;Disk disk;disk.scenario=fault;if(fault==12)mode=3;
         disk.files["/resource/app-store/current.amf3"]=manifest;disk.add(real);disk.add(peer);
         if(fault==1)disk.files.erase("/resource/app-store/current.amf3");
         if(fault==2)for(auto it=disk.files.begin();it!=disk.files.end();++it)if(it->second==peer){disk.files.erase(it);break;}
@@ -149,17 +149,25 @@ int main(int argc,char **argv){
         assert(!boot.stage("/resource/app-store/current.amf3")&&!disk.opens);
         assert(boot.set().shared().startMaintenance());
         uint8_t expected[32];memcpy(expected,manifest.data()+32,32);if(fault==8)expected[0]^=1;
+        assert(!boot.runtime().attempted&&!boot.runtime().manifest);
         bool staged=boot.stage("/resource/app-store/current.amf3",expected);
         assert(!starts&&!backend.reserves&&disk.opens==disk.closes&&!disk.current);
-        assert(staged==(fault==0||fault==4||fault==9));
+        assert(staged==(fault==0||fault==4||fault==9||fault==12));
         assert(!boot.stage("/resource/app-store/current.amf3",expected));
         disk.worker=false;disk.files.clear(); // UI must only read the immutable snapshot.
         Ap01NativeAppSharedV3::poll(&boot.set().shared());
-        if(staged&&fault!=9)assert(boot.result()==Ap01AppSetResultV3::Started&&starts==2&&backend.reserves==2);
-        else assert(!starts&&ap01ModelV3.listening);
+        if(staged&&fault!=9&&fault!=12){
+            assert(boot.result()==Ap01AppSetResultV3::Started&&starts==2&&backend.reserves==2);
+            auto runtime=boot.runtime();assert(runtime.attempted&&runtime.complete&&runtime.started==2&&runtime.manifest);
+            assert(!memcmp(runtime.manifest->digest,manifest.data()+32,32));
+        }else if(fault==12){auto runtime=boot.runtime();
+            assert(runtime.attempted&&!runtime.complete&&runtime.started==1&&runtime.failed==1&&runtime.manifest);
+            assert(boot.result()==Ap01AppSetResultV3::Start&&starts==2);
+        }else {auto runtime=boot.runtime();assert(runtime.attempted&&!runtime.complete&&!runtime.started&&!runtime.manifest);}
+        if(!staged||fault==9)assert(!starts&&ap01ModelV3.listening);
         if(fault==9)assert(boot.result()==Ap01AppSetResultV3::Start);
         boot.monitor(uint32_t(ap01ModelV3.now));
-        if(starts){
+        if(starts&&fault!=12){
             assert(boot.status().state==Ap01SupervisorStateV3::Healthy&&boot.status().count==2);
             ap01ModelV3.now+=5001;boot.monitor(uint32_t(ap01ModelV3.now));
             assert(boot.status().fault==Ap01SupervisorFaultV3::UiStale);
@@ -221,5 +229,5 @@ int main(int argc,char **argv){
         }
     }
     puts("journal-selected files: real package preflight, durable trial before UI execution, lost ACK denial, version mismatch/missing candidate -> empty rollback passed");
-    puts("native collection: Manifest preflight -> per-App C tables -> shared host; root rebuild, partial failure retention, maintenance, reader ownership and 12 worker-file staging scenarios passed (host entries)");
+    puts("native collection: Manifest preflight -> per-App C tables -> shared host; root rebuild, partial failure retention, maintenance, reader ownership and 13 worker-file staging scenarios passed (host entries)");
 }

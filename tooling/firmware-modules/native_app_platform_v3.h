@@ -44,6 +44,7 @@ public:
     Ap01AppWriteGateV3 &transactionGate(){return writeGate;}
     bool writes(bool allow){return writeGate.writes(allow);}
     bool writesDrained()const{return writeGate.drained();}
+    void appUpdate(void *context,Ap01HttpReply (*handler)(void *,const Ap01HttpRequest &,const char *,uint64_t)){services.appUpdate(context,handler);}
     void appStatus(void *context,void (*snapshot)(void *,Ap01SupervisorSnapshotV3 &)){services.appStatus(context,snapshot);}
     // Set by the resident owner before binding the window; never by an App.
     void onPoll(void *context,void (*hook)(void *,bool)){pollContext=context;pollHook=hook;}

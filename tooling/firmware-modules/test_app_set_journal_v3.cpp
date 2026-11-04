@@ -6,6 +6,9 @@
 #include "app_set_begin_v3.h"
 #include "app_set_cleanup_v3.h"
 #include "app_set_http_v3.h"
+#include "app_set_service_v3.h"
+#include "native_maintenance_0041.h"
+#include "native_json_0041.h"
 #include "native_integrity_0041.h"
 #include <algorithm>
 #include <array>
@@ -17,6 +20,7 @@
 #include <vector>
 #include <fstream>
 #include <iterator>
+#include <iostream>
 using P=Ap01SetPhaseV3;using R=Ap01SetJournalResultV3;
 static unsigned checks;
 #define CHECK(x) do {++checks;if(!(x)){fprintf(stderr,"line %d: %s\n",__LINE__,#x);abort();}}while(0)
@@ -502,8 +506,11 @@ static void fullTransactions(const char *appPath,const char *manifestPath,const 
             }else {trial.beginObservation(0);for(unsigned t=0;t<=30000;t+=1000)
                     CHECK(trial.observe(t,true,false)==(t==30000?Ap01SetHealthDecisionV3::Approved:Ap01SetHealthDecisionV3::Waiting));
                 CHECK(journal.current()->phase==P::Succeeded);}
-            CHECK(ap01CleanupSetV3(journal,disk.ops(),generation?&current:nullptr,next)==Ap01SetCleanupResultV3::Ok);
-            CHECK(!journal.current()->cleanupPending);
+            Ap01SetServiceV3 cleaner(disk.ops(),journal,gate,reboot,limits,mac,30,4096);
+            disk.checkCleanupBarrier=true;cleaner.tick(30000);
+            CHECK(!journal.current()->cleanupPending&&!gate.held()&&!gate.writable());
+            auto cleanupSequence=journal.current()->sequence;unsigned cleanupWrites=disk.writes;
+            cleaner.tick(31000);CHECK(journal.current()->sequence==cleanupSequence&&disk.writes==cleanupWrites);
             const auto &kept=generation&&scenario>=2?current:next;
             CHECK(Store::check(&store,kept.digest,kept.sequence));
             if(generation&&!(scenario&1))CHECK(disk.files[digestPath("/resource/app-store/packages/",kept.entries[1].digest,".apx2")]==originals[1]);
@@ -512,6 +519,132 @@ static void fullTransactions(const char *appPath,const char *manifestPath,const 
             if(!generation){current=next;currentBytes=nextBytes;}
         }
     }
+}
+static void httpService(const char *appPath,const char *manifestPath,const char *peerPath){
+    auto manifest=loadBytes(manifestPath);std::vector<uint8_t> payloads[2]={loadBytes(appPath),loadBytes(peerPath)};
+    Ap01ManifestLimitsV3 limits{8,1u<<24,1u<<24,1u<<24,1u<<24,32,256,127,1u<<28,0};
+    for(unsigned scenario=0;scenario<4;++scenario){
+        Disk disk;disk.cut=1024;Ap01SetJournalV3 journal(disk.ops(),mac);CHECK(journal.load()==R::Empty);
+        Ap01AppWriteGateV3 gate;CHECK(gate.writes(true));Ap01AppRebootV3 reboot;
+        Ap01SetServiceV3 service(disk.ops(),journal,gate,reboot,limits,mac,11,4096);
+        struct Route {Ap01SetServiceV3 &service;bool held=false;unsigned calls=0;} route{service};
+        Ap01MaintenancePort0041 port{};port.context=&route;
+        port.deviceCode=[](void *,char code[9]){memcpy(code,"01234567",9);return 0;};
+        port.enterOperation=[](void *p){auto &r=*(Route *)p;if(r.held)return false;r.held=true;return true;};
+        port.leaveOperation=[](void *p){auto &r=*(Route *)p;CHECK(r.held);r.held=false;};
+        port.appUpdate=[](void *p,const Ap01HttpRequest &r,const char *principal,uint64_t now){
+            auto &route=*(Route *)p;CHECK(route.held);++route.calls;return route.service.handle(r,principal,uint32_t(now));};
+        LittleFSClass fs(disk.ops(),"/resource/maintenance-test");
+        Ap01Maintenance0041 maintenance(fs,port,{},"010203040506",11);CHECK(maintenance.begin());
+        bool dropResponse=false;
+        Ap01HttpRequest request{};request.token="01234567";request.deviceMac="010203040506";request.requestId="01000000000000000000000000000000";
+        request.contentType="application/octet-stream";
+        auto send=[&](const char *method,const char *path,uint32_t now=0,const char *owner="ap01-menu-maintenance"){
+            request.method=method;request.path=path;
+            if(scenario<2||strcmp(owner,"ap01-menu-maintenance"))return service.handle(request,owner,now);
+            struct Wire {std::string input,output;size_t at=0;bool drop;} wire{{},{},0,dropResponse};
+            wire.input=std::string(method)+" "+path+"?operation_id="+request.requestId+"&device_mac="+request.deviceMac;
+            if(strstr(path,"/chunk"))wire.input+="&offset="+std::string(request.offset)+"&sha256="+request.chunkSha256;
+            wire.input+=" HTTP/1.1\r\nAuthorization: Bearer "+std::string(request.token)+
+                "\r\nContent-Type: application/octet-stream\r\nContent-Length: "+std::to_string(request.length)+"\r\n\r\n";
+            if(request.length)wire.input.append((const char *)request.body,request.length);
+            Ap01Stream stream{&wire,[](void *p,uint8_t *out,size_t n,uint64_t){auto &w=*(Wire *)p;
+                n=std::min(n,std::min(size_t(17),w.input.size()-w.at));memcpy(out,w.input.data()+w.at,n);w.at+=n;return int(n);},
+                [](void *p,const uint8_t *bytes,size_t n,uint64_t){auto &w=*(Wire *)p;if(w.drop)return -1;
+                    n=std::min(n,size_t(19));w.output.append((const char *)bytes,n);return int(n);}};
+            bool sent=ap01ServeMaintenanceHttp0041(maintenance,stream,now,now+5000);
+            maintenance.afterResponse(sent);CHECK(!route.held&&sent!=dropResponse);
+            Ap01HttpReply reply;
+            if(dropResponse){dropResponse=false;reply.status=503;return reply;}
+            CHECK(sscanf(wire.output.c_str(),"HTTP/1.1 %d",&reply.status)==1);
+            auto body=wire.output.find("\r\n\r\n");CHECK(body!=std::string::npos);reply.bytes=wire.output.substr(body+4).c_str();return reply;};
+        std::vector<uint8_t> begin(64+manifest.size());memcpy(begin.data(),"ASB3",4);begin[4]=1;begin[6]=64;
+        for(unsigned i=0;i<4;++i)begin[48+i]=uint8_t(manifest.size()>>(8*i));
+        memcpy(begin.data()+64,manifest.data(),manifest.size());
+        auto beginRequest=[&](uint32_t now){request.body=begin.data();request.length=begin.size();return send("POST","/api/app/v3/update/begin",now);};
+        if(scenario>=2){
+            request.token="bad";CHECK(beginRequest(0).status==401&&!journal.current()&&!route.calls);request.token="01234567";
+            dropResponse=true;CHECK(beginRequest(0).status==503&&journal.current()->phase==P::Receiving);
+        }
+        CHECK(beginRequest(0).status==200);auto seq=journal.current()->sequence;
+        CHECK(beginRequest(1).status==200&&journal.current()->sequence==seq);
+        CHECK(send("POST","/api/app/v3/update/begin",2,"stranger").status==404);
+        for(unsigned i=0;i<2;++i){
+            std::string path="/api/app/v3/package/"+std::to_string(i)+"/chunk";
+            auto &b=payloads[i];
+            for(uint32_t at=0;at<b.size();at+=1024){
+                uint32_t n=std::min(uint32_t(b.size())-at,1024u);request.body=b.data()+at;request.length=n;
+                std::string offset=std::to_string(at);request.offset=offset.c_str();uint8_t digest[32];syncSha256(request.body,n,digest);
+                auto hash=digestPath("",digest,"");request.chunkSha256=hash.c_str();
+                if(!i&&!at){
+                    disk.lost=true;CHECK(send("PUT",path.c_str()).status==503);disk.lost=false;
+                    CHECK(send("PUT",path.c_str()).status==503);
+                    request.length=0;CHECK(send("GET","/api/app/v3/update/result").status==202);request.length=n;
+                }
+                CHECK(send("PUT",path.c_str()).status==200);
+            }
+            request.length=0;path="/api/app/v3/package/"+std::to_string(i)+"/ready";
+            CHECK(send("POST",path.c_str()).status==200);
+        }
+        request.length=0;
+        if(!(scenario&1)){
+            if(scenario>=2){
+                dropResponse=true;CHECK(send("POST","/api/app/v3/update/commit",100).status==503);
+                CHECK(journal.current()->phase==P::SwitchPending&&reboot.state(100)==Ap01RebootStateV3::Pending);
+                seq=journal.current()->sequence;
+                CHECK(send("POST","/api/app/v3/update/commit",101).status==202&&journal.current()->sequence==seq);
+            }
+            CHECK(send("POST","/api/app/v3/update/commit",102).status==202);
+            seq=journal.current()->sequence;CHECK(beginRequest(200).status==200);
+            request.length=0;CHECK(send("POST","/api/app/v3/update/commit",200).status==202&&journal.current()->sequence==seq);
+            disk.files.erase(digestPath("/resource/app-store/manifests/",journal.current()->newDigest,".amf3"));
+            Ap01SetServiceV3 recovered(disk.ops(),journal,gate,reboot,limits,mac,11,4096);
+            request.method="POST";request.path="/api/app/v3/update/cancel";
+            CHECK(recovered.handle(request,"ap01-menu-maintenance",210).status==200);
+            recovered.tick(210);CHECK(journal.current()->cleanupPending&&gate.held());
+            disk.files[digestPath("/resource/app-store/manifests/",journal.current()->newDigest,".amf3")]=manifest;
+            disk.removeLost=true;recovered.tick(1210);CHECK(journal.current()->cleanupPending&&gate.held());
+            disk.removeLost=false;unsigned writes=disk.writes;recovered.tick(2210);CHECK(disk.writes==writes);
+            request.method="GET";request.path="/api/app/v3/update/result";
+            CHECK(recovered.handle(request,"ap01-menu-maintenance",2210).status==200);
+            recovered.tick(2210);CHECK(!journal.current()->cleanupPending&&!gate.held()&&!gate.writable());
+            CHECK(reboot.state(400)==Ap01RebootStateV3::Idle);
+            CHECK(send("GET","/api/app/v3/update/result",400).status==200);
+        }else{
+            CHECK(gate.enter());CHECK(send("POST","/api/app/v3/update/commit",100).status==409);
+            CHECK(beginRequest(4000).status==200);
+            begin.back()^=1;CHECK(beginRequest(4500).status==409);begin.back()^=1;
+            gate.leave();request.length=0;
+            auto reply=send("POST","/api/app/v3/update/commit",5100);
+            CHECK(reply.status==409&&strstr(reply.bytes.c_str(),"write_drain_timeout"));
+            CHECK(journal.current()->phase==P::Receiving&&reboot.state(6000)==Ap01RebootStateV3::Idle);
+        }
+        CHECK(!disk.handles);
+    }
+}
+static void runtimeReporting(){
+    Disk disk;auto record=initial();install(disk,0,record);Ap01SetJournalV3 journal(disk.ops(),mac);CHECK(journal.load()==R::Ok);
+    Ap01AppWriteGateV3 gate;Ap01AppRebootV3 reboot;Ap01ManifestLimitsV3 limits{};limits.apps=8;
+    Ap01SetServiceV3 service(disk.ops(),journal,gate,reboot,limits,mac,11,4096);
+    Ap01RuntimeSnapshotV3 snapshot;service.runtime(&snapshot,[](void *p){return *(Ap01RuntimeSnapshotV3 *)p;});
+    Ap01HttpRequest request{};request.method="GET";request.path="/api/app/v3/status";
+    NativeJsonAllocator0041 allocator;JsonDocument doc(&allocator);
+    auto read=[&](){auto reply=service.handle(request,"owner",100);CHECK(reply.status==200);
+        CHECK(!deserializeJson(doc,reply.bytes.c_str()));CHECK(doc["runtime_reporting"].as<bool>());};
+    read();CHECK(doc["limits"]["ram_bytes"].as<uint64_t>()==limits.ram_bytes&&doc["storage_reserve"].as<uint64_t>()==4096);CHECK(!strcmp(doc["runtime"]["boot_state"],"pending")&&doc["runtime"]["running"].size()==0);
+    Ap01ManifestV3 running{};running.count=2;running.sequence=42;running.digest[0]=9;
+    running.order[0]=1;running.order[1]=0;
+    strcpy(running.entries[0].id,"unstarted");strcpy(running.entries[1].id,"actual");strcpy(running.entries[1].version,"running-v1");
+    running.entries[1].digest[0]=10;snapshot.manifest=&running;snapshot.attempted=true;snapshot.started=1;snapshot.failed=0;
+    read();CHECK(!strcmp(doc["runtime"]["boot_state"],"partial_failed")&&!doc["runtime"]["complete"].as<bool>());
+    CHECK(doc["runtime"]["version"].as<unsigned>()==42&&doc["candidate_version"].as<unsigned>()==1);
+    CHECK(doc["runtime"]["running"].size()==1&&!strcmp(doc["runtime"]["running"][0]["app_id"],"actual"));
+    CHECK(doc["runtime"]["running"][0]["health"].isNull());
+    snapshot.started=2;snapshot.complete=true;snapshot.failed=UINT32_MAX;snapshot.health.count=2;
+    snapshot.health.state=Ap01SupervisorStateV3::Healthy;snapshot.health.sampled_at=99;
+    read();CHECK(doc["runtime"]["running"].size()==2&&doc["runtime"]["complete"].as<bool>());
+    CHECK(doc["runtime"]["running"][0]["health"].as<int>()==0&&doc["runtime"]["failed_index"].isNull());
+    snapshot={};snapshot.attempted=true;read();CHECK(!strcmp(doc["runtime"]["boot_state"],"failed"));
 }
 static void httpParsing(){
     Ap01HttpRequest request{};request.method="GET";request.path="/api/app/v3/status";request.length=0;
@@ -542,4 +675,58 @@ static void httpParsing(){
     CHECK(ap01ParseSetHttpV3(request,device,command)==200&&command.action==Ap01SetHttpActionV3::Ready);
     request.requestId="00000000000000000000000000000000";CHECK(ap01ParseSetHttpV3(request,device,command)==400);
 }
-int main(int argc,char **argv){CHECK(argc==4);httpParsing();fullTransactions(argv[1],argv[2],argv[3]);cleanup();cancellation();publication(argv[1]);manifestPublication(argv[2]);beginPlanning();codec();torn();recovery();corrupt();selection();observation();rebootScheduling();downloads();printf("AUT3: %u checks; journal faults, publication, begin/commit/cancel/cleanup, single/batch success and whole-set rollback passed\n",checks);}
+// Pipe-driven protocol peer for the Python CLI. Executes production transaction
+// and HTTP code, but injects health and models reboot; it does not execute Apps.
+static int httpPeer(){
+    struct Boot {
+        Disk &disk;Ap01ManifestLimitsV3 limits{8,1u<<24,1u<<24,1u<<24,1u<<24,32,256,127,1u<<28,0};
+        Ap01AppWriteGateV3 gate;Ap01AppRebootV3 reboot;Ap01SetJournalV3 journal;
+        Ap01SetServiceV3 service;Ap01ManifestV3 running;Ap01RuntimeSnapshotV3 runtime;
+        LittleFSClass fs;std::unique_ptr<Ap01Maintenance0041> maintenance;bool held=false;
+        Boot(Disk &d,uint64_t id,uint32_t &now,bool fail):disk(d),journal(d.ops(),mac),
+            service(d.ops(),journal,gate,reboot,limits,mac,id,4096),fs(d.ops(),"/resource/maintenance-test"){
+            auto result=journal.load();CHECK(result==R::Ok||result==R::Empty);
+            Ap01SetSelectorV3 selector(journal,id);
+            auto selected=selector.select(this,[](void *p,const uint8_t *digest,uint64_t version){auto &b=*(Boot *)p;
+                Ap01AppSetFilesV3 files(b.disk.ops());auto path=digestPath("/resource/app-store/manifests/",digest,".amf3");
+                return files.stage(path.c_str(),digest,b.limits,1u<<24)==Ap01SetFilesResultV3::Ready&&files.version()==version&&
+                    ap01ReadManifestV3(files.reader(),b.limits,b.running)==Ap01ManifestErrorV3::Ok;});
+            if(selected.mode!=Ap01SetBootModeV3::Maintenance){
+                runtime.manifest=&running;runtime.attempted=true;
+                if(fail&&selected.mode==Ap01SetBootModeV3::Trial){CHECK(selector.failed(5));reboot.request(now);}
+                else {
+                    selector.beginObservation(now);
+                    for(unsigned t=0;t<=30000;t+=1000)CHECK(selector.observe(now+t,true,false)==
+                        (t==30000?Ap01SetHealthDecisionV3::Approved:Ap01SetHealthDecisionV3::Waiting));
+                    now+=30000;runtime.complete=true;runtime.started=running.count;
+                    runtime.health.state=Ap01SupervisorStateV3::Healthy;runtime.health.count=running.count;runtime.health.sampled_at=now;
+                }
+            }
+            service.runtime(&runtime,[](void *p){return *(Ap01RuntimeSnapshotV3 *)p;});service.tick(now);
+            Ap01MaintenancePort0041 port{};port.context=this;
+            port.deviceCode=[](void *,char code[9]){memcpy(code,"01234567",9);return 0;};
+            port.enterOperation=[](void *p){auto &b=*(Boot *)p;if(b.held)return false;b.held=true;return true;};
+            port.leaveOperation=[](void *p){auto &b=*(Boot *)p;CHECK(b.held);b.held=false;};
+            port.appUpdate=[](void *p,const Ap01HttpRequest &request,const char *principal,uint64_t time){auto &b=*(Boot *)p;
+                CHECK(b.held);return b.service.handle(request,principal,uint32_t(time));};
+            maintenance.reset(new Ap01Maintenance0041(fs,port,{},"010203040506",id));CHECK(maintenance->begin());
+        }
+    };
+    Disk disk;disk.cut=1024;uint64_t identity=11;uint32_t now=0;bool failNext=false;
+    auto boot=std::unique_ptr<Boot>(new Boot(disk,identity,now,false));std::string line;
+    while(std::getline(std::cin,line)){
+        if(line=="FAIL_TRIAL"){failNext=true;std::cout<<"OK"<<std::endl;continue;}
+        now+=1000;bool restart=false;boot->reboot.tick(now,&restart,[](void *p){*(bool *)p=true;});
+        if(restart){boot.reset();boot.reset(new Boot(disk,++identity,now,failNext));failNext=false;}
+        struct Wire {std::string input,output;size_t at=0;} wire;
+        CHECK(!(line.size()&1));for(size_t i=0;i<line.size();i+=2){unsigned n=0;CHECK(sscanf(line.substr(i,2).c_str(),"%2x",&n)==1);wire.input+=char(n);}
+        Ap01Stream stream{&wire,[](void *p,uint8_t *out,size_t n,uint64_t){auto &w=*(Wire *)p;
+            n=std::min(n,std::min(size_t(31),w.input.size()-w.at));memcpy(out,w.input.data()+w.at,n);w.at+=n;return int(n);},
+            [](void *p,const uint8_t *bytes,size_t n,uint64_t){auto &w=*(Wire *)p;n=std::min(n,size_t(29));w.output.append((const char *)bytes,n);return int(n);}};
+        bool sent=ap01ServeMaintenanceHttp0041(*boot->maintenance,stream,now,now+5000);
+        boot->maintenance->afterResponse(sent);CHECK(sent&&!boot->held);boot->service.tick(now);
+        const char *hex="0123456789abcdef";for(unsigned char c:wire.output)std::cout<<hex[c>>4]<<hex[c&15];std::cout<<std::endl;
+    }
+    return 0;
+}
+int main(int argc,char **argv){if(argc==2&&!strcmp(argv[1],"--http-peer"))return httpPeer();CHECK(argc==4);httpParsing();runtimeReporting();httpService(argv[1],argv[2],argv[3]);fullTransactions(argv[1],argv[2],argv[3]);cleanup();cancellation();publication(argv[1]);manifestPublication(argv[2]);beginPlanning();codec();torn();recovery();corrupt();selection();observation();rebootScheduling();downloads();printf("AUT3: %u checks; journal faults, publication, begin/commit/cancel/cleanup, single/batch success and whole-set rollback passed\n",checks);}

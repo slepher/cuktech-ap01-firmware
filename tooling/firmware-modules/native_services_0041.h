@@ -9,6 +9,8 @@ class Ap01NativeServices0041 {
     struct State;
     std::unique_ptr<State> state;
     std::atomic<State *> live{nullptr};
+    void *updateContext=nullptr;
+    Ap01HttpReply (*updateHandler)(void *,const Ap01HttpRequest &,const char *,uint64_t)=nullptr;
     void *statusContext=nullptr;
     void (*statusSnapshot)(void *,Ap01SupervisorSnapshotV3 &)=nullptr;
 public:
@@ -22,6 +24,10 @@ public:
     uint32_t heartbeat() const;
     void appStatus(void *context,void (*snapshot)(void *,Ap01SupervisorSnapshotV3 &)){
         statusContext=context;statusSnapshot=snapshot;
+    }
+    // Configure before start, as with the status callback.
+    void appUpdate(void *context,Ap01HttpReply (*handler)(void *,const Ap01HttpRequest &,const char *,uint64_t)){
+        updateContext=context;updateHandler=handler;
     }
     int selectWifi(const char *);
     int wifiState() const;

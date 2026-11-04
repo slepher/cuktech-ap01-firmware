@@ -2,6 +2,7 @@
 #include "app_set_files_v3.h"
 #include "native_app_set_v3.h"
 #include "app_set_selection_v3.h"
+class Ap01SetServiceV3;
 // One worker stages bounded immutable bytes, one UI executor consumes once.
 class Ap01NativeAppFileBootV3 {
     Ap01AppSetFilesV3 files;
@@ -13,6 +14,7 @@ class Ap01NativeAppFileBootV3 {
     std::atomic<Ap01AppSetResultV3> bootResult{Ap01AppSetResultV3::Waiting};
     Ap01AppSupervisionV3 supervisor;
     Ap01AppRebootV3 reboot;
+    std::atomic<Ap01SetServiceV3 *> installer{nullptr};
     std::atomic<uint32_t> journalSnapshot{255};
     static void poll(void *,bool afterApps);
 public:
@@ -26,10 +28,15 @@ public:
     void monitor(uint32_t now);
     void workerFailed(){supervisor.fail(Ap01SupervisorFaultV3::Worker);}
     Ap01SupervisorSnapshotV3 status()const;
+    Ap01RuntimeSnapshotV3 runtime();
     void journalStatus(Ap01SetJournalResultV3 result,const Ap01SetJournalV3 &journal){
         uint32_t phase=journal.current()?uint32_t(journal.current()->phase):0;
         journalSnapshot.store(uint32_t(result)|(phase<<8),std::memory_order_release);
     }
+    void attachInstaller(Ap01SetServiceV3 *service){installer.store(service,std::memory_order_release);}
+    Ap01SetServiceV3 *installService()const{return installer.load(std::memory_order_acquire);}
+    const Ap01ManifestLimitsV3 &installLimits()const{return limits;}
+    Ap01AppRebootV3 &installReboot(){return reboot;}
     void dispatchReboot(uint32_t now,void *context,void (*callback)(void *)){reboot.tick(now,context,callback);}
     Ap01NativeAppSetV3 &set(){return apps;}
     Ap01SetFilesResultV3 fileResult()const{return ioResult.load(std::memory_order_acquire);}

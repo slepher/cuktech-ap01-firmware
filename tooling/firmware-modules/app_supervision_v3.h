@@ -12,6 +12,14 @@ struct Ap01SupervisorSnapshotV3 {
     Ap01RebootStateV3 reboot=Ap01RebootStateV3::Idle;
     uint32_t journal_result=UINT32_MAX,journal_phase=0;
 };
+// Manifest is immutable once a terminal boot result is published. The running
+// prefix follows dependency order; unstarted candidate entries are not running.
+struct Ap01RuntimeSnapshotV3 {
+    const Ap01ManifestV3 *manifest=nullptr;
+    uint32_t started=0,failed=UINT32_MAX;
+    bool attempted=false,complete=false;
+    Ap01SupervisorSnapshotV3 health{};
+};
 // UI owns publish(); a separate platform worker owns tick(). HTTP only reads.
 // Faults latch until reboot. This observer never calls App code or reboots.
 class Ap01AppSupervisionV3 {

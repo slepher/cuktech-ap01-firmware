@@ -4,6 +4,7 @@
 #include "native_app_file_boot_v3.h"
 #include "native_io_0041.h"
 #include "native_vfs_0041.h"
+#include "app_set_service_v3.h"
 #include <new>
 extern "C" {
 __attribute__((section(".ap01_manifest"),used,aligned(1)))
@@ -18,6 +19,11 @@ void *start(void *p){
     auto &platform=*(Ap01NativeAppFileBootV3 *)p;
     uint32_t watcher=0;
     if(ap01_native0041::thread(&watcher,"ap01-watch",monitor,4096,p))platform.workerFailed();
+    platform.set().shared().appUpdate(&platform,[](void *p,const Ap01HttpRequest &request,const char *principal,uint64_t now){
+        auto *service=((Ap01NativeAppFileBootV3 *)p)->installService();
+        if(service)return service->handle(request,principal,uint32_t(now));
+        Ap01HttpReply reply;reply.status=503;reply.bytes="{\"error_code\":\"installer_not_ready\"}";return reply;
+    });
     if(!platform.set().shared().startMaintenance()){platform.workerFailed();return nullptr;}
     // Listening is asynchronous; bounded wait, no App loading before it succeeds.
     for(unsigned i=0;i<500&&!platform.set().shared().listening();++i)ap01_native0041::pause(10);
@@ -36,12 +42,20 @@ void *start(void *p){
     auto loaded=journal.load();platform.journalStatus(loaded,journal);
     if(loaded!=Ap01SetJournalResultV3::Ok&&loaded!=Ap01SetJournalResultV3::Empty){platform.set().shared().endAppOperation();platform.workerFailed();return nullptr;}
     Ap01SetSelectorV3 selector(journal,platform.set().shared().bootIdentity());
-    platform.stageSelected(selector);platform.set().shared().endAppOperation();
+    platform.stageSelected(selector);
+    // The worker never returns after publication: journal and service live for
+    // this boot. HTTP and health both own the same maintenance-operation lease.
+    Ap01SetServiceV3 service(ap01RomVfs(),journal,platform.set().shared().transactionGate(),
+        platform.installReboot(),platform.installLimits(),mac,platform.set().shared().bootIdentity(),1u<<20);
+    service.runtime(&platform,[](void *p){return ((Ap01NativeAppFileBootV3 *)p)->runtime();});
+    platform.attachInstaller(&service);
+    platform.set().shared().endAppOperation();
     for(;;){
         uint32_t now=uint32_t(ap01_native0041::nowMs());
         if(platform.set().shared().tryAppOperation()){
         platform.healthSelected(selector,now);
-        platform.journalStatus(journal.writable()?loaded:Ap01SetJournalResultV3::Unknown,journal);
+        service.tick(now);
+        platform.journalStatus(journal.writable()?(journal.current()?Ap01SetJournalResultV3::Ok:Ap01SetJournalResultV3::Empty):Ap01SetJournalResultV3::Unknown,journal);
         platform.dispatchReboot(now,nullptr,[](void *){ap01_native0041::reboot();});
         platform.set().shared().endAppOperation();
         }

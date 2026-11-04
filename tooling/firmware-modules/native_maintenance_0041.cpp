@@ -95,6 +95,9 @@ Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,u
     Ap01HttpReply reply;
     if(!strncmp(request.path,"/api/app/",9)) {
         if(!manualAuth(request,now,reply))return reply;
+        if(active()||(port.firmware.busy&&port.firmware.busy(port.firmware.context))){
+            error(reply,409,"maintenance_busy","app_install");return reply;
+        }
         if(!port.appUpdate){error(reply,501,"app_install_unavailable","maintenance_router");return reply;}
         return port.appUpdate(port.context,request,"ap01-menu-maintenance",now);
     }

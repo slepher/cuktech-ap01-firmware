@@ -224,6 +224,7 @@ bool Ap01Firmware::begin(uint64_t now) {
 #endif
     static const uint32_t budget[]={
         sizeof(Ap01Firmware),sizeof(Record),32768,6145,1036,1024};
+    (void)budget; // Retained in the RV32 image; unused in host regressions.
     if(!available())return true;
     if(!load()){corrupt=true;record.reset();return false;}
     if(!loadStable()){stableCorrupt=true;stable.reset();}
