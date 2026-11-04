@@ -1,5 +1,33 @@
 # 当前状态
 
+2026-11-04 D4 Bridge 单步协调：core 每次先重载回执并查询原事务，按确认进度上传/Ready/commit 或显式取消；Succeeded 校验新 boot 与完整健康运行集合。7 项定向测试（含真实双包和 commit 回复丢失恢复 TCP）通过。application worker/service/UI 及 Rust/C++ 交叉验收仍未完成，未部署或操作实机。
+
+2026-11-04 D4 Bridge 回执：Rust Receipt 首次独占/fsync、后续复用原子替换，保存原事务/Manifest/旧集合围栏，拒绝身份或文件变化、偏移/序号/阶段回退；只持久化类型化进度，不存设备码/任意响应。3 项离线测试含真实集合与写入故障通过。尚未接异步上传/重连/取消协调和 UI，未部署、未访问设备。
+
+2026-11-04 D4 能力闭环：固件报告共用加载限制和 RAM/存储预留，Python CLI 与 Bridge Rust 按整集合核对资源和服务位图。CLI 超预算在回执创建/begin 前拒绝；472 无效输入、10 故障流程、102896 事务断言、真实回环 TCP 与 Rust 真包能力测试通过。候选 `d3-platform-08.bin` 6932264 B，SHA256 `fb99d42bbd5cb5a70534ea67aaa24efd03cf09df58b518debdda1255172ac559`，镜像验收通过，未部署。限制为模型配置，不是硬件容量/存储预留证明；Bridge 持久协调/UI、孤儿回收及 RV32 整链待办。
+
+2026-11-04 D4 Bridge 产物：兄弟 core 新增 AMF3 规范/摘要/依赖/端口与资源汇总、ABI 3 APX2 段布局/入口/BASE32 校验，以及按 changed_mask 选择提供包。真实业务+peer、空集合/截断/重复/缺包、重算摘要后的非法入口/保留位/重定位字测试通过。未接 Bridge 持久协调/application service/UI，设备资源能力准入仍以平台为准，未部署或访问实机。
+
+2026-11-04 D4 Bridge core：兄弟 codex_status 复用 bounded HTTP transport 新增 v3 强类型动作、MAC/事务查询围栏、块 SHA256、长度限制及菜单码鉴权；设备身份错误/JSON 或响应截断保留 AckUnknown，不自动重发。定向 Rust 路由/真实回环 TCP 两测试通过；application service、产物校验/持久恢复和 UI 尚未接入，未启停/部署 Bridge 或访问设备。跟踪见兄弟 `project-workflow/ap01-app-set-v3/`。
+
+2026-11-04 D4 TCP：v3 CLI 原有 urllib Transport 经 127.0.0.1 随机端口连接 C++ HTTP 服务模型，首装/单更/批更/回退四链通过。begin/commit 处理后断开、chunk/ready 截断响应正文后关闭，客户端保持同一事务并查询恢复，commit 各一次。报告 `build/app-install/set-client-tcp-v3-report.json`；只本机回环，未连接设备或外网，CPU 重启/健康仍为模型。Bridge、孤儿回收、RV32 整链及剩余资源协调仍待推进。
+
+2026-11-04 D4 CLI/C++ 交叉验证：Python v3 CLI 通过管道 HTTP 字节调用生产 C++ 路由/服务、AUT3 选择与清理。真实包连续首装→A 单更→A+B 批更→试运行失败整集回退通过，分别注入 begin/chunk/commit/ready 回复丢失；B 单更期间无上传且运行身份不变，回退列表与旧集合全部一致，boot_id 为 12/13/14/16。报告 `build/app-install/set-client-http-v3-report.json`；宿主注入健康、模拟 CPU 重启、内存 VFS，不执行 App 指令或接触实机。Bridge、孤儿回收、真实 TCP 客户端和 RV32 整链等仍待完成。
+
+2026-11-04 D4 v3 CLI：复用旧客户端 Transport/回执持久化/退避，新增完整 Manifest+变更包上传、发布、commit、查询和取消。首次请求前保存同一事务 ID/旧集合围栏/原 boot，未知先查询，已确认回执过期拒绝新建。真实包注入对端验证 10 条单更/批更丢回复、进程恢复后只查询、回退/取消/过期拒绝通过；未连接设备。真实 C++ HTTP 模型交叉测试、Bridge、孤儿扫描与 RV32 整链待完成。
+
+2026-11-04 D4 客户端校验：新增 AMF3/提供包核验与单更/批更选择，复用 APX2 规范校验；成功须核对新 boot、清理结束、完整健康运行集合及逐 App 身份。真实双包和 453 项无效输入拒绝通过，不连接设备。v3 CLI 上传/持久回执/断线恢复循环尚未接入。
+
+2026-11-04 D4 运行快照：HTTP 从 UI 已发布的不可变加载器选择返回成功 start 的 App 列表、摘要/版本、完整性及监督健康；候选日志与实际启动集合分别报告。未采样健康为 null，第二个 App start 失败只列成功前缀并标 partial_failed。102895 事务/HTTP 断言、13 文件启动场景及监督/写门/RV32 回归通过。候选 `d3-platform-07.bin` 6931544 B，SHA256 `8051e345a37319ae9f81d11a2fa59f74f015848dd6687d7e34609ca552ee4c2f`，构建与镜像验收通过。未部署；客户端核验、孤儿扫描和 RV32 整链仍待完成。
+
+2026-11-04 D3/D4 自动清理：原生 worker 在维护操作锁内每秒尝试终态事务清理，复用双槽终态屏障；Unknown 冻结至状态查询重载，缺失 Manifest 保留 pending，成功仅解除 transaction hold。真实包单更/批更成功及回退后允许下一次事务，取消缺失文件/删除丢 ACK 恢复通过，共 102871 断言，ASan/UBSan/RV32 编译及维护回归通过。候选 `d3-platform-06.bin` 6929704 B，SHA256 `5351fbd36e9bcbca5a317487add6e67693a341f80e374ee768c4cb085b03d903`，镜像验收通过，未部署。孤儿扫描/Manifest 元数据回收、运行列表、CLI/Bridge 和 RV32 整链仍待完成。
+
+2026-11-04 D4 HTTP 组合：真实双包经生产传输层→设备码鉴权→维护锁→事务服务，分段收发、错误设备码、begin/commit 持久后响应丢失及原事务重放、Unknown 续传、发布/取消/排空超时通过。共 102759 断言，ASan/UBSan/RV32 服务编译通过；发送失败也释放操作锁。该证据为宿主流模型，不代表真实网络/CPU 重启；RV32 新事务链、运行列表、自动清理及 CLI/Bridge 继续待完成。
+
+2026-11-04 D4 原生接线：0041 维护启动前配置安装回调，日志加载/选择后发布服务；HTTP 与健康 worker 共用操作锁，OTA/Wi-Fi busy 拒绝安装并保留健康查询。修复新增事务后健康快照仍报告初始 Empty；完整候选 `d3-platform-05.bin` 6928536 B，SHA256 `620971a08380a0a187f60c121697f24625079e3f19daf0e63e5945dfc54c7c8c`，镜像验收、96042 事务断言、集合/监督/写门/维护回归通过。未部署；HTTP 传输与服务组合执行、RV32 新事务链、运行列表、自动清理和 CLI/Bridge 尚待完成。
+
+2026-11-04 D4 服务适配：真实双包请求链覆盖 begin/上传/发布/commit/取消、跨 principal 拒绝及 Unknown 查询续传；修复重放或拒绝 begin 重置排空期限，取消不再依赖候选 Manifest。宿主 ASan/UBSan 与 RV32 编译通过，共 96042 断言。原生维护回调、运行列表、自动清理、CLI/Bridge 仍未完成；未进行实机操作。
+
 2026-11-04 D4 请求合同：新增 /api/app/v3/ 严格解析，64 B ASB3+AMF3 begin 保持 4096 B 请求限额，chunk 沿用 query 事务/MAC/offset/SHA256；方法、索引、溢出、保留位、摘要错误拒绝。宿主及 RV32 通过，合同见 [HTTP v3](../../docs/app-set-http-v3.md)。生产处理器仍未绑定，响应/运行列表与 CLI/Bridge 尚未实现。
 
 2026-11-04 原生短时协调：维护 HTTP（持锁至 afterResponse）、维护/Wi-Fi tick、UI 切网入队与 App worker journal/health 共用原子操作锁；App 进入后二次检查 OTA/Wi-Fi busy，健康查询免锁保留。锁回归、无绑定 OTA/设备码/重启回执/无稳定记录切槽、集合回归通过。候选 `d3-platform-03.bin` 6915176 B，SHA256 `07d1727526c8aa380dc08c51266c013ac729864baa217c21f275c97dbb568313`，镜像通过，未部署。原厂 OTA 启动竞态、救援优先/预算协调及安装 HTTP 服务仍未闭环。
