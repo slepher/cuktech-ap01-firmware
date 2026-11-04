@@ -32,3 +32,5 @@ struct Ap01ManifestPackagesV3 {
     void (*close)(void *,Apx2Reader &);
 };
 Ap01ManifestErrorV3 ap01CheckManifestPackagesV3(const Ap01ManifestV3 &,const Ap01ManifestPackagesV3 &);
+
+Ap01ManifestErrorV3 ap01CheckManifestPackageV3(const Ap01ManifestEntryV3 &,const Apx2Reader &,uint32_t dataVersion);

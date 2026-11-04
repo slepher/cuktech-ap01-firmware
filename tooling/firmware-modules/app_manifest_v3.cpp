@@ -64,16 +64,21 @@ E ap01CheckManifestPackagesV3(const Ap01ManifestV3 &m,const Ap01ManifestPackages
     if(m.count>AP01_MANIFEST_APPS_V3||!io.open||!io.close)return E::Header;
     for(uint32_t i=0;i<m.count;++i){const auto &e=m.entries[i];Apx2Reader reader{};uint32_t version=0;
         if(!io.open(io.context,e,reader,version))return E::Read;
-        uint64_t memory=uint64_t(e.image_bytes)+e.heap_bytes+e.stack_bytes;
-        Apx2View view{};Apx2Error result=Apx2Error::Budget;
-        if(memory<=UINT32_MAX){Apx2Limits limit{e.package_bytes,uint32_t(memory),e.heap_bytes,e.stack_bytes,version,e.capabilities,e.id,3};
-            result=apx2Validate(reader,limit,view);}
-        bool same=result==Apx2Error::Ok&&reader.size==e.package_bytes&&
-            !strcmp(e.version,view.version)&&!memcmp(e.digest,view.digest,32)&&
-            uint64_t(view.image_bytes)+view.bss_bytes==e.image_bytes&&view.heap_bytes==e.heap_bytes&&
-            view.stack_bytes==e.stack_bytes&&view.required_services==e.capabilities&&
-            view.data_read_min==e.data_min&&view.data_read_max==e.data_max&&view.data_write_version==e.data_write;
+        bool same=ap01CheckManifestPackageV3(e,reader,version)==E::Ok;
         io.close(io.context,reader);if(!same)return E::Package;
     }
     return E::Ok;
+}
+
+E ap01CheckManifestPackageV3(const Ap01ManifestEntryV3 &e,const Apx2Reader &reader,uint32_t version){
+    uint64_t memory=uint64_t(e.image_bytes)+e.heap_bytes+e.stack_bytes;
+    Apx2View view{};Apx2Error result=Apx2Error::Budget;
+    if(memory<=UINT32_MAX){Apx2Limits limit{e.package_bytes,uint32_t(memory),e.heap_bytes,e.stack_bytes,version,e.capabilities,e.id,3};
+        result=apx2Validate(reader,limit,view);}
+    bool same=result==Apx2Error::Ok&&reader.size==e.package_bytes&&
+        !strcmp(e.version,view.version)&&!memcmp(e.digest,view.digest,32)&&
+        uint64_t(view.image_bytes)+view.bss_bytes==e.image_bytes&&view.heap_bytes==e.heap_bytes&&
+        view.stack_bytes==e.stack_bytes&&view.required_services==e.capabilities&&
+        view.data_read_min==e.data_min&&view.data_read_max==e.data_max&&view.data_write_version==e.data_write;
+    return same?E::Ok:E::Package;
 }

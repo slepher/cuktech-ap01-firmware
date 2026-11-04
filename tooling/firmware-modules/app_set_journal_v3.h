@@ -7,6 +7,7 @@ struct Ap01SetRecordV3 {
     uint64_t sequence=0,oldVersion=0,newVersion=0,trialBoot=0,rollbackBoot=0,changedBytes=0;
     Ap01SetPhaseV3 phase=Ap01SetPhaseV3::Receiving;
     uint32_t error=0;
+    uint32_t received[8]{};
     uint8_t trialStarts=0,rollbackStarts=0,cleanupPending=0,changedMask=0,readyMask=0;
     uint8_t transaction[16]{},mac[6]{},oldDigest[32]{},newDigest[32]{},requestDigest[32]{};
     char principal[65]{};
@@ -26,6 +27,6 @@ public:
     Ap01SetJournalV3(const Ap01VfsOps &,const uint8_t mac[6]);
     Ap01SetJournalResultV3 load();
     Ap01SetJournalResultV3 save(const Ap01SetRecordV3 &);
-    const Ap01SetRecordV3 *current()const{return present?&record:nullptr;}
+    const Ap01SetRecordV3 *current()const{return resolved&&present?&record:nullptr;}
     bool writable()const{return resolved;}
 };

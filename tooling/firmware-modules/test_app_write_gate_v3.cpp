@@ -41,5 +41,14 @@ int main(){
     assert(gate.writes(true)&&y.write(y.context,second,"z",1)==1);
     assert(x.close(x.context,first)==0&&y.close(y.context,second)==0&&y.close(y.context,reader)==0);
     assert(gate.writes(false)&&gate.drained());
+    assert(gate.hold(true)&&gate.held()&&gate.drained());
+    std::thread health([&]{for(unsigned i=0;i<20000;++i){assert(!gate.writes(true));assert(!gate.enter());}});
+    for(unsigned i=0;i<20000;++i){assert(gate.writes(false));assert(gate.held());}
+    health.join();
+    assert(gate.hold(false)&&!gate.held()&&!gate.writable());
+    assert(gate.writes(true)&&gate.enter());
+    assert(!gate.hold(true)&&gate.held()&&!gate.drained()&&!gate.writes(true));
+    gate.leave();assert(gate.drained()&&!gate.writes(true));
+    assert(gate.hold(false)&&!gate.writable()&&gate.writes(true));
     puts("collection write gate: common admission, in-flight drain, old-handle revoke, metadata/sync denial, readonly access and explicit reopen passed");
 }

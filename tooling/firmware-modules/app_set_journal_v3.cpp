@@ -19,6 +19,11 @@ bool valid(const Ap01SetRecordV3 &r){
        bool(r.rollbackBoot)!=bool(r.rollbackStarts)||(r.rollbackBoot&&r.rollbackBoot==r.trialBoot))return false;
     unsigned changes=0;for(unsigned i=0;i<8;++i)changes+=(r.changedMask>>i)&1;
     if((!changes&&r.changedBytes)||(changes&&r.changedBytes<uint64_t(changes)*256))return false;
+    uint64_t received=0;for(unsigned i=0;i<8;++i){
+        if(!(r.changedMask&(1u<<i))&&r.received[i])return false;
+        received+=r.received[i];
+    }
+    if(received>r.changedBytes)return false;
     unsigned n=0;while(n<65&&r.principal[n]){unsigned char c=r.principal[n++];if(c<33||c>126)return false;}
     if(!n||n==65)return false;
     while(n<65)if(r.principal[n++])return false;
@@ -38,23 +43,25 @@ const char *path(unsigned i){return i?"/resource/app-store/update.1":"/resource/
 }
 bool ap01EncodeSetRecordV3(const Ap01SetRecordV3 &r,uint8_t *out){
     memset(out,0,AP01_SET_RECORD_BYTES_V3);if(!valid(r))return false;
-    memcpy(out,"AUT3",4);put(out+4,1);put(out+8,AP01_SET_RECORD_BYTES_V3);put(out+12,uint32_t(r.phase));
+    memcpy(out,"AUT3",4);put(out+4,2);put(out+8,AP01_SET_RECORD_BYTES_V3);put(out+12,uint32_t(r.phase));
     put(out+16,r.sequence,8);put(out+24,r.oldVersion,8);put(out+32,r.newVersion,8);
     put(out+40,r.trialBoot,8);put(out+48,r.rollbackBoot,8);
     out[56]=r.trialStarts;out[57]=r.rollbackStarts;out[58]=r.cleanupPending;out[59]=r.changedMask;out[60]=r.readyMask;
     put(out+64,r.changedBytes,8);put(out+72,r.error);
     memcpy(out+80,r.transaction,16);memcpy(out+96,r.mac,6);memcpy(out+104,r.oldDigest,32);
     memcpy(out+136,r.newDigest,32);memcpy(out+168,r.requestDigest,32);memcpy(out+200,r.principal,65);
+    for(unsigned i=0;i<8;++i)put(out+268+4*i,r.received[i]);
     put(out+316,ap01_native_crc32(out,316));return true;
 }
 bool ap01DecodeSetRecordV3(const uint8_t *in,Ap01SetRecordV3 &out){
-    out={};if(memcmp(in,"AUT3",4)||u32(in+4)!=1||u32(in+8)!=AP01_SET_RECORD_BYTES_V3||u32(in+316)!=ap01_native_crc32(in,316))return false;
-    if(any(in+61,3)||any(in+76,4)||any(in+102,2)||any(in+265,51))return false;
+    out={};if(memcmp(in,"AUT3",4)||u32(in+4)!=2||u32(in+8)!=AP01_SET_RECORD_BYTES_V3||u32(in+316)!=ap01_native_crc32(in,316))return false;
+    if(any(in+61,3)||any(in+76,4)||any(in+102,2)||any(in+265,3)||any(in+300,16))return false;
     Ap01SetRecordV3 r{};r.phase=P(u32(in+12));r.sequence=u64(in+16);r.oldVersion=u64(in+24);r.newVersion=u64(in+32);
     r.trialBoot=u64(in+40);r.rollbackBoot=u64(in+48);r.trialStarts=in[56];r.rollbackStarts=in[57];
     r.cleanupPending=in[58];r.changedMask=in[59];r.readyMask=in[60];r.changedBytes=u64(in+64);r.error=u32(in+72);
     memcpy(r.transaction,in+80,16);memcpy(r.mac,in+96,6);memcpy(r.oldDigest,in+104,32);
     memcpy(r.newDigest,in+136,32);memcpy(r.requestDigest,in+168,32);memcpy(r.principal,in+200,65);
+    for(unsigned i=0;i<8;++i)r.received[i]=u32(in+268+4*i);
     if(!valid(r))return false;
     out=r;return true;
 }
@@ -63,6 +70,7 @@ bool ap01SetTransitionV3(const Ap01SetRecordV3 &a,const Ap01SetRecordV3 &b){
     if(memcmp(a.transaction,b.transaction,16)){
         if((a.phase!=P::Succeeded&&a.phase!=P::FailedRolledBack&&a.phase!=P::Cancelled)||a.cleanupPending||
            b.phase!=P::Receiving||b.readyMask)return false;
+        for(auto count:b.received)if(count)return false;
         const uint8_t *active=a.phase==P::Succeeded?a.newDigest:a.oldDigest;
         uint64_t version=a.phase==P::Succeeded?a.newVersion:a.oldVersion;
         return !memcmp(b.oldDigest,active,32)&&b.oldVersion==version;
@@ -71,6 +79,8 @@ bool ap01SetTransitionV3(const Ap01SetRecordV3 &a,const Ap01SetRecordV3 &b){
        memcmp(a.oldDigest,b.oldDigest,32)||memcmp(a.newDigest,b.newDigest,32)||
        a.oldVersion!=b.oldVersion||a.newVersion!=b.newVersion||a.changedMask!=b.changedMask||a.changedBytes!=b.changedBytes||
        (b.readyMask&a.readyMask)!=a.readyMask||(a.error&&a.error!=b.error))return false;
+    for(unsigned i=0;i<8;++i)if(b.received[i]<a.received[i]||
+        (a.phase!=P::Receiving&&b.received[i]!=a.received[i]))return false;
     bool trial=b.phase==P::TrialStarted&&a.phase!=b.phase,rollback=b.phase==P::RollbackStarted&&a.phase!=b.phase;
     if(b.trialStarts!=a.trialStarts+trial||b.rollbackStarts!=a.rollbackStarts+rollback||
        (!trial&&a.trialBoot!=b.trialBoot)||(!rollback&&a.rollbackBoot!=b.rollbackBoot))return false;
@@ -78,7 +88,7 @@ bool ap01SetTransitionV3(const Ap01SetRecordV3 &a,const Ap01SetRecordV3 &b){
     switch(a.phase){
     case P::Receiving:return b.phase==P::Ready||b.phase==P::Cancelled||b.phase==P::RecoveryRequired;
     case P::Ready:return b.phase==P::SwitchPending||b.phase==P::Cancelled||b.phase==P::RecoveryRequired;
-    case P::SwitchPending:return b.phase==P::TrialStarted||b.phase==P::RollbackPending||b.phase==P::RecoveryRequired;
+    case P::SwitchPending:return b.phase==P::Cancelled||b.phase==P::TrialStarted||b.phase==P::RollbackPending||b.phase==P::RecoveryRequired;
     case P::TrialStarted:return b.phase==P::Succeeded||b.phase==P::RollbackPending||b.phase==P::RecoveryRequired;
     case P::RollbackPending:return b.phase==P::RollbackStarted||b.phase==P::RecoveryRequired;
     case P::RollbackStarted:return b.phase==P::FailedRolledBack||b.phase==P::RecoveryRequired;
@@ -96,7 +106,7 @@ R Ap01SetJournalV3::read(unsigned i,uint8_t *out,bool &found){
     if(result==R::Ok&&io.read(io.context,fd,out,AP01_SET_RECORD_BYTES_V3)!=int(AP01_SET_RECORD_BYTES_V3))result=R::Io;
     if(io.close(io.context,fd))result=R::Io;
     if(result==R::Ok&&!memcmp(out,"AUT2",4))return R::Legacy;
-    if(result==R::Ok&&!memcmp(out,"AUT3",4)&&u32(out+4)!=1)return R::Unsupported;
+    if(result==R::Ok&&!memcmp(out,"AUT3",4)&&u32(out+4)!=2)return R::Unsupported;
     return result;
 }
 R Ap01SetJournalV3::load(){
@@ -128,6 +138,7 @@ R Ap01SetJournalV3::save(const Ap01SetRecordV3 &next){
     uint8_t bytes[AP01_SET_RECORD_BYTES_V3],back[AP01_SET_RECORD_BYTES_V3];
     if(!ap01EncodeSetRecordV3(candidate,bytes)||(present?!ap01SetTransitionV3(record,candidate):
        candidate.phase!=P::Receiving||candidate.readyMask))return R::Invalid;
+    if(!present)for(auto count:candidate.received)if(count)return R::Invalid;
     unsigned target=present?slot^1:0;resolved=false;
     int fd=io.open(io.context,path(target),1);if(fd<0)return R::Unknown;
     bool okay=io.write(io.context,fd,bytes,sizeof(bytes))==int(sizeof(bytes));
