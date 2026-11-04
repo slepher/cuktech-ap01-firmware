@@ -147,3 +147,15 @@ guest 11992 字节，SHA `6c1e06cf13a57bc9101ad68f4f5b02620f658be536df9a7a908a46
 `d2-resume-guest-01` 继续运行双包及线程停滞断言，末尾显式授予模型写许可。实际业务 worker 创建 Bundle 目录一次并恢复健康；持续许可不重复创建。撤权后再次开放并注入 mkdir 失败，health Failed，继续调度也不重复尝试。最后关闭集合门。模型未实现 Bundle 持久文件成功提交，此项由真实 Bundle 宿主测试补充。
 
 `build/app-install/qemu-james/d2-resume-run01.json` 两基址通过，五项输入摘要核对一致；guest SHA256 `4ff31432cca7cbb2a1ecb55b90224e104618f997285621dadc077d246e909247`。新的业务包 SHA256 `c3bf0c7d4a01d6788532cf178c7f8e969862af5088c42062b522df5eec5e9913`，peer 不变。许可是测试注入，不是 D3 持久事务或实机结果。
+
+
+## 2026-11-04：真实双包 AUT3 选择与健康提交
+
+输入 `build/app-install/d3-journal-guest-01/`，报告 `build/app-install/qemu-james/d3-journal-run01.json`。james.local 既有 `ap01-abi-qemu:20261104` Docker，image `sha256:02aba83405eefd37e9c529a84ae0e26cf7d8e79a7749dc2d48e991fe8101c0cc`；同既有 QEMU/support 指纹，未安装宿主依赖。两个执行基址 `0xa8000000`、`0xa8040000` 均返回 0，栈哨兵/保留寄存器通过；取回报告后核对 guest、业务包、build-report、Manifest、peer 五份输入指纹一致。
+
+- guest SHA256：`ddd5f5c1c2fe24c16125134b0c01886a86d0bd2a49372a6fca5aa1b3e30eb862`。
+- 业务包：既有 `d2-business-resume-01/app.apx2`，SHA `c3bf0c7d4a01d6788532cf178c7f8e969862af5088c42062b522df5eec5e9913`；peer 和 Manifest 与 d2-resume 输入一致。
+- 开机预置合法 SwitchPending 模型记录，实际 AUT3 load/select 消耗 trial，再通过 stageSelected 按摘要找到完整 AMF3/APX2。UI 执行两个真实 App，真实三 worker/页面切换/窗口重建继续通过。
+- 用实际 supervisor/healthSelected 连续观察健康，观察前写门关闭；实际日志保存 Succeeded 后才开放写入，真实业务 worker 初始化一次。重新 load 双记录仍为 Succeeded。逐个冻结真实线程保留索引健康检查，最终平台故障锁存并撤销写许可。
+
+边界：预置事务不是 HTTP 上传/commit；日志是 guest 中的 2×320 B 可写模型槽，VFS write 的同步由模型约定，不证明真实 Flash 耐久性。没有模拟整机复位或回退包实际重载；AUT3 掉电/回退决策另有宿主测试。ROM 网络/LVGL/维护、调度与时间仍为模型；未启动完整 ROM、未调用真实 reboot、未触碰实机。原有 `d2-resume-run01` 仍保留显式写许可与恢复失败测试，本次是新增持久批准路径。

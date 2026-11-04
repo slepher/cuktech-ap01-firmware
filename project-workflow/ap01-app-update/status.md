@@ -1,5 +1,43 @@
 # 当前状态
 
+2026-11-04 D4 请求合同：新增 /api/app/v3/ 严格解析，64 B ASB3+AMF3 begin 保持 4096 B 请求限额，chunk 沿用 query 事务/MAC/offset/SHA256；方法、索引、溢出、保留位、摘要错误拒绝。宿主及 RV32 通过，合同见 [HTTP v3](../../docs/app-set-http-v3.md)。生产处理器仍未绑定，响应/运行列表与 CLI/Bridge 尚未实现。
+
+2026-11-04 原生短时协调：维护 HTTP（持锁至 afterResponse）、维护/Wi-Fi tick、UI 切网入队与 App worker journal/health 共用原子操作锁；App 进入后二次检查 OTA/Wi-Fi busy，健康查询免锁保留。锁回归、无绑定 OTA/设备码/重启回执/无稳定记录切槽、集合回归通过。候选 `d3-platform-03.bin` 6915176 B，SHA256 `07d1727526c8aa380dc08c51266c013ac729864baa217c21f275c97dbb568313`，镜像通过，未部署。原厂 OTA 启动竞态、救援优先/预算协调及安装 HTTP 服务仍未闭环。
+
+2026-11-04 写门竞态修复：commit/cancel 使用原子 transaction hold，后台健康 writes(true) 和普通关闭都不能解除；释放仍需后续健康授权。并发 20000 次重开/进入尝试与持有时已有 lease 排空通过，原生集合 healthSelected 集成及 91452 事务断言/RV32 回归通过。OTA/Wi-Fi 与安装服务统一操作锁尚未实现，未操作实机。
+
+2026-11-04 D3 组合验收：宿主四条完整事务从双包首装到单更/批更成功或整集回退，串联 begin→chunk→发布→commit→重载裁决→连续健康→cleanup。单更验证 B 文件字节/摘要不变；未齐 Ready 拒绝、重复 commit 不增序号、淘汰包删除均通过，累计 91452 断言及 RV32 编译。更新包仅重写版本元数据和摘要，未执行新 App 指令；原生维护锁/安装服务、HTTP/Bridge、孤儿扫描仍未完成。
+
+2026-11-04 D3 事务清理：先读回确认双槽同一终态，再删除未被最终集合引用的本事务包及已知临时文件，最后清 cleanup_pending。三种终态、屏障截断、删除失败/丢 ACK、完成记录丢 ACK、共享包保留通过，累计 72983 断言及 RV32 编译。最终 Manifest 元数据与无日志孤儿尚未扫描回收；完整 GC/私有目录枚举和安装服务接入仍待完成。
+
+2026-11-04 D3 取消：候选执行前持久 Cancelled/cleanup_pending 并撤销未调用的重启；已调用回调明确 RebootInFlight。TrialStarted 取消只持久安排整集回退，不在线加载旧包。取消 Unknown 不自动恢复重启，重载区分已取消与仍待切换；重复请求不增序号。72383 断言及 RV32 编译通过。GC、原生操作锁/HTTP 入口仍待完成。
+
+2026-11-04 D3 begin 持久化：实现 AMF3 前缀一致续写、同步/读回、rename 及目标读回；begin 查询空间/准备目录、发布旧与候选 Manifest 后才保存 Receiving。实际双 App Manifest 每个前缀恢复、发布失败/丢 ACK、空间不足、目录失败和低空间 Replay 通过，总计 72279 断言及 RV32 编译。原生安装服务/鉴权/统一维护操作锁、取消/GC/D4 仍待接入，未操作实机。
+
+2026-11-04 D3 begin 规划：平台按 ID/包摘要推导变更位图和字节总量，固定字节指纹约束重放；同请求保留上传进度，参数变化冲突。保守空间需求扣维护预留，支持单更/批更/新增移位/纯删除。66623 断言及 RV32 编译通过。函数不写文件/日志，尚需安装服务锁内空间预留、Manifest 发布后再创建 Receiving；未宣称完整 begin 已完成。
+
+2026-11-04 D3 commit 核心：核对旧摘要/版本和全包 Ready/长度，预检整个候选集合，关闭写门并有界排空后持久 Ready→SwitchPending，再单次安排重启；Unknown 不重启，重复 commit 不增序号/重置期限。真实包故障测试通过，累计 66571 断言及 RV32 编译。未接安装服务与维护操作锁；begin/Manifest 发布、空间预留、GC 和 D4 仍待实现。
+
+2026-11-04 D3 包发布：真实 APX2 暂存校验→摘要路径 rename→目标完整读回校验→单包 Ready 位落盘。与开机预检共用 Manifest/APX2 字段校验；目标已存在只验证复用、不覆盖坏包。真实业务包发布故障/重放回归通过，累计 66439 断言及 RV32 编译。尚未接 begin、全集合 Ready/commit、空间预留与 GC。
+
+当前格式 2 平台候选：`build/app-install/d3-platform-02.bin`，6914344 B，SHA256 `02e89989510c00c9d0a2205c0fef67a62803d71ee6feade1ec524fe237098868`；完整构建、镜像校验与集合回归通过。下载器尚未接原生安装入口，硬件 backend 仍拒绝执行，未部署。
+
+2026-11-04 D3 续传基础：AUT3 格式升级 2，320 B 内存储 8 包已确认偏移，旧草稿格式 1 明确 Unsupported。新增逐包有界 chunk、未确认尾部比较、同步/关闭/读回后提交偏移；Unknown 冻结并要求重载。53108 断言包含 512 数据截断点+320 进度截断点，两包偏移和重放围栏通过。尚未接 begin 授权/空间、包发布/Ready/commit；此前 QEMU 记录仅适用于格式 1，待新链路复验。
+
+2026-11-04 D3 RV32：james.local Docker `d3-journal-run01.json` 两基址通过，真实两 App/三 worker 经 AUT3 选择与连续健康裁决，Succeeded 写入读回后开放写许可；真实 worker 恢复写初始化一次，线程故障后撤权。五份输入指纹核对一致，guest SHA `ddd5f5c1c2fe24c16125134b0c01886a86d0bd2a49372a6fca5aa1b3e30eb862`。使用预置 SwitchPending 和内存日志槽，不代表 HTTP commit/真实重启/掉电已验证；下载、发布、commit、清理及 D4 仍未完成。
+
+2026-11-04 D3 原生接入：维护先行，按 MAC/boot_id 读取 AUT3 并启动所选完整集合；worker 每 100 ms 做健康提交与单次重启派发，绑定既有 ROM reboot。维护新增原子 journal_result/phase。完整候选 `d3-platform-01.bin` 6914856 B，SHA256 `193922c89ae69bc87bb1b321ab4456c7b1d3abeaf41e4038c70f2fb9ad849e70`，镜像/链接符号/边界检查及集合、维护回归通过。硬件 backend 不可用、未部署；QEMU 真实事务链和 D3 下载/commit/清理仍待推进。
+
+2026-11-04 D3 重启安排：补 250 ms 延迟单次派发、5 秒未重启失败锁存；持久回退且写门排空后才安排。维护 app_runtime 暴露 reboot_state，宿主维护回归及集合回归通过，日志/选择器/重启共 11252 断言通过。原生回调与 commit 路径尚未接入，不宣称真实重启闭环；无实机访问。
+
+2026-11-04 D3 健康提交：实现 10 秒启动/连续健康 30 秒/总计 40 秒裁决；观察缺口打断计时，持久确认后 healthSelected 才开放共享写门，确认 Unknown 保持关闭。日志/选择器 11232 断言和双 App 集成回归通过；原生 worker 调度、重启安排及协议回执仍未接入，未操作实机。
+
+2026-11-04 D3 文件组合：stageSelected 接入按 Manifest 摘要寻址的真实文件预检，核对 sequence；持久 trial/rollback 后才向 UI 发布，Unknown 丢弃暂存。真实 APX2 + 宿主入口集成验证了丢 ACK 不执行、候选缺失/版本错回退初始空集合；D2 集合/监督/写门回归与 RV32 编译通过。原生 hook、连续健康确认/重启尚待接入，无实机操作。
+
+2026-11-04 D3 开机裁决：新增每 boot 一次的集合选择器，完整预检后持久 trial/rollback 消耗再授权加载；执行失败只安排下次 boot 整集回退，回退重启中断进入维护。AUT3 与选择器合计 11117 项断言、ASan/UBSan/RV32 通过。文件启动器暂存发布、连续健康计时、重启执行/回执仍未连接，未勾选 D3 开机整链任务。
+
+2026-11-04 D3：AUT3 集合日志编码/双槽存储层通过 10894 项断言（含两个槽共 640 个截断写入点）、ASan/UBSan 与 RV32 编译。Unknown 时禁止后续写入并隐藏旧 current；旧 AUT2 显式拒绝。合同见 [AUT3](../../docs/app-set-journal-v3.md)，报告 `build/app-install/set-journal-v3-report.json`。尚未接入下载、开机选择、持久健康确认或重启；无实机操作。
+
 2026-11-04 可写恢复接线：真实业务 worker 在串行锁内观察平台 writes_allowed；开放后调用一次可写 begin，完成前不向配对/业务命令公布可写状态；重复许可不重建 context。撤权关闭业务入口，底层集合门立即拒绝写入。恢复失败保持只读、健康 Failed，且本次运行不重复迁移。实际 Bundle 的开放/幂等/撤权/失败不重试，direct-files 与旧服务兼容回归均通过。
 
 真实双包 `d2-resume-run01.json` 在 james.local Docker 两基址通过，验证实际 worker 在模型许可开放后初始化一次，撤权后再次恢复失败时不重试；该许可为测试显式注入，未冒充 D3 持久批准。业务包 `d2-business-resume-01/app.apx2` 204,080 B，SHA256 `c3bf0c7d4a01d6788532cf178c7f8e969862af5088c42062b522df5eec5e9913`，72 项 BASE32、零导入，01/02 重复构建一致。候选 `d2-platform-11.bin` 6,907,160 B，SHA256 `a042af91eec958a601c0f9986270530d25fcc5bbd8f1b7c445a3988c0667b2cf`，镜像及跨仓检查通过。生产默认只读；D3 持久授权和维护共享写协调仍待完成，未操作实机。
