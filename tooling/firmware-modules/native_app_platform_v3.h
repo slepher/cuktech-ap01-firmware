@@ -12,6 +12,7 @@ class Ap01NativeAppSharedV3 {
     friend class Ap01NativeAppPlatformV3;
     Ap01AppBindingBridgeV3 binding;
     Ap01NativeServices0041 services;
+    Ap01AppWriteGateV3 writeGate;
     ap01_screen_host host{};
     ap01_window_0041 window{};
     ap01_screen_app apps[AP01_MANIFEST_APPS_V3]{};
@@ -21,7 +22,10 @@ class Ap01NativeAppSharedV3 {
     const uint32_t capacity;
     uint32_t count=0;
     bool maintenanceStarted=false;
+    void *pollContext=nullptr;
+    void (*pollHook)(void *,bool)=nullptr;
     std::atomic<uint32_t> heartbeat{0};
+    std::atomic<bool> windowPresent{false};
     static bool healthy(void *);
     static void event(void *,void *);
     static void blocked(ap01_screen_host *,int);
@@ -31,6 +35,14 @@ public:
     Ap01NativeAppSharedV3 &operator=(const Ap01NativeAppSharedV3 &)=delete;
     bool bindWindow(void *,void (*)(void *));
     bool startMaintenance();
+    bool listening()const{return services.listening();}
+    uint32_t maintenanceBeat()const{return services.heartbeat();}
+    bool attachedWindow()const{return windowPresent.load(std::memory_order_acquire);}
+    bool writes(bool allow){return writeGate.writes(allow);}
+    bool writesDrained()const{return writeGate.drained();}
+    void appStatus(void *context,void (*snapshot)(void *,Ap01SupervisorSnapshotV3 &)){services.appStatus(context,snapshot);}
+    // Set by the resident owner before binding the window; never by an App.
+    void onPoll(void *context,void (*hook)(void *,bool)){pollContext=context;pollHook=hook;}
     static void poll(void *);
     unsigned registered()const{return host.app_count;}
     void *root()const{return window.win;}
@@ -58,7 +70,6 @@ class Ap01NativeAppPlatformV3 {
     void (*appTick)(void *)=nullptr;
     void (*appEvent)(void *,void *)=nullptr;
     std::atomic<uint32_t> heapUsed{0},heapPeak{0},stackUsed{0},taskCount{0};
-    std::atomic<bool> writable{false};
     uint32_t heapLimit=0,stackLimit=0;
     bool attached=false;
     Ap01VfsOps bootIo{};

@@ -16,13 +16,13 @@
 #include <string>
 static Disk disk;static unsigned mutations=0,frames=0,failWriteAt=0;
 static Ap01AppFilesV3 *directFiles=nullptr;
-static size_t largestWrite=0;
+static size_t largestWrite=0;static bool failEveryWrite=false;
 static int prepare(void *,const char *){++mutations;return 0;}
 static int open(void *,const char *path,unsigned mode){if(mode)++mutations;return Disk::open(&disk,path,mode);}
 static int write(void *,int fd,const void *p,size_t n){
     ++mutations;if(n>largestWrite)largestWrite=n;
     if(directFiles)assert(!directFiles->writes(false)); // Cannot freeze an in-flight write.
-    if(mutations==failWriteAt)return -1;return Disk::write(&disk,fd,p,n);
+    if(failEveryWrite||mutations==failWriteAt)return -1;return Disk::write(&disk,fd,p,n);
 }
 static int remove(void *,const char *p){++mutations;return Disk::remove(&disk,p);}
 static int rename(void *,const char *a,const char *b){++mutations;return Disk::rename(&disk,a,b);}
@@ -171,7 +171,16 @@ int main(int argc,char **argv){
     assert(!mutations&&meta==bytes(std::string(argv[1])+"/bundle/state.bin")&&content==bytes(std::string(argv[1])+"/bundle/content.bin"));
     // Durable success is the caller's prerequisite for this explicit transition.
     assert(writes(true));
-    assert(business.begin(200,false)&&business.writesAllowed());assert(mutations>0);
+    assert(business.syncWritePermission(200,true)&&business.writesAllowed());assert(mutations>0);
+    unsigned approved=mutations;std::string context=business.context();
+    assert(business.syncWritePermission(201,true)&&mutations==approved&&context==business.context());
+    assert(writes(false)&&business.syncWritePermission(202,false)&&!business.writesAllowed());
+    assert(!business.localActivate(0,203)&&mutations==approved);
+    assert(writes(true)&&business.syncWritePermission(204,true)&&business.writesAllowed());
+    {Ap01Business failing(fs,{nullptr,present},3);assert(failing.begin(205,true));
+     failEveryWrite=true;assert(!failing.syncWritePermission(206,true)&&!failing.writesAllowed());
+     unsigned failedAt=mutations;failEveryWrite=false;
+     assert(!failing.syncWritePermission(207,true)&&mutations==failedAt&&!failing.writesAllowed());}
     assert(strcmp(business.context(),"before-trial")&&meta!=bytes(std::string(argv[1])+"/bundle/state.bin"));
 #ifdef AP01_TEST_DIRECT_FILES
     assert(largestWrite>=3073); // One direct call, not the old 1KB transport.

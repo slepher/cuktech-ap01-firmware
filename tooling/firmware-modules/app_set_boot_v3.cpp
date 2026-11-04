@@ -35,10 +35,14 @@ int32_t Ap01AppSetBootV3::event(uint32_t kind,const void *payload,uint32_t bytes
     dispatching=false;return result;
 }
 int32_t Ap01AppSetBootV3::health(){
+    return health(nullptr);
+}
+int32_t Ap01AppSetBootV3::health(int32_t *values){
     if(!ready)return AP01_APP_V3_FAILED;
     if(dispatching)return AP01_APP_V3_PENDING;
     dispatching=true;int32_t result=AP01_APP_V3_OK;
     for(uint32_t n=0;n<manifest.count;++n){auto r=loaders[manifest.order[n]]->health();
+        if(values)values[manifest.order[n]]=r;
         if(r<0)result=r;else if(r!=AP01_APP_V3_OK&&result==AP01_APP_V3_OK)result=AP01_APP_V3_PENDING;}
     dispatching=false;return result;
 }

@@ -18,6 +18,7 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
     ap01ModelV3.bridge=bridge;++ap01ModelV3.maintenanceStarts;ap01ModelV3.listening=true;return true;
 }
 bool Ap01NativeServices0041::listening() const{return bool(state)&&ap01ModelV3.listening;}
+uint32_t Ap01NativeServices0041::heartbeat() const{return uint32_t(ap01ModelV3.now);}
 bool Ap01NativeServices0041::busy() const{return ap01ModelV3.busy;}
 namespace ap01_native0041 {
 uint64_t nowMs(){return ap01ModelV3.now;}
@@ -49,6 +50,7 @@ int32_t seek(void *,int fd,int32_t at,unsigned origin){
 int32_t size(void *,int fd){return fd==10&&ap01ModelV3.packageOpen?int32_t(ap01ModelV3.packageBytes):-1;}
 int exists(void *,const char *){return 0;}
 int pathWrite(void *,const char *){return -1;}
+int makeDirectory(void *,const char *){++ap01ModelV3.mkdirCalls;return ap01ModelV3.allowMkdir?0:-1;}
 int rename(void *,const char *,const char *){return -1;}
 int capacity(void *,const char *,uint64_t *total,uint64_t *used){*total=4u<<20;*used=0;return 0;}
 int listen(void *,uint16_t port,bool udp){return port==(udp?8767:18081)?(udp?101:100):-1;}
@@ -74,7 +76,7 @@ void text(void *,const char *){}
 void color(void *,uint32_t){}
 void font(void *,const void *){}
 }
-Ap01VfsOps ap01RomVfs(){return {&ap01ModelV3,prepare,open,close,read,write,seek,size,exists,pathWrite,pathWrite,rename,capacity};}
+Ap01VfsOps ap01RomVfs(){return {&ap01ModelV3,prepare,open,close,read,write,seek,size,exists,makeDirectory,pathWrite,rename,capacity};}
 Ap01AppNetworkPort0041 ap01NativeAppNetworkPort0041(){return {&ap01ModelV3,listen,accept,netClose,poll,receive,send};}
 void ap01ModelStockV3(void *){++ap01ModelV3.stockEvents;}
 extern "C" {

@@ -1,6 +1,7 @@
 #pragma once
 #include "native_vfs_api_0041.h"
 #include <atomic>
+#include "app_write_gate_v3.h"
 
 // Platform-owned for a whole boot. The App gets only table(), never this class.
 // Reuses the existing File/LittleFS C boundary without serialization or chunks.
@@ -12,12 +13,24 @@ class Ap01AppFilesV3 {
     Slot slots[16];
     uint32_t nextHandle=1;
     bool writable=false,failed=false;
+    Ap01AppWriteGateV3 *collection=nullptr;
     std::atomic_flag lock=ATOMIC_FLAG_INIT;
     struct Guard {
         Ap01AppFilesV3 &self;bool held;
         explicit Guard(void *p):self(*(Ap01AppFilesV3 *)p),held(!self.lock.test_and_set(std::memory_order_acquire)){}
         ~Guard(){if(held)self.lock.clear(std::memory_order_release);}
         explicit operator bool() const {return held&&!self.failed;}
+    };
+    struct Permit {
+        Ap01AppWriteGateV3 *gate=nullptr;bool allowed=false;
+        explicit Permit(Guard &g,bool mutation=true){
+            if(!g)return;
+            if(!mutation){allowed=true;return;}
+            if(g.self.collection){if(g.self.collection->enter()){gate=g.self.collection;allowed=true;}}
+            else allowed=g.self.writable;
+        }
+        ~Permit(){if(gate)gate->leave();}
+        explicit operator bool()const{return allowed;}
     };
     bool path(const char *) const;
     Slot *slot(int);
@@ -41,4 +54,6 @@ public:
     // Platform only: success means all earlier calls finished; held writers are
     // denied on their next call too. Busy returns false without changing policy.
     bool writes(bool allow);
+    // Resident construction only, before exposing table(). No per-App override.
+    void bindGate(Ap01AppWriteGateV3 &gate){collection=&gate;}
 };

@@ -22,7 +22,7 @@ Ap01AppFilesV3::Slot *Ap01AppFilesV3::slot(int handle){
     for(auto &s:slots)if(s.fd>=0&&s.handle==handle)return &s;
     return nullptr;
 }
-bool Ap01AppFilesV3::writes(bool allow){Guard g(this);if(!g)return false;writable=allow;return true;}
+bool Ap01AppFilesV3::writes(bool allow){Guard g(this);if(!g||collection)return false;writable=allow;return true;}
 int Ap01AppFilesV3::capacity(void *p,const char *root,uint64_t *total,uint64_t *used){
     Guard g(p);auto &s=g.self;
     if(!g||!root||!s.root||strcmp(root,s.root)||!total||!used||!s.io.statfs)return -1;
@@ -33,7 +33,8 @@ int Ap01AppFilesV3::capacity(void *p,const char *root,uint64_t *total,uint64_t *
 int Ap01AppFilesV3::prepare(void *p,const char *root){uint64_t t,u;return capacity(p,root,&t,&u);}
 int Ap01AppFilesV3::open(void *p,const char *path,unsigned mode){
     Guard g(p);auto &s=g.self;
-    if(!g||mode>2||(mode&&!s.writable)||!s.path(path)||!s.io.open||!s.io.close||s.nextHandle>INT32_MAX)return -1;
+    Permit permit(g,mode!=0);
+    if(!permit||mode>2||!s.path(path)||!s.io.open||!s.io.close||s.nextHandle>INT32_MAX)return -1;
     for(auto &slot:s.slots)if(slot.fd<0){
         int fd=s.io.open(s.io.context,path,mode);if(fd<0)return -1;
         slot={int(s.nextHandle++),fd,mode!=0};return slot.handle;
@@ -53,7 +54,8 @@ int Ap01AppFilesV3::read(void *p,int handle,void *out,size_t n){
 }
 int Ap01AppFilesV3::write(void *p,int handle,const void *in,size_t n){
     Guard g(p);auto &s=g.self;
-    if(!g||!s.writable||(n&&!in)||n>INT32_MAX||!s.io.write)return -1;
+    Permit permit(g);
+    if(!permit||(n&&!in)||n>INT32_MAX||!s.io.write)return -1;
     auto *slot=s.slot(handle);if(!slot||!slot->writable)return -1;
     int got=s.io.write(s.io.context,slot->fd,in,n);return got<0||size_t(got)!=n?-1:got;
 }
@@ -71,13 +73,16 @@ int Ap01AppFilesV3::exists(void *p,const char *path){
 }
 int Ap01AppFilesV3::mkdir(void *p,const char *path){
     Guard g(p);auto &s=g.self;
-    return g&&s.writable&&s.path(path)&&s.io.mkdir?s.io.mkdir(s.io.context,path):-1;
+    Permit permit(g);
+    return permit&&s.path(path)&&s.io.mkdir?s.io.mkdir(s.io.context,path):-1;
 }
 int Ap01AppFilesV3::remove(void *p,const char *path){
     Guard g(p);auto &s=g.self;
-    return g&&s.writable&&s.path(path)&&s.io.remove?s.io.remove(s.io.context,path):-1;
+    Permit permit(g);
+    return permit&&s.path(path)&&s.io.remove?s.io.remove(s.io.context,path):-1;
 }
 int Ap01AppFilesV3::rename(void *p,const char *from,const char *to){
     Guard g(p);auto &s=g.self;
-    return g&&s.writable&&s.path(from)&&s.path(to)&&s.io.rename?s.io.rename(s.io.context,from,to):-1;
+    Permit permit(g);
+    return permit&&s.path(from)&&s.path(to)&&s.io.rename?s.io.rename(s.io.context,from,to):-1;
 }

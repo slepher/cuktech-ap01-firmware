@@ -114,12 +114,28 @@ Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_
         NativeJsonAllocator0041 allocator;JsonDocument out(&allocator);
         out["device_mac"]=mac;out["fw_target"]="cuktech-ap01-0041";out["boot_id"]=boot;imageIdentity(out);
         out["service"]="ap01-maintenance";out["http_port"]=18080;
-        {
+        Ap01SupervisorSnapshotV3 appStatus{};
+        if(port.appStatus){
+            port.appStatus(port.context,appStatus);
+            out["business_online"]=appStatus.state==Ap01SupervisorStateV3::Healthy&&!active();
+        }else {
             Ap01MaintenanceCall0041 call(bridge);
             out["business_online"]=call&&bridge.online&&bridge.online(bridge.context)&&!active();
         }
         out["firmware_ota"]=firmware&&firmware->available()?"chunked-v1":"unavailable";
         out["firmware_update_policy"]="sequential_with_traditional_ota";
+        if(port.appStatus){
+            const auto &status=appStatus;
+            auto runtime=out["app_runtime"].to<JsonObject>();
+            const char *states[]={"starting","healthy","window_absent","fault"};
+            const char *faults[]={"none","boot_failed","startup_timeout","maintenance_stale","ui_stale","app_failed","app_timeout","worker_failed"};
+            runtime["state"]=uint32_t(status.state)<4?states[uint32_t(status.state)]:"unknown";
+            runtime["fault"]=uint32_t(status.fault)<8?faults[uint32_t(status.fault)]:"unknown";
+            runtime["app_index"]=status.app_index;runtime["sampled_at_ms"]=status.sampled_at;
+            auto health=runtime["health"].to<JsonArray>();
+            for(unsigned i=0;i<status.count&&i<AP01_MANIFEST_APPS_V3;++i)health.add(status.health[i]);
+            runtime["automatic_reboot"]=false;
+        }
         reply.status=200;encode(out,reply);return reply;
     }
     error(reply,404,"unsupported_endpoint","maintenance_router");return reply;

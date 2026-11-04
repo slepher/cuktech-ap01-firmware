@@ -8,6 +8,7 @@ struct Ap01ModelPlatformV3 {
     Task tasks[4];unsigned taskCount=0,maintenanceStarts=0,mounts=0,stockEvents=0,packageCloses=0;
     uint64_t now=100;
     bool listening=false,busy=false,packageOpen=false;
+    bool allowMkdir=false;unsigned mkdirCalls=0;
     const uint8_t *package=nullptr;uint32_t packageBytes=0,position=0;
     unsigned mountedPages=0,activeChild=0,eventCode=0,eventKey=0;void *eventTarget=nullptr;
     ap01_window_0041 *window=nullptr;

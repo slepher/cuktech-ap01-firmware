@@ -52,6 +52,7 @@ Ap01NativeAppPlatformV3::Ap01NativeAppPlatformV3(uint64_t boot,const Ap01BootPor
     for(unsigned i=0;i<shared->count;++i){const auto &other=shared->contexts[i]->grant;
         if(!strcmp(grant.id,other.id)||(grant.tcp&&grant.tcp==other.tcp)||(grant.udp&&grant.udp==other.udp)){validGrant=false;return;}}
     registryIndex=shared->count;shared->contexts[shared->count++]=this;
+    files.bindGate(shared->writeGate);
     refreshWindow();
     const char *hex="0123456789abcdef";
     for(unsigned i=0;i<16;++i){uint8_t v=ap01_native_manifest[36+i];build[i*2]=hex[v>>4];build[i*2+1]=hex[v&15];}
@@ -70,7 +71,7 @@ Ap01NativeAppPlatformV3::Ap01NativeAppPlatformV3(uint64_t boot,const Ap01BootPor
     api.allocate=allocate;api.reallocate=reallocate;api.release=release;api.format=snprintf;
     api.errno_slot=[](void *){return __errno();};api.task_start=task;
     api.busy=[](void *p)->int32_t {auto &s=*(Ap01NativeAppPlatformV3 *)p;return !s.shared->services.listening()||s.shared->services.busy();};
-    api.writes_allowed=[](void *p)->int32_t{return ((Ap01NativeAppPlatformV3 *)p)->writable.load(std::memory_order_acquire)?1:0;};
+    api.writes_allowed=[](void *p)->int32_t{return ((Ap01NativeAppPlatformV3 *)p)->shared->writeGate.writable()?1:0;};
     api.bind=[](void *p,const Ap01AppBindingV3 *b)->int32_t{auto &s=*(Ap01NativeAppPlatformV3 *)p;
         return b&&!strcmp(s.grant.id,"codex_status")?s.shared->binding.bind(*b):-1;};
     api.files=files.table();api.network=network.table();
@@ -101,7 +102,7 @@ bool Ap01NativeAppSharedV3::bindWindow(void *root,void (*stock)(void *)){
     if(ap01_host_init(&host,&port,apps,0)!=AP01_HOST_OK||!ap01_window_bind(&window))return false;
     for(unsigned i=0;i<count;++i){auto &app=*contexts[i];app.refreshWindow();
         if(app.loader.entered()&&app.loader.event(3,nullptr,0)!=AP01_APP_V3_OK){ap01_window_detach(&window);return false;}}
-    return true;
+    windowPresent.store(true,std::memory_order_release);return true;
 }
 bool Ap01NativeAppSharedV3::startMaintenance(){
     if(maintenanceStarted)return false;
@@ -116,10 +117,12 @@ void Ap01NativeAppSharedV3::blocked(ap01_screen_host *h,int blocked){
 }
 void Ap01NativeAppSharedV3::poll(void *p){
     auto &s=*(Ap01NativeAppSharedV3 *)p;s.heartbeat.store(uint32_t(ap01_native0041::nowMs()),std::memory_order_release);
+    if(s.pollHook&&s.window.win)s.pollHook(s.pollContext,false);
     bool blocked=s.services.busy();
     for(unsigned i=0;i<s.count;++i){s.dispatch=s.contexts[i];Ap01NativeAppPlatformV3::tick(s.dispatch);blocked|=s.dispatch->uiBlocked;}
     s.dispatch=nullptr;
     if(s.capacity>1){ap01_host_set_blocked(&s.host,blocked);ap01_host_poll(&s.host,uint32_t(ap01_native0041::nowMs()));}
+    if(s.pollHook&&s.window.win)s.pollHook(s.pollContext,true);
 }
 void Ap01NativeAppSharedV3::event(void *p,void *e){
     auto &s=*(Ap01NativeAppSharedV3 *)p;unsigned code=ap01_event_code(e);
@@ -129,14 +132,18 @@ void Ap01NativeAppSharedV3::event(void *p,void *e){
     for(unsigned i=0;i<s.count;++i){auto &app=*s.contexts[i];s.dispatch=&app;if(app.appEvent){app.appEvent(app.appInstance,e);delivered=true;}}
     s.dispatch=nullptr;
     if(!delivered&&s.capacity==1&&s.window.stock)s.window.stock(e);
-    if(deleting){ap01_host_destroy(&s.host);ap01_window_detach(&s.window);
+    if(deleting){s.windowPresent.store(false,std::memory_order_release);ap01_host_destroy(&s.host);ap01_window_detach(&s.window);
         for(unsigned i=0;i<s.count;++i){s.contexts[i]->attached=false;s.contexts[i]->appWindow.win=nullptr;}return;}
     if(s.capacity>1&&code==0x11){
-        if(s.services.busy()||s.host.blocked){ap01_host_cancel(&s.host);return;}
+        if(s.services.busy()||s.host.blocked){
+            ap01_host_cancel(&s.host);
+            if(!ap01_host_current(&s.host)&&s.window.stock)s.window.stock(e);
+            return;
+        }
         unsigned key=ap01_event_key(e);int consumed=key==0x13?ap01_host_rotate(&s.host,1,uint32_t(ap01_native0041::nowMs())):
             key==0x14?ap01_host_rotate(&s.host,-1,uint32_t(ap01_native0041::nowMs())):key==10?ap01_host_short(&s.host):0;
         if(!consumed&&s.window.stock)s.window.stock(e);
-    }else if(!s.count&&s.capacity>1&&s.window.stock)s.window.stock(e);
+    }else if(!delivered&&s.capacity>1&&s.window.stock)s.window.stock(e);
 }
 void Ap01NativeAppPlatformV3::tick(void *p){
     auto &s=*(Ap01NativeAppPlatformV3 *)p;
@@ -206,8 +213,7 @@ Ap01BootResultV3 Ap01NativeAppPlatformV3::boot(const Apx2Reader &reader,const Ap
     return loader.boot(reader,limits,expected,api,this);
 }
 bool Ap01NativeAppPlatformV3::writes(bool allow){
-    if(!files.writes(allow))return false;
-    writable.store(allow,std::memory_order_release);return true;
+    return shared&&shared->capacity==1&&shared->writes(allow);
 }
 void *Ap01NativeAppPlatformV3::allocate(void *p,uint32_t bytes){
     auto &s=*(Ap01NativeAppPlatformV3 *)p;

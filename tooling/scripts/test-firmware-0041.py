@@ -47,6 +47,14 @@ def check(manifest_path):
             assert 0 <= abi['heartbeat_offset'] <= abi['runtime_bytes'] - 4
         assert all(Path(item['source']).resolve().is_relative_to(ROOT) for item in audit['objects'])
         assert all(Path(item['path']).resolve().is_relative_to(ROOT) for item in audit['input_headers'])
+        loader = manifest.get('app_loader', {})
+        if 'manifest_path' in loader:
+            assert loader['manifest_path'] == '/resource/app-store/current.amf3'
+            assert loader['staging_bytes'] == 1 << 22
+            assert loader['file_io_executor'] == 'worker' and loader['app_start_executor'] == 'ui'
+            names = {Path(item['source']).name for item in audit['objects']}
+            assert {'app_set_files_v3.cpp', 'native_app_file_boot_v3.cpp',
+                    'app_manifest_v3.cpp', 'app_set_boot_v3.cpp', 'native_app_set_v3.cpp'} <= names
     else:
         assert manifest['runtime'] == 'application' and manifest['screen_host']['abi'] == 1
     # A changed stock byte must be rejected, even with an updated recovery CRC.

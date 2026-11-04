@@ -4,6 +4,7 @@
 #include "native_diagnostic_0041.h"
 #include "native_http_transport_0041.h"
 #include <atomic>
+#include "app_supervision_v3.h"
 
 #include "native_app_port_0041.h"
 struct Ap01MaintenancePort0041 {
@@ -14,6 +15,7 @@ struct Ap01MaintenancePort0041 {
     int (*deviceCode)(void *,char out[9])=nullptr;
     // Firmware-owned installation handler; never a pointer into unloadable App code.
     Ap01HttpReply (*appUpdate)(void *,const Ap01HttpRequest &,const char *,uint64_t)=nullptr;
+    void (*appStatus)(void *,Ap01SupervisorSnapshotV3 &)=nullptr;
 };
 class Ap01Maintenance0041 {
     LittleFSClass &fs;

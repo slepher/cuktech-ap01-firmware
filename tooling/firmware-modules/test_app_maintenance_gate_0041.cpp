@@ -55,5 +55,18 @@ int main() {
     Ap01MaintenanceCall0041 bad(bridge);assert(!bad);
     Ap01MaintenanceBridge0041 resident{};
     Ap01MaintenanceCall0041 legacy(resident);assert(legacy);
+    Ap01SupervisorSnapshotV3 snapshot{};snapshot.state=Ap01SupervisorStateV3::Fault;
+    snapshot.fault=Ap01SupervisorFaultV3::UiStale;snapshot.app_index=1;
+    snapshot.count=2;snapshot.health[0]=0;snapshot.health[1]=-4;snapshot.sampled_at=99;
+    port.context=&snapshot;
+    port.appStatus=[](void *p,Ap01SupervisorSnapshotV3 &out){out=*(Ap01SupervisorSnapshotV3 *)p;};
+    // Even an active binding must not be called by the resident health query.
+    bridge.gate=&app.gate;bridge.generation=app.gate.begin();
+    Ap01Maintenance0041 observed(fs,port,bridge,"AABBCCDDEEFF",1);assert(observed.begin());
+    unsigned calls=app.online;auto status=observed.handle(health,8);
+    assert(status.status==200&&app.online==calls);
+    assert(strstr(status.bytes.c_str(),"\"fault\":\"ui_stale\"")&&strstr(status.bytes.c_str(),"\"health\":[0,-4]"));
+    snapshot.state=Ap01SupervisorStateV3::Healthy;snapshot.fault=Ap01SupervisorFaultV3::None;
+    assert(strstr(observed.handle(health,9).bytes.c_str(),"\"business_online\":true"));
     printf("maintenance gate: pairing/principal/online protected; manual health survives stop; stale bindings rejected\n");
 }

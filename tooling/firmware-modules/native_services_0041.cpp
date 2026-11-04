@@ -28,6 +28,9 @@ struct Ap01NativeServices0041::State {
     }
     Ap01WifiSwitch0041 wifi{switchPort(this)};
     std::atomic<bool> listening{false},stop{false},ready{false};
+    std::atomic<uint32_t> heartbeat{0};
+    void *statusContext=nullptr;
+    void (*statusSnapshot)(void *,Ap01SupervisorSnapshotV3 &)=nullptr;
     void *healthContext=nullptr;
     bool (*healthy)(void *)=nullptr;
     Ap01MaintenanceBridge0041 appBinding;
@@ -74,8 +77,10 @@ struct Ap01NativeServices0041::State {
     static void *run(void *p) {
         auto &s=*(State *)p;
         int fd=listener(18080);if(fd<0)return nullptr;
+        s.heartbeat.store(uint32_t(nowMs()),std::memory_order_release);
         s.listening.store(true,std::memory_order_release);
         while(!s.stop.load(std::memory_order_acquire)) {
+            s.heartbeat.store(uint32_t(nowMs()),std::memory_order_release);
             s.maintenance->tick(nowMs());s.wifi.tick(nowMs());
             if(!waitFd(fd,1,nowMs()+1000))continue;
             int client=ap01_native0041::accept(fd);if(client<0)continue;
@@ -95,6 +100,7 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
     auto s=std::unique_ptr<State>(new(std::nothrow) State);if(!s)return false;
     char mac[13];if(!wifiMac(mac)||!s->fs.begin(false,"/resource",10,"resource"))return false;
     s->appBinding=bridge;s->healthContext=context;s->healthy=healthy;s->bootSlot=ap01SelectedSlot0041();
+    s->statusContext=statusContext;s->statusSnapshot=statusSnapshot;
     const char *hex="0123456789abcdef";
     for(unsigned i=0;i<16;++i){uint8_t v=ap01_native_manifest[36+i];s->firmwareBuild[2*i]=hex[v>>4];s->firmwareBuild[2*i+1]=hex[v&15];}
     Ap01MaintenancePort0041 port{s.get(),
@@ -103,6 +109,9 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
         {s.get(),ap01DiagnosticFile0041,ap01DiagnosticFlash0041,State::diagnosticBusy,
          [](void *p,Ap01WifiTraceSnapshot0041 &out){return ((State *)p)->trace.read(out);}},
         [](void *,char out[9]){return ap01DeviceCodeLoad0041(ap01RomVfs(),out);}};
+    if(statusSnapshot)port.appStatus=[](void *p,Ap01SupervisorSnapshotV3 &out){
+        auto &s=*(State *)p;s.statusSnapshot(s.statusContext,out);
+    };
     s->maintenance.reset(new(std::nothrow) Ap01Maintenance0041(s->fs,port,bridge,mac,boot));
     if(!s->maintenance||!s->maintenance->begin(nowMs()))return false;
     s->wifi.begin(nowMs());s->ready.store(true,std::memory_order_release);
@@ -114,6 +123,7 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
 }
 bool Ap01NativeServices0041::busy() const {auto *s=live.load(std::memory_order_acquire);return s&&(!s->ready.load(std::memory_order_acquire)||s->maintenance->active()||s->wifi.busy());}
 bool Ap01NativeServices0041::listening() const {auto *s=live.load(std::memory_order_acquire);return s&&s->listening.load(std::memory_order_acquire);}
+uint32_t Ap01NativeServices0041::heartbeat() const {auto *s=live.load(std::memory_order_acquire);return s?s->heartbeat.load(std::memory_order_acquire):0;}
 int Ap01NativeServices0041::selectWifi(const char *ssid) {
     auto *s=live.load(std::memory_order_acquire);if(!s||!s->ready.load(std::memory_order_acquire)||State::wifiBlocked(s))return -16;
     return s->wifi.request(ssid,uint32_t(nowMs()));

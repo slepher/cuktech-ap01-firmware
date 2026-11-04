@@ -25,6 +25,7 @@ public:
     Ap01AppSetResultV3 boot(const Apx2Reader &,const uint8_t expected[32],const Ap01ManifestLimitsV3 &);
     int32_t event(uint32_t,const void *,uint32_t);
     int32_t health();
+    int32_t health(int32_t values[AP01_MANIFEST_APPS_V3]);
     uint32_t startedCount()const{return started;}
     uint32_t failedIndex()const{return failed;}
     Ap01ManifestErrorV3 validationError()const{return error;}
