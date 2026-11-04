@@ -1,5 +1,15 @@
 # 当前状态
 
+2026-11-04：D2 已抽出唯一共享维护服务、窗口和 screen_host；每 App 保留独立授权、文件/网络上下文和任务统计。宿主双上下文验证了增量注册、单次输入分发和轮询，原有 16 场景及九根页面导航通过 ASan/UBSan。Manifest 460 项检查与 RV32 编译重新通过。最新候选 `build/app-install/d2-platform-03.bin` 为 6,899,240 B，SHA256 `7ccddb1921fe9b01a26a992752af75314757941838d497be3e491ad5064fbb92`，新版诊断元数据与镜像验收通过。以下较早记录中的“共享容器待实现”已被本条进展替代。
+
+边界：双上下文测试使用宿主 App 入口替身，生产开机仍为固定文件单包路径；Manifest 与原生多槽加载尚未接通。本轮未新增 QEMU 结果，真实第二独立包、共享窗口重建及集合健康监督仍待验证，D2 未完成。未访问实机、未部署。
+
+D2 每 App 授权已接入平台上下文：Manifest 条目决定 ID、能力、TCP/UDP、任务数和页面槽；执行内存预留前核对包摘要及 image/heap/stack 声明。codex_status 保留原业务根，其他合法 ID 使用 `/resource/apps/<id>`；无效 ID、维护端口和跨根访问被拒绝。平台宿主验证增至 16 场景，ASan/UBSan、RV32 严格编译、跨仓边界通过。最新候选 `build/app-install/d2-platform-02.bin` 为 6,898,088 B，SHA256 `7fb8623b64ae8fc463fc788bfa9e554f9420adaaf5759dc56a3dfd2c7a39d60d`，镜像验收通过、未部署。当前仍需共享唯一维护/host 的多上下文容器；不能创建多个当前独立平台实例冒充完成。
+
+D2 宿主接线进展：新增平台专用 `ap01_host_append`，独立 App 顺序注册时不重新初始化已有宿主。D1 平台 attach 已改用此入口；重复 ID、根/child 冲突、容量不足、正在切换时拒绝，成功保留已有页面、revision、transition 和输入状态。宿主 ASan/UBSan、平台 10 场景和跨仓边界通过。完整平台候选 `build/app-install/d2-platform-01.bin` 为 6,897,496 B，SHA256 `166a5de72b80570b797be03764ad4d4ca4412c2bc0792f97453896a40202c47d`，镜像验收通过，未部署。原生多槽 provider 和真实第二包仍未完成；这不是多个独立包已经运行的证据。
+
+D2 进行中：已实现 [AMF3 完整集合编码](../../docs/app-manifest-v3.md)、真实 APX2 全包预检及按顺序启动的集合核心。宿主消毒器与 RV32 编译通过；坏第二包使零 App 启动，启动部分失败保留至重启并拒绝同次重载。报告 `build/app-install/d2-manifest/manifest-report.json`。原生平台仍为 D1 单槽，第二包是元数据 fixture，未宣称 D2 多 App 运行完成。完整非实机目标仍 active。
+
 更新：2026-11-03，D1 非实机纵向验收完成。真实 Runtime 消费 ABI 3.0 直接 C 表，最终 ELF/APX2 零导入、72 项 BASE32、双链接基址归一化一致，两次独立构建包字节一致。最终包 203,696 B，SHA256 `581eafe33e3e524a3aefdb32e30905be75be304cfa202f14efcdbda113de1dcc`；见 [D1 记录](d1-direct-app.md)、[接口合同](../../docs/app-platform-api-v3.md) 和 `build/app-install/artifact-report.json`。
 
 平台拥有维护/host/window/provider，固定文件先维护后 App 的加载路径已接通。完整平台候选 `d1-platform-v3-02.bin` 为 6,897,352 B，SHA256 `53629b54908e6681c73dad6f256c299a9d0245a800e9301c4b5fb7d0e0ab141c`，镜像检查通过。生产加载器宿主验证、六种坏 relocation、平台 ASan/UBSan 10 场景与跨仓边界通过。
