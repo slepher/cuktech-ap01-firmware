@@ -1,5 +1,39 @@
 # 当前状态
 
+2026-11-04 可写恢复接线：真实业务 worker 在串行锁内观察平台 writes_allowed；开放后调用一次可写 begin，完成前不向配对/业务命令公布可写状态；重复许可不重建 context。撤权关闭业务入口，底层集合门立即拒绝写入。恢复失败保持只读、健康 Failed，且本次运行不重复迁移。实际 Bundle 的开放/幂等/撤权/失败不重试，direct-files 与旧服务兼容回归均通过。
+
+真实双包 `d2-resume-run01.json` 在 james.local Docker 两基址通过，验证实际 worker 在模型许可开放后初始化一次，撤权后再次恢复失败时不重试；该许可为测试显式注入，未冒充 D3 持久批准。业务包 `d2-business-resume-01/app.apx2` 204,080 B，SHA256 `c3bf0c7d4a01d6788532cf178c7f8e969862af5088c42062b522df5eec5e9913`，72 项 BASE32、零导入，01/02 重复构建一致。候选 `d2-platform-11.bin` 6,907,160 B，SHA256 `a042af91eec958a601c0f9986270530d25fcc5bbd8f1b7c445a3988c0667b2cf`，镜像及跨仓检查通过。生产默认只读；D3 持久授权和维护共享写协调仍待完成，未操作实机。
+
+2026-11-04 集合写入门：所有 App 直接文件变更共用 `Ap01AppWriteGateV3`。撤权先拒绝全部新变更（含旧可写句柄与零字节 sync），在途操作返回后才报告排空；不逐 App 切换。启动前拒绝开放，单 App 上下文不能改多 App 许可。共享门并发测试、集合/平台/Manifest/监督回归、实际业务 direct-files 只读恢复和跨仓边界通过。写集与未接线边界见 [写许可记录](../../docs/app-write-policy-v3.md)。
+
+真实双包默认只读回归 `d2-gate-run01.json` 两基址通过，五项输入摘要已核对。候选 `d2-platform-10.bin` 为 6,907,160 B，SHA256 `55886521e2e807f70c646a469e09e7bdaffe812fabcfd497c200b8b0f456bb66`，镜像验收通过。D3 持久成功后授权与业务 worker 可写恢复尚未接通，维护/OTA/Wi-Fi 的共享写协调仍开放；不能宣称试运行事务完成。未操作实机。
+
+2026-11-04 工作线程活性：codex_status ABI 3 增加业务/发现循环心跳和启动位；尚未进入两条循环时 Pending，业务 15 s 或发现 5 s 无进展时 Failed，发现线程退出也标记失败。peer 改为检查最近任务心跳（5 s），不再仅判断曾运行。读取心跳后再采时钟；平台监督也容忍并发发布者略新于已采样时钟，避免误判 uint32 回绕。
+
+真实双包 `d2-beats-run02.json` 在 james.local Docker 两基址通过：分别冻结业务、peer、发现线程，同时保持 UI/其他线程运行，准确定位所属 App；恢复线程后 App 健康恢复，但平台已记录故障仍锁存。新业务包 `d2-business-beats-02/app.apx2` 为 203,904 B，SHA256 `7325faf42b12c57d892e76ca2517ae45393c77baf7dc00c2f81ff6dfdcdf1656`，72 项 BASE32、零导入，02/03 独立构建字节相同。peer 为 992 B，SHA256 `93ebd331efc55e0f0adaabda2239ae81288367d72762ec33a1286b9a7dd56cad`。阈值是观察策略，不是已验证 ROM/VFS/渲染最长耗时。
+
+集合/监督宿主、跨仓边界和完整平台候选验收通过：`d2-platform-09.bin` 6,906,856 B，SHA256 `03a37f8c1c3cad21be5348e576d4af312fa888e058411938b0835c9ae53e9229`。接下来仍需业务写集/试运行写许可、D3 重启事务与失败回执；独立硬件看门狗未验证。未访问实机、未部署。
+
+2026-11-04 集合健康监督：UI 在各 App tick 后串行调用 health 并发布原子快照；独立 `ap01-watch` 工作线程每 100 ms 检查启动、UI 快照和维护循环心跳。启动/Pending 30 s、UI 快照 5 s、维护心跳 10 s 阈值，故障锁存至重启；窗口销毁单独标记 `window_absent`，不误报 UI 卡死。`GET /health` 与 `/api/maintenance/status` 增加 `app_runtime`，配置监督器后不再调用 App online；设备码查询保持平台独立性。
+
+监督单元测试（含时钟回绕、并发快照）、12 个文件组合场景、维护 HTTP、既有平台/Manifest/边界回归通过。真实双包 QEMU `d2-watch-run01.json` 两基址通过，验证健康、窗口状态转换及注入 UI 停滞；五项输入摘要已核对。完整候选 `d2-platform-08.bin` 为 6,906,840 B，SHA256 `b74a7f72c4ae3240abdd378b9a1cadeab971901ba1610bd4d37ccd310c4e8c76`，镜像检查通过，未部署。
+
+监督仍未完成：codex_status 健康入口主要依赖 UI，业务/发现线程的独立心跳尚待补充；模型显式调度监督 tick，不证明独立硬件看门狗或整机调度卡死恢复。自动重启关闭，必须等 D3 持久选择后接入重启请求及失败回执。业务写集/试运行写许可和 D3/D4 继续待推进。
+
+2026-11-04 生产文件组合：原生 hook 改为先启动维护监听，再由工作线程读取 `/resource/app-store/current.amf3` 和 `/resource/app-store/packages/<APX2内容摘要>.apx2`。包存储与 App 私有目录分离。暂存总上限 4 MiB，作为额外 resident 预算从总 RAM 中扣除；工作线程全包校验后 release/acquire 发布不可变快照，UI 回调加载，不执行 VFS I/O，结束后释放暂存，执行映像仍保留至重启。
+
+12 个暂存场景、Manifest 460 项、共享平台与跨仓边界检查通过；覆盖缺文件、短读、损坏、关闭失败、预算、摘要和 backend 不可用，维护原厂导航保持。真实双包文件组合在 james.local Docker 两基址通过，报告 `build/app-install/qemu-james/d2-files-run02.json` 五项输入摘要已核对。候选 `d2-platform-06.bin` 为 6,904,216 B，SHA256 `b8216325af9b83d009b57eda415fafb675f927d6aba515ba1d49ab7437bb5522`，镜像检查通过，ELF 确认保留文件组合符号。
+
+限制：这是固定 Manifest 的 D2 引导路径，不是 D3 日志选择；数据版本固定为既有 schema 1，不执行迁移，写许可仍默认关闭。持续监督、业务写集、单更/批更事务与客户端继续待做。硬件 backend 不可用，未部署或访问实机。
+
+2026-11-04 真实双包：codex_status 与新独立 z_probe 已经 AMF3、生产集合加载器与共享平台，在 james.local Docker QEMU 两基址执行成功。第二包 880 B，SHA256 `98966125e3c3ffb8a8e7dd7d993880da74ac268391aa5e6aabef9791f4473faa`；608 B 映像、2 项 BASE32、零导入，双链接归一化与重复独立构建字节一致。guest 验证监听前零启动、两个注册项、三个后台任务、集合 Pending→OK、peer 页面切换，以及两包窗口重建不重复任务/维护监听。报告 `build/app-install/qemu-james/d2-set-run01.json` 的 guest/主包/构建报告/Manifest/peer 五项输入摘要已核对。
+
+两包执行真实 RV32 指令，ROM I/O、LVGL、维护监听和调度仍为模型。集合宿主、Manifest 460 项检查与跨仓边界回归通过。生产 Manifest 文件/选择入口、持续健康监督和 D3/D4 仍待推进，本轮没有新 ROM 或实机操作。
+
+2026-11-04 集合组合：新增 `Ap01NativeAppSetV3`，连接 AMF3 全包预检、每 App 授权 C 表、集合启动器和唯一共享维护/窗口宿主。所有上下文保留至重启。组合测试通过 ASan/UBSan 和 RV32 编译，覆盖监听前不读包、坏第二包零启动、第二包 publish/start 失败时保留映像、读者成对关闭、共享宿主，以及窗口重建不重启 App/维护服务。报告 `build/app-install/d2-native-set/native-app-set-report.json`；入口与第二包仍为宿主/元数据替身。
+
+共享平台的真实单包在 james.local Docker 两基址回归通过，报告 `build/app-install/qemu-james/d2-shared-run01.json` 已与本地输入摘要核对。完整候选 `d2-platform-04.bin` 为 6,899,240 B，SHA256 `cd00fc3037e0a6e2032951d1cf625927686bd1578499be2f8fa28165f4b888bd`，镜像及跨仓边界通过。集合模块进入编译清单，但生产 hook 仍是固定单包入口，未引用集合代码可被链接器裁掉。真实第二包、生产 Manifest 文件/选择路径和持续监督仍待完成，D2 未完成；未部署、未访问设备。
+
 2026-11-04：D2 已抽出唯一共享维护服务、窗口和 screen_host；每 App 保留独立授权、文件/网络上下文和任务统计。宿主双上下文验证了增量注册、单次输入分发和轮询，原有 16 场景及九根页面导航通过 ASan/UBSan。Manifest 460 项检查与 RV32 编译重新通过。最新候选 `build/app-install/d2-platform-03.bin` 为 6,899,240 B，SHA256 `7ccddb1921fe9b01a26a992752af75314757941838d497be3e491ad5064fbb92`，新版诊断元数据与镜像验收通过。以下较早记录中的“共享容器待实现”已被本条进展替代。
 
 边界：双上下文测试使用宿主 App 入口替身，生产开机仍为固定文件单包路径；Manifest 与原生多槽加载尚未接通。本轮未新增 QEMU 结果，真实第二独立包、共享窗口重建及集合健康监督仍待验证，D2 未完成。未访问实机、未部署。

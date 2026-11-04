@@ -111,3 +111,39 @@ python3 -B /input/test-app-abi-qemu-0041.py --qemu /engine/qemu \
 复用相同 `ap01-abi-qemu:20261103` Docker 镜像/引擎，输入 `/home/slepher/ap01-abi-20261103/input/time`，报告 `build/app-install/qemu-james/abi-time-run01.json`（已取回并核对三个输入 SHA）。两个基址及两代重载均返回 0，SP/整数保存寄存器保持；包内 time() 经实际 core UTC 服务读到模型提供的 1700000000 秒，原 heap/new/delete/calloc/realloc/排空验证同时通过。
 
 guest 11992 字节，SHA `6c1e06cf13a57bc9101ad68f4f5b02620f658be536df9a7a908a4608c29cb622`；包 SHA `3361e9f052818d1efdde61938eb80a28d36dba2c64159131402339d51bccccd8`。无宿主安装、无实机/部署；不证明真实 RTC、完整业务 App 或物理执行内存准入。
+
+### 2026-11-04 共享平台真实单包回归
+
+远端旧运行镜像已不存在，按同一 Dockerfile、固定基础摘要和清华容器软件源重建 `ap01-abi-qemu:20261104`，镜像 ID `sha256:02aba83405eefd37e9c529a84ae0e26cf7d8e79a7749dc2d48e991fe8101c0cc`。依赖仅安装在容器内；未改动已有服务。引擎、support 和 runner 摘要与前次一致。首次命令误写引擎预期摘要，在执行前被身份检查拒绝；修正后通过。
+
+输入 `build/app-install/d2-shared-guest-01`，远端同名目录位于既有 input 下；输出 `build/app-install/qemu-james/d2-shared-run01.json` 已取回。guest SHA256 `e63b5eff1ae0730ee60d4ef32e7de6b3dbfe4c98db8ce435f186eba351639871`；真实 App 包仍为 D1 的 `581eafe33e3e524a3aefdb32e30905be75be304cfa202f14efcdbda113de1dcc`。两个基址均返回 0，保存寄存器和栈保持，输入三项摘要与本地一致。这是共享所有者改造后的单包回归，未执行真实双包集合，也不是完整 ROM 或实机验证。
+
+### 2026-11-04 真实双包集合执行
+
+复用 `ap01-abi-qemu:20261104`，输入 `d2-set-guest-01`；runner 上传为 `test-app-set-qemu-0041.py`（本仓 `test-app-abi-qemu-0041.py`，SHA256 `25c94487e6fd3302df2f6d70b8c543189ba1bf843e3fb084ec472b60b5a47ef2`）。新增 `set.amf3` 输入地址 0xa81c0000、`peer.apx2` 地址 0xa81c1000；执行池按 16 B 对齐推进。基址 0xa8000000 和 0xa8040000 均返回 0，栈和保存寄存器保持。
+
+报告 `build/app-install/qemu-james/d2-set-run01.json` 已取回；guest、主包、构建报告、Manifest、peer 五项输入摘要与本地一致。guest SHA256 `eee01f5cd36199d11952db42e0f7618dd4209c2aa9c86c17ea7d6ed255330b9a`，Manifest 文件 SHA256 `ec95e0a813a6a02a7feb16d502424a59f2f12e0c483625c32f5fb293510a7b33`，peer 文件 SHA256 `98966125e3c3ffb8a8e7dd7d993880da74ac268391aa5e6aabef9791f4473faa`。三条实际后台任务运行，peer 页面可进入，两个 App 的窗口重建不创建新线程或监听。底层仍为前述模型替身；生产文件入口、硬件缓存/权限不在此证据范围。
+
+### 2026-11-04 文件暂存到真实双包
+
+`d2-files-guest-02` 使用生产 `Ap01NativeAppFileBootV3` 与 `app_set_files_v3`。模型仅提供文件 I/O：按 `/resource/app-store/current.amf3` 及摘要包路径读取三个输入；stage 完成后禁用该 I/O，后续 UI 载入仍成功，证明没有在 UI 阶段重开文件。Manifest/主包/peer 与前次相同。
+
+既有 Docker 镜像/runner 下两个基址通过。报告 `build/app-install/qemu-james/d2-files-run02.json` 已取回并核验五项输入；guest SHA256 `06b8de3cd93dbc1414808ad4ac53f136a62a8200644e5acdc19732783e7a73d2`。仍覆盖三任务、peer 页面和两包窗口重建。模拟 malloc 不回收，仅宿主 ASan 测试验证实际暂存对象释放；不声称模型验证了真实堆回收、VFS 持久性或完整原厂启动。
+
+### 2026-11-04 健康观察回归
+
+`d2-watch-guest-01` 继续执行相同真实双包，增加集合监督断言：两包 healthy、窗口删除后 window_absent、重建后 healthy、停止发布 UI 快照并推进 5001 ms 后 ui_stale。监督 tick 由 guest 显式调用，原生独立线程的创建在完整候选编译/链接中检查；不把该注入当作真实 RTOS 卡死或硬件看门狗测试。
+
+报告 `build/app-install/qemu-james/d2-watch-run01.json` 两基址通过并核对五项输入。guest SHA256 `dc96687226a35876501e01b29964ad2da9841b24013a861b07b4d67654b1eeaa`。Docker 镜像/runner/引擎沿用前次，未安装宿主依赖或访问实机。
+
+### 2026-11-04 分别冻结真实工作线程
+
+`d2-beats-guest-02` 载入心跳版业务包及 peer，先完成既有双包启动/页面/窗口重建验证，然后逐个跳过业务、peer、发现线程调度；每次保持 UI 与其他线程推进 200 轮（每轮模型时间增加 100 ms），断言所属 App Failed、另一 App OK。恢复全部线程后 App health 回到 OK；最后一次故障被平台锁存，恢复后不清除。
+
+`build/app-install/qemu-james/d2-beats-run02.json` 两基址通过，五项输入摘要与本地一致。guest SHA256 `a609247c4cd6fff250d78f5ab913df4462e48cc58e7c3996e5842c4a9ae816fb`；主包 SHA256 `7325faf42b12c57d892e76ca2517ae45393c77baf7dc00c2f81ff6dfdcdf1656`，peer SHA256 `93ebd331efc55e0f0adaabda2239ae81288367d72762ec33a1286b9a7dd56cad`。真实指令执行依然使用模型 ROM I/O 和协作调度；这不是硬件抢占/整机死锁恢复测试。
+
+### 2026-11-04 实际 worker 许可恢复
+
+`d2-resume-guest-01` 继续运行双包及线程停滞断言，末尾显式授予模型写许可。实际业务 worker 创建 Bundle 目录一次并恢复健康；持续许可不重复创建。撤权后再次开放并注入 mkdir 失败，health Failed，继续调度也不重复尝试。最后关闭集合门。模型未实现 Bundle 持久文件成功提交，此项由真实 Bundle 宿主测试补充。
+
+`build/app-install/qemu-james/d2-resume-run01.json` 两基址通过，五项输入摘要核对一致；guest SHA256 `4ff31432cca7cbb2a1ecb55b90224e104618f997285621dadc077d246e909247`。新的业务包 SHA256 `c3bf0c7d4a01d6788532cf178c7f8e969862af5088c42062b522df5eec5e9913`，peer 不变。许可是测试注入，不是 D3 持久事务或实机结果。

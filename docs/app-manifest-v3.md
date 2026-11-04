@@ -63,3 +63,33 @@ python3 -B tooling/scripts/test-app-manifest-v3.py --out build/app-install/d2-ma
 多包宿主接线使用 resident-only `ap01_host_append`：平台在稳定数组的下一个位置填入该 App 注册信息，再追加到已有 host。注册不得重置先前 App 页面、revision 或输入状态；容量/身份/根冲突或转场中均拒绝。这不改变 ABI 3.0 表，不允许 App 自行追加宿主成员。D1 attach 已复用此入口，多槽 provider 仍待接入。
 
 Manifest Entry 现可直接构造 `Ap01NativeAppPlatformV3` 上下文，条目按值保留。资源预留前再次核对实际包身份/摘要/大小/能力，任务与页面创建按该项上限执行。端口由该项分配；codex_status 兼容既有 `/resource/codex-status` 数据根，其他 ID 由平台生成 `/resource/apps/<id>`。这是后续集合容器的 per-App 授权路径；现有默认入口仍只创建一个平台，共享维护/宿主接线、目录创建/首次迁移与维护写集隔离尚待完成。
+
+2026-11-04 组合更新：`native_app_set_v3` 已连接集合加载器与共享多上下文平台，`test-native-app-set-v3.py` 验证同一条 Manifest→C 表→宿主路径及窗口重建、部分启动失败保留。运行参数与上述 Manifest 测试相同，可使用独立预建输出目录；测试会生成并验证元数据第二包。上述“共享维护/宿主待接入”现仅指生产入口；固定文件 hook 尚未改用集合，真实双包及持久选择仍待完成。
+
+真实双包补充：`tooling/app-examples/peer-v3` 独立构建的 APX2 已与 codex_status 在 james.local Docker 两基址通过集合加载及共享宿主运行，见 `project-workflow/ap01-app-update/s1-qemu-james.md` 双包记录。原宿主元数据 fixture 保留用于拒绝路径测试，不将其与真实执行证据混用。生产持久选择与固定文件 hook 仍待迁移。
+
+## D2 固定文件引导（2026-11-04）
+
+生产 `native_platform_v3_0041` 现构造 `Ap01NativeAppFileBootV3`，使用以下平台专属命名空间：
+
+- Manifest：`/resource/app-store/current.amf3`。
+- 包：`/resource/app-store/packages/<64位小写APX2内容摘要>.apx2`。这里是 APX2 头中 192..223 字节的内容摘要，不是整个包文件 SHA256。
+- App 数据根仍为 `/resource/apps/<id>`，codex_status 保持 `/resource/codex-status`，不得与包存储混用。
+
+维护 worker 启动监听后，加载 worker 有界等待最多 500 次 10 ms pause；未监听不读包。工作线程读取 Manifest，验证预算并缓存所有引用包，完成完整校验才向 UI 发布不可变快照。UI 仅调用内存 reader，再次预检/加载并调用 start，不调用 VFS。消费结束释放暂存字节；任何已经预留的映像与上下文保留至重启。成功与失败均不自动重试本次启动。
+
+暂存上限 4 MiB，构造时在 runtime Manifest 预算之外增加到 resident RAM 保留额，防止只计算运行映像而遗漏峰值缓存；Manifest 固定缓冲区与对象开销包含于平台 resident 保留额。该限额为非实机配置，不是硬件可用容量声明。未来若实测预算不足，应改成分阶段工作线程加载，不得直接取消暂存扣账。
+
+`app_set_files_v3` 可接收调用者选定的预期 Manifest 摘要；当前 hook 使用文件自身的校验摘要作为固定引导，未实现日志授权选择。包数据 schema 固定为 1；D3 接入持久数据版本之前，不支持自动迁移。文件加载期间包写权限仍关闭。工作线程暂存测试并不能证明 RTOS 原厂 I/O 耗时、cache 或硬件看门狗。
+
+## 集合健康观察
+
+文件组合由 UI 在 App tick 后串行采样全部 health，顺序为 Manifest 的排序索引，不在监督线程或 HTTP 回调内执行 App 代码。平台独立工作线程每 100 ms 检查该原子快照和维护循环心跳。观察器状态为 starting/healthy/window_absent/fault；故障原因包括 boot_failed、startup_timeout、maintenance_stale、ui_stale、app_failed、app_timeout、worker_failed。故障锁存，恢复心跳不会自行清除。
+
+当前配置：启动或持续 Pending 30 s，UI 快照陈旧 5 s，维护循环心跳陈旧 10 s（允许既有维护请求处理期限）。正常窗口销毁暂停 App/UI 的陈旧判定并报告 window_absent；重建后重新采样。固定引导暂不进行试运行健康提交，也不自动重启。D3 需在持久试运行规则中处理 window_absent，不能把它当作全体健康确认。
+
+设备码认证的 `GET /health` 和 `/api/maintenance/status` 返回 `app_runtime`，包含 state、fault、app_index、sampled_at_ms、health 数组和 automatic_reboot=false。无具体失败 App 时 app_index 为 4294967295；数组索引对应排序后的 Manifest。监督配置存在时 business_online 由平台快照决定，不调用 App online；旧未配置路径保持原行为。
+
+这证明平台能观察按合同报告健康的 App，不代表 App 内所有线程都已提供活性信号。当前 codex_status 尚需补业务/发现线程心跳；监督自身也无法恢复 CPU/调度器整体停机，独立硬件看门狗仍在 H 范围。维护服务自身失去监听时不能承诺 HTTP 仍可查询，但平台故障快照会保留。
+
+工作线程补充（2026-11-04）：codex_status 的 ABI 3 health 现要求业务与发现线程均已进入循环且最近心跳未超时；业务观察阈值 15 s，发现/peer 5 s。上述“尚需补工作线程心跳”已被该进展替代。阈值未证明所有合法业务负载均能满足，需要结合实际 ROM I/O/渲染上界继续验证。平台按 App health 观察，不能自行推断未声明的额外线程是否健康。
