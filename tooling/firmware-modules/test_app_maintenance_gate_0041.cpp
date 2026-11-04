@@ -66,7 +66,34 @@ int main() {
     unsigned calls=app.online;auto status=observed.handle(health,8);
     assert(status.status==200&&app.online==calls);
     assert(strstr(status.bytes.c_str(),"\"fault\":\"ui_stale\"")&&strstr(status.bytes.c_str(),"\"health\":[0,-4]"));
+    snapshot.reboot=Ap01RebootStateV3::Pending;
+    assert(strstr(observed.handle(health,8).bytes.c_str(),"\"reboot_state\":\"pending\""));
+    assert(strstr(observed.handle(health,8).bytes.c_str(),"\"automatic_reboot\":true"));
+    snapshot.reboot=Ap01RebootStateV3::Failed;
+    assert(strstr(observed.handle(health,8).bytes.c_str(),"\"reboot_state\":\"failed\""));
+    assert(strstr(observed.handle(health,8).bytes.c_str(),"\"automatic_reboot\":false"));
     snapshot.state=Ap01SupervisorStateV3::Healthy;snapshot.fault=Ap01SupervisorFaultV3::None;
     assert(strstr(observed.handle(health,9).bytes.c_str(),"\"business_online\":true"));
+    struct Operation {bool held=false;unsigned enters=0,leaves=0,updates=0;} operation;
+    port.context=&operation;port.appStatus=nullptr;
+    port.enterOperation=[](void *p){auto &s=*(Operation*)p;++s.enters;if(s.held)return false;s.held=true;return true;};
+    port.leaveOperation=[](void *p){auto &s=*(Operation*)p;assert(s.held);s.held=false;++s.leaves;};
+    port.appUpdate=[](void *p,const Ap01HttpRequest &,const char *,uint64_t){auto &s=*(Operation*)p;
+        assert(s.held);++s.updates;Ap01HttpReply reply;reply.status=200;return reply;};
+    Ap01Maintenance0041 coordinated(fs,port,resident,"AABBCCDDEEFF",1);assert(coordinated.begin());
+    operation.held=true; // Installer owns the short operation lease.
+    assert(coordinated.handle(health,10).status==200);coordinated.afterResponse(true);
+    assert(operation.held&&!operation.leaves&&!operation.enters);
+    auto update=request("/api/app/result","01234567");
+    assert(coordinated.handle(update,11).status==409);coordinated.afterResponse(true);
+    assert(operation.held&&!operation.updates&&!operation.leaves);
+    coordinated.tick(12);assert(operation.held&&!operation.leaves);
+    operation.held=false;
+    assert(coordinated.handle(update,13).status==200&&operation.held&&operation.updates==1);
+    coordinated.afterResponse(false);assert(!operation.held&&operation.leaves==1);
+    auto unauthorized=update;unauthorized.token="bad";
+    assert(coordinated.handle(unauthorized,14).status==401&&operation.held);
+    coordinated.afterResponse(true);assert(!operation.held&&operation.leaves==2);
+    coordinated.tick(15);assert(!operation.held&&operation.leaves==3);
     printf("maintenance gate: pairing/principal/online protected; manual health survives stop; stale bindings rejected\n");
 }

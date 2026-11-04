@@ -65,7 +65,8 @@ struct Disk {
     std::vector<uint8_t> *current=nullptr;
     unsigned position=0,opens=0,closes=0,scenario=0;bool worker=true;
     static int open(void *p,const char *path,unsigned flags){
-        auto &s=*(Disk *)p;assert(s.worker&&!flags&&!s.current);
+        auto &s=*(Disk *)p;assert(s.worker&&!s.current);
+        if(flags==1)s.files[path].clear();
         auto it=s.files.find(path);if(it==s.files.end())return -1;
         s.current=&it->second;s.position=0;++s.opens;return 10;
     }
@@ -84,7 +85,10 @@ struct Disk {
         for(unsigned i=192;i<224;++i){path+=hex[v[i]>>4];path+=hex[v[i]&15];}
         files[path+".apx2"]=v;
     }
-    Ap01VfsOps io(){Ap01VfsOps ops{};ops.context=this;ops.open=open;ops.close=close;ops.read=read;ops.size=size;return ops;}
+    Ap01VfsOps io(){Ap01VfsOps ops{};ops.context=this;ops.open=open;ops.close=close;ops.read=read;ops.size=size;
+        ops.exists=[](void *p,const char *path){auto &s=*(Disk*)p;assert(s.worker);return int(s.files.count(path));};
+        ops.write=[](void *p,int fd,const void *data,size_t n){auto &s=*(Disk*)p;assert(s.worker&&fd==10&&s.current);
+            auto b=(const uint8_t*)data;s.current->assign(b,b+n);return s.scenario==20?-1:int(n);};return ops;}
 };
 int main(int argc,char **argv){
     assert(argc==4);auto manifest=file(argv[1]);auto real=file(argv[2]),peer=file(argv[3]);
@@ -167,5 +171,55 @@ int main(int argc,char **argv){
         }
         assert(disk.opens==disk.closes);
     }
+    for(unsigned fault=0;fault<4;++fault){
+        ap01ModelV3={};starts=0;mode=0;instances[0]=Instance{};instances[1]=Instance{};
+        Store backend;Disk disk;disk.add(real);disk.add(peer);
+        std::string path="/resource/app-store/manifests/";const char *hex="0123456789abcdef";
+        for(unsigned i=32;i<64;++i){path+=hex[manifest[i]>>4];path+=hex[manifest[i]&15];}
+        if(fault!=3)disk.files[path+".amf3"]=manifest;
+        Ap01SetRecordV3 record{};record.sequence=1;record.phase=Ap01SetPhaseV3::SwitchPending;
+        for(unsigned i=0;i<8;++i)record.newVersion|=uint64_t(manifest[16+i])<<(i*8);
+        if(fault==2)++record.newVersion;
+        memcpy(record.newDigest,manifest.data()+32,32);record.mac[0]=1;record.transaction[0]=1;record.requestDigest[0]=1;
+        strcpy(record.principal,"owner");record.changedMask=record.readyMask=3;record.changedBytes=real.size()+peer.size();
+        uint8_t bytes[320];assert(ap01EncodeSetRecordV3(record,bytes));
+        disk.files["/resource/app-store/update.0"]={bytes,bytes+320};
+        Ap01SetJournalV3 journal(disk.io(),record.mac);assert(journal.load()==Ap01SetJournalResultV3::Ok);
+        Ap01SetSelectorV3 selector(journal,29);
+        Ap01NativeAppFileBootV3 boot(29,disk.io(),{&backend,nullptr,Store::reserve,Store::publish},limits,1u<<22);
+        assert(boot.set().shared().bindWindow((void*)1,ap01ModelStockV3));
+        assert(boot.set().shared().startMaintenance());
+        if(fault==1)disk.scenario=20;
+        auto selected=boot.stageSelected(selector);
+        assert(!starts&&!backend.reserves&&disk.opens==disk.closes);
+        assert(selected.mode==(fault==0?Ap01SetBootModeV3::Trial:fault==1?Ap01SetBootModeV3::Maintenance:Ap01SetBootModeV3::Rollback));
+        if(fault==0)assert(journal.current()->phase==Ap01SetPhaseV3::TrialStarted);
+        if(fault==1)assert(!journal.current());
+        if(fault>=2)assert(journal.current()->phase==Ap01SetPhaseV3::RollbackStarted&&!selected.version);
+        disk.worker=false;disk.files.clear();
+        Ap01NativeAppSharedV3::poll(&boot.set().shared());
+        assert(starts==(fault==0?2u:0u));assert(boot.set().writesDrained());
+        if(fault==0){
+            disk.worker=true;
+            for(unsigned second=0;second<=30;++second){
+                Ap01NativeAppSharedV3::poll(&boot.set().shared());boot.monitor(uint32_t(ap01ModelV3.now));
+                auto decision=boot.healthSelected(selector,uint32_t(ap01ModelV3.now));
+                assert(decision==(second==30?Ap01SetHealthDecisionV3::Approved:Ap01SetHealthDecisionV3::Waiting));
+                for(auto &instance:instances)assert(instance.api->writes_allowed(instance.context)==int(second==30));
+                ap01ModelV3.now+=1000;
+            }
+            assert(journal.current()->phase==Ap01SetPhaseV3::Succeeded&&journal.current()->cleanupPending);
+            auto &gate=boot.set().shared().transactionGate();
+            assert(gate.hold(true));
+            assert(boot.healthSelected(selector,uint32_t(ap01ModelV3.now))==Ap01SetHealthDecisionV3::Approved);
+            assert(gate.held()&&!gate.writable());
+            assert(gate.hold(false)&&!gate.writable());
+            assert(boot.healthSelected(selector,uint32_t(ap01ModelV3.now))==Ap01SetHealthDecisionV3::Approved&&gate.writable());
+            ap01ModelV3.now+=5001;boot.monitor(uint32_t(ap01ModelV3.now));
+            assert(boot.healthSelected(selector,uint32_t(ap01ModelV3.now))==Ap01SetHealthDecisionV3::Maintenance);
+            assert(boot.set().writesDrained());
+        }
+    }
+    puts("journal-selected files: real package preflight, durable trial before UI execution, lost ACK denial, version mismatch/missing candidate -> empty rollback passed");
     puts("native collection: Manifest preflight -> per-App C tables -> shared host; root rebuild, partial failure retention, maintenance, reader ownership and 12 worker-file staging scenarios passed (host entries)");
 }

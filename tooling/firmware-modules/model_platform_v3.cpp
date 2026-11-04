@@ -19,6 +19,8 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
 }
 bool Ap01NativeServices0041::listening() const{return bool(state)&&ap01ModelV3.listening;}
 uint32_t Ap01NativeServices0041::heartbeat() const{return uint32_t(ap01ModelV3.now);}
+bool Ap01NativeServices0041::tryAppOperation(){return !ap01ModelV3.busy;}
+void Ap01NativeServices0041::endAppOperation(){}
 bool Ap01NativeServices0041::busy() const{return ap01ModelV3.busy;}
 namespace ap01_native0041 {
 uint64_t nowMs(){return ap01ModelV3.now;}

@@ -77,7 +77,22 @@ bool Ap01Maintenance0041::manualAuth(const Ap01HttpRequest &request, uint64_t no
 }
 
 Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_t now) {
-    Ap01HttpReply reply;tick(now);
+    bool observation=!strcmp(request.method,"GET")&&(!strcmp(request.path,"/health")||!strcmp(request.path,"/api/maintenance/status"));
+    if(!observation&&port.enterOperation){
+        if(operationHeld||!port.leaveOperation||!port.enterOperation(port.context)){
+            Ap01HttpReply reply;error(reply,409,"maintenance_busy","platform_operation");return reply;
+        }
+        operationHeld=true;
+    }
+    if(!observation)tickLocked(now);
+    return handleLocked(request,now);
+}
+void Ap01Maintenance0041::afterResponse(bool sent){
+    if(operationHeld||!port.enterOperation){if(firmware)firmware->afterResponse(sent);}
+    if(operationHeld){operationHeld=false;port.leaveOperation(port.context);}
+}
+Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,uint64_t now) {
+    Ap01HttpReply reply;
     if(!strncmp(request.path,"/api/app/",9)) {
         if(!manualAuth(request,now,reply))return reply;
         if(!port.appUpdate){error(reply,501,"app_install_unavailable","maintenance_router");return reply;}
@@ -134,12 +149,25 @@ Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_
             runtime["app_index"]=status.app_index;runtime["sampled_at_ms"]=status.sampled_at;
             auto health=runtime["health"].to<JsonArray>();
             for(unsigned i=0;i<status.count&&i<AP01_MANIFEST_APPS_V3;++i)health.add(status.health[i]);
-            runtime["automatic_reboot"]=false;
+            const char *reboots[]={"idle","pending","invoked","failed"};
+            auto reboot=uint32_t(status.reboot);
+            runtime["automatic_reboot"]=status.reboot==Ap01RebootStateV3::Pending||status.reboot==Ap01RebootStateV3::Invoked;
+            runtime["reboot_state"]=reboot<4?reboots[reboot]:"unknown";
+            const char *journals[]={"ok","empty","invalid","corrupt","io","unknown","legacy","unsupported"};
+            runtime["journal_result"]=status.journal_result<8?journals[status.journal_result]:"not_loaded";
+            runtime["journal_phase"]=status.journal_phase;
         }
         reply.status=200;encode(out,reply);return reply;
     }
     error(reply,404,"unsupported_endpoint","maintenance_router");return reply;
 }
 void Ap01Maintenance0041::tick(uint64_t now) {
+    if(port.enterOperation){
+        if(operationHeld||!port.leaveOperation||!port.enterOperation(port.context))return;
+        tickLocked(now);port.leaveOperation(port.context);return;
+    }
+    tickLocked(now);
+}
+void Ap01Maintenance0041::tickLocked(uint64_t now) {
     if(firmware){firmware->tick(now);gate.store(firmware->blocksBusiness(),std::memory_order_release);}
 }

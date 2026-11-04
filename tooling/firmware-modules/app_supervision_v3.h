@@ -2,12 +2,15 @@
 #include "app_abi_v3.h"
 #include "app_manifest_v3.h"
 #include <atomic>
+#include "app_reboot_v3.h"
 
 enum class Ap01SupervisorStateV3:uint32_t {Starting,Healthy,WindowAbsent,Fault};
 enum class Ap01SupervisorFaultV3:uint32_t {None,Boot,StartupTimeout,MaintenanceStale,UiStale,AppFailed,AppTimeout,Worker};
 struct Ap01SupervisorSnapshotV3 {
     Ap01SupervisorStateV3 state;Ap01SupervisorFaultV3 fault;
     uint32_t app_index,count,sampled_at;int32_t health[AP01_MANIFEST_APPS_V3];
+    Ap01RebootStateV3 reboot=Ap01RebootStateV3::Idle;
+    uint32_t journal_result=UINT32_MAX,journal_phase=0;
 };
 // UI owns publish(); a separate platform worker owns tick(). HTTP only reads.
 // Faults latch until reboot. This observer never calls App code or reboots.

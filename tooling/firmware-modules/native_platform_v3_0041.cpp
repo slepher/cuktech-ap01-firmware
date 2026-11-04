@@ -1,4 +1,4 @@
-// D2 Manifest boot composition. Hardware executable-memory admission is not
+// Journal-selected Manifest boot. Hardware executable-memory admission is not
 // established: the default backend refuses reserve, leaving maintenance alive.
 // The model supplies an explicit backend to the same resident platform class.
 #include "native_app_file_boot_v3.h"
@@ -21,8 +21,32 @@ void *start(void *p){
     if(!platform.set().shared().startMaintenance()){platform.workerFailed();return nullptr;}
     // Listening is asynchronous; bounded wait, no App loading before it succeeds.
     for(unsigned i=0;i<500&&!platform.set().shared().listening();++i)ap01_native0041::pause(10);
-    platform.stage("/resource/app-store/current.amf3");
-    return nullptr;
+    if(!platform.set().shared().listening()){platform.workerFailed();return nullptr;}
+    char text[13];uint8_t mac[6]{};
+    if(!ap01_native0041::wifiMac(text)){platform.workerFailed();return nullptr;}
+    for(unsigned i=0;i<12;++i){
+        char c=text[i];int n=c>='0'&&c<='9'?c-'0':c>='A'&&c<='F'?c-'A'+10:c>='a'&&c<='f'?c-'a'+10:-1;
+        if(n<0){platform.workerFailed();return nullptr;}
+        mac[i/2]=uint8_t((mac[i/2]<<4)|n);
+    }
+    Ap01SetJournalV3 journal(ap01RomVfs(),mac);
+    bool admitted=false;
+    for(unsigned i=0;i<500&&!admitted;++i){admitted=platform.set().shared().tryAppOperation();if(!admitted)ap01_native0041::pause(10);}
+    if(!admitted){platform.workerFailed();return nullptr;}
+    auto loaded=journal.load();platform.journalStatus(loaded,journal);
+    if(loaded!=Ap01SetJournalResultV3::Ok&&loaded!=Ap01SetJournalResultV3::Empty){platform.set().shared().endAppOperation();platform.workerFailed();return nullptr;}
+    Ap01SetSelectorV3 selector(journal,platform.set().shared().bootIdentity());
+    platform.stageSelected(selector);platform.set().shared().endAppOperation();
+    for(;;){
+        uint32_t now=uint32_t(ap01_native0041::nowMs());
+        if(platform.set().shared().tryAppOperation()){
+        platform.healthSelected(selector,now);
+        platform.journalStatus(journal.writable()?loaded:Ap01SetJournalResultV3::Unknown,journal);
+        platform.dispatchReboot(now,nullptr,[](void *){ap01_native0041::reboot();});
+        platform.set().shared().endAppOperation();
+        }
+        ap01_native0041::pause(100);
+    }
 }
 }
 extern "C" __attribute__((used))

@@ -15,6 +15,8 @@ public:
     Ap01NativeServices0041();
     ~Ap01NativeServices0041();
     bool start(const Ap01MaintenanceBridge0041 &,uint64_t boot,void *healthContext,bool (*healthy)(void *));
+    bool tryAppOperation();
+    void endAppOperation();
     bool busy() const;
     bool listening() const;
     uint32_t heartbeat() const;

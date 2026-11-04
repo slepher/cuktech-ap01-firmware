@@ -117,9 +117,9 @@ def main():
         if abi[0]==3:
             runtime_metadata['platform_abi']={'version':3,'context_bytes':abi[1],'shared_pointer_offset':abi[2],'shared_owner_bytes':abi[3]}
         if audit.get('boot_app_v3'):
-            runtime_metadata['app_loader']={'abi_major':3,'manifest_path':'/resource/app-store/current.amf3',
+            runtime_metadata['app_loader']={'abi_major':3,'manifest_path':'/resource/app-store/manifests/<content-digest>.amf3',
                 'package_path':'/resource/app-store/packages/<content-digest>.apx2','staging_bytes':1<<22,
-                'file_io_executor':'worker','app_start_executor':'ui','journal_selection':False,
+                'file_io_executor':'worker','app_start_executor':'ui','journal_selection':True,
                 'maintenance_before_app':True,'hardware_backend':'unavailable','executable_backend_verified':False}
     else:
         runtime_metadata={'runtime':'application',

@@ -36,8 +36,12 @@ public:
     bool bindWindow(void *,void (*)(void *));
     bool startMaintenance();
     bool listening()const{return services.listening();}
+    bool tryAppOperation(){return services.tryAppOperation();}
+    void endAppOperation(){services.endAppOperation();}
+    uint64_t bootIdentity()const{return bootId;}
     uint32_t maintenanceBeat()const{return services.heartbeat();}
     bool attachedWindow()const{return windowPresent.load(std::memory_order_acquire);}
+    Ap01AppWriteGateV3 &transactionGate(){return writeGate;}
     bool writes(bool allow){return writeGate.writes(allow);}
     bool writesDrained()const{return writeGate.drained();}
     void appStatus(void *context,void (*snapshot)(void *,Ap01SupervisorSnapshotV3 &)){services.appStatus(context,snapshot);}

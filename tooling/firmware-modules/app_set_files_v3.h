@@ -25,6 +25,7 @@ public:
     Ap01SetFilesResultV3 stage(const char *,const uint8_t *expected,const Ap01ManifestLimitsV3 &,uint32_t stagingBytes);
     Apx2Reader reader(){return {this,manifestSize,readManifest};}
     const uint8_t *digest()const{return manifest.digest;}
+    uint64_t version()const{return manifest.sequence;}
     Ap01ManifestPackagesV3 packages(){return {this,open,close};}
     void discard();
 };

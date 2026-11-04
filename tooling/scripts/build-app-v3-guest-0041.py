@@ -10,7 +10,7 @@ if bool(a.manifest)!=bool(a.peer):p.error('--manifest and --peer must be supplie
 if not out.is_dir() or any(out.iterdir()):p.error('Precreate empty output directory')
 tool=native.tools(a.tool_prefix)
 names=['probe_app_v3_guest.cpp','native_app_platform_v3.cpp','app_boot_v3.cpp','app_binding_v3.cpp','app_files_v3.cpp','app_network_v3.cpp','apx2.cpp','native_sha256_0041.cpp','model_platform_v3.cpp','runtime_libc_0041.cpp','app_runtime_format_v2.cpp','screen_host_0041.c']
-if a.manifest:names+=['native_app_set_v3.cpp','app_set_boot_v3.cpp','app_manifest_v3.cpp','app_set_files_v3.cpp','native_app_file_boot_v3.cpp','app_supervision_v3.cpp']
+if a.manifest:names+=['native_app_set_v3.cpp','app_set_boot_v3.cpp','app_manifest_v3.cpp','app_set_files_v3.cpp','native_app_file_boot_v3.cpp','app_supervision_v3.cpp','app_set_journal_v3.cpp','app_set_selection_v3.cpp']
 objects=[]
 for name in names:
     obj=out/(name+'.o');objects.append(str(obj))

@@ -96,7 +96,7 @@ def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=Non
         sources += [MODULES/name for name in ('app_boot_v3.cpp','app_binding_v3.cpp','app_files_v3.cpp',
                                              'app_network_v3.cpp','native_app_platform_v3.cpp',
                                              'app_manifest_v3.cpp','app_set_boot_v3.cpp','native_app_set_v3.cpp',
-                                             'app_set_files_v3.cpp','native_app_file_boot_v3.cpp','app_supervision_v3.cpp')]
+                                             'app_set_files_v3.cpp','native_app_file_boot_v3.cpp','app_supervision_v3.cpp','app_set_journal_v3.cpp','app_set_selection_v3.cpp')]
     if screen_host_probe:
         sources.append(MODULES / 'test_screen_peer_0041.cpp')
     if len({p.stem for p in sources}) != len(sources):

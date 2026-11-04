@@ -16,6 +16,8 @@ struct Ap01MaintenancePort0041 {
     // Firmware-owned installation handler; never a pointer into unloadable App code.
     Ap01HttpReply (*appUpdate)(void *,const Ap01HttpRequest &,const char *,uint64_t)=nullptr;
     void (*appStatus)(void *,Ap01SupervisorSnapshotV3 &)=nullptr;
+    bool (*enterOperation)(void *)=nullptr;
+    void (*leaveOperation)(void *)=nullptr;
 };
 class Ap01Maintenance0041 {
     LittleFSClass &fs;
@@ -27,6 +29,9 @@ class Ap01Maintenance0041 {
     unsigned manualFailures=0;
     uint64_t manualRetryAt=0;
     std::atomic<bool> gate{false};
+    bool operationHeld=false;
+    void tickLocked(uint64_t);
+    Ap01HttpReply handleLocked(const Ap01HttpRequest &,uint64_t);
     bool manualAuth(const Ap01HttpRequest &,uint64_t,Ap01HttpReply &);
 public:
     Ap01Maintenance0041(LittleFSClass &,const Ap01MaintenancePort0041 &,
@@ -34,7 +39,7 @@ public:
     bool begin(uint64_t now=0);
     bool active() const {return gate.load(std::memory_order_acquire);}
     void tick(uint64_t);
-    void afterResponse(bool sent) {if(firmware)firmware->afterResponse(sent);}
+    void afterResponse(bool sent);
     Ap01HttpReply handle(const Ap01HttpRequest &,uint64_t);
 };
 inline bool ap01ServeMaintenanceHttp0041(Ap01Maintenance0041 &service,const Ap01Stream &io,uint64_t now,uint64_t deadline) {
