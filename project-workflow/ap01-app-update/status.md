@@ -1,5 +1,23 @@
 # 当前状态
 
+2026-11-05 TCP/RV32 闭环：Python 原客户端经回环 TCP 完成五事务（首装失败空回退、同包重装、单更、批更、整集回退）；每事务一次 commit，重启执行期间 26 次查询原事务，实际 RV32 日志/运行快照导入后由生产服务清理并返回，boot=13/14/15/16/18，终态 cleanup_pending=false。报告 `build/app-install/set-rv32-tcp-v3-report-02.json`，SHA `436ca005efa953a19c51567a7caa759745fa1d47c750eba6471bd04cc4f9ebca`。实际 App 在 james.local Docker 双基址执行，宿主不注入健康。Bridge UI/Rust 与真实 RV32 的同次闭环、原生 HTTP/原厂启动仍待验证；未操作实机。
+
+2026-11-04 原客户端/RV32 闭环：实时 HTTP commit 快照交 james.local Docker 双基址运行，实际日志和 boot.runtime() 快照回到原生产 service/cleanup/HTTP；Python 客户端五事务（首装失败空回退→同包重装→单更→批更→整集回退）通过，每事务 commit 一次，丢回复原事务恢复，boot=13/14/15/16/18，最终清理完成。客户端逐字段核验实际运行身份/健康，宿主不注入健康。权威报告 `set-rv32-closure-v3-report-02.json`，SHA `157e8941c6d475415f87a2fcd8179960f5e7f1526bfaa705daf41cf7b61ff84e`。HTTP 传输仍为管道，TCP/Bridge、完整 RV32 HTTP/原厂引导和资源/回收目标仍开放，未操作实机。
+
+2026-11-04 空集合回退：HTTP/CLI --fail-first 五事务通过（首装失败清理→相同 Manifest 新 ID 重装→单更→批更→整集回退）；RV32 同 VM fail-trial→reset→empty-rollback 两基址通过，无 App 执行池/线程/页面，健康空集合持久 FailedRolledBack，trial/rollback 各一。输入/输出摘要已核验，报告 `set-empty-retry-tcp-v3-report.json` 和 `d4-empty-reset-run01.json`。两段未串为 RV32 终态返回客户端的连续闭环，其他资源/回收目标仍开放，未操作实机。
+
+2026-11-04 同 VM reset：runner 复用 QMP system_reset 与 ELF BSS 初始化，实际导出日志逐字节传递；候选失败→旧集合成功、候选失败→旧集合失败→维护两条链在 james.local Docker 双基址通过。reset PC=0xa0000000，三阶段各基址同 PID、两次 reset，所有输入/输出指纹已核验；错误日志连接在 reset 前拒绝。报告 `d4-reset-rollback-run01`、`d4-reset-maintenance-run01`、负向 `d4-reset-mismatch-run01`。不是原厂 Boot ROM/reboot 寄存器验证，HTTP/客户端闭环、空集合再安装及资源/回收目标仍开放，未操作实机。
+
+2026-11-04 RV32 维护兜底：旧集合真实 worker 失败后持久 RecoveryRequired，再以该日志第三次启动，双基址均无 App 线程/页面/执行池分配，模型维护监听保留；重复 poll/stage 不改变双槽字节或计数。报告 `d4-http-rollback-fail-run01`、`d4-http-maintenance-run01`，输入/输出指纹已核验。runner 已区分无 App 维护与真实执行。仍未覆盖真实救援网络、同 VM reset、空集合再安装和客户端闭环，未操作实机。
+
+2026-11-04 RV32 回退：HTTP 第四事务快照启动真实候选，停滞实际 worker 触发生产监督并写 RollbackPending；原样导出双日志交给下一 CPU 启动，按 oldDigest 加载完整旧双 App，健康后 FailedRolledBack。james.local Docker 两阶段均双基址通过，trial/rollback 各消耗一次，旧两包+Manifest 与前次成功集合逐项同 SHA；正常 Succeeded 日志导出也通过。报告 `d4-http-fail-run01`、`d4-http-rollback-run01`、`d4-http-export-run01`，详见 QEMU 记录。同 VM 复位、RV32 结果返回客户端/清理及维护兜底仍开放，未操作实机。
+
+2026-11-04 HTTP→RV32 文件桥接：新增精确 commit 前重启快照导出及 --snapshot guest 构建。宿主 102896 检查/四链 TCP 通过；首装、A 单更、A+B 批更快照在 james.local Docker 各双基址执行真实两 App/三线程及持久健康提交通过，六份输入和源快照摘要一致，单更 B 包不变。报告 `qemu-james/d4-http-run00/01/02.json`。HTTP 仍在宿主、QEMU 为独立新 CPU，回退再启动/结果返回客户端及同 VM 重启仍未完成，未操作实机。
+
+2026-11-04 RV32 当前日志回归：james.local Docker `d3-journal2-run01.json` 两基址通过，当前 AUT3 format 2 接收偏移持久读回、真实双 App/三 worker 与 runtime 完整集合身份均验证，五项输入指纹一致。guest SHA `54312d89a28958980f55863833270f6bf8c7149a1f0ef41774be67dfc53ec26a`。仍是预置 SwitchPending/内存 VFS，HTTP→CPU 重启→回退重载整链未完成；未操作实机。
+
+2026-11-04 Bridge 暂存：新增 128 MiB 总量限制及无活动回执时的 24 小时过期清理；活动/损坏回执保留缓存，原始文件不参与清理。5 项应用测试、职责边界与 UI/Rust/C++ 四链复验通过。模型与测试 IPC 边界不变，未操作实机。
+
 2026-11-04 D4 UI/Rust/C++：生产页面函数经测试 IPC 调用真实 Rust 暂存/准备/worker/查询/归档，连续完成真实双包首装、单更、批更、失败整集回退。每条丢一次回复、重开页面恢复原事务，commit 各一次，回退不误报成功；报告 `build/app-install/set-ui-rust-tcp-v3-report.json`（交叉命令用 `--rust-ui`）。DOM/Tauri IPC 与固定测试端点由适配器代替，原生 IPC/文件对话框仍未验，健康/CPU 重启仍为模型。其他网络变化、资源/GC/RV32 目标开放，未操作实机或生产 Bridge。
 
 2026-11-04 D4 Bridge UI：AP01 卡片支持完整清单/单个或多个包、校验后显式 run、逐包进度/复用、取消/原事务恢复/归档。Node、原生 WKWebView 88 个窄/宽场景及截图审阅通过，Rust 暂存/应用回归与跨仓职责检查通过。页面轮询只读本地任务；未重建运行 Bridge。UI IPC 为模拟，UI→Rust/C++ 同次全链、自动发现网络变化、桌面暂存清理和平台资源/GC/RV32 待办仍开放，未访问实机。

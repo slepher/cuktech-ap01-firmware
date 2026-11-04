@@ -159,3 +159,112 @@ guest 11992 字节，SHA `6c1e06cf13a57bc9101ad68f4f5b02620f658be536df9a7a908a46
 - 用实际 supervisor/healthSelected 连续观察健康，观察前写门关闭；实际日志保存 Succeeded 后才开放写入，真实业务 worker 初始化一次。重新 load 双记录仍为 Succeeded。逐个冻结真实线程保留索引健康检查，最终平台故障锁存并撤销写许可。
 
 边界：预置事务不是 HTTP 上传/commit；日志是 guest 中的 2×320 B 可写模型槽，VFS write 的同步由模型约定，不证明真实 Flash 耐久性。没有模拟整机复位或回退包实际重载；AUT3 掉电/回退决策另有宿主测试。ROM 网络/LVGL/维护、调度与时间仍为模型；未启动完整 ROM、未调用真实 reboot、未触碰实机。原有 `d2-resume-run01` 仍保留显式写许可与恢复失败测试，本次是新增持久批准路径。
+
+## 2026-11-04：当前 AUT3 format 2 与运行集合快照
+
+输入 `build/app-install/d3-journal2-guest-01/`，取回报告 `build/app-install/qemu-james/d3-journal2-run01.json`。沿用已核验的 james.local Docker 镜像 `sha256:02aba83405eefd37e9c529a84ae0e26cf7d8e79a7749dc2d48e991fe8101c0cc` 和前述引擎/support/runner；容器 network none、只读根和输入、512 MiB/2 CPU。未在远端宿主安装依赖。
+
+guest 由当前生产源码重新构建，SHA256 `54312d89a28958980f55863833270f6bf8c7149a1f0ef41774be67dfc53ec26a`。新增 format=2、两包完整 received 偏移编码和 Succeeded 重载保留断言，以及 runtime() 的 started=2、complete、健康状态、Manifest 版本/摘要和各包运行摘要核对。既有真实两 App/三 worker/窗口重建/连续健康批准/写许可/逐线程停滞和栈哨兵检查保留。0xa8000000、0xa8040000 均返回 0，保存寄存器保持；五份输入摘要与本地一致。
+
+构建命令：`python3 -B tooling/scripts/build-app-v3-guest-0041.py --out build/app-install/d3-journal2-guest-01 --package build/app-install/d2-business-resume-01/app.apx2 --manifest build/app-install/d2-resume-set/set.amf3 --peer build/app-install/d2-peer-beats-02/app.apx2 --tool-prefix build/s1/toolchains/xpack-riscv-none-elf-gcc-12.5.0-1/bin/riscv-none-elf-`（输出目录须预建且为空）。执行复用上述 Docker 挂载，运行 `/input/test-app-set-qemu-0041.py --direct-v3`，fixture 指向新输入目录、output 指向新报告。
+
+边界保持：仍预置 SwitchPending，内存双日志、模型 ROM I/O/时间/协作线程；尚未串起 HTTP 安装、CPU 重启、回退集合重载和垃圾清理。没有完整原厂 ROM 启动或实机操作。此前 format 1 的报告仅作历史证据，本报告覆盖当前 format 2 启动/健康路径。
+
+## 2026-11-04：HTTP 提交文件驱动 RV32 启动
+
+新增宿主测试 peer 的 `SNAPSHOT` 只读命令：在响应 commit 后、下一次推进模型重启时钟之前，导出模型文件的精确字节。`test-app-set-client-http-v3.py --snapshot-dir <预建空目录>` 保存原事务响应、文件映射及指纹；不修改服务或伪造 SwitchPending。四链 HTTP 回归通过，导出 `build/app-install/d4-http-snapshots-01/commit-{0..3}.json`，报告 `build/app-install/set-snapshot-tcp-v3-report.json`。新版 C++ 宿主 ASan/UBSan 102896 检查及相关 RV32 编译通过。
+
+`build-app-v3-guest-0041.py --snapshot <commit.json> --out <预建空目录> --tool-prefix <既有工具前缀>` 从双 AUT3 format 2 日志选取最新记录，核对 CRC/事务 ID/阶段，再按持久摘要选 AMF3 与两包并做完整包校验。guest 直接载入这两份日志（0xa81ff000 的长度头+双槽），不再编码初始记录；实际生产 journal/selector 消耗试运行，真实两 App/三线程启动、全体健康后持久 Succeeded 并开放写入。暂存文件/包仍由模型 VFS 提供。
+
+前三份（首装、A 单更、A+B 批更）已生成 `d4-http-guest-00/01/02`，沿用 james.local 的锁定 Docker 镜像、QEMU/support/runner 执行。`build/app-install/qemu-james/d4-http-run00/01/02.json` 各两个基址返回 0、栈/保存寄存器通过。六项输入（guest、主包、构建报告、Manifest、peer、双日志）及原始快照指纹均与本地一致；单更 B 包 SHA 与首装相同。共同 guest SHA256 `2f3b12847d817fad7fa8dabb1dd9aeff24944d22405978bb20209b1318e7cd79`。
+
+准确边界：HTTP 服务在宿主运行，落盘为模型；QEMU 是独立全新 CPU 进程，尚不是同一 VM 内 HTTP→硬件 reboot 的连续执行。四次宿主事务的前置成功仍由宿主健康模型建立；QEMU 健康结果还没有反向交给客户端决定下一事务。第 4 份失败快照已捕获，但候选失败→CPU 再启动→旧集合重载尚未串联，不能宣称完整端到端或回退闭环完成。无实机访问、宿主依赖安装或生产 Bridge 启停。
+
+## 2026-11-04：RV32 候选失败日志→旧集合实际重载
+
+构建入口增加 `--boot-mode fail-trial` 和 `--boot-mode rollback --resume-journals <上次导出文件>`，均要求原始 `--snapshot`。失败模式先执行真实候选双 App/三线程，再跳过实际业务 worker 调度，保持 UI 与另外两线程推进；生产 supervisor 判定 AppFailed，healthSelected 写入 RollbackPending 并要求重启，写门保持关闭。guest 导出生产 VFS 模型实际写入的双 AUT3 槽，不由 Python 制造回退记录。
+
+runner 新增按构建报告固定地址 0xa81ff000/648 B 导出双槽，每个基址独立保存并报告 SHA256；远端新文件为 `/input/test-app-set-resume-qemu-0041.py`，SHA `0320f1d83ca2bbd462f51c6e33cd73dee0c44e0adc3937fcba24f75d215cfa75`，原 runner 保留。james.local Docker 镜像/引擎/support 及资源隔离沿用已核验基线。
+
+- 失败输入 `d4-http-fail-guest-01` 使用第 4 份 HTTP commit 快照；guest SHA `cf21c953dc436bdd61af5bb759459736956365760c2704cfba21a4372ac54f30`。`qemu-james/d4-http-fail-run01.json` 两基址均通过，输出日志 SHA 均为 `e3bab0c23de4a0ff615224640a6d6b9cbe9f73bba7a45abdb4da97311605e5fb`，phase=RollbackPending、trialStarts=1、rollbackStarts=0。
+- 回退输入 `d4-http-rollback-guest-01` 使用上述原样日志以及同一 HTTP 快照中的 oldDigest/oldVersion 对应文件。guest SHA `87cb3a5f5734e0a98fde613b34e6b2c60f4b077d2379fb33e96b8fab212e9891`。`qemu-james/d4-http-rollback-run01.json` 两基址均实际运行旧双 App/三线程、页面/窗口重建和连续健康批准，持久 FailedRolledBack 后开放写许可。两基址日志 SHA 均为 `5570bb2c46dcd1861e3f434a3fd385ac8e12998fe8ace2541e14ee7f2fba82f5`，trialBoot=42/rollbackBoot=43，两个消耗计数均为 1，cleanupPending=1。
+- 输入六项及输出日志指纹已核对；旧 Manifest、主包、peer 与第 3 次成功批更的三个文件逐一同 SHA，证明没有混合候选/旧包。
+
+边界：这是两次独立 QEMU CPU 进程之间传递真实模型日志的回退加载，未调用同一 VM 的硬件复位，未接生产 Flash。终态日志导出时先保留健康批准结果，随后原有线程停滞回归仍运行；不能把导出结果当作退出时实时健康。客户端终态/清理还没有接收此次 RV32 结果，回退失败再进入维护、无旧集合首装失败等完整链路继续开放。未操作实机。
+
+相同导出机制的正常批更回归 `d4-http-export-guest-01` / `qemu-james/d4-http-export-run01.json` 双基址通过；guest SHA `3b462de3c1ce7d17fcac25daea49471a136330ef740c26f8866d895a6c397fd0`，终态日志 SHA `1b4af2330064a0b873b59453daa1d554fd31d0ae8f07d256697460a7bc916110`。六项输入与日志校验通过，Succeeded/trialStarts=1/rollbackStarts=0/cleanupPending=1，未要求第二次正常启动。
+
+## 2026-11-04：回退也失败→第三次启动维护
+
+新增 `--boot-mode fail-rollback`：使用实际候选失败导出的 RollbackPending 日志，加载并执行旧双 App；真实旧 worker 停滞后，生产监督/selector 持久 RecoveryRequired，返回 Maintenance，写门保持关闭。`--boot-mode maintenance` 使用该日志启动 boot=44，stageSelected 不尝试任何 App，重复 poll/stage 5 次仍为 Maintenance，taskCount/mounts=0、可执行池 cursor 不动，模型维护监听仅启动一次；双槽内容、序号和消耗计数均不变。
+
+james.local Docker 镜像/引擎/support 及隔离不变。新 runner `/input/test-app-set-maintenance-qemu-0041.py` SHA `929535b54cdbfbf809238dbbe35468d31432cdb6a504cf29231d04b495aaa004`，维护模式报告明确 `production_apx2_loader_executed=false`、`real_abi_v3_app_executed=false`、`no_app_maintenance_verified=true`，不把零 App 执行误报为真实集合启动。
+
+- `d4-http-rollback-fail-guest-01` / `qemu-james/d4-http-rollback-fail-run01.json` 两基址通过；guest SHA `03b9a96341065929af5368a36e87d4282cd6e91ae1e13c462f71a7f84c37b58b`。
+- `d4-http-maintenance-guest-01` / `qemu-james/d4-http-maintenance-run01.json` 两基址通过；guest SHA `10d41d3227a15f7c32166db566f2b75e048f9db5a1b229f888a234c07e041a5b`。
+- 两阶段输入六项与输出日志 SHA 已核对；RecoveryRequired 日志 SHA `b421a3ea443be65d2ec966ed8e0b27f146c4e74d706f89b315763f376d8b159a`，trialBoot=42/rollbackBoot=43、计数均 1。第三次启动输入/输出双日志逐字节相同。
+
+复现沿用 snapshot 构建命令；fail-rollback 的 resume-journals 指向 `d4-http-fail-run01.a8000000.journals.bin`，maintenance 指向 `d4-http-rollback-fail-run01.a8000000.journals.bin`。两个基址的上游日志一致，均已核验。
+
+边界：维护监听仍为模型，不证明真实网络救援/完整原厂 UI；三次执行是独立 CPU 进程的文件传递，不是同 VM 硬件 reset。RV32 原生 HTTP 与客户端结果闭环、空集合首装失败后的再安装、设备资源预算/孤儿清理等继续开放。未安装远端宿主依赖、未部署或操作实机。
+
+## 2026-11-04：同 VM QMP 复位链
+
+runner 增加可重复的 `--next-fixture`（最多总共三阶段），复用既有 support.QMP 的有界命令，不启动新的模拟器来替代后续启动。每阶段执行实际 guest 后读出双日志，下一阶段必须与预期 journal 输入逐字节一致，否则在 reset 前拒绝；实际传入下一阶段的是刚读出的字节。随后取消断点、QMP `system_reset`、确认暂停和 PC 已回到 reset 地址，再装入下一阶段 guest/输入。构建报告增加 ELF `__guest_bss_start/end` 的 address/size；每次启动清零该 guest BSS，并恢复 .data 初值，避免把旧调度上下文带入新启动。
+
+当前 runner `/input/test-app-set-reset-qemu-0041.py` SHA `25c6208aeea65f538f06622c5e1c323b8e0df80a84f6a95c18be50221b3d16ad`。所有运行仍在 james.local 同一锁定 Docker 镜像/引擎/support 与原有隔离限制内。输入 `d4-reset-{fail-trial,rollback,fail-rollback,maintenance}-01` 均重新构建带 BSS 元数据。
+
+- `qemu-james/d4-reset-rollback-run01.json`：fail-trial → 一次 QMP reset → rollback；两个基址两阶段均返回 0，最终日志 FailedRolledBack 与此前一致。
+- `qemu-james/d4-reset-maintenance-run01.json`：fail-trial → reset → fail-rollback → reset → maintenance；两个基址三阶段均返回 0，第三阶段无 App 启动，RecoveryRequired 双日志不变。各基址两次 reset 保持同一 QEMU PID（6 / 10），PC 都为 `0xa0000000`。
+- `qemu-james/d4-reset-mismatch-run01.json`：故意将 fail-trial 输出接到 maintenance（需要 RecoveryRequired 而实际为 RollbackPending），按预期 `journal handoff mismatch`，无 reset/第二阶段执行；这是负向检查，不是成功运行报告。
+
+三个报告及每阶段输出日志已取回；逐一核对每个构建报告及其所有输入摘要、全部阶段输出摘要、日志传递字节、reset 次数/同 PID/reset PC。正常回退最终 SHA `5570bb2c46dcd1861e3f434a3fd385ac8e12998fe8ace2541e14ee7f2fba82f5`；维护 SHA `b421a3ea443be65d2ec966ed8e0b27f146c4e74d706f89b315763f376d8b159a`。
+
+复现：既有 Docker 命令的 runner 改为上述新文件，`--fixture-dir /input/d4-reset-fail-trial-01 --next-fixture /input/d4-reset-rollback-01`；维护链将 next 改为 `/input/d4-reset-fail-rollback-01` 再追加 `/input/d4-reset-maintenance-01`。每次输出用新名称。
+
+准确边界：现已验证同一模型 VM 的 CPU reset，复位后按测试引导加载新 guest/BSS，持久存储由宿主保存的实际模型槽模拟；不是完整原厂 Boot ROM 的启动路径，也不是原厂 reboot 寄存器/Flash 行为。HTTP 仍在宿主，QMP reset 由测试协调器触发，RV32 结果尚未闭环给原客户端或完成清理。此前“独立 CPU 进程传递”的记录保留为历史，本节补充同 VM 证据；不声称完整端到端/实机已验。
+
+## 2026-11-04：首次安装失败后的空集合与重装
+
+HTTP 测试增加 `--fail-first`（当前限 Python CLI）：在原四链前插入一次失败首装，随后以新 operation_id 重装完全相同的候选 Manifest/版本。`build/app-install/set-empty-retry-tcp-v3-report.json` 五事务通过，boot_id 为 13/14/15/16/18；首次终态 FailedRolledBack、runtime 为完整健康空集合（零摘要/版本/运行列表），cleanup_pending=false。相同 Manifest 的新事务安装成功后，继续 A 单更、A+B 批更、失败整集回退，清理均完成。已核对首次失败与重装 operation_id 不同、候选摘要相同；掉回复仍走原事务恢复。快照存放 `d4-empty-snapshots-01/commit-{0..4}.json`。
+
+RV32 构建新增 `--boot-mode empty-rollback`，要求上游真实失败日志且 oldVersion/digest 均为零。测试输入仍携带候选包以便统一 runner，但空回退不得读取/装载这些包或分配执行池。生产 stageSelected 跳过 Manifest 文件、保留维护监听，由监督器确认无 App 的健康集合，30 秒观察后持久 FailedRolledBack，trial/rollback 各一次、cleanupPending=1。runtime.started/count/version/digest 均为零，taskCount/mounts=0。
+
+james.local Docker 新 runner `/input/test-app-set-empty-qemu-0041.py` SHA `63ddfaf974fd419089f7b936e54c006256340cfeca86a2f5b9a6c8e00ea21fd5`，同既有镜像/引擎/support/隔离。`d4-empty-fail-guest-01` 的 guest SHA `7e6f8dbec8034415b947821834df4bfc2b427a87b6e7a7178f40375f669ba0db`，`d4-empty-rollback-guest-01` 为 `46e380b87548cdd06176f850259221d165a5d65acaab40982f9f59bf105fe1fc`。`qemu-james/d4-empty-reset-run01.json` 两基址均在同 VM 完成 fail-trial→QMP reset→empty-rollback，PC 复位到 0xa0000000，各阶段返回 0。输入/输出指纹已核对；终态双日志 SHA `c5e2188077bafa13e9c379cd670a8f7aca433bdb0806d89b5839a75638d20e9f`，old 集合身份为零、计数均 1。
+
+复现沿用现有命令：HTTP 四链命令加 `--fail-first --snapshot-dir build/app-install/d4-empty-snapshots-01`（须空目录）；RV32 fail-trial 输入用 commit-0，empty-rollback 的 resume-journals 用 `d4-empty-fail-run01.a8000000.journals.bin`；runner 用 `--fixture-dir /input/d4-empty-fail-guest-01 --next-fixture /input/d4-empty-rollback-guest-01`。
+
+边界：宿主 HTTP 已证明清理后同包重装，RV32 已证明同 VM 的空集合健康回退；尚未将 RV32 输出终态送回 HTTP 服务/客户端驱动后续重装，不合并声称一个连续端到端证据。Flash/原厂引导/网络仍为模型，未操作实机。
+
+## 2026-11-04：RV32 终态回到原 HTTP/CLI 事务
+
+guest 新增与双日志同一时刻的测试用 `ARV3` 运行快照（0xa81ff300，912 B，显式 LE 编码），来自 `boot.runtime()`：实际 boot ID、集合版本/摘要、启动数量、complete、监督健康/采样时间、逐 App ID/版本/摘要/健康与执行顺序。正常/回退健康批准时先导出，再执行原有后续故障回归；失败路径导出当时实际故障快照。该格式仅为测试跨架构桥，不是新增设备协议或持久 ABI。构建可指定 `--boot-id`，按原 HTTP boot_id+1/+2 递增，不再假定所有事务都使用 42/43。
+
+宿主 C++ 测试 peer 增加 `APPLY`：只接受当前 SwitchPending 原事务的 RV32 终态，核对 MAC/操作 ID/请求指纹、旧/新版本和摘要、接收偏移/掩码/总量、单次试运行及清理标记；再核对导出 runtime 的 boot ID、完整健康集合和持久 Manifest 各成员。该分支跳过宿主 selector/健康注入，以实际 runtime 提供生产 service.runtime()，随后由生产 service.tick()/cleanup/HTTP serializer 完成清理和结果报告。其他既有测试仍可使用宿主模型健康。
+
+新增协调脚本 `tooling/scripts/run-app-set-rv32-result-0041.py`：仅使用 james.local 的固定镜像 ID 和引擎 SHA，独立 UUID 远端输入/输出目录、只读输入、network none 与既有资源限制；不安装依赖。每次 commit 后用实时快照构建/上传 guest，实际运行双基址，核对报告/输入/日志/runtime 指纹以及双基址输出一致。失败事务先预跑生成下一阶段 fixture，再以同一 VM QMP reset 正式串起候选失败/回退；正式链实际输出返回原 peer。预跑属于测试准备，不是产品额外重启。
+
+`test-app-set-client-http-v3.py --rv32-results --fail-first` 连续五事务通过：首装失败回到空集合并清理、新 operation_id 重装相同 Manifest、A 单更且 B 不上传/身份不变、A+B 批更、候选失败整集回退。丢回复仍恢复原事务，每事务 commit 一次；客户端逐字段对照 RV32 runtime 的 boot ID、Manifest 版本/摘要、启动数量、每 App ID/版本/摘要/健康。最终 boot_id=13/14/15/16/18，全部 cleanup_pending=false，宿主不注入健康。
+
+权威报告 `build/app-install/set-rv32-closure-v3-report-02.json`，SHA `157e8941c6d475415f87a2fcd8179960f5e7f1526bfaa705daf41cf7b61ff84e`；输入和各次详细报告/输出位于 `build/app-install/d4-rv32-closure-02/`。五组实际日志/runtime/报告摘要均已核验。首轮 `...report.json` 已运行通过，但旧汇总字段误留 `app_instructions_executed=false`；修正汇总并加入客户端逐字段对照后重新运行的 `-02` 为当前证据。宿主 C++ ASan/UBSan 102896 检查及相关 RV32 编译通过，Python 四入口语法检查和 diff check 通过。
+
+复现（先创建新的空 snapshot-dir）：
+
+```sh
+python3 -B tooling/scripts/test-app-set-client-http-v3.py --rv32-results --fail-first \
+  --binary build/app-install/test-set-journal-v3 \
+  --manifest build/app-install/d2-resume-set/set.amf3 \
+  --package build/app-install/d2-business-resume-01/app.apx2 \
+  --package build/app-install/d2-peer-beats-02/app.apx2 \
+  --snapshot-dir build/app-install/d4-rv32-closure-02 \
+  --tool-prefix build/s1/toolchains/xpack-riscv-none-elf-gcc-12.5.0-1/bin/riscv-none-elf- \
+  --report build/app-install/set-rv32-closure-v3-report-02.json
+```
+
+边界：这次是原客户端→生产 HTTP 字节处理/存储模型→真实 RV32 App/监督→原样终态及运行快照→生产清理/HTTP→原客户端的连续测试，不再是两段无反馈证据。HTTP 字节仍通过宿主管道，当前 `--rv32-results` 不支持 TCP 或 Bridge UI；App 的 ROM 网络/LVGL/时间/调度仍为模型，QMP reset/测试引导不等同原厂 Boot ROM/Flash。RV32 里未运行完整 HTTP 服务。真实网络断连、Bridge 原生 IPC、资源/写集/孤儿回收等目标继续开放；未部署或操作实机。
+
+## 2026-11-05 回环 TCP 与实际 RV32 结果
+
+2026-11-05 TCP/RV32 闭环：Python 原客户端经回环 TCP 完成五事务（首装失败空回退、同包重装、单更、批更、整集回退）；每事务一次 commit，重启执行期间 26 次查询原事务，实际 RV32 日志/运行快照导入后由生产服务清理并返回，boot=13/14/15/16/18，终态 cleanup_pending=false。报告 `build/app-install/set-rv32-tcp-v3-report-02.json`，SHA `436ca005efa953a19c51567a7caa759745fa1d47c750eba6471bd04cc4f9ebca`。实际 App 在 james.local Docker 双基址执行，宿主不注入健康。Bridge UI/Rust 与真实 RV32 的同次闭环、原生 HTTP/原厂启动仍待验证；未操作实机。
+
+旧镜像 `ap01-abi-qemu:20261104` 已不存在，首次 TCP 尝试因此失败并人工中止，不能作为通过证据。复用 Dockerfile.ap01-qemu-runtime 在 Docker 内重建 `ap01-abi-qemu:20261105`，镜像 ID `sha256:f69f687096a1e3437c7225f8e004b7f45bce243c22670507c0aef7e41d540420`；未在 james.local 宿主安装依赖。运行脚本支持同时指定 `--qemu-image` 与 `--expected-image-id`，本轮使用上述值。QEMU 引擎 SHA 保持 `25a9c3620f83411672359412d6aca73c20f0e2eb94d6a8fbae5e4c39f3be3f11`。
