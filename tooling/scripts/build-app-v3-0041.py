@@ -13,6 +13,11 @@ p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--out',type=Path,required=True)
 p.add_argument('--app-config',type=Path,required=True)
 p.add_argument('--tool-prefix',required=True)
+p.add_argument('--app-id',default='codex_status')
+p.add_argument('--version',default='d1.0')
+p.add_argument('--heap-bytes',type=int,default=2*1024*1024)
+p.add_argument('--stack-bytes',type=int,default=40960)
+p.add_argument('--capabilities',type=int,default=127)
 a=p.parse_args();out=a.out.resolve()
 if not out.is_dir() or any(out.iterdir()):p.error('out must be an existing empty directory')
 config=native.read_app_config(a.app_config);tool=native.tools(a.tool_prefix);m=native.MODULES
@@ -76,11 +81,11 @@ for base in (0x10000,0x100000):
         offsets.append([symbols[n] for n in entries])
 assert images[0]==images[1] and offsets[0]==offsets[1],'Normalized images differ'
 image=images[0];spans=image['spans'];ro=spans['.rodata'];data=spans.get('.data',[ro[0]+ro[1],0])
-manifest=dict(abi_major=3,app_id='codex_status',version='d1.0',text_bytes=spans['.text'][1],
+manifest=dict(abi_major=3,app_id=a.app_id,version=a.version,text_bytes=spans['.text'][1],
               ro_offset=ro[0],ro_bytes=ro[1],data_offset=data[0],data_bytes=data[1],
-              bss_bytes=image['memory']-len(image['image']),heap_bytes=2*1024*1024,stack_bytes=40960,
+              bss_bytes=image['memory']-len(image['image']),heap_bytes=a.heap_bytes,stack_bytes=a.stack_bytes,
               entries=offsets[0],data_read_min=1,data_read_max=1,data_write_version=1,
-              required_services=127,fixups=[[at,struct.unpack_from('<I',image['image'],at)[0]] for at in image['fixups']])
+              required_services=a.capabilities,fixups=[[at,struct.unpack_from('<I',image['image'],at)[0]] for at in image['fixups']])
 (out/'app.apx2').write_bytes(apx2.package(image['image'],manifest))
 native.write_json(out/'app-manifest.json',manifest)
 report.update(built=True,normalized_link_bases_identical=True,unresolved_imports=0,

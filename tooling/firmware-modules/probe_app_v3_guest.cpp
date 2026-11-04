@@ -12,6 +12,8 @@ extern "C" void free(void *){}
 extern "C" void *realloc(void *p,size_t n){if(!p)return malloc(n);void *q=malloc(n);if(q){size_t old=*(size_t *)((uint8_t *)p-16);memcpy(q,p,n<old?n:old);}return q;}
 void *operator new(size_t n){return malloc(n);}
 void *operator new(size_t n,const std::nothrow_t &) noexcept{return malloc(n);}
+void *operator new[](size_t n,const std::nothrow_t &) noexcept{return malloc(n);}
+void operator delete[](void *p) noexcept{free(p);}
 void operator delete(void *p) noexcept{free(p);}
 void operator delete(void *p,size_t) noexcept{free(p);}
 extern "C" time_t time(time_t *p){time_t n=1700000000;if(p)*p=n;return n;}
@@ -30,6 +32,9 @@ static void runTask(){auto &t=ap01ModelV3.tasks[current];t.entry(t.context);done
 static bool reserve(void *p,const Apx2View &v,Ap01BootMemoryV3 &m){if((v.image_bytes+v.bss_bytes)>0x40000)return false;m={(uint8_t *)p,0x40000,uint32_t(uintptr_t(p))};return true;}
 static bool publish(void *,const Ap01BootMemoryV3 &m,const Apx2View &v,Ap01AppEntriesV3 &e){asm volatile("fence.i":::"memory");e={(Ap01AppStartV3)(m.base+v.entries[0]),(Ap01AppEventV3)(m.base+v.entries[1]),(Ap01AppHealthV3)(m.base+v.entries[2])};return true;}
 #define CHECK(x) do {if(!(x))return __LINE__;}while(0)
+#ifdef AP01_MODEL_SET_V3
+#include "probe_app_set_v3_guest.h"
+#else
 extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_t base,const uint8_t *package,uint32_t bytes){
     asm volatile("li t0,0x6000\ncsrs mstatus,t0":::"t0");
     ap01ModelV3=Ap01ModelPlatformV3{};ap01ModelV3.package=package;ap01ModelV3.packageBytes=bytes;
@@ -65,3 +70,5 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     for(unsigned i=0;i<initialized;++i)for(unsigned j=0;j<64;++j)CHECK(stackBottom[i][j]==0xa5);
     return 0;
 }
+
+#endif

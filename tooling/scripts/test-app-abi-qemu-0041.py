@@ -46,6 +46,10 @@ def main():
     package = args.fixture_dir / 'app.apx2'
     assert probe['built'] and sha(image) == probe['guest_sha256']
     assert sha(package) == probe['package_sha256']
+    extras = probe.get('extra_inputs', [])
+    for item in extras:
+        assert Path(item['name']).name == item['name']
+        assert sha(args.fixture_dir/item['name']) == item['sha256']
     results = {}
     report = {'passed': False, 'engine_sha256': sha(args.qemu),
               'support_sha256': sha(support_path), 'script_sha256': sha(Path(__file__)),
@@ -53,7 +57,7 @@ def main():
               'build_report_sha256': sha(args.fixture_dir/'build-report.json'),
               'production_apx2_loader_executed': False, 'abi_v2_entries_executed': False,
               'synthetic_fixture': not args.direct_v3, 'substitutes': probe.get('substitutes', []), 'hardware_verified': False, 'full_rom_boot_verified': False,
-              'results': results}
+              'collection': probe.get('collection', False), 'extra_inputs': extras, 'results': results}
     try:
         with tempfile.TemporaryDirectory(prefix='ap01-s1-') as directory:
             root = Path(directory)
@@ -86,6 +90,7 @@ def main():
                         write(probe['guest_base'],image.read_bytes())
                         package_address,stop,sp=(probe['package_address'],probe['stop'],probe['sp']) if args.direct_v3 else (0x62fce000,0x62fc8000,0x62fd4000)
                         write(package_address,package.read_bytes())
+                        for item in extras:write(item['address'],(args.fixture_dir/item['name']).read_bytes())
                         write(stop,struct.pack('<I',0x0000006f))
                         expect_ok(f'Z0,{stop:x},4')
                         saved={reg:0x55000000+reg for reg in range(18,28)}
@@ -114,7 +119,7 @@ def main():
                                 process.kill()
                                 process.wait(timeout=2)
                         socket_path.unlink(missing_ok=True)
-        report.update(passed=True,production_apx2_loader_executed=True,abi_v2_entries_executed=not args.direct_v3,real_abi_v3_app_executed=args.direct_v3)
+        report.update(passed=True,production_apx2_loader_executed=True,abi_v2_entries_executed=not args.direct_v3,real_abi_v3_app_executed=args.direct_v3,real_abi_v3_collection_executed=args.direct_v3 and probe.get('collection',False))
     except Exception as error:
         report['error'] = f'{type(error).__name__}: {error}'
         raise
