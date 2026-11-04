@@ -1,5 +1,19 @@
 # 当前状态
 
+2026-11-04 D4 UI/Rust/C++：生产页面函数经测试 IPC 调用真实 Rust 暂存/准备/worker/查询/归档，连续完成真实双包首装、单更、批更、失败整集回退。每条丢一次回复、重开页面恢复原事务，commit 各一次，回退不误报成功；报告 `build/app-install/set-ui-rust-tcp-v3-report.json`（交叉命令用 `--rust-ui`）。DOM/Tauri IPC 与固定测试端点由适配器代替，原生 IPC/文件对话框仍未验，健康/CPU 重启仍为模型。其他网络变化、资源/GC/RV32 目标开放，未操作实机或生产 Bridge。
+
+2026-11-04 D4 Bridge UI：AP01 卡片支持完整清单/单个或多个包、校验后显式 run、逐包进度/复用、取消/原事务恢复/归档。Node、原生 WKWebView 88 个窄/宽场景及截图审阅通过，Rust 暂存/应用回归与跨仓职责检查通过。页面轮询只读本地任务；未重建运行 Bridge。UI IPC 为模拟，UI→Rust/C++ 同次全链、自动发现网络变化、桌面暂存清理和平台资源/GC/RV32 待办仍开放，未访问实机。
+
+2026-11-04 D4 Bridge worker：有界后台推进原回执，任务内存持设备码/已校验包、取消意图先落盘，每步操作锁、临时失败退避查询，预算到期保留回执。应用 4 项及 worker→生产 C++ TCP 真实双包四链通过：首装/单更/批更/失败整集回退，四种丢回复自动恢复，commit 各一次。报告 `build/app-install/set-worker-tcp-v3-report.json`（原交叉命令加 `--rust-worker`）；仅宿主重启/健康模型。UI、自动发现网络变化验收、资源协调/GC/RV32 整链仍待完成，未启停生产 Bridge 或访问设备。
+
+2026-11-04 D4 Bridge 恢复：显式 reconnect 在新地址只查询原事务，MAC/事务/Manifest/进度通过后原子保存地址；未确认进度的 404 另认证 status，允许保留围栏迁移或本地 abandoned 取消，已确认过期/未知不丢回执。core 10 项、app 3 项通过，含全 GET 错误身份/摘要/503/写失败及应用新地址恢复后取消无额外 POST。自动 worker/发现策略、UI 和其他非实机目标仍待完成；未部署、未访问实机。
+
+2026-11-04 D4 Bridge 归档：离线 inspect 不依赖设备地址，query 只观察原事务；archive 重新确认终态/清理与成功运行身份后，先同步历史副本再释放活动回执，支持再次 prepare。core 8 项（含归档冲突/复制后中断恢复）、app 3 项（未完成/未清理/旧 boot 拒绝及接续更新）通过。地址迁移、未发送事务取消、自动 worker/UI 及其余平台待办仍开放；未部署、未访问实机。
+
+2026-11-04 D4 Bridge 应用层：Tauri/MCP 共用 prepare/inspect/advance/cancel，要求已登记 AP01 并复用操作锁。prepare 仅认证能力/校验产物并独占保存原回执，推进前核对原 operation_id；设备码不落盘，保留发送前失败/未知分类。3 项隔离应用测试通过（回环准备/推进、损坏回执拒绝、登记/锁）。自动 worker、终态归档/地址恢复及 UI 页面仍待完成；未启停 Bridge 或操作实机。
+
+2026-11-04 D4 Rust/C++：复用 TCP 故障中继，Bridge core 协调器对接生产 C++ HTTP/AUT3 模型，以真实双包完成首装、A 单更（B 不上传/身份不变）、A+B 批更及失败整集回退。每条分别丢 begin/chunk/commit/ready 回复，重载原回执恢复，commit 各一次；boot_id 12/13/14/16。报告 `build/app-install/set-rust-tcp-v3-report.json`。只回环 TCP，健康注入/CPU 重启模型，不执行 App 指令；Bridge application service/UI、RV32 整链和资源/回收待办仍开放。复现见兄弟仓库 `project-workflow/ap01-app-set-v3/status.md`。
+
 2026-11-04 D4 Bridge 单步协调：core 每次先重载回执并查询原事务，按确认进度上传/Ready/commit 或显式取消；Succeeded 校验新 boot 与完整健康运行集合。7 项定向测试（含真实双包和 commit 回复丢失恢复 TCP）通过。application worker/service/UI 及 Rust/C++ 交叉验收仍未完成，未部署或操作实机。
 
 2026-11-04 D4 Bridge 回执：Rust Receipt 首次独占/fsync、后续复用原子替换，保存原事务/Manifest/旧集合围栏，拒绝身份或文件变化、偏移/序号/阶段回退；只持久化类型化进度，不存设备码/任意响应。3 项离线测试含真实集合与写入故障通过。尚未接异步上传/重连/取消协调和 UI，未部署、未访问设备。
