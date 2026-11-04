@@ -79,12 +79,12 @@ Ap01AppNetworkPort0041 ap01NativeAppNetworkPort0041(){return {&ap01ModelV3,liste
 void ap01ModelStockV3(void *){++ap01ModelV3.stockEvents;}
 extern "C" {
 const ap01_lvgl_api_0041 ap01_lvgl_0041={1,sizeof(ap01_lvgl_api_0041),create,destroy,resize,align,hide,label,present,retire,onDraw,text,color,color,font};
-int ap01_window_bind(ap01_window_0041 *w){ap01ModelV3.window=w;w->timer=w;w->event_root=w->win;return 1;}
+int ap01_window_bind(ap01_window_0041 *w){ap01ModelV3.window=w;ap01ModelV3.mountedPages=0;w->timer=w;w->event_root=w->win;return 1;}
 int ap01_window_mount(ap01_window_0041 *,ap01_screen_slot *slots,ap01_page_0041 *pages,unsigned count){
-    for(unsigned i=0;i<count;++i){slots[i].root=&pages[i];slots[i].child=9+i;}
-    ++ap01ModelV3.mounts;return 1;
+    for(unsigned i=0;i<count;++i){slots[i].root=&pages[i];slots[i].child=9+ap01ModelV3.mountedPages+i;}
+    ap01ModelV3.mountedPages+=count;++ap01ModelV3.mounts;return 1;
 }
-ap01_screen_port ap01_window_port(ap01_window_0041 *){return {&ap01ModelV3,active,yes,yes,slide,edge};}
+ap01_screen_port ap01_window_port(ap01_window_0041 *w){return {w,active,yes,yes,slide,edge};}
 void ap01_window_detach(ap01_window_0041 *w){w->win=nullptr;}
 unsigned ap01_window_active(ap01_window_0041 *){return ap01ModelV3.activeChild;}
 int ap01_window_visible(ap01_window_0041 *){return 1;}
@@ -94,7 +94,7 @@ void *ap01_window_overlay(ap01_window_0041 *w){return w->win;}
 void ap01_window_activity(){}
 void ap01_window_wake(){}
 unsigned ap01_event_code(void *){return ap01ModelV3.eventCode;}
-unsigned ap01_event_key(void *){return 0;}
+unsigned ap01_event_key(void *){return ap01ModelV3.eventKey;}
 void *ap01_event_context(void *){return nullptr;}
 void *ap01_event_target(void *){return ap01ModelV3.eventTarget;}
 }

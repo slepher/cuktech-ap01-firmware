@@ -1,5 +1,6 @@
 #include "native_app_platform_v3.h"
 #include "model_platform_v3.h"
+#include "native_integrity_0041.h"
 #include <cassert>
 #include <cstdio>
 #include <cstring>
@@ -43,6 +44,21 @@ static int32_t start(const Ap01PlatformApiV3 *api,void *context,void **out){
     assert(api->bind(context,&binding)==0&&api->bind(context,&binding)!=0);
     *out=context;return scenario==1?AP01_APP_V3_FAILED:AP01_APP_V3_OK;
 }
+static int32_t grantStart(const Ap01PlatformApiV3 *api,void *context,void **out){
+    ++starts;*out=context;
+    const bool peer=scenario==11;
+    assert(!strcmp(api->private_root,peer?"/resource/apps/z_probe":"/resource/codex-status"));
+    assert(api->files.prepare(api->files.context,peer?"/resource/codex-status":"/resource/apps/z_probe")<0);
+    assert(api->ui.attach(context,context,slots,pages,8,poll,tick,event)!=0);
+    assert(api->ui.attach(context,context,slots,pages,1,poll,tick,event)==0);
+    assert(!strcmp(api->ui.app->app_id,peer?"z_probe":"codex_status"));
+    assert(api->task_start(context,"one",worker,256,context)==(peer?-1:0));
+    assert(api->task_start(context,"over-count",worker,256,context)!=0);
+    assert(api->network.listen(api->network.context,18080,0)<0);
+    assert(api->network.listen(api->network.context,peer?18081:18082,0)<0);
+    if(peer)assert(api->network.listen(api->network.context,8767,1)<0);
+    return AP01_APP_V3_OK;
+}
 static int32_t appEvent(void *,uint32_t,const void *,uint32_t){return 0;}
 static int32_t health(void *){return 0;}
 struct Backend {
@@ -57,7 +73,7 @@ struct Backend {
         auto &s=*(Backend *)p;++s.publishes;
         for(unsigned i=view.image_bytes;i<memory.capacity;++i)assert(!memory.bytes[i]);
         for(unsigned i=memory.capacity;i<s.memory.size();++i)assert(s.memory[i]==0xa5);
-        out={start,appEvent,health};return scenario!=2;
+        out={scenario>=10?grantStart:start,appEvent,health};return scenario!=2;
     }
     Ap01BootPortV3 port(){return {this,nullptr,reserve,publish};}
 };
@@ -65,6 +81,30 @@ static bool read(void *p,uint32_t at,uint8_t *out,uint32_t n){
     auto &data=*(std::vector<uint8_t> *)p;if(uint64_t(at)+n>data.size())return false;
     memcpy(out,data.data()+at,n);return true;
 }
+static const Ap01PlatformApiV3 *sharedApi[2]{};
+static ap01_screen_slot sharedSlots[2][1];static ap01_page_0041 sharedPages[2][1];
+static unsigned sharedPolls[2]={},sharedTicks[2]={};
+static unsigned sharedIndex(void *p){return p==sharedApi[0]?0:1;}
+static void sharedPoll(void *p,uint32_t){++sharedPolls[sharedIndex(p)];}
+static void sharedTick(void *p){auto *api=(const Ap01PlatformApiV3 *)p;++sharedTicks[sharedIndex(p)];
+    api->ui.poll(api->ui.host,100);api->ui.blocked(api->ui.host,0);}
+static void sharedEvent(void *p,void *e){auto *api=(const Ap01PlatformApiV3 *)p;
+    api->ui.window->stock(e);api->ui.rotate(api->ui.host,1,100);}
+static int preparePage(void *,ap01_screen_slot *,uint32_t){return AP01_ENTER_READY;}
+static int32_t sharedStart(const Ap01PlatformApiV3 *api,void *context,void **out){
+    unsigned i=strstr(api->private_root,"z_probe")?1:0;sharedApi[i]=api;
+    *out=(void *)api;
+    assert(api->ui.attach(context,(void *)api,sharedSlots[i],sharedPages[i],1,sharedPoll,sharedTick,sharedEvent)==0);
+    ap01_screen_desc page{1,sizeof(ap01_screen_desc),"page",nullptr,preparePage,nullptr,nullptr,nullptr,nullptr,1};
+    assert(api->ui.screens->replace_screen_set(api->ui.app,api->ui.app->revision,&page,1)==0);
+    if(i){Ap01AppBindingV3 b{context,principal,pairing,online};assert(api->bind(context,&b)<0);}
+    return 0;
+}
+struct SharedBackend:Backend {
+    static bool publish(void *p,const Ap01BootMemoryV3 &m,const Apx2View &v,Ap01AppEntriesV3 &out){
+        bool okay=Backend::publish(p,m,v,out);out.start=sharedStart;return okay;}
+    Ap01BootPortV3 port(){return {this,nullptr,Backend::reserve,publish};}
+};
 int main(int argc,char **argv){
     assert(argc==2);std::ifstream f(argv[1],std::ios::binary);
     std::vector<uint8_t> original{std::istreambuf_iterator<char>(f),{}};assert(original.size()>256);
@@ -106,5 +146,57 @@ int main(int argc,char **argv){
         }
         assert(platform.execution().health()==(result==R::Started?0:AP01_APP_V3_FAILED));
     }
-    puts("native ABI 3 platform: real package/loader/provider/host; 10 boot, maintenance-first, quota, immutable C binding and failure-retention scenarios passed (host App entry substitutes)");
+    for(scenario=10;scenario<16;++scenario){
+        ap01ModelV3={};starts=0;auto bytes=original;
+        if(scenario==11){
+            memset(bytes.data()+128,0,32);memcpy(bytes.data()+128,"z_probe",7);
+            memset(bytes.data()+192,0,32);uint8_t hash[32];syncSha256(bytes.data(),bytes.size(),hash);memcpy(bytes.data()+192,hash,32);
+        }
+        Apx2Reader reader{&bytes,uint32_t(bytes.size()),read};
+        Apx2Limits limits{1u<<22,1u<<23,1u<<21,40960,1,127,nullptr,3};Apx2View view{};
+        assert(apx2Validate(reader,limits,view)==Apx2Error::Ok);
+        Ap01ManifestEntryV3 grant{};memcpy(grant.id,view.app_id,32);memcpy(grant.digest,view.digest,32);
+        grant.image_bytes=view.image_bytes+view.bss_bytes;grant.heap_bytes=view.heap_bytes;grant.stack_bytes=view.stack_bytes;
+        grant.capabilities=127;grant.pages=1;grant.tasks=scenario==11?0:1;grant.tcp=scenario==11?18082:18081;
+        if(scenario==12)--grant.heap_bytes;
+        if(scenario==13)strcpy(grant.id,"../bad");
+        if(scenario==14)grant.tcp=18080;
+        if(scenario==15)strcpy(grant.id,"other");
+        Backend backend;Ap01NativeAppPlatformV3 platform(9,backend.port(),grant);
+        assert(platform.bindWindow(&platform,ap01ModelStockV3)&&platform.startMaintenance());
+        auto result=platform.boot(reader,limits,view.digest);
+        if(scenario<12){assert(result==R::Started&&starts==1&&backend.reserves==1);}
+        else {assert((result==R::Memory||result==R::Package||result==R::Invalid)&&!starts&&!backend.reserves);}
+    }
+    {
+        ap01ModelV3={};scenario=20;Ap01NativeAppSharedV3 resident(17,2);
+        assert(resident.bindWindow((void *)1,ap01ModelStockV3)&&resident.startMaintenance());
+        SharedBackend backends[2];std::unique_ptr<Ap01NativeAppPlatformV3> apps[2];
+        for(unsigned i=0;i<2;++i){auto bytes=original;
+            if(i){memset(bytes.data()+128,0,32);memcpy(bytes.data()+128,"z_probe",7);
+                memset(bytes.data()+192,0,32);uint8_t hash[32];syncSha256(bytes.data(),bytes.size(),hash);memcpy(bytes.data()+192,hash,32);}
+            Apx2Reader reader{&bytes,uint32_t(bytes.size()),read};
+            Apx2Limits limits{1u<<22,1u<<23,1u<<21,40960,1,127,nullptr,3};Apx2View view{};
+            assert(apx2Validate(reader,limits,view)==Apx2Error::Ok);
+            Ap01ManifestEntryV3 grant{};memcpy(grant.id,view.app_id,32);memcpy(grant.digest,view.digest,32);
+            grant.image_bytes=view.image_bytes+view.bss_bytes;grant.heap_bytes=view.heap_bytes;grant.stack_bytes=view.stack_bytes;
+            grant.capabilities=127;grant.pages=1;
+            apps[i].reset(new Ap01NativeAppPlatformV3(resident,backends[i].port(),grant));
+            assert(!apps[i]->startMaintenance());assert(apps[i]->boot(reader,limits,view.digest)==R::Started);
+        }
+        assert(resident.registered()==2&&ap01ModelV3.maintenanceStarts==1);
+        assert(sharedApi[0]->ui.host==sharedApi[1]->ui.host&&sharedApi[0]->files.context!=sharedApi[1]->files.context);
+        assert(sharedApi[0]->ui.app->count==1&&sharedApi[1]->ui.app->count==1);
+        Ap01NativeAppSharedV3::poll(&resident);
+        assert(sharedTicks[0]==1&&sharedTicks[1]==1&&sharedPolls[0]==1&&sharedPolls[1]==1);
+        ap01ModelV3.activeChild=7;ap01ModelV3.eventCode=0x11;ap01ModelV3.eventKey=0x13;
+        ap01ModelV3.window->event(ap01ModelV3.window->context,(void *)1);
+        assert(ap01ModelV3.activeChild==9&&ap01ModelV3.stockEvents==0);
+        Ap01NativeAppSharedV3::poll(&resident);
+        ap01ModelV3.window->event(ap01ModelV3.window->context,(void *)1);
+        assert(ap01ModelV3.activeChild==10&&ap01ModelV3.stockEvents==0);
+        ap01ModelV3.eventKey=99;ap01ModelV3.window->event(ap01ModelV3.window->context,(void *)1);
+        assert(ap01ModelV3.stockEvents==1);
+    }
+    puts("native ABI 3 platform: shared two-App service/registry, single input/poll dispatch; real package/loader/provider/host; 16 boot, maintenance-first, per-App grants, quota, immutable C binding and failure-retention scenarios passed (host App entry substitutes)");
 }

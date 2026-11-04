@@ -1,19 +1,54 @@
 #pragma once
 #include "app_boot_v3.h"
+#include "app_manifest_v3.h"
 #include "app_binding_v3.h"
 #include "app_files_v3.h"
 #include "app_network_v3.h"
 #include "native_services_0041.h"
 
-// One resident platform for D1's fixed codex_status boot entry. D2 replaces the
-// one-entry registry with a validated Manifest; screen_host itself is reused.
-class Ap01NativeAppPlatformV3 {
-    Ap01BootPortV3 executable;
+class Ap01NativeAppPlatformV3;
+// One resident service/window/registry owner, shared by all App contexts.
+class Ap01NativeAppSharedV3 {
+    friend class Ap01NativeAppPlatformV3;
     Ap01AppBindingBridgeV3 binding;
     Ap01NativeServices0041 services;
     ap01_screen_host host{};
-    ap01_screen_app app{};
     ap01_window_0041 window{};
+    ap01_screen_app apps[AP01_MANIFEST_APPS_V3]{};
+    Ap01NativeAppPlatformV3 *contexts[AP01_MANIFEST_APPS_V3]{};
+    Ap01NativeAppPlatformV3 *dispatch=nullptr;
+    const uint64_t bootId;
+    const uint32_t capacity;
+    uint32_t count=0;
+    bool maintenanceStarted=false;
+    std::atomic<uint32_t> heartbeat{0};
+    static bool healthy(void *);
+    static void event(void *,void *);
+    static void blocked(ap01_screen_host *,int);
+public:
+    explicit Ap01NativeAppSharedV3(uint64_t boot,uint32_t appCapacity):bootId(boot),capacity(appCapacity){}
+    Ap01NativeAppSharedV3(const Ap01NativeAppSharedV3 &)=delete;
+    Ap01NativeAppSharedV3 &operator=(const Ap01NativeAppSharedV3 &)=delete;
+    bool bindWindow(void *,void (*)(void *));
+    bool startMaintenance();
+    static void poll(void *);
+    unsigned registered()const{return host.app_count;}
+    void *root()const{return window.win;}
+};
+// Per-App context. The D1 convenience constructors own a one-slot shared host;
+// the collection constructor borrows the sole resident host for the whole boot.
+class Ap01NativeAppPlatformV3 {
+    Ap01BootPortV3 executable;
+    Ap01ManifestEntryV3 grant{};
+    char privateRoot[64]={};
+    bool boundedGrant=false,validGrant=false;
+    friend class Ap01NativeAppSharedV3;
+    Ap01NativeAppPlatformV3(uint64_t,const Ap01BootPortV3 &,const Ap01ManifestEntryV3 &,bool,Ap01NativeAppSharedV3 *);
+    std::unique_ptr<Ap01NativeAppSharedV3> ownedShared;
+    Ap01NativeAppSharedV3 *shared=nullptr;
+    uint32_t registryIndex=UINT32_MAX;
+    bool uiBlocked=false;
+    ap01_window_0041 appWindow{};
     Ap01PlatformApiV3 api{};
     Ap01AppFilesV3 files;
     Ap01AppNetworkV3 network;
@@ -22,10 +57,10 @@ class Ap01NativeAppPlatformV3 {
     void *appInstance=nullptr;
     void (*appTick)(void *)=nullptr;
     void (*appEvent)(void *,void *)=nullptr;
-    std::atomic<uint32_t> heartbeat{0},heapUsed{0},heapPeak{0},stackUsed{0},taskCount{0};
+    std::atomic<uint32_t> heapUsed{0},heapPeak{0},stackUsed{0},taskCount{0};
     std::atomic<bool> writable{false};
     uint32_t heapLimit=0,stackLimit=0;
-    bool maintenanceStarted=false,attached=false;
+    bool attached=false;
     Ap01VfsOps bootIo{};
     int bootFd=-1;
     uint32_t bootBytes=0;
@@ -38,11 +73,10 @@ class Ap01NativeAppPlatformV3 {
     static bool reserve(void *,const Apx2View &,Ap01BootMemoryV3 &);
     static bool publish(void *,const Ap01BootMemoryV3 &,const Apx2View &,Ap01AppEntriesV3 &);
     static bool maintenanceReady(void *);
-    static bool healthy(void *);
     static bool clock(void *,uint64_t *);
     static bool yield(void *);
     static void tick(void *);
-    static void event(void *,void *);
+    void refreshWindow();
     static int32_t attach(void *,void *,ap01_screen_slot *,ap01_page_0041 *,uint32_t,
                           void (*)(void *,uint32_t),void (*)(void *),void (*)(void *,void *));
     static void *allocate(void *,uint32_t);
@@ -51,6 +85,10 @@ class Ap01NativeAppPlatformV3 {
     static int32_t task(void *,const char *,void *(*)(void *),uint32_t,void *);
 public:
     Ap01NativeAppPlatformV3(uint64_t boot,const Ap01BootPortV3 &backend);
+    // Collection owner supplies a validated immutable Manifest entry. This
+    // context enforces that entry's ID, budgets, capabilities and port grants.
+    Ap01NativeAppPlatformV3(uint64_t boot,const Ap01BootPortV3 &backend,const Ap01ManifestEntryV3 &);
+    Ap01NativeAppPlatformV3(Ap01NativeAppSharedV3 &,const Ap01BootPortV3 &,const Ap01ManifestEntryV3 &);
     Ap01NativeAppPlatformV3(const Ap01NativeAppPlatformV3 &)=delete;
     Ap01NativeAppPlatformV3 &operator=(const Ap01NativeAppPlatformV3 &)=delete;
     // UI executor; maintenance start belongs on its own worker.
@@ -66,7 +104,7 @@ public:
     uint32_t usedHeap() const {return heapUsed.load(std::memory_order_acquire);}
     uint32_t peakHeap() const {return heapPeak.load(std::memory_order_acquire);}
     uint32_t reservedStack() const {return stackUsed.load(std::memory_order_acquire);}
-    static void poll(void *context){tick(context);}
+    static void poll(void *context){auto *s=(Ap01NativeAppPlatformV3 *)context;if(s->shared)Ap01NativeAppSharedV3::poll(s->shared);}
     Ap01BootResultV3 result()const{return bootResult.load(std::memory_order_acquire);}
     static const uint32_t platformAbi[4];
 };

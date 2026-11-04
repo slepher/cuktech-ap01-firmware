@@ -67,6 +67,10 @@ struct ap01_screen_host {
 };
 
 int ap01_host_init(ap01_screen_host *, const ap01_screen_port *, ap01_screen_app *, unsigned);
+/* Resident UI executor only. Register apps[app_count] during boot into a stable
+ * caller-owned registry, without resetting existing pages/revisions/input state.
+ * No running transition or online replacement; failure leaves host unchanged. */
+int ap01_host_append(ap01_screen_host *,ap01_screen_app *registry,unsigned capacity);
 int ap01_host_replace(ap01_screen_app *, uint32_t expected_revision,
                       const ap01_screen_desc *, unsigned count);
 ap01_screen_slot *ap01_host_find(ap01_screen_app *, const char *id);

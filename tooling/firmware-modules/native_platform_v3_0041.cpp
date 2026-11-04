@@ -22,8 +22,8 @@ extern "C" __attribute__((used))
 void ap01Register0041(void *root,void (*callback)(void *),unsigned filter,void *user){
     using namespace ap01_native0041;
     if(!mainHook(callback,filter)){registerStock(root,callback,filter,user);return;}
-    if(auto *existing=(Ap01NativeAppPlatformV3 *)ap01_window_find(Ap01NativeAppPlatformV3::poll)){
-        if(existing->table().ui.window->win==root)return;
+    if(auto *existing=(Ap01NativeAppSharedV3 *)ap01_window_find(Ap01NativeAppSharedV3::poll)){
+        if(existing->root()==root)return;
         if(!existing->bindWindow(root,callback))registerStock(root,callback,filter,user);
         return;
     }

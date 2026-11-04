@@ -24,8 +24,27 @@ int main(void) {
     for(i=0;i<9;++i){slots[i].root=&slots[i];slots[i].child=9+i;}
     apps[0].app_id="templates";apps[0].slots=slots;apps[0].capacity=8;apps[0].poll=poll;apps[0].context=&f;
     apps[1].app_id="other";apps[1].slots=slots+8;apps[1].capacity=1;apps[1].poll=poll;apps[1].context=&f;
-    assert(ap01_host_init(&h,&p,apps,2)==0);
+    assert(ap01_host_init(&h,&p,NULL,0)==0);
+    assert(ap01_host_append(&h,apps,2)==0&&h.app_count==1);
     f.host=&h;
+    ap01_screen_desc first=desc("first",&f);
+    assert(ap01_host_replace(apps,0,&first,1)==0);
+    h.transition=37;h.blocked=1;h.pressed_at=123;
+    ap01_screen_host before_append=h;uint32_t old_revision=apps[0].revision;
+    apps[1].app_id=apps[0].app_id;
+    assert(ap01_host_append(&h,apps,2)==AP01_HOST_INVALID);
+    assert(!memcmp(&h,&before_append,sizeof(h))&&apps[0].revision==old_revision);
+    apps[1].app_id="other";slots[8].child=slots[0].child;
+    assert(ap01_host_append(&h,apps,2)==AP01_HOST_INVALID);
+    slots[8].child=17;slots[8].root=slots[0].root;
+    assert(ap01_host_append(&h,apps,2)==AP01_HOST_INVALID);slots[8].root=&slots[8];
+    h.phase=1;assert(ap01_host_append(&h,apps,2)==AP01_HOST_BUSY);h.phase=0;
+    assert(ap01_host_append(&h,apps,1)==AP01_HOST_CAPACITY);
+    assert(ap01_host_append(&h,apps,2)==0&&h.app_count==2);
+    assert(h.transition==37&&h.blocked==1&&h.pressed_at==123);
+    assert(apps[0].revision==old_revision&&ap01_host_find(apps,"first")==slots);
+    assert(ap01_host_append(&h,apps,2)==AP01_HOST_CAPACITY);
+    assert(ap01_host_init(&h,&p,apps,2)==0);memset(slots[0].id,0,sizeof(slots[0].id));
     assert(!ap01_host_rotate(&h,1,0)); /* Empty host preserves stock navigation. */
     ap01_screen_desc a[8],b=desc("other",&f);
     for(i=0;i<8;++i){static const char *ids[]={"a","b","c","d","e","f","g","h"};a[i]=desc(ids[i],&f);}

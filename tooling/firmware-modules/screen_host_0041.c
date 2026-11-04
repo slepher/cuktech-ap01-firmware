@@ -24,9 +24,9 @@ ap01_screen_slot *ap01_host_find(ap01_screen_app *a,const char *id) {
     for(i=0;i<a->capacity;++i)if(a->slots[i].id[0]&&!strcmp(a->slots[i].id,id))return &a->slots[i];
     return NULL;
 }
-int ap01_host_init(ap01_screen_host *h,const ap01_screen_port *p,ap01_screen_app *apps,unsigned count) {
+static int apps_valid(ap01_screen_app *apps,unsigned count) {
     unsigned a,i,b,j;
-    if(!h||!p||!p->active||!p->idle||!p->available||!p->slide||(!apps&&count))return AP01_HOST_INVALID;
+    if(!apps&&count)return AP01_HOST_INVALID;
     for(a=0;a<count;++a) {
         if(!id_valid(apps[a].app_id))return AP01_HOST_INVALID;
         for(b=0;b<a;++b)if(!strcmp(apps[a].app_id,apps[b].app_id))return AP01_HOST_INVALID;
@@ -38,9 +38,26 @@ int ap01_host_init(ap01_screen_host *h,const ap01_screen_port *p,ap01_screen_app
                 if(s->child==apps[b].slots[j].child||s->root==apps[b].slots[j].root)return AP01_HOST_INVALID;
         }
     }
+    return AP01_HOST_OK;
+}
+int ap01_host_init(ap01_screen_host *h,const ap01_screen_port *p,ap01_screen_app *apps,unsigned count) {
+    unsigned a;int result;
+    if(!h||!p||!p->active||!p->idle||!p->available||!p->slide)return AP01_HOST_INVALID;
+    result=apps_valid(apps,count);if(result)return result;
     memset(h,0,sizeof(*h));h->port=*p;h->apps=apps;h->app_count=count;
     for(a=0;a<count;++a){apps[a].host=h;apps[a].count=0;apps[a].revision=0;}
     return AP01_HOST_OK;
+}
+int ap01_host_append(ap01_screen_host *h,ap01_screen_app *apps,unsigned capacity) {
+    int result;ap01_screen_app *next;
+    if(!h||!apps||!h->port.active||(h->apps&&h->apps!=apps))return AP01_HOST_INVALID;
+    if(!capacity||capacity>AP01_SCREEN_SET_LIMIT||h->app_count>=capacity)return AP01_HOST_CAPACITY;
+    if(h->phase)return AP01_HOST_BUSY;
+    result=apps_valid(apps,h->app_count+1);if(result)return result;
+    next=&apps[h->app_count];
+    if(next->host)return AP01_HOST_INVALID;
+    next->host=h;next->count=0;next->revision=0;
+    h->apps=apps;++h->app_count;return AP01_HOST_OK;
 }
 void ap01_host_cancel(ap01_screen_host *h) {
     h->phase=0;h->source=h->target=NULL;h->locked=0;

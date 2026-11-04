@@ -9,7 +9,7 @@ struct Ap01ModelPlatformV3 {
     uint64_t now=100;
     bool listening=false,busy=false,packageOpen=false;
     const uint8_t *package=nullptr;uint32_t packageBytes=0,position=0;
-    unsigned activeChild=0,eventCode=0;void *eventTarget=nullptr;
+    unsigned mountedPages=0,activeChild=0,eventCode=0,eventKey=0;void *eventTarget=nullptr;
     ap01_window_0041 *window=nullptr;
     Ap01MaintenanceBridge0041 bridge{};
     void (*pause)(uint32_t)=nullptr;

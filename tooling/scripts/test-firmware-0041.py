@@ -35,7 +35,16 @@ def check(manifest_path):
     for item in audit['input_headers']:
         assert hashlib.sha256(Path(item['path']).read_bytes()).hexdigest() == item['sha256']
     if manifest['runtime'] == 'platform':
-        assert manifest['applications'] == [] and manifest['platform_abi']['version'] == 2
+        assert manifest['applications'] == []
+        abi = manifest['platform_abi']
+        assert abi['version'] in (2, 3)
+        if abi['version'] == 3:
+            assert abi['context_bytes'] > 0 and abi['shared_owner_bytes'] > 0
+            assert 0 <= abi['shared_pointer_offset'] <= abi['context_bytes'] - 4
+            assert abi['shared_pointer_offset'] % 4 == 0
+        else:
+            assert 0 <= abi['window_offset'] < abi['runtime_bytes']
+            assert 0 <= abi['heartbeat_offset'] <= abi['runtime_bytes'] - 4
         assert all(Path(item['source']).resolve().is_relative_to(ROOT) for item in audit['objects'])
         assert all(Path(item['path']).resolve().is_relative_to(ROOT) for item in audit['input_headers'])
     else:

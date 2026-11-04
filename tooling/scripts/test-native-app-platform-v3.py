@@ -14,6 +14,11 @@ native.write_json(report,{'passed':False})
 subprocess.run(['clang++','-std=c++17','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
                 *map(str,sources),str(host),'-o',str(binary)],check=True)
 result=subprocess.check_output([str(binary),str(a.package.resolve())],text=True,timeout=30)
+registry_test=a.out.resolve()/'test-screen-host-v3'
+subprocess.run(['clang','-std=c11','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
+               str(native.MODULES/'test_screen_host_0041.c'),str(host),'-o',str(registry_test)],check=True)
+result+=subprocess.check_output([str(registry_test)],text=True,timeout=30)
+sources.extend([native.MODULES/'screen_host_0041.c',native.MODULES/'test_screen_host_0041.c'])
 native.write_json(report,{'passed':True,'checks':result.strip(),'package_sha256':native.sha(a.package),
                           'app_instructions_executed':False,'device_accessed':False,
                           'sources':{s.name:native.sha(s) for s in sources},

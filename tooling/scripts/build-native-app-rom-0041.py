@@ -109,11 +109,13 @@ def main():
     abi_file=out/'native-runtime-abi.bin'
     subprocess.run([objcopy,'-O','binary','--only-section=.abi',str(out/'ap01-native-0041.elf'),str(abi_file)],check=True)
     abi_raw=abi_file.read_bytes();abi=struct.unpack('<'+str(len(abi_raw)//4)+'I',abi_raw)
-    if not ((len(abi)==23 and abi[0]==1) or (len(abi)==4 and abi[0]==2)):
-        p.error('unsupported runtime ABI (expected App ABI 1 or platform ABI 2)')
-    if abi[0]==2:
+    if not ((len(abi)==23 and abi[0]==1) or (len(abi)==4 and abi[0] in (2,3))):
+        p.error('unsupported runtime ABI (expected App ABI 1 or platform diagnostics ABI 2/3)')
+    if abi[0] in (2,3):
         runtime_metadata={'runtime':'platform','applications':[],
             'platform_abi':{'version':2,'runtime_bytes':abi[1],'window_offset':abi[2],'heartbeat_offset':abi[3]}}
+        if abi[0]==3:
+            runtime_metadata['platform_abi']={'version':3,'context_bytes':abi[1],'shared_pointer_offset':abi[2],'shared_owner_bytes':abi[3]}
         if audit.get('boot_app_v3'):
             runtime_metadata['app_loader']={'abi_major':3,'fixed_path':'/resource/app-current.apx2',
                 'maintenance_before_app':True,'hardware_backend':'unavailable','executable_backend_verified':False}
