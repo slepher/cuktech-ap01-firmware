@@ -677,15 +677,44 @@ static void httpParsing(){
 }
 // Pipe-driven protocol peer for the Python CLI. Executes production transaction
 // and HTTP code, but injects health and models reboot; it does not execute Apps.
+static uint32_t modelU32(const uint8_t *p){return uint32_t(p[0])|uint32_t(p[1])<<8|uint32_t(p[2])<<16|uint32_t(p[3])<<24;}
+static uint64_t modelU64(const uint8_t *p){return uint64_t(modelU32(p))|uint64_t(modelU32(p+4))<<32;}
+static std::vector<uint8_t> modelHex(const std::string &s){
+    CHECK(!(s.size()&1));std::vector<uint8_t> out(s.size()/2);
+    auto nibble=[](char c){CHECK((c>='0'&&c<='9')||(c>='a'&&c<='f'));return c<='9'?c-'0':c-'a'+10;};
+    for(size_t i=0;i<out.size();++i)out[i]=uint8_t(nibble(s[2*i])*16+nibble(s[2*i+1]));return out;
+}
 static int httpPeer(){
     struct Boot {
         Disk &disk;Ap01ManifestLimitsV3 limits{8,1u<<24,1u<<24,1u<<24,1u<<24,32,256,127,1u<<28,0};
         Ap01AppWriteGateV3 gate;Ap01AppRebootV3 reboot;Ap01SetJournalV3 journal;
         Ap01SetServiceV3 service;Ap01ManifestV3 running;Ap01RuntimeSnapshotV3 runtime;
         LittleFSClass fs;std::unique_ptr<Ap01Maintenance0041> maintenance;bool held=false;
-        Boot(Disk &d,uint64_t id,uint32_t &now,bool fail):disk(d),journal(d.ops(),mac),
+        Boot(Disk &d,uint64_t id,uint32_t &now,bool fail,const std::vector<uint8_t> *observed=nullptr):disk(d),journal(d.ops(),mac),
             service(d.ops(),journal,gate,reboot,limits,mac,id,4096),fs(d.ops(),"/resource/maintenance-test"){
             auto result=journal.load();CHECK(result==R::Ok||result==R::Empty);
+            if(observed){
+                const auto &bytes=*observed;CHECK(bytes.size()==912&&!memcmp(bytes.data(),"ARV3\x01\0\0\0",8));
+                const auto *raw=bytes.data();const auto *record=journal.current();CHECK(record);
+                CHECK(record->phase==P::Succeeded||record->phase==P::FailedRolledBack);
+                bool approved=record->phase==P::Succeeded;
+                const auto *digest=approved?record->newDigest:record->oldDigest;
+                uint64_t version=approved?record->newVersion:record->oldVersion;
+                CHECK(modelU64(raw+8)==id&&id==(approved?record->trialBoot:record->rollbackBoot));
+                CHECK(modelU64(raw+16)==version&&!memcmp(raw+48,digest,32));
+                CHECK(modelU32(raw+32)==1&&modelU32(raw+36)==unsigned(Ap01SupervisorStateV3::Healthy)&&!modelU32(raw+40));
+                if(version){Ap01AppSetFilesV3 files(disk.ops());auto path=digestPath("/resource/app-store/manifests/",digest,".amf3");
+                    CHECK(files.stage(path.c_str(),digest,limits,1u<<24)==Ap01SetFilesResultV3::Ready);
+                    CHECK(ap01ReadManifestV3(files.reader(),limits,running)==Ap01ManifestErrorV3::Ok);}
+                CHECK(modelU32(raw+24)==running.count&&modelU32(raw+28)==running.count);
+                runtime.manifest=&running;runtime.complete=true;runtime.attempted=true;runtime.started=modelU32(raw+28);
+                runtime.health.state=Ap01SupervisorStateV3(modelU32(raw+36));runtime.health.count=modelU32(raw+24);
+                runtime.health.sampled_at=modelU32(raw+44);now=runtime.health.sampled_at;
+                for(unsigned i=0;i<running.count;++i){unsigned at=80+104*i;
+                    CHECK(!memcmp(raw+at,running.entries[i].id,32)&&!memcmp(raw+at+32,running.entries[i].version,32));
+                    CHECK(!memcmp(raw+at+64,running.entries[i].digest,32)&&modelU32(raw+at+100)==running.order[i]);
+                    CHECK(modelU32(raw+at+96)==0);runtime.health.health[i]=int32_t(modelU32(raw+at+96));}
+            }else{
             Ap01SetSelectorV3 selector(journal,id);
             auto selected=selector.select(this,[](void *p,const uint8_t *digest,uint64_t version){auto &b=*(Boot *)p;
                 Ap01AppSetFilesV3 files(b.disk.ops());auto path=digestPath("/resource/app-store/manifests/",digest,".amf3");
@@ -702,6 +731,7 @@ static int httpPeer(){
                     runtime.health.state=Ap01SupervisorStateV3::Healthy;runtime.health.count=running.count;runtime.health.sampled_at=now;
                 }
             }
+            }
             service.runtime(&runtime,[](void *p){return *(Ap01RuntimeSnapshotV3 *)p;});service.tick(now);
             Ap01MaintenancePort0041 port{};port.context=this;
             port.deviceCode=[](void *,char code[9]){memcpy(code,"01234567",9);return 0;};
@@ -716,6 +746,37 @@ static int httpPeer(){
     auto boot=std::unique_ptr<Boot>(new Boot(disk,identity,now,false));std::string line;
     while(std::getline(std::cin,line)){
         if(line=="FAIL_TRIAL"){failNext=true;std::cout<<"OK"<<std::endl;continue;}
+        if(line.rfind("APPLY ",0)==0){
+            auto split=line.find(' ',6);CHECK(split!=std::string::npos);
+            auto saved=modelHex(line.substr(6,split-6)),observed=modelHex(line.substr(split+1));
+            CHECK(saved.size()==648&&observed.size()==912&&modelU64(observed.data()+8)>identity);
+            const auto *before=boot->journal.current();CHECK(before&&before->phase==P::SwitchPending);
+            Disk candidate;candidate.cut=1024;
+            for(unsigned i=0;i<2;++i){auto n=modelU32(saved.data()+4*i);CHECK(n==320);candidate.files[paths[i]]={saved.begin()+8+320*i,saved.begin()+8+320*i+n};}
+            Ap01SetJournalV3 imported(candidate.ops(),mac);CHECK(imported.load()==R::Ok);const auto *after=imported.current();
+            CHECK(after&&after->sequence>before->sequence&&(after->phase==P::Succeeded||after->phase==P::FailedRolledBack));
+            CHECK(!memcmp(before->transaction,after->transaction,16)&&!memcmp(before->requestDigest,after->requestDigest,32));
+            CHECK(!memcmp(before->newDigest,after->newDigest,32)&&!memcmp(before->oldDigest,after->oldDigest,32));
+            CHECK(before->oldVersion==after->oldVersion&&before->newVersion==after->newVersion&&before->changedBytes==after->changedBytes);
+            CHECK(before->changedMask==after->changedMask&&before->readyMask==after->readyMask&&!memcmp(before->received,after->received,sizeof(before->received)));
+            CHECK(!strcmp(before->principal,after->principal)&&after->trialStarts==1&&after->cleanupPending);
+            boot.reset();for(unsigned i=0;i<2;++i)disk.files[paths[i]]=candidate.files[paths[i]];
+            identity=modelU64(observed.data()+8);failNext=false;
+            boot.reset(new Boot(disk,identity,now,false,&observed));
+            std::cout<<"OK"<<std::endl;continue;
+        }
+        // Export exact durable model bytes before advancing the reboot clock.
+        // A fresh RV32 guest can consume these without fabricating a journal.
+        if(line=="SNAPSHOT"){
+            CHECK(!disk.handles);std::cout<<"{";bool first=true;const char *hex="0123456789abcdef";
+            for(const auto &file:disk.files){
+                if(file.second.empty())continue;
+                CHECK(file.first.find_first_of("\\\"\n\r")==std::string::npos);
+                if(!first)std::cout<<",";first=false;std::cout<<"\""<<file.first<<"\":\"";
+                for(unsigned char c:file.second)std::cout<<hex[c>>4]<<hex[c&15];std::cout<<"\"";
+            }
+            std::cout<<"}"<<std::endl;continue;
+        }
         now+=1000;bool restart=false;boot->reboot.tick(now,&restart,[](void *p){*(bool *)p=true;});
         if(restart){boot.reset();boot.reset(new Boot(disk,++identity,now,failNext));failNext=false;}
         struct Wire {std::string input,output;size_t at=0;} wire;
