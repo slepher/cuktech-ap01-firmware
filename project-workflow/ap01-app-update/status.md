@@ -373,3 +373,19 @@ The existing QMP reset runner now supports exact BFV1 business-file handoff in a
 The same updated runner also passed the existing fail-trial -> rollback journal fixtures at both bases, preserving exact journal handoff. Report build/pair-worker/journal-regression-qemu.json, SHA256 7a65d837def531f72f50492b6ff1a2b4d00856006e27f0c7b9beff6bdbbe0cc3. Script and both stage build-report hashes were checked. The journal regression uses its archived App/guest fixtures and is not evidence for executing the newest App in that rollback chain.
 
 Boundary: the CPU really resets, but the runner reloads the guest and injects verified file bytes into the model VFS; this is not original-ROM reboot execution, flash persistence or power-cut recovery. Those boundaries remain open.
+
+### 2026-11-05 App OTA 归属迁移与主线收敛
+
+按用户要求，App 可执行包 OTA 含客户端归 firmware。codex_status 撤出五笔 OTA-only 提交对应的 Rust 校验/回执/协调、worker、Tauri/MCP、UI 和专项测试，原补丁留档 docs/history/app-ota-bridge；本仓复用 app-set-client-v3.py，不新增另一套客户端。业务 Bundle/C2/BLE、配对、只读恢复及 ABI 3.1 App 适配保持；11 个关键源码 SHA 与迁移前一致。未改本机 Bridge 数据/回执，未部署或启停服务。
+
+验收：源码边界及 Node 页面通过；WKWebView 80 个场景通过，560/1000 宽度截图已审阅；Rust core/app/mcp 共 347 passed、5 条件忽略，日志 build/ota-boundary/bridge-tests.log。初次 Fake BLE 请求被系统代理返回 503；仅测试进程清除代理并为 loopback 设置 NO_PROXY 后同组通过，未为测试修改业务协议。AUT3 103164 检查、CLI 472 拒绝输入、10 组丢回复/续传测试通过；最新业务真包与 peer 经生产 C++ HTTP 回环 TCP 的首装失败再装、单更、批更、整集回退五链通过（build/ota-boundary/client-tcp.json），该链本轮仍用模型健康/重启，未扩称 RV32 执行。
+
+当前主线已重写到 task.md，旧 D0-D4 清单存 task-before-ota-boundary.md。目录孤儿扫描和桌面更新产品化后置。复核生产入口 native_platform_v3_0041.cpp：仍给 Ap01NativeAppFileBootV3 传空执行后端，故维护可工作但生产 App 加载拒绝；这是独立业务落地主线的真实未完成项，不能由当前模型启动测试替代。下一步聚焦执行内存分配/发布接线及完整启动列表重启路径，实机准入另行授权。
+
+### 2026-11-05 生产执行内存后端已接线
+
+本轮只推进生产启动/重启加载：新增 native_exec_memory_v3，生产 Platform 持有后端并传入真实 port，替代空后端。按需从平台 malloc 分配 image+BSS+15，对齐 16 B，仅接受固定 4 MiB RAM 区间；限制总量与 8 个映像，已接受映像保留到重启。入口发布检查所有权/范围后执行与固定 ROM 相同的 D-cache clean、I-cache invalidate、fence.i 序列。平台候选 6933864 B / SHA256 90da79aab5809f2d01dc75c01bf3f032472700ed0391fd7d6af35cc601dff17b，未部署。
+
+宿主 ASan/UBSan、RV32 编译通过。james.local Docker 的双地址真实双包启动/完整模板安装、同 VM reset 绑定与 Bundle 恢复通过；firmware CLI 首装失败再装、单更、批更、整集回退五事务接实际 RV32 日志/运行列表通过，全部产物摘要核对。详见 [执行后端证据与命令](exec-backend-v3.md)。本轮未修改 codex_status 业务源码；未继续目录扫描或 Bridge 产品化。
+
+替代前文“生产传空后端”的状态，但不替代物理内存/cache 或完整原厂 ROM 启动验收。QEMU 仍用分配地址、VFS/network/LVGL/调度替身及 reset 后注入 guest/文件；这一边界在报告中保留，不能从平台构建成功推导实机可部署。
