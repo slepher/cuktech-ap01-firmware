@@ -268,3 +268,105 @@ python3 -B tooling/scripts/test-app-set-client-http-v3.py --rv32-results --fail-
 2026-11-05 TCP/RV32 闭环：Python 原客户端经回环 TCP 完成五事务（首装失败空回退、同包重装、单更、批更、整集回退）；每事务一次 commit，重启执行期间 26 次查询原事务，实际 RV32 日志/运行快照导入后由生产服务清理并返回，boot=13/14/15/16/18，终态 cleanup_pending=false。报告 `build/app-install/set-rv32-tcp-v3-report-02.json`，SHA `436ca005efa953a19c51567a7caa759745fa1d47c750eba6471bd04cc4f9ebca`。实际 App 在 james.local Docker 双基址执行，宿主不注入健康。Bridge UI/Rust 与真实 RV32 的同次闭环、原生 HTTP/原厂启动仍待验证；未操作实机。
 
 旧镜像 `ap01-abi-qemu:20261104` 已不存在，首次 TCP 尝试因此失败并人工中止，不能作为通过证据。复用 Dockerfile.ap01-qemu-runtime 在 Docker 内重建 `ap01-abi-qemu:20261105`，镜像 ID `sha256:f69f687096a1e3437c7225f8e004b7f45bce243c22670507c0aef7e41d540420`；未在 james.local 宿主安装依赖。运行脚本支持同时指定 `--qemu-image` 与 `--expected-image-id`，本轮使用上述值。QEMU 引擎 SHA 保持 `25a9c3620f83411672359412d6aca73c20f0e2eb94d6a8fbae5e4c39f3be3f11`。
+
+## 2026-11-05 Bridge 页面与 Rust worker 接实际 RV32
+
+2026-11-05 Bridge UI/Rust/RV32 闭环：生产页面函数经测试 IPC、真实 Rust worker、回环 TCP 和生产 C++ HTTP 完成五事务（首装失败空回退→同包新 ID 重装→A 单更→A+B 批更→整集回退）。james.local Docker 中真实 App 双基址运行，导出日志/运行快照返回原客户端；每事务一次 commit，重启等待期间 20 次原事务查询，boot=13/14/15/16/18，终态 cleanup_pending=false。页面重开恢复、成功/回退标签、查询与归档均通过。报告 `build/app-install/set-rv32-ui-v3-report-01.json`，SHA `26d67fcd842758202b07668a861420a9a82314c2463c011649c2f5ffe9fe2982`；全部快照、子报告和终态二进制摘要复核一致。原生 Tauri IPC/文件对话框、网络变化自动发现、完整 RV32 HTTP/原厂启动仍未验证，未操作实机或生产 Bridge。
+
+复现：先创建一个新的空 snapshot 目录，避免覆盖历史证据。使用固件提交 `7802d7b` 的脚本、Bridge 提交 `b16450e` 的缓存实现；测试上下文设备登记为空，自动重连在网络发现前返回，不扫描实机。Docker 镜像与上节 20261105 指纹相同。
+
+```sh
+PATH=/Users/slepher/.cargo/bin:$PATH CARGO_TARGET_DIR=/private/tmp/codex-ap01-bridge-v3-target \
+python3 -B tooling/scripts/test-app-set-client-http-v3.py \
+  --tcp --rv32-results --fail-first --rust-ui \
+  --rust-bridge /Users/slepher/project/codex_status/bridge \
+  --binary build/app-install/test-set-journal-v3 \
+  --manifest build/app-install/d2-resume-set/set.amf3 \
+  --package build/app-install/d2-business-resume-01/app.apx2 \
+  --package build/app-install/d2-peer-beats-02/app.apx2 \
+  --snapshot-dir build/app-install/d4-rv32-ui-01 \
+  --tool-prefix build/s1/toolchains/xpack-riscv-none-elf-gcc-12.5.0-1/bin/riscv-none-elf- \
+  --qemu-image ap01-abi-qemu:20261105 \
+  --expected-image-id sha256:f69f687096a1e3437c7225f8e004b7f45bce243c22670507c0aef7e41d540420 \
+  --report build/app-install/set-rv32-ui-v3-report-01.json
+```
+
+这里的 CPU 复位是 QMP 模型，文件系统为内存 VFS；真实执行指 App 指令/加载/健康监督，不包括原厂 ROM 服务实现。运行包身份逐字段与实际 912 B ARV3 快照核对，单更 B 身份不变，回退恢复完整旧集合。
+
+## 2026-11-05 后续网络静态审计（非 QEMU）
+
+2026-11-05 网络阻塞审计：固定 0041 ROM 的 TCP accept 在空队列/阻塞模式下传 -1 无限等待，并不使用监听器接收超时。共享 native listener 创建 socket 时新增 ROM 已支持的 type bit 11（0x800），同时覆盖维护和 App；接收/发送仍用非阻塞 flags 及既有 deadline。新增 audit-native-network-0041.py 固定 ROM SHA/关键指令与调用链，变更 ROM 拒绝。完整 ABI 3 平台构建及候选校验通过，`d3-platform-09.bin` 6932264 B，SHA `f84b41d9529b9ca9d262bdc9e7c63ad09b464aa97554c17120aac73fb02f528b`；反汇编确认 TCP/UDP type=0x801/0x802。证据 `build/app-install/d2-network-audit-01/report.json`。本轮是静态原厂指令审计/构建，不是实际网络时序验收；维护预留、内核锁等待和资源完整审计仍待完成，未操作实机、不可部署。
+
+原厂路径：socket `0xa00268c4` → psock_socket `0xa00360e2`；IPv4 ops `0xa01be908` 的 +32 指向 accept `0xa00349d6`。空队列检查 conn+29 的 bit 3；未设置时 `0xa0034af6` 装入 -1，调用 `0xa003c08e`，再进入无限 semaphore wait `0xa002786c`。type bit 11 在 `0xa0036194` 映射到该 bit 3。没有假定 Linux fcntl/ioctl/setsockopt 常量，也没有改写原厂函数。复核命令：`python3 -B tooling/scripts/audit-native-network-0041.py --report build/app-install/d2-network-audit-01/rom-audit.json`；候选检查：`python3 -B tooling/scripts/test-firmware-0041.py --manifest build/app-install/d3-platform-09.manifest.json`。原厂指令审计不能替代后续运行测试。
+
+## 2026-11-05 原厂 socket/accept 指令对照
+
+2026-11-05 原厂网络指令执行：james.local Docker QEMU（rv32,xtheadbb=true）运行编译后的监听器前段及固定 ROM 的 psock_socket/TCP accept。TCP/UDP type=0x801/0x802；原厂将 bit 11 映射为 conn.flags bit 3；空队列下非阻塞返回 -11、不进入 wait。阻塞对照即使设置接收超时 20 deciseconds，仍到达 timeout=-1 的等待入口，测试在该处断点停止。五项检查通过，报告 `build/app-install/d2-network-qemu-01/network-20261105-03.json`，SHA `facfb56108c944973903f1043b17437aa42d599151bbe26b62cef6ae49800da0`；脚本、ROM、监听器片段及引擎/支持脚本摘要一致。分配/setup 和空连接为替身，未执行完整内核引导/真实网络，不能宣称内核锁耗时或维护预留已验；未操作实机。
+
+本轮原测试镜像 20261105 已不存在；使用已有 Dockerfile、同一 Debian 基础摘要，在 Docker 内重建 `ap01-network-qemu:20261105-01`，ID `sha256:5eb73f3723ae561b43d9a416f1d29730fb5c945800fe5501b2e0ec6a8101365e`。不安装宿主依赖、不改动运行服务。第一次脚本导入因容器路径层级不同失败，已将审计模块的默认路径求值移至 CLI；第二次默认 rv32 在 T-Head 指令处超时，不作为通过证据；显式启用 xtheadbb 后第三次通过，固定 ROM 字节没有改写。
+
+输入目录 `/home/slepher/ap01-abi-20261103/input/network-20261105-01`，包含原始 ROM、两份脚本和从 `d3-platform-09/native_io_0041.o` 的 listener section 用 objcopy 导出的 154 B `listener.bin`。测试只执行 listener 到 socket 调用入口，不执行其中后续外部重定位调用；psock_socket 的 setup 在 `0xa003401e` 拦截并提供零化 conn，其余标志传播及 accept 分支执行原厂指令。阻塞对照停在 `0xa003c08e`，不会实际等待。未启动完整 ROM，未初始化 RF，也未使用真实 socket。
+
+运行沿用只读根、无网络、2 CPU/512 MiB/64 PID、UID 1000 及 /tmp tmpfs 的 Docker 限制；引擎和 support 只读挂载，output 独立可写。容器内命令：
+
+```sh
+python3 -B /input/test-native-network-qemu-0041.py \
+  --qemu /engine/qemu \
+  --expected-engine-sha256 25a9c3620f83411672359412d6aca73c20f0e2eb94d6a8fbae5e4c39f3be3f11 \
+  --support-dir /support --rom /input/ap01-1.0.2_0041.bin \
+  --listener /input/listener.bin --output /output/network-20261105-03.json
+```
+
+复现须使用新的 output 名，脚本拒绝覆盖。镜像及全部本地输入摘要保存在 `d2-network-qemu-01/execution-identity.json`，超时尝试报告保留为 `network-20261105-02.json`。
+
+## 2026-11-05 原生 I/O 截止回归（宿主）
+
+2026-11-05 原生 I/O 截止修复：waitFd 原先两次读取单调时钟，100→102 ms/截止 101 ms 会导致无符号下溢并请求 poll 1000 ms；新增真实适配器宿主回归先复现失败，改为单次采样后通过。覆盖已截止、等待上限、EINTR、I/O 错误、就绪/挂断，以及 TCP/UDP 非阻塞参数和各初始化失败的关闭路径；已接 test-native-app-platform-v3.py，原有双 App/宿主回归与 ASan/UBSan 一并通过。报告 `build/app-install/d2-native-io-01/native-app-platform-v3-report.json`，SHA `912740522e5de52aae4f4061509a6f1f8e528760cc87969434fd5e44445286d4`。完整候选 `d3-platform-10.bin` 6932264 B，SHA `17ae3f3f7e43fc045a11a96f6b86d5c5127273693070922defb84b582de1ad54`，镜像校验通过；未操作实机，不可部署。ROM 时钟/poll 为测试替身，不证明实际时延、时钟失效恢复或维护资源预留。
+
+回归直接包含生产 native_io_0041.cpp，仅 ROM_FN 由时钟/poll/socket 替身解析；RV32 PollFd 24 B 静态断言仍保留在交叉构建中。命令：
+
+```sh
+python3 -B tooling/scripts/test-native-app-platform-v3.py \
+  --out build/app-install/d2-native-io-01 \
+  --package build/app-install/d2-business-resume-01/app.apx2
+python3 -B tooling/scripts/test-firmware-0041.py \
+  --manifest build/app-install/d3-platform-10.manifest.json
+```
+
+首次回归的断言失败是刻意验证旧实现，退出 134；修复后通过，不涉及 Python 崩溃或真实设备。此前原厂 socket/accept QEMU 证据仍对应 d3-platform-09 的 listener 片段，本轮新增期限修正由宿主生产适配器测试和完整 RV32 编译验证，不扩大旧 QEMU 的验证范围。
+
+## 2026-11-05 维护 HTTP 工作区（宿主及完整交叉构建）
+
+2026-11-05 维护请求预留：Ap01NativeServices0041::State 在 App 启动前持有并复用 34817 B HTTP 工作区（2048 B 头+32768 B ROM 块+终止位），串行维护请求解析不再逐次申请 6145 B/大块缓冲区。生产 RV32 State=35536 B（已含工作区）、维护对象=200 B、维护线程栈=16384 B；构建报告明确嵌套计费，避免再叠加旧 HTTP 上限。注入解析器数组分配失败后，空/小/最大分块及复用通过，越界/截断拒绝；ASan/UBSan 原生平台、集合 102896 检查、独立维护 OTA/重放/重启回执/无稳定记录切槽、跨仓职责边界均通过。完整候选 d3-platform-12.bin 6932600 B，SHA `d063186246c5daa8e977abd2091928f38da6fdef47ea0c58a964b079284ecd53`，校验通过。证据在 `build/app-install/d2-maintenance-reserve-01/`；仍不保证响应/处理器及 ROM 分配或整机维护储备，未操作实机、不可部署。
+
+报告摘要：
+
+- `native-app-platform-v3-report.json`：`c9c319dd89bd152dfbf20f0005184afa0987ccab39e9887384441f58df7265aa`。
+- `set-journal-v3-report.json`：`e9a7ddc7022e38aa864a2c9ee756541c26133ead809bc9872b70490cd8337375`。
+- `maintenance-gate-report.json`：`bd5af9abc84885c2418a6aeed4b809ee67325422ac0dce0db3c2bc78bdcfd71d`。
+
+分配失败测试只替换 nothrow 数组分配；真实解析器借用预留工作区，handler/响应分配不在本项无分配声明内。共享工作区复用后还检查长度边界和截断，原有动态分配 fallback 仍单独覆盖。集合生产 HTTP 路由和独立维护 32 KiB OTA 分块使用同一工作区入口。独立维护最初失败为长 checkout 临时路径触发既有 128 B VFS 限制，测试改用短临时根后通过，未放宽固件路径规则。无 App 绑定仍可维护和切槽。
+
+复现（输出目录须预建）：
+
+```sh
+python3 -B tooling/scripts/test-native-app-platform-v3.py --out build/app-install/d2-maintenance-reserve-01 --package build/app-install/d2-business-resume-01/app.apx2
+python3 -B tooling/scripts/test-app-maintenance-gate-0041.py --out build/app-install/d2-maintenance-reserve-01 --rom build/app-install/d3-platform-12.bin
+python3 -B tooling/scripts/test-app-set-journal-v3.py --out build/app-install/d2-maintenance-reserve-01 --package build/app-install/d2-business-resume-01/app.apx2 --manifest build/app-install/d2-resume-set/set.amf3 --peer build/app-install/d2-peer-beats-02/app.apx2
+python3 -B tooling/scripts/test-firmware-0041.py --manifest build/app-install/d3-platform-12.manifest.json
+```
+
+## 2026-11-05 响应内存失败（宿主及完整交叉构建）
+
+2026-11-05 响应 OOM：故障注入复现 ArduinoJson String writer 在最终 flush 失败时仍返回非零计数，旧判断可留下空/不完整成功正文。统一 ap01EncodeJson0041 保留一次预分配，检查文档溢出、输出上限、序列化计数和实际长度；集合、维护/ROM 及保留的旧 App 更新回执复用。HTTP 对非 frame 空正文直接发送无需 String 分配的 503/unknown，指引查询原事务，避免将可能已提交的动作报为成功或拒绝。新回归、ASan/UBSan 原生平台、102896 集合检查、独立维护及旧 HTTP 均通过。完整候选 d3-platform-13.bin 6932440 B，SHA `f9690ed792daa30d30af512c7a3cb5c20ae8de98e3281cb4996cabcb7c081eaf`，镜像校验通过；证据 `build/app-install/d2-response-oom-01/`。不是全处理器 OOM 矩阵或整机资源保证，未操作实机、不可部署。
+
+证据摘要：
+
+- `native-app-platform-v3-report.json`：`097c5968d6a23e56026f6e4a67af8443176487f91d5767bd9fe79535de73b778`。
+- `set-journal-v3-report.json`：`d4c1f26079330e222fe6b8f7e816e910fb425ace3b8fe34ca3a51e349f0e2a5e`。
+- `maintenance-gate-report.json`：`9b57091b493207fbe5d874cd915c932b1b25922affa78fff30f82c7eb6abd08e`。
+- `http-report.json`：`f5960c83824589482732561c5b9594d636d176e3d9af0d11c0c050937ab15a3b`。
+
+测试直接注入 String realloc 失败，验证旧 writer 非零计数/空正文、新 helper 拒绝输出，以及正常序列化只发生一次 reserve；还覆盖长度上限和 JsonDocument 分配失败。HTTP 测试模拟已处理请求返回空成功正文，保持解析工作区可用并拒绝解析器数组分配，断言线上 503 Unknown 与查询原事务提示。处理器/响应 malloc 的全部调用链故障矩阵仍开放。
+
+回归入口仍为 `test-native-app-platform-v3.py`、`test-app-set-journal-v3.py`、`test-app-maintenance-gate-0041.py`；保留路径通过 `test-app-http-0041.py --out build/app-install/d2-response-oom-01 --package build/app-install/golden.apx2` 验证。完整候选通过 `test-firmware-0041.py --manifest build/app-install/d3-platform-13.manifest.json`，未运行 QEMU或操作实机。
