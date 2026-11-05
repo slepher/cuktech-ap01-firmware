@@ -1,10 +1,12 @@
-# App 平台 C ABI 3.0
+# App 平台 C ABI 3.1（兼容 3.0 前缀）
 
 2026-11-03，D1 冻结。权威声明为 `tooling/firmware-modules/app_abi_v3.h`、`app_platform_api_v3.h` 及其引用的公开 C 结构。目标 RV32IM AFC、little-endian、ILP32F；指针/int/size_t 为 32 位，变参遵循同一 ABI。不传 C++ 私有对象、String、异常、STL 或 TLS。
 
 ## 版本与生命周期
 
-表头 `abi_major=3, abi_minor=0, struct_bytes=296, reserved=0`，能力位 core/files/network/memory/UI/tasks/binding 分别为 1/2/4/8/16/32/64；当前真实 App 必需全部 127。必需函数或嵌套表缺失则启动拒绝。只允许尾部追加兼容 minor，改变已有布局/语义须换 major。RV32 编译断言：UI 100 B、binding 16 B、HTTP 请求 48 B、文件表 52 B、网络表 36 B；原有 LVGL/host 表版本均为 1。
+3.0 表头为 `abi_major=3, abi_minor=0, struct_bytes=296, reserved=0`；3.1 平台提供 `abi_minor=1, struct_bytes=304`，保留原 296 B 前缀（含末尾 4 B 填充），仅在偏移 296 追加 write_scope 指针。能力位 core/files/network/memory/UI/tasks/binding 分别为 1/2/4/8/16/32/64；当前真实 App 必需全部 127。必需函数或嵌套表缺失则启动拒绝。只允许尾部追加兼容 minor，改变已有布局/语义须换 major。RV32 编译断言：UI 100 B、binding 16 B、HTTP 请求 48 B、文件表 52 B、网络表 36 B；原有 LVGL/host 表版本均为 1。
+
+`write_scope(context, callback, argument, result)` 为 worker 上的同步写操作准入。INVALID 表示缺失 callback/result，UNSUPPORTED 表示无文件能力，PENDING 表示没有执行回调且 result 不变；OK 只表示执行完成，业务成败取决于 result 中的回调返回值。回调不得抛异常、异步继续、嵌套 scope 或等待另一个写者。同线程 VFS 调用借用整段租约，其他线程不能借用；撤权等待已准入操作完成。新调用方通过 `ap01WriteScopeV3` 或 `ap01RuntimeWriteScopeV3` 检查 major/minor/字段覆盖长度及非空入口，旧/短表返回 UNSUPPORTED，不越界读取。历史 3.0 App 仍可在新平台使用旧前缀；新业务运行库依赖作用域，绑定时要求 minor>=1、字段长度及入口有效，避免健康批准后才发现功能缺失。此扩展不改变 App start/event/health 的编码。真实 Runtime 首次可写恢复已调用此扩展；Bundle、激活和配对确认的操作级接线仍待完成。
 
 平台传入每 App 独立、不可替换的 table/context，保留至重启；文件/网络子表有自己的 context，调用时不得混用。平台先监听维护端口、预留映像及 App 预算，再校验/复制/修正包、发布缓存、调用 start。start 发布的 instance、注册回调与代码在失败后也必须保留，不在线释放或再次 start。未知 ABI 与旧五入口包拒绝；无 prepare_stop/stop。
 
@@ -20,7 +22,7 @@
 - 文件操作只在工作线程进行，缓冲区在调用期间借用；平台锁、路径/句柄检查与写许可继续有效。write/rename 语义见 `native_vfs_api_0041.h`。D1 固定根 `/resource/codex-status`，写门默认关闭，不执行 trial/成功开放；D2 要审计维护与业务完整写集，当前根不是已完成的多 App 私有目录隔离。
 - 网络工作线程使用直接表；TCP 接收/发送等待绝对单调期限，UDP 非阻塞。listen/accept 返回正句柄；close 成功 0，其余字节数/事件位见头文件。仅准许 TCP 18081/UDP 8767。2026-11-05 固定 ROM 静态审计确认阻塞 accept 不使用接收超时；共享 listener 已用原厂支持的 socket type 0x800 标志，空队列返回 EAGAIN。见 `tooling/scripts/audit-native-network-0041.py`。`test-native-network-qemu-0041.py` 在 james.local Docker 执行原厂标志传播和空队列 accept 分支已通过（连接分配/setup 为替身）；此修正不证明内核锁/调度时延，原厂 accept 的实际耗时仍未硬件验证；单地址空间也不提供沙箱。
 - format 是平台 snprintf，固定 RV32 变参/标准返回值；App 不链接私有 formatter。errno_slot 是平台当前调用线程的 errno。format 不拥有传入缓冲区。
-- busy/writes_allowed 只读；App 不能自行开放写门。bind 只成功一次，复制 C 回调表，release/acquire 发布。维护请求字符串和 body 仅调用期间有效；pairing 必须且只能 emit 一次，status 100–599、body 不超过 4096 B；平台复制后 emit 才返回。回调在维护工作线程执行，应有界，不访问 UI。绑定前维护仍工作，业务身份/配对返回未就绪。
+- busy/writes_allowed 只读；App 不能自行开放写门。busy 包括维护未监听、原厂 OTA、平台维护 OTA 和 Wi-Fi 切网状态；它是观察值，不是跨检查/写入的锁，不能替代集合写门或平台操作锁。bind 只成功一次，复制 C 回调表，release/acquire 发布。维护请求字符串和 body 仅调用期间有效；pairing 必须且只能 emit 一次，status 100–599、body 不超过 4096 B；平台复制后 emit 才返回。回调在维护工作线程执行，应有界，不访问 UI。绑定前维护仍工作，业务身份/配对返回未就绪。
 
 ## UI 与当前范围
 
