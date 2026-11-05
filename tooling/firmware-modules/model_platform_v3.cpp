@@ -24,6 +24,7 @@ void Ap01NativeServices0041::endAppOperation(){}
 bool Ap01NativeServices0041::busy() const{return ap01ModelV3.busy;}
 namespace ap01_native0041 {
 uint64_t nowMs(){return ap01ModelV3.now;}
+bool monotonicMs(uint64_t &out){if(ap01ModelV3.clockFailed)return false;out=ap01ModelV3.now;return true;}
 void pause(unsigned n){ap01ModelV3.now+=n;if(ap01ModelV3.pause)ap01ModelV3.pause(n);}
 bool randomBytes(void *,uint8_t *out,size_t n){if(!out)return false;memset(out,7,n);return true;}
 bool wifiMac(char (&out)[13]){memcpy(out,"AABBCCDDEEFF",13);return true;}

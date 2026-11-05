@@ -57,6 +57,14 @@ static int32_t grantStart(const Ap01PlatformApiV3 *api,void *context,void **out)
     assert(api->network.listen(api->network.context,18080,0)<0);
     assert(api->network.listen(api->network.context,peer?18081:18082,0)<0);
     if(peer)assert(api->network.listen(api->network.context,8767,1)<0);
+    if(!peer){
+        auto &net=api->network;int fd=net.listen(net.context,18081,0);assert(fd>0);
+        uint64_t before=ap01ModelV3.now;ap01ModelV3.clockFailed=true;
+        assert(net.wait(net.context,fd,1,before+10)==0&&ap01ModelV3.now==before);
+        ap01ModelV3.clockFailed=false;
+        assert(net.wait(net.context,fd,1,before+1)==0&&ap01ModelV3.now==before+1);
+        assert(!net.close(net.context,fd));
+    }
     return AP01_APP_V3_OK;
 }
 static int32_t appEvent(void *,uint32_t,const void *,uint32_t){return 0;}

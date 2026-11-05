@@ -27,7 +27,7 @@ bool charge(std::atomic<uint32_t> &used,uint32_t amount,uint32_t limit){
     return true;
 }
 }
-bool Ap01NativeAppPlatformV3::clock(void *,uint64_t *out){*out=ap01_native0041::nowMs();return true;}
+bool Ap01NativeAppPlatformV3::clock(void *,uint64_t *out){return out&&ap01_native0041::monotonicMs(*out);}
 bool Ap01NativeAppPlatformV3::yield(void *){ap01_native0041::pause(1);return true;}
 Ap01NativeAppPlatformV3::Ap01NativeAppPlatformV3(uint64_t boot,const Ap01BootPortV3 &backend)
     :Ap01NativeAppPlatformV3(boot,backend,defaultGrant(),false,nullptr){}

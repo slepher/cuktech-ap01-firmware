@@ -8,6 +8,9 @@ struct Address {uint16_t family,port;uint32_t ip;uint8_t padding[8];};
 struct Clock {int32_t seconds,nanos;};
 struct Flash {int32_t fd=-1,flip=0;};
 uint64_t nowMs();
+// Checked form for deadline-sensitive I/O. A valid boot-time zero is distinct
+// from a failed/invalid ROM clock read; failure leaves the output unchanged.
+bool monotonicMs(uint64_t &);
 void pause(unsigned ms);
 void closeFd(int fd);
 bool randomBytes(void *,uint8_t *,size_t);
