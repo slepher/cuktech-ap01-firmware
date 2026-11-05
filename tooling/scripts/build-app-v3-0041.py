@@ -14,13 +14,15 @@ p.add_argument('--out',type=Path,required=True)
 p.add_argument('--app-config',type=Path,required=True)
 p.add_argument('--tool-prefix',required=True)
 p.add_argument('--app-id',default='codex_status')
-p.add_argument('--version',default='d1.0')
+p.add_argument('--version',help='Override the version declared by the App source configuration')
 p.add_argument('--heap-bytes',type=int,default=2*1024*1024)
 p.add_argument('--stack-bytes',type=int,default=40960)
 p.add_argument('--capabilities',type=int,default=127)
 a=p.parse_args();out=a.out.resolve()
 if not out.is_dir() or any(out.iterdir()):p.error('out must be an existing empty directory')
 config=native.read_app_config(a.app_config);tool=native.tools(a.tool_prefix);m=native.MODULES
+try:a.version=native.app_version(config,a.version)
+except ValueError as error:p.error(str(error))
 report={'built':False,'executed':False,'hardware_verified':False,'abi_major':3,'objects':[],
         'compiler':subprocess.check_output([tool('g++'),'--version'],text=True).splitlines()[0],
         'app_config_sha256':native.sha(a.app_config),

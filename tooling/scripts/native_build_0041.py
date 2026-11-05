@@ -61,11 +61,20 @@ def tools(prefix):
     return executable
 
 
+def app_version(config, override=None):
+    value = override if override is not None else config.get('version')
+    if not isinstance(value, str) or not re.fullmatch(r'[A-Za-z0-9._+\-]{1,31}', value):
+        raise ValueError('Supply an App source configuration version or --version (1-31 ASCII version characters)')
+    return value
+
+
 def read_app_config(path):
     path = path.resolve()
     config = json.loads(path.read_text(encoding='utf-8'))
-    if config.get('format') != 1 or set(config) - {'format', 'root', 'include_dirs', 'defines', 'plain_sources', 'sources'}:
+    if config.get('format') != 1 or set(config) - {'format', 'root', 'version', 'include_dirs', 'defines', 'plain_sources', 'sources'}:
         raise ValueError('Unsupported App source configuration')
+    if 'version' in config:
+        app_version(config)
     app = (path.parent / config['root']).resolve()
     for key in ('include_dirs', 'plain_sources', 'sources'):
         paths = [(app / p).resolve() for p in config[key]]

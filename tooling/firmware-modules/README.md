@@ -23,7 +23,9 @@
 原厂基线与 CUKTECH 修改版版本的源码唯一入口为 `native_version_0041.h`。
 CUKTECH 从 `0.1.0-cuktech` 独立递增；同一发布的无载入器/有载入器构建由
 `supports_app` 和 `build_id` 区分，原厂兼容目标仍为 0041。
-App 版本通过 `tooling/scripts/build-app-v3-0041.py --version` 从源码构建时指定；不从已有包推导新版本。
+App 版本由 App 仓库源码配置的 `version` 字段声明，构建器读取该字段；`--version` 可显式覆盖。
+固件仓库不内置业务 App 的默认版本，不从已有包推导新版本。`codex_status` AP01 沿用
+Note4/1.54 的业务版本系列，当前声明 `0.18.108-ap01`，独立于 CUKTECH ROM 发布。
 ROM 与 App 分别发版，修改源码版本后须重新构建和安装才会改变设备返回值。
 
 `apps` 仅列本次开机成功加载的 App，按启动顺序返回，不枚举磁盘上的旧包、候选包或未启动条目。

@@ -37,6 +37,19 @@ class BuildChecks(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'within its source root'):
             native.read_app_config(self.config)
 
+    def test_app_owned_version_and_explicit_override(self):
+        config = json.loads(self.config.read_text())
+        config['version'] = '0.18.108-ap01'
+        native.write_json(self.config, config)
+        self.assertEqual(native.app_version(native.read_app_config(self.config)), '0.18.108-ap01')
+        self.assertEqual(native.app_version(config, '0.18.109-ap01'), '0.18.109-ap01')
+        self.assertEqual(native.app_version({}, 'legacy.1'), 'legacy.1')
+        for value in (None, '', 'x' * 32, 'bad version', '版本', 123):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                native.app_version({'version': value})
+        with self.assertRaises(ValueError):
+            native.app_version({})
+
     def test_changed_source_object_or_config_invalidates_link(self):
         for path in (self.source, self.obj, self.config):
             with self.subTest(path=path.name):
