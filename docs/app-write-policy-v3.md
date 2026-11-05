@@ -92,3 +92,13 @@ ABI 3 配对回调会通过相同 VFS 写门保存绑定，维护路由不能在
 生产服务的 `busy()` 此前只包含平台维护与 Wi-Fi 状态，遗漏原厂 OTA，和 `tryAppOperation()` 的判断不一致。现复用后者已有的 `State::firmwareBusy`，使业务 C 表和 UI 调度也能观察原厂 OTA。业务 Runtime 的 `systemBusy` 通过 C 表读取该值；未修改原厂 OTA 入口或关闭救援通道。
 
 `test_native_services_0041.cpp` 直接链接生产服务、维护及 Wi-Fi 状态机，替换 ROM/VFS/线程端点且不启动执行器。旧实现触发 busy 断言，新实现通过原厂 OTA 开始/结束、操作锁竞争与释放、Wi-Fi 入队互斥；与独立无绑定 OTA/重放/重启回执/切槽测试一起纳入 `test-app-maintenance-gate-0041.py`。这证明状态传播，尚不证明原厂检查/启动原子性、业务在途写排空或完整资源协调。先前“安装 HTTP 待绑定”的记录已被后续 D3/D4 绑定与闭环证据取代，剩余协调限制仍有效。
+
+2026-11-05：HTTP 整请求准入的宿主专项已覆盖认证 claim、Bundle begin/chunk/commit：Busy 不推进请求序号，原请求重试成功，成功回执重放无额外持久写入；只读 status 在 Busy 时仍可用。测试使用真实 Application/C2/Bundle 与 AppFilesV3，底层磁盘和线程身份为宿主替身；不代表 RV32 HTTP、配对确认或本地激活已验收。
+
+本地激活通过完整 writeScope 执行；仅准入 Busy 返回 retry，worker 重排请求且不覆盖更新请求，存储/渲染失败保留原失败语义。两模板宿主测试已覆盖远程激活 Busy 重试/回执重放和本地激活 Busy 无写入后成功切页；原生 UI 队列并发及 RV32 HTTP 尚未验收。
+
+配对确认：ABI 3 UI 仅记录已显示请求的有效松键及修订号；业务 worker 在写入准入内调用原绑定状态机落盘。Busy 保留待处理确认，worker 使用当前时间检查到期并拒绝修订号变化，防止取消/替换后旧按键授权新请求。绑定锁保护单个待处理确认；无函数表写入准入的旧端口保持原行为。宿主顺序交错已验，原生并发尚未验收。
+
+Busy 的两层边界：仅 writeScope 准入竞争时，status 不需要写入租约；系统 `busy()` 为真时，业务生命周期策略仍返回 `business_offline`（独立维护查询另行保证）。宿主前者和 RV32 分段 HTTP 后者均已验证，不能将“准入竞争时可读”推广为所有维护期间业务 status 可用。
+
+配对保存并发已增加宿主真实线程证据：底层 write 阻塞期间，绑定锁排除 UI、取消/身份查询与重复 worker，释放后提交一次；ThreadSanitizer 与 ASan/UBSan 通过。此项不代表原厂调度与硬件 I/O 延迟已验收。

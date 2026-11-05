@@ -293,3 +293,83 @@ HTTP 路由改动后的完整独立平台构建及镜像检查通过：`build/ap
 ### 2026-11-05 分批提交边界
 
 业务仓库新增 HTTP 变更请求的整请求 writeScope 接入，准入位于 session/replay 更新之前；当前只读恢复宿主回归与跨仓库边界检查通过。该 HTTP 接入尚缺认证 C2 Busy 后同请求重试、提交回执重放的专项测试，既有 RV32 包证据不包含这次 HTTP 接入；本地激活与配对确认写入仍未闭环。此次仅提交源码与文档，不操作实机。
+
+### 2026-11-05 C2 整请求准入专项
+
+`test-app-readonly-0041.py --out build/commit-check --direct-files` 新增真实 Application/C2/Bundle 与生产 AppFilesV3 的组合测试：宿主线程身份、磁盘和 Busy 状态替身；状态查询在 Busy 时成功，认证 claim、Bundle begin/chunk/commit 均在 Busy 拒绝后以完全相同的请求重试成功，成功回执再次重放字节一致且无额外磁盘写入/上下文变更。ASan/UBSan 通过；报告 `build/commit-check/readonly-direct-report.json`。此前该项专项缺口已补齐，未覆盖 RV32 HTTP、HTTP 激活、本地激活及 UI 配对确认线程迁移，未操作实机。
+
+### 2026-11-05 激活写入准入
+
+远程 `/api/activate` 已纳入真实 C2 Busy 原请求重试及无额外写入的回执重放测试；两模板夹具验证切到索引 1。本地 `localActivate` 在完整 writeScope 中更新 context、落盘、恢复和渲染；Busy 不生成新 context、不写盘并显式返回 retry，worker 保留待处理请求且不覆盖更新的请求；真实 I/O 失败不重试。宿主验证 Busy 后切回索引 0、context 更新以及 I/O 失败分类，ASan/UBSan 通过。原生队列并发及实际 UI 执行仍待验证。
+
+真实 App 交叉构建 `build/app-install/d2-business-activation-scope-01/app.apx2`，204928 B，SHA256 `94cf12d85e5cb59609b93c34df8388816806d829014cadc07336102191e4bdf7`；外部未解析符号 0、双基址归一化一致。该包包含 HTTP 和本地激活准入，尚未执行 QEMU；不继承旧包的执行证据，未操作实机。配对确认迁移仍待推进。
+
+### 2026-11-05 配对确认迁移到 worker
+
+ABI 3 App UI 的有效松键仅保存 event/revision（绑定锁保护、单个待处理确认），不调用持久 save。业务 worker 在 writeScope 内完成确认；Busy 保留，取消/替换通过 revision 淘汰，过期以 worker 当前时间判定，失败或执行后清除。无 writeScope 的旧端口行为保留。
+
+真实 Application/Binding/AppFilesV3 宿主 ASan/UBSan 测试通过：UI 零写入、Busy 零写入、取消并换请求后旧确认不授权、有效松键延迟到期不授权、重新确认 Busy 后落盘一次及重复处理无写入。报告 `build/commit-check/readonly-direct-report.json`；这是顺序交错测试，不证明原生 UI/worker 并发。跨仓库边界检查通过。
+
+交叉包 `build/app-install/d2-business-pair-worker-01/app.apx2` 205360 B，SHA256 `27bb07332aff6eef0726f48ea09c3638eadee8df2be23b652324f6fed0e0b2cb`，零未解析符号、双基址归一化一致；新包未执行 QEMU/实机。后续仍需原生并发和 RV32 HTTP/配对/激活链验证。
+
+### 2026-11-05 新配对 worker 包的 RV32 回归
+
+james.local 既有 Docker 镜像 `5eb73f3723ae561b43d9a416f1d29730fb5c945800fe5501b2e0ec6a8101365e` 中执行 `d2-business-pair-worker-01` 真包及 peer 集合，两基址 `0xa8000000`/`0xa8040000` 返回 0，栈和保留寄存器校验通过。生产 APX2 加载、集合启动、健康确认、Busy 后首次可写恢复、各 worker 停滞检测通过。报告 `build/pair-worker/qemu.json` SHA256 `eb7d1ef4d5e6f4de4a30c8f04abfc5405cfc6f91e185b167916a6259fa9ef12a`；guest、App、Manifest、peer、构建报告及运行脚本哈希与本地一致。
+
+该 guest 仍用模型 VFS/network/LVGL 与协作调度；未发送配对/业务 HTTP 请求，不能替代这些请求路径的 RV32 验证，也不证明原厂 RTOS 并发或完整 ROM 启动。未安装远端宿主依赖、未访问实机。
+
+### 2026-11-05 真实 RV32 worker HTTP 拒绝路径
+
+模型网络新增可选单请求字节夹具，默认无请求，7B 分段读取/11B 分段发送；集合 guest 向真实 App worker 交付有效 C2 帧。james.local 既有 Docker 中两基址返回 0，校验请求被完整读取、连接关闭且无额外 mkdir：Trial Bundle begin → 503 app_trial_readonly；status → 401 unauthorized；系统 Busy 时 Bundle begin → 503 maintenance_busy、status → 503 business_offline；Busy 解除后 status → 401。
+
+报告 `build/pair-worker/http-wire-qemu.json` SHA256 `93fb627caa9eeef9ea957948a35029d77cf12adaa52225157212d00df66d7a38`，guest `e9d707d14e23f12ee370b4c6ab038737473062c16f7cde111a95dac206b18d99`，真实包仍为 `27bb07332aff6eef0726f48ea09c3638eadee8df2be23b652324f6fed0e0b2cb`；构建报告及全部输入哈希已核对。此前“未发送业务 HTTP”的边界由此部分推进：现在覆盖实际 RV32 HTTP 拒绝路径，尚不覆盖认证成功、配对确认/Bundle 持久写入、原厂 socket 或原生抢占调度。模型仅空业务 VFS，不据此宣称磁盘成功路径已验。
+
+### 2026-11-05 RV32 配对成功与认证状态
+
+真实 App 经 resident pairing bridge 受理请求，模型触发真实 App 注册的绘制回调及共享窗口按下/松开事件；UI 无绑定写入，系统 Busy 时 worker 不写入，解除后 worker 完成 APB1 保存、读回验证和一次 rename。随后使用该令牌经模型分段网络、真实 HTTP/C2 worker 获得 200/session_nonce。两基址返回 0、栈/保留寄存器通过，james.local 既有 Docker 执行。
+
+报告 `build/pair-worker/pair-http-qemu.json` SHA256 `e38e1193c1599e2e099b2c01f911d2e0aaf597fd801453531fe3e89f54c654d3`，guest `aece24c2223daf8cb8c0951afcde56e81f7ec25c7373e7edfcd04b18eca8d3e0`；App 仍为 `27bb07332aff6eef0726f48ea09c3638eadee8df2be23b652324f6fed0e0b2cb`，全部输入/构建报告哈希已核对。早期 400ms 调度不足以跨过 worker 最长 1s 的 listen wait，配对仍 awaiting；延长到 2s 调度后通过，没有改变生产状态机。
+
+边界：绑定存储仅两个 512B 内存文件，单条 APB1 夹具；绘制完成是显式模型事件，配对入口直接经过 resident bridge（不覆盖维护 HTTP parser/鉴权），状态查询经过真实业务 HTTP parser。尚不证明硬件 VFS、掉电持久性、真实 LVGL 绘制/按键、原厂抢占调度或 Bundle 安装成功链。
+
+### 2026-11-05 配对保存真实线程交错
+
+只读/准入宿主夹具改用与原生 Runtime 相同的 atomic_flag 绑定锁语义，并以真实 std::thread 执行 `processConfirmation`，在底层 write 内用有界条件变量暂停。暂停期间 UI button/displayed/pairingUi 不进入状态，principal 返回 503，取消请求返回 maintenance_busy，第二次 worker 调用不产生写入；释放后原 worker 完成一次提交，重复处理不再写入。ASan/UBSan 与 ThreadSanitizer 均通过。
+
+运行 `test-app-readonly-0041.py --out build/commit-check --direct-files --thread-sanitizer`；报告 `readonly-direct-tsan-report.json` SHA256 `34be5e98a76e527d17606c8f3a44cdcb0a97e25a8b3ca28498809f1b76a6bcfa`。该证据覆盖真实 Application/Binding/VFS 代码的宿主线程互斥，仍不替代原厂 RTOS 调度/锁内最长延迟、真实 UI 队列并发或设备磁盘时序。
+
+### 2026-11-05 Bundle RV32 模型存储准备
+
+从实际 BundleStore 安装流程确认需同时读 content 并追加编译缓存；模型 VFS 因而扩展为 6 个显式文件、16 个独立游标句柄：两绑定文件各 512B，incoming/content 各 256KiB，state.tmp/state.bin 各 2KiB，按需分配。支持 read/append/seek、关闭后 rename/remove、UI 写拒绝及超容量无写入；不模拟真实 flash 块/掉电。宿主 ASan/UBSan 对独立游标、边界和关闭所有权的专项及多 App 回归通过。
+
+扩展后配对/认证状态 guest 在 james.local Docker QEMU 双基址仍返回 0；报告 `build/pair-worker/bundle-vfs-qemu.json` SHA256 `9a3e01a0f53f5c8a59abeca6b4da976b4b4514f8e653cdc1c2a71d028333b04d`，输入哈希逐项核对。Bundle claim/begin/chunk/commit 成功请求序列尚未接入 guest，因此 Bundle 安装 RV32 验收仍未完成。
+
+### 2026-11-05 RV32 Bundle 安装成功链
+
+在前述真实配对/认证基础上，guest 经实际 HTTP/C2 worker 执行 status 开 session、claim、Bundle begin/chunk/commit；最小单模板矩形 Bundle 的长度/CRC 随 fixture 固定，真实 BundleStore 执行校验、模板编译、正文追加缓存、readback 与状态提交。校验 content/state 存在、incoming 已退役、content 大于原始 JSON，提交后 status configured=true 且模板 ID 匹配；同一个 commit 帧重放回执逐字节一致且无新增写入/rename。
+
+james.local Docker QEMU 双基址返回 0、栈/保留寄存器通过。报告 `build/pair-worker/bundle-http-qemu.json` SHA256 `255120870719aa0ad80b4f0fe76995020ed49cb4a9b76ff1e0e16f623e105894`；guest `f97a5bf2b820aab04c4f53a08dc90919d32fc667771fc6eac45760586a870229`，真实 App 包仍 `27bb07332aff6eef0726f48ea09c3638eadee8df2be23b652324f6fed0e0b2cb`；输入/构建报告/脚本哈希核对通过。
+
+本次发现旧测试 guest 的不回收 bump heap 上界写到 QEMU 未映射的 a8400000 以上。故障日志定位在 malloc，最终陷入 trap 后 QEMU 被终止。guest 已改为复用现有 Ap01AppHeap0041 allocator/client，仅占已映射的 2MiB，可回收；这是测试 ROM malloc 替身，真实 ABI 3 App 不重新接入旧堆服务。运行器现在记录清理前退出状态并支持有界 guest 异常日志。
+
+仍不证明硬件 VFS/掉电、原生抢占、真实显示、完整业务模板/中文字体、Bundle 重启恢复及完整 ROM 启动。此处是最小有效 Bundle 的真实 RV32 安装与请求幂等成功证据。
+
+### 2026-11-05 Full AP01 template RV32 evidence
+
+The guest builder now accepts --business-template and records source/header hashes. The complete codex-status-ap01.json (SHA256 98ef1b21821025070ad2c10c93a1befd1024c141e184002d6f36df40ac0b99af) was packaged without removing elements: 6496 bytes in seven chunks of at most 1024 bytes. The real C2 worker completed claim/begin/chunks/commit. Each chunk and commit replay returned identical receipts without additional writes/renames; final status was configured=true with codex-status-a.
+
+Both relocation bases passed in james.local Docker QEMU. Report: build/pair-worker/full-template-qemu.json, SHA256 f867ca561d6a79150cf16b2fd4d0f7f1e5f47ae13db32348d58ccad7cdbd21c1. Guest SHA256: 157b85c10756a0713c3e048d7cf422244dee33ae61294d082f202beeccce0c5c. Source template, generated header, guest, App, Manifest, peer and build-report hashes were verified. External fonts, actual display, reboot restoration, hardware storage and original RTOS scheduling remain unverified.
+
+### 2026-11-05 Exact business files across independent RV32 boots
+
+Builder/runner now export and import a bounded BFV1 test snapshot (six explicit lengths plus exact file bytes). Real full-template installation at boot 42 produced bindings=86B, content/cache=17850B, state=420B; both bases exported SHA256 ca967b4588835572fd02efc67b9bc7757750ff7f716704c56d7b60989ca2cf51. A fresh guest at boot 43 loaded those bytes, accepted the retained binding token, reported configured=true and codex-status-a while trial writes remained zero. After health approval, writable restoration updated state while binding and content/cache bytes stayed identical. Output file snapshot SHA256 66b5185a2e0db210ecc7f483dc419d147c61fcb618e9a814c634fc3d4e1fc9ba.
+
+Report build/pair-worker/business-resume-qemu.json SHA256 64be8ba043949f2bb55cf21d760775911a4e59728e0f5e2ca757da249334058c; guest 26f5e3699e85acfdbb78914511265fe7f8b49c4da29b69ea0eb4e920b5cefa2c. Both bases passed in james.local Docker, inputs and output files verified locally. This is independent-boot file handoff, not same-VM reset or physical power loss. Window rebuild/health remain checked; the empty-business rotation-to-peer assertion is inapplicable to configured restore and remains only in the empty scenario. External fonts, actual display, original RTOS, full ROM boot and hardware storage remain outside this evidence.
+
+### 2026-11-05 Same-VM business recovery and journal regression
+
+The existing QMP reset runner now supports exact BFV1 business-file handoff in addition to AUT3 journals. For each relocation base, installation and restore ran in one QEMU process with system_reset between stages; PC returned to 0xa0000000 and the next input matched the actual previous export byte-for-byte. Both stages returned 0 with preserved stack/registers. Report build/pair-worker/business-reset-qemu.json, SHA256 82f81230dad5e4cf07611a129b09d0a3c8ae2aa66f81be73c9c64071d2e31bbc.
+
+The same updated runner also passed the existing fail-trial -> rollback journal fixtures at both bases, preserving exact journal handoff. Report build/pair-worker/journal-regression-qemu.json, SHA256 7a65d837def531f72f50492b6ff1a2b4d00856006e27f0c7b9beff6bdbbe0cc3. Script and both stage build-report hashes were checked. The journal regression uses its archived App/guest fixtures and is not evidence for executing the newest App in that rollback chain.
+
+Boundary: the CPU really resets, but the runner reloads the guest and injects verified file bytes into the model VFS; this is not original-ROM reboot execution, flash persistence or power-cut recovery. Those boundaries remain open.
