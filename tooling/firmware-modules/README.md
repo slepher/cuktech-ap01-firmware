@@ -1,5 +1,40 @@
 # AP01 固件模块
 
+## 0041 诊断版本协议
+
+`GET /api/diagnostic/versions` 返回版本 JSON；`GET /api/diagnostic/status` 同时包含这些字段。
+两者沿用诊断接口的设备码 Bearer 鉴权、限流和维护互斥，不开放匿名访问。
+外层保留 `protocol: "ap01-diagnostic-0041-v1"`、`device_mac`、`boot_id`；新增字段：
+
+```json
+{
+  "versions_protocol": 1,
+  "rom": {
+    "base_version": "1.0.2_0041",
+    "modified_version": "0.1.0-cuktech",
+    "build_id": "<本次 ROM 构建的 32 位十六进制标识>",
+    "supports_app": true
+  },
+  "apps_scope": "loaded_this_boot",
+  "apps": [{"app_id": "codex_status", "version": "0.18.108-ap01"}]
+}
+```
+
+原厂基线与 CUKTECH 修改版版本的源码唯一入口为 `native_version_0041.h`。
+CUKTECH 从 `0.1.0-cuktech` 独立递增；同一发布的无载入器/有载入器构建由
+`supports_app` 和 `build_id` 区分，原厂兼容目标仍为 0041。
+App 版本通过 `tooling/scripts/build-app-v3-0041.py --version` 从源码构建时指定；不从已有包推导新版本。
+ROM 与 App 分别发版，修改源码版本后须重新构建和安装才会改变设备返回值。
+
+`apps` 仅列本次开机成功加载的 App，按启动顺序返回，不枚举磁盘上的旧包、候选包或未启动条目。
+部分启动失败时只返回已成功启动的前缀；健康状态仍查既有运行状态接口。
+版本原样取自已验证的加载清单：旧 `d1.0` 不会被改报为新版本。
+无载入器 ROM 返回 `supports_app: false` 和 `apps: []`；支持载入但尚未启动或无 App 时
+返回 `supports_app: true` 和 `apps: []`。`supports_app` 指此 ROM 支持 ABI 3 文件 App 加载。
+无效运行快照返回 HTTP 503 / `runtime_snapshot`，不返回误导性的空列表。
+
+客户端：`python -B tooling/scripts/diagnostic-client-0041.py --host IP:18080 --token-file CREDENTIAL.json --mac MAC --operation versions`。
+
 ## 0041 共享屏幕宿主与平台代码
 
 `native_platform_0041.cpp` 提供默认无 App 启动入口：保持原厂页面与事件注册，通过独立窗口观察器/50ms timer 保存服务生命周期，在后台启动维护服务；窗口 DELETE 后解除订阅，下一次创建窗口时复用服务。`native_sha256_0041.cpp` 为独立构建提供已有字节工具实现。构建/打包入口为 `tooling/scripts/build-firmware-0041.py`，不依赖 `codex_status` 或逆向仓库；外部 App 的整合构建仍可使用下述平台模块。

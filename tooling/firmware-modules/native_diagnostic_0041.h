@@ -1,6 +1,7 @@
 #pragma once
 #include "native_http_0041.h"
 #include "native_wifi_trace_0041.h"
+#include "app_supervision_v3.h"
 
 // Owned by the resident maintenance service, independent of business/UI state.
 // Readers return a byte count or negative errno; they never open for writing.
@@ -10,6 +11,9 @@ struct Ap01DiagnosticPort {
     int (*flash)(void *, uint32_t, uint8_t *, unsigned) = nullptr;
     bool (*busy)(void *) = nullptr;
     bool (*trace)(void *, Ap01WifiTraceSnapshot0041 &) = nullptr;
+    const char *romBuild = nullptr;
+    // Non-null only when this ROM supports file App loading. Snapshot is read-only.
+    Ap01RuntimeSnapshotV3 (*runtime)(void *) = nullptr;
 };
 Ap01HttpReply ap01DiagnosticHttp0041(const Ap01DiagnosticPort &, const Ap01HttpRequest &,
                                     const char *mac, uint64_t boot);

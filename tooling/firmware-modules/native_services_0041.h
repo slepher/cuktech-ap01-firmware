@@ -13,6 +13,8 @@ class Ap01NativeServices0041 {
     Ap01HttpReply (*updateHandler)(void *,const Ap01HttpRequest &,const char *,uint64_t)=nullptr;
     void *statusContext=nullptr;
     void (*statusSnapshot)(void *,Ap01SupervisorSnapshotV3 &)=nullptr;
+    void *runtimeContext=nullptr;
+    Ap01RuntimeSnapshotV3 (*runtimeSnapshot)(void *)=nullptr;
 public:
     Ap01NativeServices0041();
     ~Ap01NativeServices0041();
@@ -24,6 +26,9 @@ public:
     uint32_t heartbeat() const;
     void appStatus(void *context,void (*snapshot)(void *,Ap01SupervisorSnapshotV3 &)){
         statusContext=context;statusSnapshot=snapshot;
+    }
+    void appRuntime(void *context,Ap01RuntimeSnapshotV3 (*snapshot)(void *)){
+        runtimeContext=context;runtimeSnapshot=snapshot;
     }
     // Configure before start, as with the status callback.
     void appUpdate(void *context,Ap01HttpReply (*handler)(void *,const Ap01HttpRequest &,const char *,uint64_t)){

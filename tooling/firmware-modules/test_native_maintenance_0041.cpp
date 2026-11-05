@@ -90,6 +90,10 @@ void unboundMaintenance(const std::string &folder,const std::string &image,Disk 
     {
         Ap01Maintenance0041 maintenance(fs,servicePort,{},"AABBCCDDEEFF",30);assert(maintenance.begin());
         Ap01HttpWorkspace0041 workspace;
+        assert(maintenance.handle(request("GET","/api/diagnostic/versions",{},""),1).status==401);
+        auto versions=maintenance.handle(request("GET","/api/diagnostic/versions",{},disk.code),1);
+        assert(versions.status==200 && strstr(versions.bytes.c_str(),"\"modified_version\":\"0.1.0-cuktech\""));
+        assert(strstr(versions.bytes.c_str(),"\"supports_app\":false") && strstr(versions.bytes.c_str(),"\"apps\":[]"));
         disk.denyLock=true;
         assert(maintenance.handle(request("GET","/health",{},disk.code),1).status==200);
         disk.denyLock=false;

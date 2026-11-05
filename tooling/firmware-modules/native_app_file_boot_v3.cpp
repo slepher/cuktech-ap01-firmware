@@ -8,6 +8,7 @@ Ap01NativeAppFileBootV3::Ap01NativeAppFileBootV3(uint64_t boot,const Ap01VfsOps 
     else limits.resident_bytes+=stagingBytes;
     apps.shared().onPoll(this,poll);
     apps.shared().appStatus(this,[](void *p,Ap01SupervisorSnapshotV3 &out){out=((Ap01NativeAppFileBootV3 *)p)->status();});
+    apps.shared().appRuntime(this,[](void *p){return ((Ap01NativeAppFileBootV3 *)p)->runtime();});
 }
 bool Ap01NativeAppFileBootV3::stage(const char *path,const uint8_t *expected){
     if(!apps.shared().listening())return false;

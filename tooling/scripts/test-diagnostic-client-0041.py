@@ -19,6 +19,10 @@ def response(raw, total=3):
 
 with tempfile.TemporaryDirectory(prefix='ap01-diag-client-') as directory:
     root=Path(directory);token=root/'token.json';token.write_text(json.dumps({'device_mac':mac,'token':'a'*32}))
+    with patch('sys.argv',['diagnostic','--host','127.0.0.1:1','--token-file',str(token),'--mac',mac,'--operation','versions']),patch.object(client,'request',return_value={'rom':{'supports_app':False},'apps':[]}) as query,patch('builtins.print') as output:
+        client.main()
+        query.assert_called_once_with('127.0.0.1:1','a'*32,mac,'versions')
+        assert json.loads(output.call_args.args[0])['apps']==[]
     for name,operation,raw,total,length in [('binary','file',b'\x00\xffA',3,None),('empty-log','file',b'',None,1024),('short-flash','flash',b'A',0x1000000,1024)]:
         out=root/name
         args=['diagnostic','--host','127.0.0.1:1','--token-file',str(token),'--mac',mac,

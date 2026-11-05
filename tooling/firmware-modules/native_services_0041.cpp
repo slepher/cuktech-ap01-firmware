@@ -37,6 +37,8 @@ struct Ap01NativeServices0041::State {
     Ap01HttpReply (*updateHandler)(void *,const Ap01HttpRequest &,const char *,uint64_t)=nullptr;
     void *statusContext=nullptr;
     void (*statusSnapshot)(void *,Ap01SupervisorSnapshotV3 &)=nullptr;
+    void *runtimeContext=nullptr;
+    Ap01RuntimeSnapshotV3 (*runtimeSnapshot)(void *)=nullptr;
     void *healthContext=nullptr;
     bool (*healthy)(void *)=nullptr;
     Ap01MaintenanceBridge0041 appBinding;
@@ -111,6 +113,7 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
     s->appBinding=bridge;s->healthContext=context;s->healthy=healthy;s->bootSlot=ap01SelectedSlot0041();
     s->updateContext=updateContext;s->updateHandler=updateHandler;
     s->statusContext=statusContext;s->statusSnapshot=statusSnapshot;
+    s->runtimeContext=runtimeContext;s->runtimeSnapshot=runtimeSnapshot;
     const char *hex="0123456789abcdef";
     for(unsigned i=0;i<16;++i){uint8_t v=ap01_native_manifest[36+i];s->firmwareBuild[2*i]=hex[v>>4];s->firmwareBuild[2*i+1]=hex[v&15];}
     Ap01MaintenancePort0041 port{s.get(),
@@ -119,6 +122,10 @@ bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint6
         {s.get(),ap01DiagnosticFile0041,ap01DiagnosticFlash0041,State::diagnosticBusy,
          [](void *p,Ap01WifiTraceSnapshot0041 &out){return ((State *)p)->trace.read(out);}},
         [](void *,char out[9]){return ap01DeviceCodeLoad0041(ap01RomVfs(),out);}};
+    port.diagnostic.romBuild=s->firmwareBuild;
+    if(runtimeSnapshot)port.diagnostic.runtime=[](void *p){
+        auto &s=*(State *)p;return s.runtimeSnapshot(s.runtimeContext);
+    };
     if(statusSnapshot)port.appStatus=[](void *p,Ap01SupervisorSnapshotV3 &out){
         auto &s=*(State *)p;s.statusSnapshot(s.statusContext,out);
     };

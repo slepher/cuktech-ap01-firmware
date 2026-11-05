@@ -151,6 +151,7 @@ def main():
         shutil.copyfile(source,destination)
     payload_path.write_bytes(payload);output.write_bytes(image)
     manifest={'format':FORMAT,'firmware_target':'cuktech-ap01-0041','build_id':h[36:52].hex(),
+        'rom_versions':audit.get('rom_versions'), 'supports_app':bool(audit.get('boot_app_v3')),
         'flashable':False,'hardware_verified':False,'simulator_verified':False,'unsigned_ota':True,
         'native_recovery_compatible':True,'recovery_marker_count':2,
         'timer_delete_guard':{'entry':hex(symbols['ap01TimerDelete0041']),'offset':hex(TIMER_DELETE),'bytes':8,'null_is_noop':True,'nonnull_tail':'0xa008ae60'},

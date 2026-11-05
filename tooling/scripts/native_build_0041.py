@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib
 import json
 import os
+import re
 import shutil
 import struct
 import subprocess
@@ -113,6 +114,9 @@ def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=Non
               'compiler': subprocess.check_output([executable('g++'), '--version'], text=True).splitlines()[0],
               'generator_sha256': sha(Path(__file__)),
               'input_headers': [{'path': str(p), 'sha256': sha(p)} for p in headers]}
+    versions = dict(re.findall(r'^#define AP01_(BASE|MODIFIED)_ROM_VERSION "([^"]+)"$',
+                              (MODULES / 'native_version_0041.h').read_text(), re.M))
+    report['rom_versions'] = {'base_version': versions['BASE'], 'modified_version': versions['MODIFIED']}
     if config:
         report['app_config'] = {'path': str(config['path']), 'sha256': sha(config['path'])}
     write_json(out / 'native-core-audit.json', report)

@@ -1,6 +1,7 @@
 #include "native_diagnostic_0041.h"
 #include "native_json_0041.h"
 #include "native_integrity_0041.h"
+#include "native_version_0041.h"
 #include <new>
 #include <memory>
 
@@ -31,11 +32,13 @@ Ap01HttpReply ap01DiagnosticHttp0041(const Ap01DiagnosticPort &port, const Ap01H
     NativeJsonAllocator0041 allocator;
     ArduinoJson::JsonDocument input(&allocator), output(&allocator);
     bool status = !strcmp(request.path, "/api/diagnostic/status");
+    bool versions = !strcmp(request.path, "/api/diagnostic/versions");
+    bool query = status || versions;
     bool file = !strcmp(request.path, "/api/diagnostic/file");
     bool flash = !strcmp(request.path, "/api/diagnostic/flash");
-    if (!status && !file && !flash) return failure(404, "unsupported_endpoint");
-    if (strcmp(request.method, status ? "GET" : "POST")) return failure(405, "method");
-    if (!status) {
+    if (!query && !file && !flash) return failure(404, "unsupported_endpoint");
+    if (strcmp(request.method, query ? "GET" : "POST")) return failure(405, "method");
+    if (!query) {
         if (strcmp(request.contentType, "application/json") || request.length > 1024 ||
             ArduinoJson::deserializeJson(input, request.body, request.length) || !input.is<ArduinoJson::JsonObject>())
             return failure(400, "json");
@@ -50,6 +53,31 @@ Ap01HttpReply ap01DiagnosticHttp0041(const Ap01DiagnosticPort &port, const Ap01H
         output["file_reader"] = port.file != nullptr;
         output["flash_reader"] = port.flash != nullptr;
     }
+    if(query) {
+        output["versions_protocol"] = 1;
+        auto rom = output["rom"].to<ArduinoJson::JsonObject>();
+        rom["base_version"] = AP01_BASE_ROM_VERSION;
+        rom["modified_version"] = AP01_MODIFIED_ROM_VERSION;
+        rom["build_id"] = port.romBuild;
+        rom["supports_app"] = port.runtime != nullptr;
+        output["apps_scope"] = "loaded_this_boot";
+        auto apps = output["apps"].to<ArduinoJson::JsonArray>();
+        if(port.runtime) {
+            auto snapshot = port.runtime(port.context);
+            const auto *m = snapshot.manifest;
+            if(snapshot.started && (!m || m->count > AP01_MANIFEST_APPS_V3 || snapshot.started > m->count))
+                return failure(503,"runtime_snapshot");
+            for(unsigned n=0;n<snapshot.started;++n) {
+                unsigned i=m->order[n];
+                if(i>=m->count || !memchr(m->entries[i].id,0,sizeof(m->entries[i].id)) ||
+                   !memchr(m->entries[i].version,0,sizeof(m->entries[i].version)))
+                    return failure(503,"runtime_snapshot");
+                auto app=apps.add<ArduinoJson::JsonObject>();
+                app["app_id"]=m->entries[i].id;
+                app["version"]=m->entries[i].version;
+            }
+        }
+    }
     if(status&&port.trace) {
         Ap01WifiTraceSnapshot0041 snapshot;
         if(!port.trace(port.context,snapshot))return failure(503,"trace_busy");
@@ -62,7 +90,7 @@ Ap01HttpReply ap01DiagnosticHttp0041(const Ap01DiagnosticPort &port, const Ap01H
             item["a"]=e.a;item["b"]=e.b;item["c"]=e.c;item["d"]=e.d;
         }
     }
-    if (!status) {
+    if (!query) {
         if (!input["offset"].is<uint32_t>() || !input["length"].is<unsigned>()) return failure(400, "range");
         uint32_t offset = input["offset"].as<uint32_t>();
         unsigned length = input["length"].as<unsigned>();

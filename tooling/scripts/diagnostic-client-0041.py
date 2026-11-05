@@ -37,7 +37,7 @@ def main():
     parser.add_argument('--host', required=True, help='IP:port of the maintenance service')
     parser.add_argument('--token-file', type=Path, required=True, help='existing registered device-token JSON')
     parser.add_argument('--mac', default='34F01557210B')
-    parser.add_argument('--operation', choices=('status', 'file', 'flash'), default='status')
+    parser.add_argument('--operation', choices=('status', 'versions', 'file', 'flash'), default='status')
     parser.add_argument('--path', help='absolute /data or /resource filename, or /dev/ramlog')
     parser.add_argument('--offset', type=lambda s:int(s,0), default=0)
     parser.add_argument('--length', type=lambda s:int(s,0))
@@ -47,8 +47,8 @@ def main():
     if credential.get('device_mac') != args.mac:
         parser.error('registered MAC mismatch')
     token = credential['token']
-    status = request(args.host, token, args.mac, 'status')
-    if args.operation == 'status':
+    status = request(args.host, token, args.mac, 'versions' if args.operation == 'versions' else 'status')
+    if args.operation in ('status', 'versions'):
         print(json.dumps(status));return
     if not args.output or args.offset < 0 or (args.length is not None and args.length <= 0):
         parser.error('export needs a new output file and a valid range')

@@ -48,6 +48,7 @@ public:
     bool writesDrained()const{return writeGate.drained();}
     void appUpdate(void *context,Ap01HttpReply (*handler)(void *,const Ap01HttpRequest &,const char *,uint64_t)){services.appUpdate(context,handler);}
     void appStatus(void *context,void (*snapshot)(void *,Ap01SupervisorSnapshotV3 &)){services.appStatus(context,snapshot);}
+    void appRuntime(void *context,Ap01RuntimeSnapshotV3 (*snapshot)(void *)){services.appRuntime(context,snapshot);}
     // Set by the resident owner before binding the window; never by an App.
     void onPoll(void *context,void (*hook)(void *,bool)){pollContext=context;pollHook=hook;}
     static void poll(void *);
