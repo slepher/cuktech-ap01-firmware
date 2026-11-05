@@ -374,6 +374,18 @@ The same updated runner also passed the existing fail-trial -> rollback journal 
 
 Boundary: the CPU really resets, but the runner reloads the guest and injects verified file bytes into the model VFS; this is not original-ROM reboot execution, flash persistence or power-cut recovery. Those boundaries remain open.
 
+### 2026-11-05 孤儿 GC 的原生目录 ABI 静态证据
+
+新增 `audit-native-directory-0041.py`，对固定 0041 ROM（SHA256 972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9）的挂载操作表及四个候选目录函数做完整字节摘要校验；本机报告 `build/commit-check/native-directory-static.json` 通过。候选 open/close/read/rewind 地址分别为 0xa0044b9a、0xa0040362、0xa00448c4、0xa00444fa。静态分析确认 mount-private 从 inode+24 取得、目录句柄分配 60B、位置位于句柄+48。
+
+这不是可调用 ABI 验收。read 中 0xa004493c 的自定义指令和输出布局待 james.local Docker QEMU 执行验证，之后才能实现平台私有枚举及引用安全的孤儿回收。未接入删除逻辑，未访问设备，未修改公开 App C 函数表。历史源码引用的 0041-littlefs-abi.json 尚未找到，本审计没有将其冒充为已恢复证据。
+
+### 2026-11-05 目录回调执行：锁失败已验证，成功路径指令障碍已定位
+
+新增 `test-native-directory-qemu-0041.py` 并在 james.local 既有 Docker 镜像中运行，使用固定 ROM 原始指令；只构造挂载/目录状态并替代锁返回值。锁返回 -16 时原始 read 回调返回 -16，SP 恢复、位置仍为 0，输出区与两侧哨兵不变。报告 `build/commit-check/native-directory-qemu.json` 整体 `passed=false`，不得作为目录枚举通过证据。
+
+成功锁路径调用 ROM memset 时在 0xa002495c 的指令 0x2113168b 触发 illegal_instruction；启用 xtheadbb/xtheadmempair/xtheadmemidx 后仍复现（引擎 SHA256 25a9c3620f83411672359412d6aca73c20f0e2eb94d6a8fbae5e4c39f3be3f11）。脚本新增地址 0 异常入口断点，失败立即保存报告，不再等陷阱循环超时。下一步需核对 ROM 所用指令编码与引擎支持，或明确替代 libc 后单独验证目录输出指令；不能凭启用扩展假称成功。尚未执行完整 open/read/rewind/close 和真实目录记录遍历，无设备访问或主机依赖安装。
+
 ### 2026-11-05 App OTA 归属迁移与主线收敛
 
 按用户要求，App 可执行包 OTA 含客户端归 firmware。codex_status 撤出五笔 OTA-only 提交对应的 Rust 校验/回执/协调、worker、Tauri/MCP、UI 和专项测试，原补丁留档 docs/history/app-ota-bridge；本仓复用 app-set-client-v3.py，不新增另一套客户端。业务 Bundle/C2/BLE、配对、只读恢复及 ABI 3.1 App 适配保持；11 个关键源码 SHA 与迁移前一致。未改本机 Bridge 数据/回执，未部署或启停服务。
