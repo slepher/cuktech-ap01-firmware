@@ -1,0 +1,2 @@
+# Preserve unified-diff context markers on blank lines in the archived patches.
+*.patch -whitespace

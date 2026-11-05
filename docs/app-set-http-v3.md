@@ -107,4 +107,4 @@ python3 -B tooling/scripts/app-set-client-v3.py --host DEVICE:18080 --mac AABBCC
 
 响应 `limits` 直接来自服务/加载器共用的 Ap01ManifestLimitsV3：package_bytes、image_bytes、heap_bytes、stack_bytes、tasks、pages 是全集合上限；capabilities 是允许位图；ram_bytes 是可计入 RAM，resident_bytes 包含维护及暂存预留。镜像总量逐 App 向上对齐 16 B，镜像+堆+栈不得超过 ram_bytes-resident_bytes。`app_max` 单独约束数量；`storage_reserve` 是 begin 空间检查的维护存储预留，不是 RAM 预留。
 
-CLI 新事务在创建回执和发送 begin 前检查这些字段；Bridge `Manifest::check_capabilities` 使用相同算法。缺字段、超量或未知服务位拒绝。设备准入仍是最终裁决；客户端检查不是存储预留或硬件容量证明，当前原生预算仍为模型阶段配置值。
+CLI 新事务在创建回执和发送 begin 前检查这些字段；旧 Bridge `Manifest::check_capabilities` 曾使用相同算法；2026-11-05 起 App OTA 客户端归 firmware，Bridge 专用实现已撤出，见 [当前归属](app-ota-ownership.md)。缺字段、超量或未知服务位拒绝。设备准入仍是最终裁决；客户端检查不是存储预留或硬件容量证明，当前原生预算仍为模型阶段配置值。

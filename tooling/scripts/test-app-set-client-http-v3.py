@@ -1,9 +1,8 @@
-"""Python CLI or Rust coordinator against production C++ HTTP/transactions, offline."""
+"""Firmware OTA CLI against production C++ HTTP/transactions, offline."""
 import argparse
 import hashlib
 import importlib.util
 import json
-import os
 import sys
 import time
 from pathlib import Path
@@ -28,20 +27,11 @@ p.add_argument('--expected-image-id')
 p.add_argument('--fail-first',action='store_true',help='Fail the initial install, confirm empty rollback, then retry the identical collection')
 p.add_argument('--snapshot-dir',type=Path,help='Existing empty directory for exact post-commit model files, before reboot')
 p.add_argument('--tcp',action='store_true',help='Use real urllib and a loopback-only TCP relay')
-p.add_argument('--rust-bridge',type=Path,help='Run the Bridge core coordinator test from this bridge workspace (requires --tcp and isolated CARGO_TARGET_DIR)')
-p.add_argument('--rust-worker',action='store_true',help='Use the Bridge application worker instead of core single steps')
-p.add_argument('--rust-ui',action='store_true',help='Run production page functions through a test IPC adapter to the real Rust worker')
 a=p.parse_args()
 if a.snapshot_dir and (not a.snapshot_dir.is_dir() or any(a.snapshot_dir.iterdir())):p.error('--snapshot-dir must be existing and empty')
 if bool(a.qemu_image)!=bool(a.expected_image_id):p.error('supply --qemu-image and --expected-image-id together')
 original=a.manifest.read_bytes();base=inspect_manifest(original)
 if a.rv32_results and (not a.snapshot_dir or not a.tool_prefix):p.error('--rv32-results needs --snapshot-dir and --tool-prefix')
-if a.rv32_results and a.rust_bridge and not (a.rust_worker or a.rust_ui):p.error('RV32 outages require worker/UI, not the single-step test with one-loss assertion')
-if a.fail_first and a.rust_bridge and not a.rust_ui:p.error('--fail-first uses Python CLI or UI UUIDs; fixed-ID core/worker tests cannot retry the same version')
-if a.rust_worker and not a.rust_bridge:p.error('--rust-worker requires --rust-bridge')
-if a.rust_ui and not a.rust_bridge:p.error('--rust-ui requires --rust-bridge')
-if a.rust_bridge and (not a.tcp or not os.environ.get('CARGO_TARGET_DIR')):
-    p.error('--rust-bridge requires --tcp and an isolated CARGO_TARGET_DIR')
 packages={b[128:160].split(b'\0')[0].decode():b for b in [x.read_bytes() for x in a.package]}
 mac='010203040506';host='offline.invalid:18080'
 a.report.write_text(json.dumps({'passed':False,'stage':'running'})+'\n')
@@ -200,24 +190,7 @@ try:
             if failed:assert peer.exchange('FAIL_TRIAL')=='OK'
             peer.failed=failed;peer.lose=lose;manifest,blobs=generation(n,mask);clock=Clock();before=len(peer.calls)
             receipt=Path(folder)/f'{step}.json'
-            if a.rust_bridge:
-                manifest_path=Path(folder)/f'{n}.amf3';manifest_path.write_bytes(manifest)
-                paths=[]
-                for i,blob in enumerate(blobs):
-                    path=Path(folder)/f'{n}-{i}.apx2';path.write_bytes(blob);paths.append(path)
-                result=Path(folder)/f'{n}-result.json'
-                env=dict(os.environ,AP01_HTTP_ENDPOINT=host,AP01_MANIFEST=str(manifest_path),
-                         AP01_PACKAGE=str(paths[0]),AP01_RECEIPT=str(receipt),AP01_RESULT=str(result),
-                         AP01_EXPECT_PHASE='failed_rolled_back' if failed else 'succeeded')
-                env.pop('AP01_PEER',None)
-                if len(paths)>1:env['AP01_PEER']=str(paths[1])
-                target=['-p','bridge-app','ap01_app_update::tests::production_ui_rust_cpp_collection'] if a.rust_ui else ['-p','bridge-app','ap01_app_update::tests::production_cpp_worker_collection'] if a.rust_worker else [
-                    '-p','bridge-core','ap01_app_set_install::tests::production_cpp_http_collection','--lib']
-                subprocess.run(['cargo','test','--offline',*target,
-                                '--','--ignored','--exact'],cwd=a.rust_bridge,env=env,check=True,timeout=180)
-                value=json.loads(result.read_text())
-            else:
-                value=client.Installer(request,mac,host,receipt,180,time.monotonic if a.rv32_results and a.tcp else clock.time,time.sleep if a.rv32_results and a.tcp else clock.sleep).install(manifest,blobs)
+            value=client.Installer(request,mac,host,receipt,180,time.monotonic if a.rv32_results and a.tcp else clock.time,time.sleep if a.rv32_results and a.tcp else clock.sleep).install(manifest,blobs)
             assert value['phase']==('failed_rolled_back' if failed else 'succeeded')
             assert value['changed_mask']==mask and len({params['operation_id'] for _,_,params in peer.calls[before:] if params})==1
             assert len([1 for method,endpoint,_ in peer.calls[before:] if endpoint=='update/commit' and method=='POST'])==1
@@ -254,7 +227,7 @@ finally:peer.close()
 assert not peer.errors,peer.errors
 if a.rv32_results and a.tcp:assert peer.offline_requests>=len(results)
 report=dict(passed=True,device_accessed=False,app_instructions_executed=a.rv32_results,
-            health_injected=not a.rv32_results,cpu_reboot_modeled=True,transport='Production UI via test IPC to Rust worker and C++ HTTP' if a.rust_ui else 'Rust application worker over loopback TCP to C++ HTTP' if a.rust_worker else 'Rust core over loopback TCP to C++ HTTP' if a.rust_bridge else 'urllib over loopback TCP to C++ HTTP' if a.tcp else 'HTTP bytes over pipes',
+            health_injected=not a.rv32_results,cpu_reboot_modeled=True,transport='urllib over loopback TCP to C++ HTTP' if a.tcp else 'HTTP bytes over pipes',
             binary_sha256=hashlib.sha256(a.binary.read_bytes()).hexdigest(),results=results,snapshots=peer.snapshots,first_install_failure_retried=a.fail_first,rv32_results=peer.executions,reboot_query_requests=peer.offline_requests)
 a.report.write_text(json.dumps(report,indent=2)+'\n')
 print('collection client/C++ HTTP: scenarios passed; '+('actual RV32 journals/runtime returned to the original client' if a.rv32_results else 'modeled reboot/health')+'; no device access')

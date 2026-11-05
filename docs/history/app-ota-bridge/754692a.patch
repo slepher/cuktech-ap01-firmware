@@ -1,0 +1,326 @@
+diff --git a/bridge/crates/app/ui/index.html b/bridge/crates/app/ui/index.html
+index 17e7f17..0d56d1b 100644
+--- a/bridge/crates/app/ui/index.html
++++ b/bridge/crates/app/ui/index.html
+@@ -150,6 +150,11 @@
+   button.danger { background: #fff8f6; }
+   select, input, textarea { min-height: 34px; max-width: 100%; background: var(--surface); border-color: #d7e1d9; }
+   input[type="checkbox"] { min-height: 0; padding: 0; margin: 0; flex: none; vertical-align: middle; }
++  .app-update-files { display:grid; gap:7px; margin:12px 0; }
++  .app-update-files input { width:100%; min-width:0; box-sizing:border-box; }
++  #app-update-progress .row { flex-wrap:wrap; }
++  #app-update-progress progress { max-width:100%; width:140px; }
++  #app-update-result, #app-update-identity { overflow-wrap:anywhere; margin-top:10px; }
+   .checkbox-label { display: inline-flex; align-items: center; gap: 8px; }
+   textarea { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 9px; resize: vertical; color: var(--ink); }
+   .muted, .sub, .todo, .ring small { color: var(--muted); }
+@@ -417,6 +422,22 @@
+         <div class="row"><span>升级结论</span><strong id="dev-verdict">无法判断</strong></div>
+         <div class="row" id="dev-upgrade-failure-row" hidden><span>最近相关升级失败</span><span id="dev-upgrade-failure"></span></div>
+       </div>
++      <section class="card" id="app-update-card" hidden>
++        <h2>独立 App 更新</h2>
++        <p class="sub">选择完整 App 清单和本次变更的一个或多个包。更新会重启设备；任一 App 试运行失败时整批回退。</p>
++        <div class="app-update-files"><label for="app-update-manifest">App 清单 (.amf3)</label><input id="app-update-manifest" type="file" accept=".amf3">
++          <label for="app-update-packages">变更的 App 包 (.apx2，可多选)</label><input id="app-update-packages" type="file" accept=".apx2" multiple>
++          <label for="app-update-code">设备菜单中的八位设备码</label><input id="app-update-code" type="password" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="仅用于本次任务"></div>
++        <div class="action-strip"><button id="app-update-prepare" onclick="appUpdatePrepare()">校验更新</button><button onclick="appUpdateRestore()">恢复本地任务</button>
++          <button class="primary" id="app-update-run" onclick="appUpdateAction('run')" disabled>开始 / 继续</button><button id="app-update-query" onclick="appUpdateAction('query')" disabled>查询原事务</button>
++          <button id="app-update-cancel" onclick="appUpdateAction('cancel')" disabled>取消更新</button></div>
++        <div id="app-update-result" class="status" role="status" aria-live="polite">尚未准备更新</div>
++        <div id="app-update-progress"></div>
++        <details><summary>任务与恢复</summary><div id="app-update-identity" class="sub"></div>
++          <div class="action-strip"><button id="app-update-reconnect" onclick="appUpdateAction('reconnect')" disabled>核验已发现的新地址</button>
++            <button id="app-update-archive" onclick="appUpdateAction('archive')" disabled>确认结束并归档</button></div>
++          <p class="sub">结果未知时保留原任务。Bridge 重启后，继续上传需重新选择变更包；已提交的任务可直接查询。归档会再次核验结果，再允许下一次更新。</p></details>
++      </section>
+       <div class="card">
+         <h2>屏幕实际结果</h2>
+         <div class="row"><span>已安装内容</span><span id="dev-installed">尚未读取</span></div>
+@@ -1488,6 +1509,102 @@
+       wifiSetResult('设备已登记；可离线准备目标。');}catch(e){wifiSetResult(wifiError(e));}
+   }
+ 
++
++  let appUpdatePollSeq=0;
++  let appUpdate={operation:null,manifest:null,packages:[],active:false,busy:false};
++  function appUpdateReset(){
++    appUpdatePollSeq++;
++    appUpdate={operation:null,manifest:null,packages:[],active:false,busy:false};
++    $('app-update-card').hidden=true;
++    for(const id of ['app-update-manifest','app-update-packages','app-update-code'])$(id).value='';
++    $('app-update-progress').innerHTML='';$('app-update-identity').textContent='';$('app-update-result').textContent='尚未准备更新';appUpdateButtons();
++  }
++  function appUpdateButtons(){
++    $('app-update-prepare').disabled=appUpdate.busy||appUpdate.active||!!appUpdate.operation;
++    for(const name of ['run','query','cancel','reconnect','archive'])$('app-update-'+name).disabled=appUpdate.busy||!appUpdate.operation||(appUpdate.active&&name!=='cancel');
++    $('app-update-manifest').disabled=appUpdate.busy||appUpdate.active;
++    $('app-update-packages').disabled=appUpdate.busy||appUpdate.active;
++  }
++  function appUpdateError(error){
++    return ({budget_exhausted:'等待超时，可查询或继续原任务',app_set_original_receipt_exists:'已有任务，请先恢复原任务',app_receipt_target_changed:'设备地址已变化，请先重新发现并核验新地址',app_set_operation_mismatch:'任务身份不一致，请恢复原任务',app_set_terminal_not_confirmed:'尚未确认结束或清理完成，请继续查询',rediscover_device_first:'请先重新发现设备地址',app_set_cancel_save_failed:'取消意图保存失败，请检查本机数据目录后重试',worker_stopped:'后台任务已停止，请恢复原任务'})[error]||error;
++  }
++  function appUpdateShow(value){
++    if(value.operation_id)appUpdate.operation=value.operation_id;
++    if(value.manifest)appUpdate.manifest=value.manifest;
++    if(typeof value.active==='boolean')appUpdate.active=value.active;
++    const v=value.status||value,reply=v.reply||{},progress=v.progress||{};
++    const phase=reply.phase||progress.phase;
++    const labels={prepared:'校验通过，尚未开始',saved:'已恢复原任务，尚未联系设备',running:'后台任务正在推进',pending:'等待设备确认',confirmed:'更新成功，已核验重启后的完整运行集合',terminal:phase==='failed_rolled_back'?'更新失败，已整体回退':phase==='cancelled'?'更新已取消':phase==='recovery_required'?'设备需要维护恢复':'事务已结束',unknown:'结果未知，保留原事务',error:'操作未完成',cancelling:'取消请求已保存，等待设备确认',abandoned:'设备确认事务不存在，已关闭本地任务',archived:'原任务已归档，可准备下一次更新',absent:'本机没有活动任务'};
++    const phases={receiving:'上传变更包',ready:'准备重启',switch_pending:'等待重启切换',trial_started:'新集合试运行',rollback_pending:'等待重启回退',rollback_started:'旧集合恢复中'};
++    $('app-update-result').textContent=[labels[v.result]||v.result||'等待状态',phases[phase],v.cancel_requested?'已请求取消':'',appUpdateError(v.error),v.action].filter(Boolean).join(' · ');
++    if(['archived','abandoned','absent'].includes(v.result)){appUpdate.operation=null;appUpdate.active=false;appUpdate.manifest=null;appUpdate.packages=[];}
++    $('app-update-identity').textContent=appUpdate.operation?'原事务：'+appUpdate.operation:'暂无活动事务';
++    const apps=appUpdate.manifest?.apps||[];
++    $('app-update-progress').innerHTML=apps.map((app,i)=>{
++      const known=Number.isInteger(progress.changed_mask),changed=known&&!!(progress.changed_mask&(1<<i));
++      const received=progress.received?.[i]||0,total=app.package_bytes||0,ready=!!(progress.ready_mask&(1<<i));
++      const state=!known?'等待设备确认变更':!changed?'复用已有包':ready?'已校验':`${received} / ${total} B`;
++      return `<div class="row"><span>${escapeHtml(app.id)} · ${escapeHtml(app.version)}</span><span>${escapeHtml(state)}${changed?` <progress aria-label="${escapeHtml(app.id)} 上传进度" max="${total}" value="${received}"></progress>`:''}</span></div>`;
++    }).join('');appUpdateButtons();
++  }
++  async function appUpdateInvoke(mac,body){
++    const value=await invoke('platform_ap01_app_update',{body:{...body,mac}});
++    if(value.result==='error')throw new Error(appUpdateError(value.error)||'更新请求被拒绝');return value;
++  }
++  async function appUpdateStage(mac,file,kind){
++    const limit=kind==='manifest'?3584:16*1024*1024;
++    if(!file||file.size>limit)throw new Error('请选择有效文件；清单不超过 3584 B，每个包不超过 16 MiB');
++    const bytes=new Uint8Array(await file.arrayBuffer());let binary='';
++    for(let at=0;at<bytes.length;at+=8192)binary+=String.fromCharCode(...bytes.subarray(at,at+8192));
++    const value=await appUpdateInvoke(mac,{op:'stage',kind,data_base64:btoa(binary)});
++    if(value.result!=='staged')throw new Error('更新任务正忙，请先恢复原任务');return value.path;
++  }
++  async function appUpdatePackageFiles(mac,generation){
++    const files=Array.from($('app-update-packages').files||[]);
++    if(files.length>8||files.reduce((n,f)=>n+f.size,0)>64*1024*1024)throw new Error('最多选择 8 个包，合计不超过 64 MiB');
++    const paths=[];for(const file of files){if(!isCurrentDevice(mac,generation))throw new Error('已切换设备');paths.push(await appUpdateStage(mac,file,'package'));}return paths;
++  }
++  async function appUpdatePrepare(){
++    const mac=selectedTarget(),generation=deviceSelectionGeneration;if(appUpdate.busy||appUpdate.operation)return;
++    appUpdatePollSeq++;appUpdate.busy=true;appUpdateButtons();
++    try{
++      const code=$('app-update-code').value;if(!/^[0-9]{8}$/.test(code))throw new Error('请填写八位设备码');
++      const path=await appUpdateStage(mac,$('app-update-manifest').files?.[0],'manifest');
++      const packages=await appUpdatePackageFiles(mac,generation);if(!isCurrentDevice(mac,generation))return;
++      const value=await appUpdateInvoke(mac,{op:'prepare',code,manifest_path:path,package_paths:packages});
++      if(isCurrentDevice(mac,generation)){appUpdate.packages=packages;appUpdateShow(value);}
++    }catch(e){if(isCurrentDevice(mac,generation))$('app-update-result').textContent=String(e);}
++    finally{if(isCurrentDevice(mac,generation)){appUpdate.busy=false;appUpdateButtons();}}
++  }
++  async function appUpdateRestore(){
++    if(!selectedDeviceMac||$('app-update-card').hidden||appUpdate.busy)return;
++    const mac=selectedTarget(),generation=deviceSelectionGeneration;
++    appUpdatePollSeq++;appUpdate.busy=true;appUpdateButtons();
++    try{
++      const local=await appUpdateInvoke(mac,{op:'inspect'});if(!isCurrentDevice(mac,generation))return;appUpdateShow(local);
++    }catch(e){if(isCurrentDevice(mac,generation))$('app-update-result').textContent=String(e);}
++    finally{if(isCurrentDevice(mac,generation)){appUpdate.busy=false;appUpdateButtons();}}
++    if(isCurrentDevice(mac,generation))await appUpdatePoll();
++  }
++  async function appUpdatePoll(){
++    if(!selectedDeviceMac||$('app-update-card').hidden||appUpdate.busy)return;
++    const mac=selectedTarget(),generation=deviceSelectionGeneration,ticket=++appUpdatePollSeq;
++    try{const value=await appUpdateInvoke(mac,{op:'worker_status'});if(isCurrentDevice(mac,generation)&&ticket===appUpdatePollSeq&&value.operation_id&&(value.operation_id===appUpdate.operation||(!appUpdate.operation&&value.active)))appUpdateShow(value);}
++    catch(e){if(isCurrentDevice(mac,generation)&&ticket===appUpdatePollSeq)$('app-update-result').textContent='任务状态读取失败：'+e;}
++  }
++  async function appUpdateAction(op){
++    const mac=selectedTarget(),generation=deviceSelectionGeneration,operation=appUpdate.operation;if(!operation||appUpdate.busy)return;
++    appUpdatePollSeq++;appUpdate.busy=true;appUpdateButtons();
++    try{
++      const code=$('app-update-code').value;if(!(op==='cancel'&&appUpdate.active)&&!/^[0-9]{8}$/.test(code))throw new Error('请填写八位设备码');
++      let packages=appUpdate.packages;if(op==='run'&&$('app-update-packages').files?.length)packages=await appUpdatePackageFiles(mac,generation);
++      if(!isCurrentDevice(mac,generation))return;
++      const value=await appUpdateInvoke(mac,{op,code,operation_id:operation,package_paths:op==='run'?packages:undefined});
++      if(isCurrentDevice(mac,generation)){appUpdateShow(value);if(op==='run'&&(value.result==='running'||value.active)){$('app-update-code').value='';appUpdate.active=true;}}
++    }catch(e){if(isCurrentDevice(mac,generation))$('app-update-result').textContent=String(e);}
++    finally{if(isCurrentDevice(mac,generation)){appUpdate.busy=false;appUpdateButtons();}}
++  }
++
+   let platformDeviceRequest = 0;
+   let renameTargetMac = null;
+ 
+@@ -1500,6 +1617,7 @@
+   }
+ 
+   function clearDeviceView() {
++    appUpdateReset();
+     wifiFamilySelectionDirty=false;wifiWiredDirty=false;wifiManualSelection=false;$('wifi-ap01-code').value='';wifiFamilyCancel();
+     $('device-power').hidden=false;$('wifi-card').hidden=false;
+     wifiRenderOnline(null);
+@@ -1629,7 +1747,7 @@
+   function refreshVisibleDevice() {
+     if (!document.querySelector('.tabs button[data-tab="device"]').classList.contains('on')) return;
+     if(!selectedDeviceMac)return wifiCheckPermissions();
+-    const update = Promise.all([refreshDevice(), wifiRefreshView()]); // Passive cache/host reads; never wakes or contacts the device.
++    const update = Promise.all([refreshDevice(), wifiRefreshView(), appUpdatePoll()]); // Passive cache/host reads; never wakes or contacts the device.
+     if ($('details-upgrade_history').open) loadDeviceDetail('upgrade_history');
+     return update;
+   }
+@@ -1644,6 +1762,7 @@
+       const d = result.device;
+       if (!d || d.device_mac !== mac) throw new Error('设备身份与所选 MAC 不符');
+       $('device-power').hidden=d.power_mode==='always_on';
++      $('app-update-card').hidden=d.power_mode!=='always_on';
+       $('wifi-card').hidden=false;
+       $('dev-name').textContent = d.identity.name || mac;
+       $('device-state').textContent = d.contact.label;
+diff --git a/tools/test-ap01-app-ui-rpc.mjs b/tools/test-ap01-app-ui-rpc.mjs
+new file mode 100644
+index 0000000..a7f5dce
+--- /dev/null
++++ b/tools/test-ap01-app-ui-rpc.mjs
+@@ -0,0 +1,52 @@
++// Production page functions -> test IPC transport -> real Rust app -> C++ HTTP.
++// No Tauri window, production data directory, or physical device is used.
++import assert from 'node:assert/strict';
++import {readFileSync,writeFileSync} from 'node:fs';
++import vm from 'node:vm';
++const endpoint=new URL(process.env.AP01_UI_RPC);assert.equal(endpoint.hostname,'127.0.0.1');
++const html=readFileSync(new URL('../bridge/crates/app/ui/index.html',import.meta.url),'utf8');
++const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
++const source=script.slice(0,script.lastIndexOf('\n  renderFamilyMenu();'));
++const elements=new Map();
++const element=id=>{
++  if(!elements.has(id))elements.set(id,{value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,checked:false,files:[],
++    classList:{add(){},remove(){},contains(){return false;}},focus(){},scrollIntoView(){},setAttribute(){},getAttribute(){return '';}});
++  return elements.get(id);
++};
++const calls=[];let latest;
++const invoke=async(name,args)=>{
++  calls.push(args.body.op);
++  const response=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json','x-test-token':process.env.AP01_UI_TOKEN},body:JSON.stringify({name,args}),signal:AbortSignal.timeout(15000)});
++  assert(response.ok);const value=await response.json();latest=value;return value;
++};
++const context=vm.createContext({window:{__TAURI__:{core:{invoke}},confirm:()=>true},
++  document:{getElementById:element,querySelectorAll:()=>[],querySelector:()=>({classList:{contains:()=>true}}),addEventListener(){}},
++  localStorage:{getItem:()=>null,setItem(){},removeItem(){}},setInterval(){},clearInterval(){},setTimeout,structuredClone,btoa});
++vm.runInContext(source,context);const run=code=>vm.runInContext(code,context);
++run("selectedDeviceMac='010203040506';deviceSelectionGeneration++;clearDeviceView()");element('app-update-card').hidden=false;
++const file=path=>{const bytes=readFileSync(path);return {size:bytes.length,arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};};
++element('app-update-manifest').files=[file(process.env.AP01_MANIFEST)];
++element('app-update-packages').files=[process.env.AP01_PACKAGE,process.env.AP01_PEER].filter(Boolean).map(file);
++element('app-update-code').value='01234567';await run('appUpdatePrepare()');
++const operation=run('appUpdate.operation');assert.match(operation||'',/^[0-9a-f]{32}$/,'prepare: '+element('app-update-result').textContent);
++assert(!calls.includes('run'));assert.equal(element('app-update-run').disabled,false);
++await run("appUpdateAction('run')");assert.equal(run('appUpdate.active'),true,JSON.stringify(latest));assert.equal(element('app-update-code').value,'');
++// Reopening the page loses transient inputs but must recover the same worker.
++run('deviceSelectionGeneration++;clearDeviceView()');element('app-update-card').hidden=false;
++element('app-update-manifest').files=[];element('app-update-packages').files=[];
++await run('appUpdateRestore()');assert.equal(run('appUpdate.operation'),operation);
++const deadline=Date.now()+130000;
++while(run('appUpdate.active')){
++  assert(Date.now()<deadline,'UI worker deadline');await new Promise(resolve=>setTimeout(resolve,30));await run('appUpdatePoll()');
++}
++assert.equal(latest.status?.result,process.env.AP01_EXPECT_PHASE==='succeeded'?'confirmed':'terminal',JSON.stringify(latest));
++assert.equal(latest.status.reply.phase,process.env.AP01_EXPECT_PHASE);
++const label=element('app-update-result').textContent;
++assert(label.includes(process.env.AP01_EXPECT_PHASE==='succeeded'?'\u66f4\u65b0\u6210\u529f':'\u6574\u4f53\u56de\u9000'));
++assert.equal(calls.filter(op=>op==='run').length,1);
++element('app-update-code').value='01234567';await run("appUpdateAction('query')");
++assert.equal(latest.reply?.phase,process.env.AP01_EXPECT_PHASE,JSON.stringify(latest));
++writeFileSync(process.env.AP01_RESULT,JSON.stringify(latest.reply,null,2)+'\n');
++await run("appUpdateAction('archive')");assert.equal(run('appUpdate.operation'),null,element('app-update-result').textContent);
++await run('appUpdatePoll()');assert.equal(run('appUpdate.operation'),null,'archived operation resurrected');
++console.log('Production UI -> Rust -> C++: files, prepare, worker, page recovery, result and archive passed');
+diff --git a/tools/test-device-page.mjs b/tools/test-device-page.mjs
+index 421d41c..8c20999 100644
+--- a/tools/test-device-page.mjs
++++ b/tools/test-device-page.mjs
+@@ -40,7 +40,7 @@ const context = vm.createContext({
+   document: { getElementById: element, querySelectorAll: () => [],
+     querySelector: () => ({ classList: { contains: () => deviceTabOn } }), addEventListener() {} },
+   localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
+-  setInterval() {}, clearInterval() {}, setTimeout(callback) {callback();}, structuredClone,
++  setInterval() {}, clearInterval() {}, setTimeout(callback) {callback();}, structuredClone, btoa,
+ });
+ vm.runInContext(source, context);
+ const run = code => vm.runInContext(code, context);
+@@ -521,3 +521,34 @@ run("wifiSelections.clear();wifiSelections.set('unknown',true);wifiScheme={compl
+ await run('wifiFamilyImport()');assert.equal(calls.length,noDestinationCalls);assert.match(element('wifi-result').textContent,/明确选择/);
+ run("wifiDifferences=[{network_id:'unknown',device:[{writable:true,network:{}}]}]");
+ element('wifi-direction').value='import';run('wifiPreviewSync()');assert.equal(element('wifi-sync-submit').disabled,true);assert.match(element('wifi-preview').textContent,/选择目标族/);
++
++// App updates use the same application service; passive polling never starts a job.
++select(macA);element('app-update-card').hidden=false;
++const appManifest={apps:[{id:'business',version:'v2',package_bytes:1024},{id:'peer',version:'v1',package_bytes:256}]};
++let appWorker={result:'absent',active:false};
++handlers.platform_ap01_app_update=({body})=>{
++  if(body.op==='stage')return {result:'staged',path:'/fixture/'+body.kind};
++  if(body.op==='prepare')return {result:'prepared',operation_id:'original-op',manifest:appManifest};
++  if(body.op==='run'){appWorker={operation_id:'original-op',active:true,manifest:appManifest,status:{result:'pending',progress:{phase:'receiving',changed_mask:1,ready_mask:0,received:[512,0]}}};return {result:'running',operation_id:'original-op',active:true};}
++  if(body.op==='worker_status')return appWorker;
++  if(body.op==='cancel')return {result:'cancelling',operation_id:'original-op'};
++  if(body.op==='archive')return {result:'archived',operation_id:'original-op'};
++  return {result:'absent'};
++};
++const file={size:4,arrayBuffer:async()=>new Uint8Array([1,2,3,4]).buffer};
++element('app-update-manifest').files=[file];element('app-update-packages').files=[file,file];element('app-update-code').value='01234567';
++const appStart=calls.length;await run('appUpdatePrepare()');
++assert.equal(run('appUpdate.operation'),'original-op');assert.equal(element('app-update-run').disabled,false);
++assert.deepEqual(calls.slice(appStart).map(c=>c.args.body.op),['stage','stage','stage','prepare']);
++assert(!calls.slice(appStart).some(c=>c.args.body.op==='run'));
++await run("appUpdateAction('run')");assert.equal(element('app-update-code').value,'');assert.equal(run('appUpdate.active'),true);
++await run('appUpdatePoll()');assert.match(element('app-update-progress').innerHTML,/512 \/ 1024/);assert.match(element('app-update-progress').innerHTML,/复用已有包/);
++await run("appUpdateAction('cancel')");assert.match(element('app-update-result').textContent,/取消请求已保存/);
++appWorker={...appWorker,active:false,status:{result:'unknown',error:'budget_exhausted'}};await run('appUpdatePoll()');assert.match(element('app-update-result').textContent,/结果未知/);assert.equal(run('appUpdate.operation'),'original-op');
++appWorker.status={result:'terminal',reply:{phase:'failed_rolled_back'}};await run('appUpdatePoll()');assert.match(element('app-update-result').textContent,/整体回退/);assert(!element('app-update-result').textContent.includes('更新成功'));
++element('app-update-code').value='01234567';await run("appUpdateAction('archive')");assert.equal(run('appUpdate.operation'),null);
++await run('appUpdatePoll()');assert.equal(run('appUpdate.operation'),null,'finished worker must not resurrect archived receipt');
++let deliver;handlers.platform_ap01_app_update=()=>new Promise(resolve=>{deliver=resolve;});
++const late=run('appUpdatePoll()');select(macB);deliver({operation_id:'wrong-device-op',active:true,status:{result:'running'}});await late;
++assert.equal(run('appUpdate.operation'),null);assert.equal(element('app-update-code').value,'');
++console.log('AP01 App UI: multi-file prepare, explicit run, progress/reuse, cancel, unknown/rollback, archive and stale-device isolation OK');
+diff --git a/tools/test-wifi-ui.swift b/tools/test-wifi-ui.swift
+index aec0851..834b54b 100644
+--- a/tools/test-wifi-ui.swift
++++ b/tools/test-wifi-ui.swift
+@@ -49,7 +49,7 @@ final class Runner: NSObject, WKNavigationDelegate {
+                 var results: [Any] = []
+                 for (width,height) in [(560,680),(1000,800)] {
+                     window.setContentSize(NSSize(width:width,height:height))
+-                    for scenario in ["wifi-family-edit","wifi-family-wired","wifi-family-ap01","family-menu-refresh","ap01-family-menu","154-family-menu","ble-recovery","empty","bridge","device","compare","waiting","error","permission-request","permission-settings","current-missing","current-connecting","current-error","current-ready","rename","delete","current-unreachable","sync-guard","imported-edit","save-error","delivery-alignment","roundtrip-own","roundtrip-other","online-usb","online-boot","stale-cache","job-feedback","job-feedback-error","job-blocked","failure-sent","failure-unknown","failure-network","failure-budget","endpoint-rejected","endpoint-unknown"] {
++                    for scenario in ["app-update-ready","app-update-upload","app-update-rollback","app-update-unknown","wifi-family-edit","wifi-family-wired","wifi-family-ap01","family-menu-refresh","ap01-family-menu","154-family-menu","ble-recovery","empty","bridge","device","compare","waiting","error","permission-request","permission-settings","current-missing","current-connecting","current-error","current-ready","rename","delete","current-unreachable","sync-guard","imported-edit","save-error","delivery-alignment","roundtrip-own","roundtrip-other","online-usb","online-boot","stale-cache","job-feedback","job-feedback-error","job-blocked","failure-sent","failure-unknown","failure-network","failure-budget","endpoint-rejected","endpoint-unknown"] {
+                         let result = try await web.callAsyncJavaScript("return await window.__wifiUiScenario(name)",arguments:["name":scenario],in:nil,contentWorld:.page)
+                         results.append(result ?? NSNull())
+                         let config=WKSnapshotConfiguration()
+diff --git a/tools/wifi-ui-scenarios.js b/tools/wifi-ui-scenarios.js
+index 6259741..c18f058 100644
+--- a/tools/wifi-ui-scenarios.js
++++ b/tools/wifi-ui-scenarios.js
+@@ -8,6 +8,35 @@ window.__wifiUiScenario = async function(scenario) {
+   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'tab-device'));
+   selectedDeviceMac = mac; deviceSelectionGeneration++;
+   clearDeviceView();
++
++  if(scenario.startsWith('app-update-')) {
++    $('wifi-card').hidden=true;$('device-power').hidden=true;$('app-update-card').hidden=false;
++    const manifest={apps:[{id:'codex_status',version:'2026.11.04',package_bytes:204080},{id:'peer_beats',version:'1.0',package_bytes:992}]};
++    const progress={phase:'receiving',changed_mask:1,ready_mask:0,received:[102400,0]};
++    if(scenario==='app-update-ready') {
++      const put=(id,files)=>{const transfer=new DataTransfer();files.forEach(f=>transfer.items.add(f));$(id).files=transfer.files;};
++      put('app-update-manifest',[new File([new Uint8Array([1,2,3,4])],'set.amf3')]);
++      put('app-update-packages',[new File([new Uint8Array([1,2,3,4])],'business.apx2'),new File([new Uint8Array([1,2,3,4])],'peer.apx2')]);
++      $('app-update-code').value='00000000';const calls=[];
++      window.__wifiRoundtripInvoke=async(name,{body})=>{check(name==='platform_ap01_app_update','Wrong App IPC');calls.push(body.op);
++        if(body.op==='stage')return {result:'staged',path:'/synthetic/'+body.kind};
++        if(body.op==='prepare')return {result:'prepared',operation_id:'01000000000000000000000000000000',manifest};throw Error('Unexpected App operation');};
++      try{await appUpdatePrepare();check(calls.join(',')==='stage,stage,stage,prepare','File selection must only stage/prepare');check(!$('app-update-run').disabled,'Prepared update cannot start');}
++      finally{window.__wifiRoundtripInvoke=null;}
++    }else{
++      const active=scenario==='app-update-upload';
++      const status=active?{result:'pending',progress}:scenario==='app-update-rollback'?{result:'terminal',reply:{phase:'failed_rolled_back'},progress:{...progress,phase:'failed_rolled_back',received:[204080,0]}}:{result:'unknown',error:'budget_exhausted',progress};
++      appUpdateShow({operation_id:'01000000000000000000000000000000',active,manifest,status});
++      if(active){check($('app-update-run').disabled&&!$('app-update-cancel').disabled,'Active worker controls incorrect');check($('app-update-progress').textContent.includes('复用已有包'),'Unchanged App is not identified');}
++      if(scenario==='app-update-rollback')check($('app-update-result').textContent.includes('整体回退')&&!$('app-update-result').textContent.includes('更新成功'),'Rollback was reported as success');
++      if(scenario==='app-update-unknown')check(appUpdate.operation&&$('app-update-result').textContent.includes('结果未知'),'Unknown operation was discarded');
++    }
++    const card=$('app-update-card');card.scrollIntoView({block:'start'});await wait();const bounds=card.getBoundingClientRect();
++    check(card.scrollWidth<=card.clientWidth+1,'App update card overflows');
++    for(const node of card.querySelectorAll('input,button,progress')){if(!node.getClientRects().length)continue;const r=node.getBoundingClientRect();check(r.left>=bounds.left-1&&r.right<=bounds.right+1,'App control exceeds card: '+node.id);}
++    check(window.__uiErrors.length===0,'App JS errors: '+window.__uiErrors.join('; '));
++    return {scenario,width:innerWidth,cardWidth:Math.round(bounds.width),result:$('app-update-result').textContent};
++  }
+   wifiLibrary={revision:0,families:[],devices:{},wired_family:null};wifiManualSelection=false;$('wifi-family-editor').open=false;wifiFamilyRender();
+   const network = {network_id:'home', label:'书桌网络', host_ssid:'Home-5G', ssid:'Home-2G',
+     password:'fixture-pass',credential:'keep', origin:'local', version:2, deleted:false};
