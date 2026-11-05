@@ -1,15 +1,32 @@
 // Model only: real App instructions, production loader/provider/host, fake ROM I/O.
 #include "native_app_platform_v3.h"
 #include "model_platform_v3.h"
+#include "app_heap_0041.h"
+#include "app_heap_client_v2.h"
 #include <new>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
 namespace std {const nothrow_t nothrow{};}
-static uintptr_t heapCursor=0xa8200000;
-extern "C" void *malloc(size_t n){n=(n+31)&~size_t(15);if(n>0x300000||heapCursor+n>0xa8500000)return nullptr;void *p=(void *)heapCursor;heapCursor+=n;*(size_t *)p=n-16;return (uint8_t *)p+16;}
-extern "C" void free(void *){}
-extern "C" void *realloc(void *p,size_t n){if(!p)return malloc(n);void *q=malloc(n);if(q){size_t old=*(size_t *)((uint8_t *)p-16);memcpy(q,p,n<old?n:old);}return q;}
+// Test-only reuse of the validated arena; production ABI 3 still uses ROM malloc.
+// QEMU maps this arena through 0xa83fffff, not the old bump limit 0xa8500000.
+static Ap01AppHeapClientV2 &modelHeap(){
+    alignas(Ap01AppGeneration0041) static uint8_t gateStorage[sizeof(Ap01AppGeneration0041)];
+    alignas(Ap01AppHeap0041) static uint8_t heapStorage[sizeof(Ap01AppHeap0041)];
+    alignas(Ap01AppHeapClientV2) static uint8_t clientStorage[sizeof(Ap01AppHeapClientV2)];
+    static bool ready=false;
+    if(!ready){
+        auto *gate=new(gateStorage) Ap01AppGeneration0041;
+        auto *heap=new(heapStorage) Ap01AppHeap0041(*gate);
+        if(!heap->bind(1,(void *)0xa8200000,0x200000)||gate->begin()!=1)__builtin_trap();
+        new(clientStorage) Ap01AppHeapClientV2(heap->table(1));ready=true;
+    }
+    return *(Ap01AppHeapClientV2 *)clientStorage;
+}
+extern "C" void *malloc(size_t n){return modelHeap().allocate(n);}
+extern "C" void free(void *p){if(p)modelHeap().free(p);}
+extern "C" void *realloc(void *p,size_t n){return modelHeap().reallocate(p,n);}
 void *operator new(size_t n){return malloc(n);}
 void *operator new(size_t n,const std::nothrow_t &) noexcept{return malloc(n);}
 void *operator new[](size_t n,const std::nothrow_t &) noexcept{return malloc(n);}

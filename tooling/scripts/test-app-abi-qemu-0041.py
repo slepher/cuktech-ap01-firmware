@@ -28,12 +28,13 @@ def sha(path):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--guest-diagnostics',action='store_true',help='Enable bounded QEMU guest error/interrupt logging')
     p.add_argument('--direct-v3', action='store_true', help='Execute real ABI 3 App model guest')
     p.add_argument('--qemu', type=Path, required=True)
     p.add_argument('--expected-engine-sha256', required=True)
     p.add_argument('--support-dir', type=Path, required=True)
     p.add_argument('--fixture-dir', type=Path, required=True)
-    p.add_argument('--next-fixture',type=Path,action='append',default=[],help='Next boot in the same VM after QMP system_reset; exact journal handoff required')
+    p.add_argument('--next-fixture',type=Path,action='append',default=[],help='Next boot in the same VM after QMP system_reset; exact journal or business-file handoff required')
     p.add_argument('--output', type=Path, required=True)
     args = p.parse_args()
     if args.output.exists() or not args.output.parent.is_dir():
@@ -53,7 +54,8 @@ def main():
         fixtures.append((directory,probe))
     if args.next_fixture:
         assert args.direct_v3 and len(fixtures)<=3
-        assert all(probe.get('journal_export') and probe.get('guest_bss') for _,probe in fixtures)
+        assert all(probe.get('guest_bss') for _,probe in fixtures)
+        assert all(probe.get('journal_export') for _,probe in fixtures) or all(probe.get('business_export') for _,probe in fixtures)
         assert all(probe['bases']==fixtures[0][1]['bases'] for _,probe in fixtures)
     probe=fixtures[0][1];image=args.fixture_dir/'guest.bin';package=args.fixture_dir/'app.apx2'
     extras=probe.get('extra_inputs',[])
@@ -79,6 +81,7 @@ def main():
                            '-S', '-display', 'none', '-serial', 'none', '-monitor', 'none',
                            '-gdb', f'unix:{socket_path},server=on,wait=off',
                            '-qmp',f'unix:{qmp_path},server=on,wait=off']
+                if args.guest_diagnostics:command += ['-d','guest_errors,int']
                 log_path = args.output.with_suffix(f'.{base:x}.log')
                 with log_path.open('x') as log:
                     process = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=log, stderr=log,
@@ -100,12 +103,19 @@ def main():
                                 expect_ok(f'M{address+at:x},{len(chunk):x}:{chunk.hex()}')
                         def register(number, value):
                             expect_ok(f'P{number:x}=' + struct.pack('<I', value).hex())
-                        previous_journals=None
+                        previous_journals=None;previous_business=None
                         if args.next_fixture:results[hex(base)]={'stages':[],'resets':[]}
                         for stage,(fixture,probe) in enumerate(fixtures):
                             rsp.deadline=time.monotonic()+20
                             if stage:
-                                assert previous_journals==(fixture/'journals.bin').read_bytes(), 'journal handoff mismatch'
+                                handoff={}
+                                if probe.get('journal_export'):
+                                    assert previous_journals==(fixture/'journals.bin').read_bytes(), 'journal handoff mismatch'
+                                    handoff['journal_handoff_identical']=True
+                                if probe.get('business_export'):
+                                    assert previous_business==(fixture/'business-files.bin').read_bytes(), 'business-file handoff mismatch'
+                                    handoff['business_handoff_identical']=True
+                                assert handoff
                                 qmp.deadline=time.monotonic()+5
                                 expect_ok(f'z0,{stop:x},4')
                                 qmp.command('system_reset')
@@ -113,7 +123,7 @@ def main():
                                 reset_regs=bytes.fromhex(rsp.request('g'))
                                 reset_pc=struct.unpack_from('<I',reset_regs,32*4)[0]
                                 assert reset_pc!=stop and process.poll() is None
-                                results[hex(base)]['resets'].append({'pid':process.pid,'pc_after_reset':hex(reset_pc),'journal_handoff_identical':True})
+                                results[hex(base)]['resets'].append({'pid':process.pid,'pc_after_reset':hex(reset_pc),**handoff})
                             image=fixture/'guest.bin';package=fixture/'app.apx2';extras=probe.get('extra_inputs',[])
                             write(probe['guest_base'],image.read_bytes())
                             if probe.get('guest_bss'):
@@ -122,7 +132,8 @@ def main():
                             package_address,stop,sp=(probe['package_address'],probe['stop'],probe['sp']) if args.direct_v3 else (0x62fce000,0x62fc8000,0x62fd4000)
                             write(package_address,package.read_bytes())
                             for item in extras:
-                                data=previous_journals if stage and item['name']=='journals.bin' else (fixture/item['name']).read_bytes()
+                                data=(previous_journals if stage and item['name']=='journals.bin' else
+                                      previous_business if stage and item['name']=='business-files.bin' else (fixture/item['name']).read_bytes())
                                 write(item['address'],data)
                             write(stop,struct.pack('<I',0x0000006f))
                             expect_ok(f'Z0,{stop:x},4')
@@ -143,6 +154,20 @@ def main():
                             if args.next_fixture:results[hex(base)]['stages'].append(stage_result)
                             else:results[hex(base)]=stage_result
                             assert result==0,f'guest assertion failed at source line {result}'
+                            if probe.get('business_export'):
+                                export=probe['business_export'];assert export=={'address':0xa81d0000,'limit':0x1f000}
+                                header=bytes.fromhex(rsp.request('ma81d0000,20'));assert header[:4]==b'BFV1'
+                                total=struct.unpack_from('<I',header,4)[0];assert 32<=total<=export['limit']
+                                data=bytearray(header)
+                                for offset in range(32,total,256):
+                                    count=min(256,total-offset);chunk=bytes.fromhex(rsp.request(f'm{export["address"]+offset:x},{count:x}'))
+                                    assert len(chunk)==count;data.extend(chunk)
+                                lengths=struct.unpack_from('<6I',header,8)
+                                assert 32+sum(n for n in lengths if n!=0xffffffff)==total
+                                suffix=f'.stage{stage}' if args.next_fixture else ''
+                                path=args.output.with_suffix(f'.{base:x}{suffix}.business-files.bin');assert not path.exists();path.write_bytes(data)
+                                previous_business=bytes(data)
+                                stage_result['business_files']={'name':path.name,'sha256':sha(path),'lengths':list(lengths)}
                             if probe.get('journal_export'):
                                 export=probe['journal_export'];assert export=={'address':0xa81ff000,'size':648}
                                 data=bytearray()
@@ -165,6 +190,7 @@ def main():
                                 path=args.output.with_suffix(f'.{base:x}{suffix}.runtime.bin');assert not path.exists();path.write_bytes(data)
                                 stage_result['runtime']={'name':path.name,'sha256':sha(path)}
                     finally:
+                        report.setdefault('qemu_exit_before_cleanup',{})[hex(base)]=process.poll()
                         if qmp:qmp.file.close()
                         if qmp_socket:qmp_socket.close()
                         if connection:
