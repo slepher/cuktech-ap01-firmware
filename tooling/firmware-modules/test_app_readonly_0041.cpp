@@ -6,6 +6,7 @@
 #include "app_files_0041.h"
 #include "app_vfs_client_v2.h"
 #include "app_files_v3.h"
+#include "app_platform_api_v3.h"
 #include "app_services_0041.h"
 #include "app_network_client_v2.h"
 #include "app_network_client_v3.h"
@@ -183,6 +184,70 @@ int main(int argc,char **argv){
      assert(!failing.syncWritePermission(207,true)&&mutations==failedAt&&!failing.writesAllowed());}
     assert(strcmp(business.context(),"before-trial")&&meta!=bytes(std::string(argv[1])+"/bundle/state.bin"));
 #ifdef AP01_TEST_DIRECT_FILES
+    // Known coordination gap: transient platform contention is indistinguishable
+    // from storage failure during writable restoration. Preserve this evidence
+    // until an operation-level admission contract replaces per-call retries.
+    {
+        bool occupied=true;
+        Ap01AppWriteGateV3 coordinated(&occupied,[](void *p){return !*(bool *)p;},[](void *){});
+        assert(coordinated.writes(true));
+        Ap01AppFilesV3 scoped(ops,argv[1]);scoped.bindGate(coordinated);
+        auto table=scoped.table();LittleFSClass coordinatedFs(table,argv[1]);
+        Ap01Business restoring(coordinatedFs,{nullptr,present},4);
+        assert(restoring.begin(208,true));
+        unsigned beforeContention=mutations;
+        auto beforeMeta=bytes(std::string(argv[1])+"/bundle/state.bin");
+        assert(!restoring.syncWritePermission(209,true)&&!restoring.writesAllowed());
+        assert(mutations==beforeContention&&beforeMeta==bytes(std::string(argv[1])+"/bundle/state.bin"));
+        occupied=false;
+        assert(!restoring.syncWritePermission(210,true)&&!restoring.writesAllowed());
+        assert(mutations==beforeContention);
+        puts("negative control: uncoordinated legacy restore latches contention without any backend mutation");
+        // The scoped candidate admits before calling any business code. Busy
+        // never invokes begin(), so it cannot latch writeResumeFailed.
+        scoped.threadIdentity(nullptr,[](void *)->uintptr_t{static thread_local int id;return (uintptr_t)&id;});
+        Ap01Business admitted(coordinatedFs,{nullptr,present},5);assert(admitted.begin(211,true));
+        struct Resume {Ap01Business *business;unsigned calls=0;} resume{&admitted};
+        auto restore=[](void *p)->int32_t{auto &r=*(Resume *)p;++r.calls;
+            return r.business->syncWritePermission(212,true)?0:-1;};
+        occupied=true;int32_t outcome=99;
+        assert(!scoped.writeScope(restore,&resume,outcome)&&!resume.calls&&outcome==99);
+        assert(!admitted.writesAllowed()&&mutations==beforeContention);
+        occupied=false;directFiles=&scoped;
+        assert(scoped.writeScope(restore,&resume,outcome)&&resume.calls==1&&outcome==0);
+        assert(admitted.writesAllowed()&&mutations>beforeContention);
+        Ap01Business ioFailure(coordinatedFs,{nullptr,present},6);assert(ioFailure.begin(213,true));
+        Resume failedResume{&ioFailure};failEveryWrite=true;
+        assert(scoped.writeScope(restore,&failedResume,outcome)&&outcome==-1&&!ioFailure.writesAllowed());
+        unsigned afterFailure=mutations;failEveryWrite=false;
+        assert(scoped.writeScope(restore,&failedResume,outcome)&&outcome==-1&&mutations==afterFailure);
+        directFiles=&files;
+        puts("scoped admission: busy leaves real business untouched; retry restores Bundle and write permission (host thread identity)");
+        struct Admission {Ap01PlatformApiV3 api{};Ap01AppFilesV3 *files;unsigned calls=0;} admission{{},&scoped};
+        admission.api.abi_major=3;admission.api.abi_minor=1;admission.api.struct_bytes=sizeof(admission.api);
+        admission.api.write_scope=[](void *p,int32_t (*callback)(void *),void *argument,int32_t *result)->int32_t{
+            auto &a=*(Admission *)p;++a.calls;
+            return a.files->writeScope(callback,argument,*result)?AP01_APP_V3_OK:AP01_APP_V3_PENDING;
+        };
+        Ap01BusinessPort resumePort{&admission,present,nullptr,nullptr,
+            [](void *p,int32_t (*callback)(void *),void *argument,int32_t *result)->int32_t{
+                auto &a=*(Admission *)p;return ap01WriteScopeV3(&a.api,p,callback,argument,result);
+            }};
+        Ap01Business integrated(coordinatedFs,resumePort,7);assert(integrated.begin(214,true));
+        unsigned unchanged=mutations;occupied=true;
+        for(unsigned i=0;i<5;++i)assert(integrated.syncWritePermission(215+i,true)&&!integrated.writesAllowed());
+        assert(mutations==unchanged&&admission.calls==5);
+        occupied=false;directFiles=&scoped;
+        assert(integrated.syncWritePermission(220,true)&&integrated.writesAllowed());
+        unsigned restored=mutations;assert(restored>unchanged&&admission.calls==6);
+        assert(integrated.syncWritePermission(221,true)&&mutations==restored&&admission.calls==6);
+        Ap01Business integratedFailure(coordinatedFs,resumePort,8);assert(integratedFailure.begin(222,true));
+        failEveryWrite=true;assert(!integratedFailure.syncWritePermission(223,true));failEveryWrite=false;
+        unsigned failedCalls=admission.calls,failedMutations=mutations;
+        assert(!integratedFailure.syncWritePermission(224,true)&&admission.calls==failedCalls&&mutations==failedMutations);
+        directFiles=&files;
+        puts("production business write admission: five Busy polls preserve readonly health, later C API admission restores once; real storage failure remains latched");
+    }
     assert(largestWrite>=3073); // One direct call, not the old 1KB transport.
     int handles[16];std::string path=std::string(argv[1])+"/held.bin";
     for(auto &h:handles){h=direct.open(direct.context,path.c_str(),0);assert(h>0);}

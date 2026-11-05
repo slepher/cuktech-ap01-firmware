@@ -181,7 +181,7 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     for(unsigned round=0;round<12;++round){
         for(unsigned i=0;i<ap01ModelV3.taskCount;++i){
             if(i>=initialized){uint32_t stack=ap01ModelV3.tasks[i].stack;auto *p=(uint8_t *)malloc(stack);CHECK(p);memset(p,0xa5,stack);stackBottom[i]=p;workers[i].words[0]=uint32_t(uintptr_t(runTask));workers[i].words[1]=uint32_t(uintptr_t(p+stack));++initialized;}
-            CHECK(!done[i]);current=i;modelSwitch(&scheduler,&workers[i]);
+            CHECK(!done[i]);current=i;ap01ModelV3.threadIdentity=i+2;modelSwitch(&scheduler,&workers[i]);
         }
         Ap01NativeAppSharedV3::poll(&set->shared());
     }
@@ -207,7 +207,7 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     auto schedule=[&](unsigned skip,unsigned rounds)->int{
         for(unsigned round=0;round<rounds;++round){
             ap01ModelV3.now+=100;
-            for(unsigned i=0;i<3;++i)if(i!=skip){CHECK(!done[i]);current=i;modelSwitch(&scheduler,&workers[i]);}
+            for(unsigned i=0;i<3;++i)if(i!=skip){CHECK(!done[i]);current=i;ap01ModelV3.threadIdentity=i+2;modelSwitch(&scheduler,&workers[i]);}
             Ap01NativeAppSharedV3::poll(&set->shared());
         }return 0;
     };
@@ -244,6 +244,11 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     }
     CHECK(decision==Ap01SetHealthDecisionV3::Approved);
     CHECK(journal.current()->phase==finalPhase&&journal.current()->cleanupPending);
+    ap01ModelV3.busy=true;
+    CHECK(schedule(3,20)==0&&ap01ModelV3.mkdirCalls==0);
+    CHECK(set->execution().health()==AP01_APP_V3_OK);
+    ap01ModelV3.busy=false;
+    CHECK(schedule(3,20)==0&&ap01ModelV3.mkdirCalls==1);
     CHECK(schedule(3,20)==0&&ap01ModelV3.mkdirCalls==1);
     model.worker=true;CHECK(journal.load()==Ap01SetJournalResultV3::Ok);
     CHECK(journal.current()->phase==finalPhase);model.worker=false;

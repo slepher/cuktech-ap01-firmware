@@ -27,7 +27,9 @@ asm(".text\n.global modelSwitch\nmodelSwitch:\n"
 "flw fs0,56(a1)\nflw fs1,60(a1)\nflw fs2,64(a1)\nflw fs3,68(a1)\nflw fs4,72(a1)\nflw fs5,76(a1)\nflw fs6,80(a1)\nflw fs7,84(a1)\nflw fs8,88(a1)\nflw fs9,92(a1)\nflw fs10,96(a1)\nflw fs11,100(a1)\nret\n");
 static uint8_t *stackBottom[4]{};
 static Context scheduler{},workers[4]{};static unsigned current=0,initialized=0;static bool done[4]{};
-static void pauseTask(uint32_t){modelSwitch(&workers[current],&scheduler);}
+static void pauseTask(uint32_t){
+    ap01ModelV3.threadIdentity=1;modelSwitch(&workers[current],&scheduler);
+}
 static void runTask(){auto &t=ap01ModelV3.tasks[current];t.entry(t.context);done[current]=true;for(;;)pauseTask(0);}
 static bool reserve(void *p,const Apx2View &v,Ap01BootMemoryV3 &m){if((v.image_bytes+v.bss_bytes)>0x40000)return false;m={(uint8_t *)p,0x40000,uint32_t(uintptr_t(p))};return true;}
 static bool publish(void *,const Ap01BootMemoryV3 &m,const Apx2View &v,Ap01AppEntriesV3 &e){asm volatile("fence.i":::"memory");e={(Ap01AppStartV3)(m.base+v.entries[0]),(Ap01AppEventV3)(m.base+v.entries[1]),(Ap01AppHealthV3)(m.base+v.entries[2])};return true;}
@@ -51,7 +53,7 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     for(unsigned round=0;round<12;++round){
         for(unsigned i=0;i<ap01ModelV3.taskCount;++i){
             if(i>=initialized){uint32_t stack=ap01ModelV3.tasks[i].stack;auto *p=(uint8_t *)malloc(stack);CHECK(p);memset(p,0xa5,stack);stackBottom[i]=p;workers[i].words[0]=uint32_t(uintptr_t(runTask));workers[i].words[1]=uint32_t(uintptr_t(p+stack));++initialized;}
-            CHECK(!done[i]);current=i;modelSwitch(&scheduler,&workers[i]);
+            CHECK(!done[i]);current=i;ap01ModelV3.threadIdentity=i+2;modelSwitch(&scheduler,&workers[i]);
         }
         platform->poll(platform);
     }

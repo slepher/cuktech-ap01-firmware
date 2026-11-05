@@ -26,12 +26,16 @@ subprocess.run(['clang++',*flags,*map(str,sources),'-o',str(binary)],check=True)
 with tempfile.TemporaryDirectory(prefix='readonly-',dir=a.out.resolve()) as state:
     result=subprocess.check_output([str(binary),state,str(payload)],text=True,timeout=60)
 dependencies=sources+[m/n for n in ('app_vfs_client_v2.h','app_file_abi_v2.h','app_files_0041.h','app_generation_0041.h','app_abi_v2.h','native_filesystem_0041.h','app_network_client_v2.h','app_network_abi_v2.h','app_services_0041.h','app_core_abi_v2.h')]
-dependencies += [m/'native_vfs_api_0041.h',m/'app_files_v3.h']
+dependencies += [m/'native_vfs_api_0041.h',m/'app_files_v3.h',m/'app_write_gate_v3.h']
 if a.direct_files:dependencies += [m/n for n in ('app_network_v3.h','app_network_api_v3.h','app_network_client_v3.h')]
 evidence=dict(passed=True,checks=result.strip(),device_accessed=False,
               direct_file_network_tables=a.direct_files,
               sources={str(s.relative_to(s.parent.parent)):hashlib.sha256(s.read_bytes()).hexdigest() for s in dependencies})
 if a.direct_files:
+    evidence['writable_restore_contention_resolved']=True
+    evidence['scoped_admission_candidate_verified']=True
+    evidence['scoped_admission_boundary']='Production business restoration via C API helper with host admission/identity substitutes; actual RV32 worker execution is separate evidence.'
+    evidence['known_gaps']=['Bundle, pairing confirmation and activation operation-level admission remain incomplete; this report only closes writable restoration contention.']
     symbols=subprocess.check_output(['nm','-C',str(binary)],text=True)
     for name in ('Ap01AppCore0041::invoke','Ap01AppFiles0041::invoke','Ap01AppNetwork0041::invoke','Ap01AppHeap0041::invoke'):
         assert name not in symbols,('legacy invoke linked into direct path',name)
