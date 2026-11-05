@@ -11,6 +11,9 @@ uint64_t nowMs();
 // Checked form for deadline-sensitive I/O. A valid boot-time zero is distinct
 // from a failed/invalid ROM clock read; failure leaves the output unchanged.
 bool monotonicMs(uint64_t &);
+// Worker context only. Thread-local storage identity, zero on lookup failure;
+// unlike __errno(), this never substitutes the global fallback errno slot.
+uintptr_t threadIdentity();
 void pause(unsigned ms);
 void closeFd(int fd);
 bool randomBytes(void *,uint8_t *,size_t);

@@ -7,6 +7,7 @@ namespace ap01_native0041 {
 static_assert(sizeof(PollFd)==24,"0041 poll ABI");
 #endif
 static_assert(sizeof(Address)==16&&sizeof(Clock)==8,"0041 kernel ABI");
+uintptr_t threadIdentity(){return (uintptr_t)ROM_FN(0xa0026784,void *(*)())();}
 bool monotonicMs(uint64_t &out) {
     Clock value{};
     if (ROM_FN(0xa002696a,int (*)(unsigned,Clock *))(1,&value) || value.seconds < 0 || value.nanos < 0 || value.nanos>=1000000000) return false;
@@ -56,14 +57,16 @@ int receive(void *p,uint8_t *bytes,size_t length,uint64_t deadline) {
     int fd=*(int *)p;
     while(waitFd(fd,1,deadline)) {
         int n=ROM_FN(0xa010d6f6,int (*)(int,void *,size_t,int))(fd,bytes,length,0x40);
-        if(n>=0)return n;int code=*ROM_FN(0xa00267c0,int *(*)())();if((code!=4&&code!=11)||!retryIo(deadline))return -1;
+        if(n>=0)return n;
+        int code=*ROM_FN(0xa00267c0,int *(*)())();if((code!=4&&code!=11)||!retryIo(deadline))return -1;
     }return -1;
 }
 int send(void *p,const uint8_t *bytes,size_t length,uint64_t deadline) {
     int fd=*(int *)p;
     while(waitFd(fd,4,deadline)) {
         int n=ROM_FN(0xa003949c,int (*)(int,const void *,size_t,int,const void *,unsigned))(fd,bytes,length,0x40,nullptr,0);
-        if(n>=0)return n;int code=*ROM_FN(0xa00267c0,int *(*)())();if((code!=4&&code!=11)||!retryIo(deadline))return -1;
+        if(n>=0)return n;
+        int code=*ROM_FN(0xa00267c0,int *(*)())();if((code!=4&&code!=11)||!retryIo(deadline))return -1;
     }return -1;
 }
 int listener(unsigned port,bool udp) {

@@ -1,4 +1,4 @@
-"""Run the native listener prefix and original socket/accept instructions.
+"""Run the native listener prefix, socket/accept and thread TLS instructions.
 
 Run only in james.local Docker. Socket allocation/setup is substituted by a
 zeroed connection, with an empty accept backlog. No kernel boot, radio, real
@@ -40,6 +40,8 @@ def main():
     assert sha(a.qemu) == a.expected_engine_sha256
     audit = load('network_audit', Path(__file__).with_name('audit-native-network-0041.py'))
     rom = a.rom.read_bytes(); audit.audit(rom)
+    thread_audit = load('thread_audit', Path(__file__).with_name('audit-native-thread-0041.py'))
+    thread_audit.audit(rom)
     support_path = a.support_dir/'run-qemu-ap01.py'
     sys.path.insert(0, str(a.support_dir.resolve()))
     support = load('qemu_support', support_path)
@@ -48,7 +50,8 @@ def main():
                   engine_sha256=sha(a.qemu), support_sha256=sha(support_path),
                   script_sha256=sha(Path(__file__)), rom_sha256=sha(a.rom),
                   listener_sha256=sha(a.listener), cases=[],
-                  substitutes=['socket setup/allocation', 'empty connection/backlog'],
+                  substitutes=['socket setup/allocation', 'empty connection/backlog', 'current TCB and TLS fields'],
+                  scheduler_executed=False,
                   real_network_or_latency_verified=False)
     try:
         with tempfile.TemporaryDirectory(prefix='ap01-net-') as folder:
@@ -118,6 +121,21 @@ def main():
                                 assert regs[32] == 0xa003c08e and regs[11] == 0xffffffff
                                 case['empty_accept'] = 'reaches wait with timeout -1 (stopped before wait)'
                         report['cases'].append(case)
+                    # Execute the real lookup and errno paths with distinct
+                    # task records; do not pretend this runs the scheduler.
+                    for addr in (0xa002671a, 0xa0026784, 0xa00267c0):
+                        assert read(addr, 16) == rom[addr-audit.BASE:addr-audit.BASE+16]
+                    for tcb, tls in ((0xa81d0000,0xa81d1000),(0xa81d0100,0xa81d2000),
+                                     (0xa81d0000,0xa81d1000),(0xa81d0100,0)):
+                        write(tcb,bytes(80));write(tcb+60,struct.pack('<I',tls))
+                        write(0x62fc6c18,struct.pack('<I',tcb))
+                        regs=start(0xa0026784,{})
+                        assert regs[32]==stop and regs[10]==tls and regs[2]==sp
+                        regs=start(0xa00267c0,{})
+                        expected=tls+4 if tls else 0x62fc604c
+                        assert regs[32]==stop and regs[10]==expected and regs[2]==sp
+                        report['cases'].append(dict(current_tcb=hex(tcb),thread_identity=hex(tls),
+                                                    errno_slot=hex(expected)))
                 finally:
                     if conn: conn.close()
                     if process.poll() is None:

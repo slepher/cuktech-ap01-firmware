@@ -12,6 +12,8 @@ unsigned returnedEvents;
 int socketType, failure, closes, binds, listens, options;
 int clockFailure;bool failClockAfterPoll;
 int pauses,transferCalls,transferFailures;
+uintptr_t tlsIdentity;
+void *threadCall(){return (void *)tlsIdentity;}
 int clockCall(unsigned kind, Clock *value){
     if(clockFailure){
         value->seconds=clockFailure==2?-1:0;
@@ -55,6 +57,7 @@ uintptr_t resolve(uintptr_t address){
     case 0xa002696a:return (uintptr_t)clockCall;
     case 0xa003f546:return (uintptr_t)pollCall;
     case 0xa00267c0:return (uintptr_t)errnoCall;
+    case 0xa0026784:return (uintptr_t)threadCall;
     case 0xa00268c4:return (uintptr_t)socketCall;
     case 0xa010e532:return (uintptr_t)optionCall;
     case 0xa003f446:return (uintptr_t)bindCall;
@@ -71,6 +74,9 @@ uintptr_t resolve(uintptr_t address){
 #undef ROM_FN
 
 int main(){
+    for(uintptr_t id:{uintptr_t(0),uintptr_t(0x62fc7000),uintptr_t(0x62fc8000)}){
+        tlsIdentity=id;assert(threadIdentity()==id);
+    }
     // A single clock sample must determine both expiry and remaining budget.
     // The old two-read implementation sees 100 then 102, underflows and polls 1000 ms.
     times={100,102};clockAt=0;polls=0;expectedTimeout=1;pollResult=0;
