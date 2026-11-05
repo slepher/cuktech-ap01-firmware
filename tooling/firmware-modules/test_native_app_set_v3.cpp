@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include "model_platform_v3.h"
+#include "native_vfs_0041.h"
 #include <cassert>
 #include <cstring>
 #include <fstream>
@@ -90,7 +91,33 @@ struct Disk {
         ops.write=[](void *p,int fd,const void *data,size_t n){auto &s=*(Disk*)p;assert(s.worker&&fd==10&&s.current);
             auto b=(const uint8_t*)data;s.current->assign(b,b+n);return s.scenario==20?-1:int(n);};return ops;}
 };
+static void bundleModelFiles(){
+    ap01ModelV3={};auto io=ap01RomVfs();const char *incoming="/fixture/bundle/incoming.bin",*content="/fixture/bundle/content.bin";
+    assert(io.open(io.context,incoming,1)<0); // UI identity cannot mutate.
+    ap01ModelV3.threadIdentity=2;
+    int writer=io.open(io.context,incoming,1);assert(writer>=0);
+    const uint8_t payload[]={1,2,3,4};uint8_t out[8]{};
+    assert(io.write(io.context,writer,payload,4)==4&&io.write(io.context,writer,nullptr,0)==0);
+    assert(io.rename(io.context,incoming,content)<0&&io.close(io.context,writer)==0);
+    assert(io.rename(io.context,incoming,content)==0);
+    int first=io.open(io.context,content,0),second=io.open(io.context,content,0),append=io.open(io.context,content,2);
+    assert(first>=0&&second>=0&&append>=0);
+    assert(io.read(io.context,first,out,2)==2&&out[0]==1&&out[1]==2);
+    assert(io.read(io.context,second,out,4)==4&&!memcmp(out,payload,4));
+    assert(io.write(io.context,first,payload,1)<0);
+    assert(io.write(io.context,append,payload,4)==4&&io.size(io.context,first)==8);
+    assert(io.seek(io.context,first,-1,2)==7&&io.read(io.context,first,out,2)==1&&out[0]==4);
+    assert(io.seek(io.context,first,1,2)<0&&io.seek(io.context,first,-9,2)<0);
+    assert(io.remove(io.context,content)<0);
+    assert(io.close(io.context,first)==0&&io.close(io.context,second)==0&&io.close(io.context,append)==0);
+    assert(io.remove(io.context,content)==0&&io.exists(io.context,content)==0);
+    writer=io.open(io.context,"/fixture/bindings.pending",1);assert(writer>=0);
+    uint8_t excess[513]{};assert(io.write(io.context,writer,excess,sizeof(excess))<0&&io.size(io.context,writer)==0);
+    assert(io.close(io.context,writer)==0);
+    puts("Bundle model VFS: independent read/append cursors, seek, close-before-rename/remove, UI and size limits passed");
+}
 int main(int argc,char **argv){
+    bundleModelFiles();
     assert(argc==4);auto manifest=file(argv[1]);auto real=file(argv[2]),peer=file(argv[3]);
     Ap01ManifestLimitsV3 limits{8,1u<<24,1u<<23,1u<<23,1u<<20,16,32,127,1u<<25,1u<<20};
     for(mode=0;mode<4;++mode){

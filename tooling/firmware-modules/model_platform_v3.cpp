@@ -36,33 +36,94 @@ int thread(uint32_t *id,const char *,void *(*entry)(void *),unsigned stack,void 
 }
 namespace {
 int prepare(void *,const char *){return 0;}
+int fileIndex(const char *path){
+    const char *names[]={"/bindings.pending","/bindings.bin","/bundle/incoming.bin",
+                         "/bundle/content.bin","/bundle/state.tmp","/bundle/state.bin"};
+    size_t length=strlen(path);
+    for(unsigned i=0;i<6;++i){size_t n=strlen(names[i]);if(length>=n&&!strcmp(path+length-n,names[i]))return int(i);}
+    return -1;
+}
+Ap01ModelPlatformV3::Handle *handle(int fd){
+    if(fd<20||fd>=36)return nullptr;
+    auto &h=ap01ModelV3.handles[fd-20];return h.file<0?nullptr:&h;
+}
+bool opened(int index){for(auto &h:ap01ModelV3.handles)if(h.file==index)return true;return false;}
 int open(void *,const char *path,unsigned mode){
-    auto &m=ap01ModelV3;
+    auto &m=ap01ModelV3;int index=fileIndex(path);
+    if(index>=0){auto &f=m.files[index];
+        if(mode>2||(!mode&&!f.present)||(mode&&m.threadIdentity==1))return -1;
+        for(unsigned i=0;i<16;++i)if(m.handles[i].file<0){
+            if(mode&&!f.bytes){f.capacity=index<2?512:index<4?262144:2048;
+                f.bytes.reset(new(std::nothrow) uint8_t[f.capacity]);if(!f.bytes)return -1;}
+            if(mode==1)f.size=0;if(mode)f.present=true;
+            m.handles[i]={index,mode==2?f.size:0,mode!=0};return int(20+i);
+        }
+        return -1;
+    }
     if(mode||strcmp(path,"/resource/app-current.apx2")||!m.package||m.packageOpen)return -1;
     m.packageOpen=true;m.position=0;return 10;
 }
-int close(void *,int fd){if(fd!=10||!ap01ModelV3.packageOpen)return -1;ap01ModelV3.packageOpen=false;++ap01ModelV3.packageCloses;return 0;}
-int read(void *,int fd,void *out,size_t n){
-    auto &m=ap01ModelV3;if(fd!=10||!m.packageOpen||n>m.packageBytes-m.position)return -1;
+int close(void *,int fd){if(auto *h=handle(fd)){*h={};return 0;}
+    if(fd!=10||!ap01ModelV3.packageOpen)return -1;ap01ModelV3.packageOpen=false;++ap01ModelV3.packageCloses;return 0;}
+int read(void *,int fd,void *out,size_t n){auto &m=ap01ModelV3;
+    if(auto *h=handle(fd)){auto &f=m.files[h->file];
+        if(h->position>=f.size)return 0;
+        if(n>f.size-h->position)n=f.size-h->position;
+        if(n)memcpy(out,f.bytes.get()+h->position,n);h->position+=n;return int(n);}
+    if(fd!=10||!m.packageOpen||n>m.packageBytes-m.position)return -1;
     memcpy(out,m.package+m.position,n);m.position+=uint32_t(n);return int(n);
 }
-int write(void *,int,const void *,size_t){return -1;}
-int32_t seek(void *,int fd,int32_t at,unsigned origin){
-    if(fd!=10||!ap01ModelV3.packageOpen||origin||at<0||uint32_t(at)>ap01ModelV3.packageBytes)return -1;
-    ap01ModelV3.position=uint32_t(at);return at;
+int write(void *,int fd,const void *bytes,size_t n){auto &m=ap01ModelV3;auto *h=handle(fd);
+    if(!h||!h->writable||m.threadIdentity==1)return -1;
+    auto &f=m.files[h->file];if(n>f.capacity-h->position)return -1;
+    if(n)memcpy(f.bytes.get()+h->position,bytes,n);h->position+=n;
+    if(h->position>f.size)f.size=h->position;
+    if(h->file<2)++m.bindingWrites;else ++m.bundleWrites;return int(n);
 }
-int32_t size(void *,int fd){return fd==10&&ap01ModelV3.packageOpen?int32_t(ap01ModelV3.packageBytes):-1;}
-int exists(void *,const char *){return 0;}
-int pathWrite(void *,const char *){return -1;}
-int makeDirectory(void *,const char *){++ap01ModelV3.mkdirCalls;return ap01ModelV3.allowMkdir?0:-1;}
-int rename(void *,const char *,const char *){return -1;}
+int32_t seek(void *,int fd,int32_t at,unsigned origin){auto &m=ap01ModelV3;
+    if(auto *h=handle(fd)){auto &f=m.files[h->file];if(origin>2)return -1;
+        int64_t next=int64_t(origin==0?0:origin==1?h->position:f.size)+at;
+        if(next<0||next>f.size)return -1;h->position=uint32_t(next);return int32_t(next);}
+    if(fd!=10||!m.packageOpen||origin||at<0||uint32_t(at)>m.packageBytes)return -1;
+    m.position=uint32_t(at);return at;
+}
+int32_t size(void *,int fd){if(auto *h=handle(fd))return int32_t(ap01ModelV3.files[h->file].size);
+    return fd==10&&ap01ModelV3.packageOpen?int32_t(ap01ModelV3.packageBytes):-1;}
+bool directory(const char *path){size_t n=strlen(path);return n>=7&&!strcmp(path+n-7,"/bundle");}
+int exists(void *,const char *path){int i=fileIndex(path);
+    return i>=0?int(ap01ModelV3.files[i].present):directory(path)&&ap01ModelV3.bundleDirectory?1:0;}
+int pathWrite(void *,const char *path){int i=fileIndex(path);auto &m=ap01ModelV3;
+    if(i<0||m.threadIdentity==1||opened(i)||!m.files[i].present)return -1;
+    m.files[i].present=false;m.files[i].size=0;return 0;}
+int makeDirectory(void *,const char *){auto &m=ap01ModelV3;++m.mkdirCalls;
+    if(!m.allowMkdir)return -1;m.bundleDirectory=true;return 0;}
+int rename(void *,const char *a,const char *b){auto &m=ap01ModelV3;int from=fileIndex(a),to=fileIndex(b);
+    if(from<0||to<0||from==to||m.threadIdentity==1||opened(from)||opened(to)||!m.files[from].present)return -1;
+    m.files[to]=std::move(m.files[from]);m.files[from]={};
+    if(from<2)++m.bindingRenames;else ++m.bundleRenames;return 0;
+}
 int capacity(void *,const char *,uint64_t *total,uint64_t *used){*total=4u<<20;*used=0;return 0;}
 int listen(void *,uint16_t port,bool udp){return port==(udp?8767:18081)?(udp?101:100):-1;}
-int accept(void *,int){return -1;}
-int netClose(void *,int){return 0;}
-int poll(void *,int,unsigned){return 0;}
-int receive(void *,int,uint8_t *,uint32_t,ap01_app_peer_v2 *){return AP01_NET_AGAIN;}
-int send(void *,int,const uint8_t *,uint32_t,const ap01_app_peer_v2 *){return AP01_NET_AGAIN;}
+int accept(void *,int fd){auto &m=ap01ModelV3;
+    if(fd!=100||!m.httpQueued||m.httpActive)return -1;
+    m.httpQueued=false;m.httpActive=true;return 102;
+}
+int netClose(void *,int fd){auto &m=ap01ModelV3;
+    if(fd==102&&m.httpActive){m.httpActive=false;++m.httpCloses;}return 0;
+}
+int poll(void *,int fd,unsigned events){auto &m=ap01ModelV3;
+    return (fd==100&&m.httpQueued)||(fd==102&&m.httpActive)?int(events):0;
+}
+int receive(void *,int fd,uint8_t *out,uint32_t n,ap01_app_peer_v2 *){auto &m=ap01ModelV3;
+    if(fd!=102||!m.httpActive||!m.httpInput)return AP01_NET_AGAIN;
+    if(n>7)n=7;if(n>m.httpLength-m.httpRead)n=m.httpLength-m.httpRead;
+    memcpy(out,m.httpInput+m.httpRead,n);m.httpRead+=n;return int(n);
+}
+int send(void *,int fd,const uint8_t *in,uint32_t n,const ap01_app_peer_v2 *){auto &m=ap01ModelV3;
+    if(fd!=102||!m.httpActive||!m.httpOutput)return AP01_NET_AGAIN;
+    if(n>11)n=11;if(n>m.httpCapacity-m.httpWritten)return -1;
+    memcpy(m.httpOutput+m.httpWritten,in,n);m.httpWritten+=n;return int(n);
+}
 unsigned active(void *){return ap01ModelV3.activeChild;}
 int yes(void *){return 1;}
 void slide(void *,unsigned child,unsigned){ap01ModelV3.activeChild=child;}
@@ -75,7 +136,7 @@ void hide(void *,int){}
 void *label(void *parent,const char *,int,int){return parent;}
 int present(ap01_surface_0041 *,void *,const uint8_t *,const uint16_t *,uint32_t,void (*)(void *),void *){return 0;}
 void retire(ap01_surface_0041 *){}
-void onDraw(void *,void (*)(void *),void *){}
+void onDraw(void *,void (*callback)(void *),void *context){ap01ModelV3.drawCallback=callback;ap01ModelV3.drawContext=context;}
 void text(void *,const char *){}
 void color(void *,uint32_t){}
 void font(void *,const void *){}
@@ -101,6 +162,6 @@ void ap01_window_activity(){}
 void ap01_window_wake(){}
 unsigned ap01_event_code(void *){return ap01ModelV3.eventCode;}
 unsigned ap01_event_key(void *){return ap01ModelV3.eventKey;}
-void *ap01_event_context(void *){return nullptr;}
+void *ap01_event_context(void *){return ap01ModelV3.drawContext;}
 void *ap01_event_target(void *){return ap01ModelV3.eventTarget;}
 }
