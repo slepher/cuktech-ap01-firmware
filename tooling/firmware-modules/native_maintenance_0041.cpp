@@ -23,13 +23,11 @@ void error(Ap01HttpReply &reply, int status, const char *code, const char *stage
     out["error"] = code; out["stage"] = stage;
     out["action"] = unknown ? "query_original_request" : "read_device_status";
     reply.status = status; reply.bytes = "";
-    if (out.overflowed() || !serializeJson(out, reply.bytes))
+    if (!ap01EncodeJson0041(out, reply.bytes))
         reply.bytes = "{\"result\":\"unknown\",\"error\":\"reply_oom\",\"stage\":\"response\"}";
 }
 bool encode(JsonDocument &doc, Ap01HttpReply &reply) {
-    size_t expected = measureJson(doc); reply.bytes = "";
-    if (doc.overflowed() || expected > 4048 || !reply.bytes.reserve(expected) ||
-        serializeJson(doc, reply.bytes) != expected || reply.bytes.length() != expected) {
+    if (!ap01EncodeJson0041(doc, reply.bytes,4048)) {
         error(reply, 503, "reply_limit", "response", true); return false;
     }
     return true;

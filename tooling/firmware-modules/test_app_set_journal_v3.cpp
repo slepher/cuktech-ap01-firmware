@@ -536,6 +536,7 @@ static void httpService(const char *appPath,const char *manifestPath,const char 
             auto &route=*(Route *)p;CHECK(route.held);++route.calls;return route.service.handle(r,principal,uint32_t(now));};
         LittleFSClass fs(disk.ops(),"/resource/maintenance-test");
         Ap01Maintenance0041 maintenance(fs,port,{},"010203040506",11);CHECK(maintenance.begin());
+        Ap01HttpWorkspace0041 workspace;
         bool dropResponse=false;
         Ap01HttpRequest request{};request.token="01234567";request.deviceMac="010203040506";request.requestId="01000000000000000000000000000000";
         request.contentType="application/octet-stream";
@@ -552,7 +553,7 @@ static void httpService(const char *appPath,const char *manifestPath,const char 
                 n=std::min(n,std::min(size_t(17),w.input.size()-w.at));memcpy(out,w.input.data()+w.at,n);w.at+=n;return int(n);},
                 [](void *p,const uint8_t *bytes,size_t n,uint64_t){auto &w=*(Wire *)p;if(w.drop)return -1;
                     n=std::min(n,size_t(19));w.output.append((const char *)bytes,n);return int(n);}};
-            bool sent=ap01ServeMaintenanceHttp0041(maintenance,stream,now,now+5000);
+            bool sent=ap01ServeMaintenanceHttp0041(maintenance,stream,now,now+5000,&workspace);
             maintenance.afterResponse(sent);CHECK(!route.held&&sent!=dropResponse);
             Ap01HttpReply reply;
             if(dropResponse){dropResponse=false;reply.status=503;return reply;}

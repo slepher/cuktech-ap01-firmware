@@ -11,7 +11,8 @@
 extern "C" const uint8_t ap01_native_manifest[256];
 using namespace ap01_native0041;
 struct Ap01NativeServices0041::State {
-    static const uint32_t budget[5];
+    static const uint32_t budget[6];
+    Ap01HttpWorkspace0041 httpWorkspace;
     Flash updateFlash;
     char firmwareBuild[33]={};
     int bootSlot=-1;
@@ -91,14 +92,14 @@ struct Ap01NativeServices0041::State {
             if(!waitFd(fd,1,nowMs()+1000))continue;
             int client=ap01_native0041::accept(fd);if(client<0)continue;
             Ap01Stream io{&client,receive,send};uint64_t now=nowMs();
-            bool sent=ap01ServeMaintenanceHttp0041(*s.maintenance,io,now,now+5000);
+            bool sent=ap01ServeMaintenanceHttp0041(*s.maintenance,io,now,now+5000,&s.httpWorkspace);
             closeFd(client);s.maintenance->afterResponse(sent);
         }
         s.listening.store(false,std::memory_order_release);closeFd(fd);return nullptr;
     }
 };
 __attribute__((section(".ap01_platform_budget"),used))
-const uint32_t Ap01NativeServices0041::State::budget[5]={sizeof(State),sizeof(Ap01Maintenance0041),sizeof(Ap01NativeServices0041),sizeof(Ap01WifiSwitch0041),sizeof(LittleFSClass)};
+const uint32_t Ap01NativeServices0041::State::budget[6]={sizeof(State),sizeof(Ap01Maintenance0041),sizeof(Ap01NativeServices0041),sizeof(Ap01WifiSwitch0041),sizeof(LittleFSClass),sizeof(Ap01HttpWorkspace0041)};
 Ap01NativeServices0041::Ap01NativeServices0041()=default;
 Ap01NativeServices0041::~Ap01NativeServices0041()=default;
 bool Ap01NativeServices0041::start(const Ap01MaintenanceBridge0041 &bridge,uint64_t boot,void *context,bool (*healthy)(void *)) {

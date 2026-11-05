@@ -19,6 +19,25 @@ subprocess.run(['clang','-std=c11','-g','-Wall','-Wextra','-Werror','-fsanitize=
                str(native.MODULES/'test_screen_host_0041.c'),str(host),'-o',str(registry_test)],check=True)
 result+=subprocess.check_output([str(registry_test)],text=True,timeout=30)
 sources.extend([native.MODULES/'screen_host_0041.c',native.MODULES/'test_screen_host_0041.c'])
+io_test=a.out.resolve()/'test-native-io-0041'
+subprocess.run(['clang++','-std=c++17','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
+               str(native.MODULES/'test_native_io_0041.cpp'),'-o',str(io_test)],check=True)
+result+=subprocess.check_output([str(io_test)],text=True,timeout=30)
+sources.extend(native.MODULES/n for n in ('test_native_io_0041.cpp','native_io_0041.cpp','native_io_0041.h'))
+http_test=a.out.resolve()/'test-native-http-workspace-0041'
+http_sources=[native.MODULES/n for n in ('test_native_http_workspace_0041.cpp','native_http_transport_0041.cpp')]
+subprocess.run(['clang++','-std=c++17','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
+               *map(str,http_sources),'-o',str(http_test)],check=True)
+result+=subprocess.check_output([str(http_test)],text=True,timeout=30)
+sources.extend(http_sources+[native.MODULES/'native_http_transport_0041.h'])
+json_test=a.out.resolve()/'test-native-json-reply-0041'
+subprocess.run(['clang++','-std=c++17','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
+               '-DARDUINOJSON_ENABLE_ARDUINO_STRING=1','-DARDUINOJSON_ENABLE_STD_STRING=0',
+               '-DARDUINOJSON_ENABLE_STD_STREAM=0','-I'+str(native.MODULES),
+               '-I'+str(native.ROOT/'tooling/vendor/ArduinoJson/src'),
+               str(native.MODULES/'test_native_json_reply_0041.cpp'),'-o',str(json_test)],check=True)
+result+=subprocess.check_output([str(json_test)],text=True,timeout=30)
+sources.extend(native.MODULES/n for n in ('test_native_json_reply_0041.cpp','native_json_0041.h','native_string_0041.h'))
 native.write_json(report,{'passed':True,'checks':result.strip(),'package_sha256':native.sha(a.package),
                           'app_instructions_executed':False,'device_accessed':False,
                           'sources':{s.name:native.sha(s) for s in sources},

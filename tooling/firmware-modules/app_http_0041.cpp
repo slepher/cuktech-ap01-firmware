@@ -36,7 +36,7 @@ Ap01HttpReply response(int status,const char *error,const char *device,const Ap0
         doc["received"]=r->received;doc["length"]=r->total;doc["cleanup_pending"]=bool(r->cleanupPending);
     }
     Ap01HttpReply reply;reply.status=status;
-    if(doc.overflowed()||!serializeJson(doc,reply.bytes)){reply.status=503;reply.bytes="{\"error_code\":\"reply_oom\",\"next_action\":\"query_original_operation\"}";}
+    if(!ap01EncodeJson0041(doc,reply.bytes)){reply.status=503;reply.bytes="{\"error_code\":\"reply_oom\",\"next_action\":\"query_original_operation\"}";}
     return reply;
 }
 bool terminal(P p){return p==P::Succeeded||p==P::FailedRolledBack||p==P::Cancelled||p==P::RecoveryRequired;}

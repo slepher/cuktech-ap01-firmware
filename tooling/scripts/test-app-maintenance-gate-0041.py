@@ -44,12 +44,18 @@ if a.rom:
     regression=a.out.resolve()/'test-maintenance-independent'
     subprocess.run(['clang++','-fsanitize=address,undefined',*map(str,objects[1:]+extra),
                     '-o',str(regression)],check=True)
-    with tempfile.TemporaryDirectory(prefix='maintenance-',dir=a.out.resolve()) as state:
+    # Host checkout paths can exceed the production VFS's 128-byte path bound.
+    # Keep the fixture root short; do not relax the firmware boundary for tests.
+    with tempfile.TemporaryDirectory(prefix='ap01-maint-') as state:
+        assert len(str(Path(state)/'f21/firmware.pending'))<128
         (Path(state)/'f21').mkdir()
         regression_result=subprocess.check_output([str(regression),state,str(a.rom.resolve())],
                                                  text=True,timeout=120)
     report['independent_maintenance']=regression_result.strip()
     report['rom_sha256']=hashlib.sha256(a.rom.read_bytes()).hexdigest()
+    for name in ('test_native_maintenance_0041.cpp','native_http_transport_0041.cpp',
+                 'native_http_transport_0041.h','native_maintenance_0041.h'):
+        report['sources'][name]=hashlib.sha256((modules/name).read_bytes()).hexdigest()
     print(regression_result,end='')
 (a.out/'maintenance-gate-report.json').write_text(json.dumps(report,indent=2)+'\n')
 print(result,end='')

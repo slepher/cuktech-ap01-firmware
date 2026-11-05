@@ -42,6 +42,7 @@ public:
     void afterResponse(bool sent);
     Ap01HttpReply handle(const Ap01HttpRequest &,uint64_t);
 };
-inline bool ap01ServeMaintenanceHttp0041(Ap01Maintenance0041 &service,const Ap01Stream &io,uint64_t now,uint64_t deadline) {
-    return ap01ServeNativeHttp0041(&service,[](void *p,const Ap01HttpRequest &r,uint64_t n){return ((Ap01Maintenance0041 *)p)->handle(r,n);},true,io,now,deadline);
+inline bool ap01ServeMaintenanceHttp0041(Ap01Maintenance0041 &service,const Ap01Stream &io,uint64_t now,uint64_t deadline,
+                                       Ap01HttpWorkspace0041 *workspace=nullptr) {
+    return ap01ServeNativeHttp0041(&service,[](void *p,const Ap01HttpRequest &r,uint64_t n){return ((Ap01Maintenance0041 *)p)->handle(r,n);},true,io,now,deadline,workspace);
 }

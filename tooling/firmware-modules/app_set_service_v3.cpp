@@ -96,7 +96,7 @@ Ap01HttpReply Ap01SetServiceV3::reply(int status,const char *error,bool disclose
         auto received=doc["received"].to<JsonArray>();for(auto n:r->received)received.add(n);
     }
     Ap01HttpReply out;out.status=status;
-    if(doc.overflowed()||!serializeJson(doc,out.bytes)){out.status=503;out.bytes="{\"error_code\":\"reply_oom\",\"next_action\":\"query_original_operation\"}";}
+    if(!ap01EncodeJson0041(doc,out.bytes)){out.status=503;out.bytes="{\"error_code\":\"reply_oom\",\"next_action\":\"query_original_operation\"}";}
     return out;
 }
 Ap01HttpReply Ap01SetServiceV3::handle(const Ap01HttpRequest &request,const char *principal,uint32_t now){

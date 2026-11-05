@@ -216,14 +216,17 @@ def collect_budgets(out, executable, report, application):
     firmware,transaction,body,headers,receipt,scratch=struct.unpack('<6I',budget_file.read_bytes())
     report['budget']['firmware']={'service_bytes':firmware,'transaction_bytes':transaction,
         'max_chunk_heap_bytes':body,'http_header_and_small_body_heap_bytes':headers,
+        'http_buffer_limits_not_additional_to_platform_workspace':True,
         'max_persistent_record_bytes':receipt,'max_pending_plus_record_bytes':receipt*2,
         'native_write_scratch_stack_bytes':scratch}
     subprocess.run([executable('objcopy'),'-O','binary','--only-section=.ap01_platform_budget',
                     str(out/'native_services_0041.o'),str(budget_file)],check=True)
-    service_state,maintenance,service_handle,wifi_switch,filesystem=struct.unpack('<5I',budget_file.read_bytes())
+    service_state,maintenance,service_handle,wifi_switch,filesystem,http_workspace=struct.unpack('<6I',budget_file.read_bytes())
     report['budget']['platform_services']={'state_bytes':service_state,'maintenance_bytes':maintenance,
         'app_handle_bytes':service_handle,'wifi_switch_bytes':wifi_switch,'filesystem_bytes':filesystem,
-        'additional_threads':0,'maintenance_stack_bytes':16384,'persistent_format_changes':False}
+        'http_workspace_bytes_in_state':http_workspace,'request_parser_heap_bytes':0,
+        'additional_threads':0,'maintenance_threads':1,'maintenance_stack_bytes':16384,'persistent_format_changes':False,
+        'limits':'HTTP response/handler, allocator and ROM allocations still need separate accounting'}
     subprocess.run([executable('objcopy'),'-O','binary','--only-section=.ap01_menu_budget',
                     str(out/'native_device_code_menu_0041.o'),str(budget_file)],check=True)
     menu_context,ssid_row,list_snapshot,max_rows=struct.unpack('<4I',budget_file.read_bytes())

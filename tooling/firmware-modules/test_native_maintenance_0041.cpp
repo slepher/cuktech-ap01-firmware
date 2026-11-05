@@ -89,15 +89,18 @@ void unboundMaintenance(const std::string &folder,const std::string &image,Disk 
     servicePort.deviceCode=[](void *p,char out[9]){memcpy(out,((Disk *)p)->code,9);return 0;};
     {
         Ap01Maintenance0041 maintenance(fs,servicePort,{},"AABBCCDDEEFF",30);assert(maintenance.begin());
+        Ap01HttpWorkspace0041 workspace;
         disk.denyLock=true;
         assert(maintenance.handle(request("GET","/health",{},disk.code),1).status==200);
         disk.denyLock=false;
         assert(maintenance.handle(request("GET","/api/firmware/slots",{},disk.code),1).status==200);
         assert(maintenance.handle(request("POST","/api/firmware/begin",beginBody(image),"99999999"),1).status==401&&!fake.opens);
-        assert(maintenance.handle(request("POST","/api/firmware/begin",beginBody(image),disk.code),1).status==200&&fake.opens==1);
+        auto begun=maintenance.handle(request("POST","/api/firmware/begin",beginBody(image),disk.code),1);
+        if(begun.status!=200)fprintf(stderr,"unbound begin: %d %s\n",begun.status,begun.bytes.c_str());
+        assert(begun.status==200&&fake.opens==1);
         auto first=image.substr(0,32768);
         Stream wire;wire.input="POST /api/firmware/chunk?request_id=fw-test&offset=0 HTTP/1.1\r\nAuthorization: Bearer 01234567\r\nContent-Type: application/octet-stream\r\nContent-Length: 32768\r\n\r\n"+first;
-        assert(ap01ServeMaintenanceHttp0041(maintenance,{&wire,receive,send},2,5000)&&wire.output.rfind("HTTP/1.1 200 ",0)==0);
+        assert(ap01ServeMaintenanceHttp0041(maintenance,{&wire,receive,send},2,5000,&workspace)&&wire.output.rfind("HTTP/1.1 200 ",0)==0);
         strcpy(disk.code,"76543210");
         auto chunk=request("POST","/api/firmware/chunk",first,"01234567");chunk.contentType="application/octet-stream";chunk.requestId="fw-test";chunk.offset="0";
         assert(maintenance.handle(chunk,3).status==401&&fake.writes==1);

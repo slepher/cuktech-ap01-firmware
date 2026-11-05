@@ -24,7 +24,7 @@ bool hex32(const char *p,uint32_t &value) {
 }
 Ap01HttpReply jsonReply(JsonDocument &doc,int status) {
     Ap01HttpReply out;out.status=status;
-    if(doc.overflowed()||measureJson(doc)>2048||!serializeJson(doc,out.bytes)) {
+    if(!ap01EncodeJson0041(doc,out.bytes,2048)) {
         out.status=503;out.bytes="{\"result\":\"unknown\",\"error\":\"response_oom\",\"stage\":\"response\",\"action\":\"query_original_request\"}";
     }return out;
 }

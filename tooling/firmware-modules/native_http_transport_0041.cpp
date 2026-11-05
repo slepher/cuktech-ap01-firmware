@@ -66,15 +66,18 @@ bool fail(const Ap01Stream &io, int status, const char *code, uint64_t deadline)
 }
 }
 bool ap01ServeNativeHttp0041(void *context, Ap01HttpHandler0041 handler, bool maintenance, const Ap01Stream &io,
-                   uint64_t now, uint64_t deadline) {
+                   uint64_t now, uint64_t deadline, Ap01HttpWorkspace0041 *workspace) {
     if (!io.read || !io.write || deadline <= now) return false;
-    // The wire admits 2048 header bytes and at most one 4096-byte body.
-    std::unique_ptr<uint8_t[]> storage(new (std::nothrow) uint8_t[6145]);
-    if (!storage) return fail(io, 503, "oom", deadline);
-    char *header = (char *)storage.get(); size_t used = 0, headerBytes = 0;
+    // Normal requests admit 2048 header bytes and a 4096-byte body; only
+    // maintenance ROM chunks can use 32768 body bytes in the reserved workspace.
+    std::unique_ptr<uint8_t[]> storage;
+    if(!workspace)storage.reset(new (std::nothrow) uint8_t[6145]);
+    uint8_t *buffer=workspace?workspace->bytes:storage.get();
+    if (!buffer) return fail(io, 503, "oom", deadline);
+    char *header = (char *)buffer; size_t used = 0, headerBytes = 0;
     while (!headerBytes) {
         if (used >= 2048) return fail(io, 431, "headers_limit", deadline);
-        int n = io.read(io.context, storage.get()+used, 2048-used, deadline);
+        int n = io.read(io.context, buffer+used, 2048-used, deadline);
         if (n <= 0 || size_t(n) > 2048-used) return false;
         used += n; header[used] = 0;
         char *end = strstr(header, "\r\n\r\n"); if (end) headerBytes = end-header+4;
@@ -89,7 +92,7 @@ bool ap01ServeNativeHttp0041(void *context, Ap01HttpHandler0041 handler, bool ma
         return fail(io, 400, "request_target", deadline);
     Ap01HttpRequest request{}; request.method = header; request.path = path;
     request.token = ""; request.deviceToken = ""; request.contentType = "";
-    request.body = storage.get()+headerBytes;
+    request.body = buffer+headerBytes;
     char *parameters = strchr(path, '?'); if (parameters) { *parameters++ = 0; if (!query(parameters, request)) return fail(io, 400, "query", deadline); }
     bool lengthSeen = false, authSeen = false, typeSeen = false, tokenSeen = false;
     const size_t bodyLimit = maintenance && !strcmp(request.path, "/api/firmware/chunk") ? 32768 : 4096;
@@ -132,8 +135,8 @@ bool ap01ServeNativeHttp0041(void *context, Ap01HttpHandler0041 handler, bool ma
     if (!strcmp(request.method, "POST") && !lengthSeen) return fail(io, 411, "content_length_required", deadline);
     if (used > headerBytes+length) return fail(io, 400, "trailing_bytes", deadline);
     std::unique_ptr<uint8_t[]> large;
-    uint8_t *body=storage.get()+headerBytes;size_t received=used-headerBytes;
-    if(length>4096) {
+    uint8_t *body=buffer+headerBytes;size_t received=used-headerBytes;
+    if(length>4096&&!workspace) {
         large.reset(new(std::nothrow) uint8_t[length]);if(!large)return fail(io,503,"oom",deadline);
         memcpy(large.get(),body,received);body=large.get();request.body=body;
     }
@@ -149,5 +152,12 @@ bool ap01ServeNativeHttp0041(void *context, Ap01HttpHandler0041 handler, bool ma
     if(maintenance&&!strcmp(request.path,"/api/firmware/commit"))deadline=now+60000;
     if(maintenance&&(!strcmp(request.path,"/api/firmware/stable")||!strcmp(request.path,"/api/firmware/switch")))deadline=now+60000;
     Ap01HttpReply response = handler(context,request,now);
+    if(!response.frame&&!response.bytes.length()) {
+        // The handler may already have committed. Even the error String can
+        // fail allocation; this literal response needs no heap and never says
+        // rejected/succeeded. The caller must query the original transaction.
+        static const char unavailable[]="{\"result\":\"unknown\",\"error\":\"reply_oom\",\"error_code\":\"reply_oom\",\"stage\":\"response\",\"action\":\"query_original_request\",\"next_action\":\"query_original_operation\"}";
+        return reply(io,503,false,unavailable,sizeof(unavailable)-1,deadline);
+    }
     return reply(io, response.status, response.frame, response.bytes.c_str(), response.bytes.length(), deadline);
 }
