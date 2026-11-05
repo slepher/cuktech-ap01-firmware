@@ -1,7 +1,7 @@
-// Journal-selected Manifest boot. Hardware executable-memory admission is not
-// established: the default backend refuses reserve, leaving maintenance alive.
-// The model supplies an explicit backend to the same resident platform class.
+// Journal-selected Manifest boot with retained RAM images. Hardware cache and
+// capacity acceptance remain separate from the non-device candidate build.
 #include "native_app_file_boot_v3.h"
+#include "native_exec_memory_v3.h"
 #include "native_io_0041.h"
 #include "native_vfs_0041.h"
 #include "app_set_service_v3.h"
@@ -11,6 +11,12 @@ __attribute__((section(".ap01_manifest"),used,aligned(1)))
 extern const uint8_t ap01_native_manifest[256]={};
 }
 namespace {
+struct Platform {
+    Ap01NativeExecMemoryV3 executable{1u<<22};
+    Ap01NativeAppFileBootV3 boot;
+    Platform(uint64_t id,const Ap01ManifestLimitsV3 &limits)
+        :boot(id,ap01RomVfs(),executable.port(),limits,1u<<22){}
+};
 void *monitor(void *p){
     auto &platform=*(Ap01NativeAppFileBootV3 *)p;
     for(;;){platform.monitor(uint32_t(ap01_native0041::nowMs()));ap01_native0041::pause(100);}
@@ -77,8 +83,9 @@ void ap01Register0041(void *root,void (*callback)(void *),unsigned filter,void *
     // Provisional model budgets, not a hardware capacity assertion. The staging
     // allocation is additionally charged against RAM by the file composition.
     Ap01ManifestLimitsV3 limits{8,1u<<22,1u<<23,1u<<23,1u<<20,4,32,127,1u<<24,1u<<20};
-    auto *platform=new(std::nothrow) Ap01NativeAppFileBootV3(boot,ap01RomVfs(),{},limits,1u<<22);
-    if(!platform){registerStock(root,callback,filter,user);return;}
-    if(!platform->set().shared().bindWindow(root,callback)){delete platform;registerStock(root,callback,filter,user);return;}
+    auto *owner=new(std::nothrow) Platform(boot,limits);
+    if(!owner){registerStock(root,callback,filter,user);return;}
+    auto *platform=&owner->boot;
+    if(!platform->set().shared().bindWindow(root,callback)){delete owner;registerStock(root,callback,filter,user);return;}
     uint32_t worker=0;if(thread(&worker,"ap01-platform",start,16384,platform))platform->workerFailed();
 }

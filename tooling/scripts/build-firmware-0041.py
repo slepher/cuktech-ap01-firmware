@@ -16,7 +16,7 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--app-config', type=Path, help='App source/configuration JSON; firmware compiles and links it')
     group.add_argument('--app-source-dir', type=Path, help='Compatibility: package existing audited/linked build')
-    group.add_argument('--boot-app-v3', action='store_true', help='Build resident ABI 3 journal-selected boot platform (unverified hardware backend refuses execution)')
+    group.add_argument('--boot-app-v3', action='store_true', help='Build resident ABI 3 journal-selected boot platform (retained RAM execution backend; hardware acceptance pending)')
     parser.add_argument('--stage', choices=('audit', 'link', 'rom'), default='rom')
     parser.add_argument('--screen-host-probe', action='store_true')
     parser.add_argument('--json-header', type=Path, help='Explicit ArduinoJson src override')

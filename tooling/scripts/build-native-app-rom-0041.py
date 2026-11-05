@@ -120,7 +120,7 @@ def main():
             runtime_metadata['app_loader']={'abi_major':3,'manifest_path':'/resource/app-store/manifests/<content-digest>.amf3',
                 'package_path':'/resource/app-store/packages/<content-digest>.apx2','staging_bytes':1<<22,
                 'file_io_executor':'worker','app_start_executor':'ui','journal_selection':True,
-                'maintenance_before_app':True,'hardware_backend':'unavailable','executable_backend_verified':False}
+                'maintenance_before_app':True,'hardware_backend':'rom-heap-retained-ram','cache_publish':'0041-dcache-clean-icache-invalidate-fence-i','executable_backend_verified':False}
     else:
         runtime_metadata={'runtime':'application',
             'screen_host':{'abi':1,'roots_per_template':True,'timer_context_direct':True,'host_offset':abi[17],'phase_offset':abi[18],'slot_bytes':abi[19],'slot_root_offset':abi[20],'slot_child_offset':abi[21],'slots_offset':abi[22],'template_capacity':8},

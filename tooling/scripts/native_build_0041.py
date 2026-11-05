@@ -93,7 +93,7 @@ def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=Non
     sources = [MODULES / name for name in PLATFORM_SOURCES]
     sources += config['plain_sources'] + config['sources'] if config else [MODULES / ('native_platform_v3_0041.cpp' if boot_app_v3 else 'native_platform_0041.cpp')]
     if boot_app_v3:
-        sources += [MODULES/name for name in ('app_boot_v3.cpp','app_binding_v3.cpp','app_files_v3.cpp',
+        sources += [MODULES/name for name in ('native_exec_memory_v3.cpp','app_boot_v3.cpp','app_binding_v3.cpp','app_files_v3.cpp',
                                              'app_network_v3.cpp','native_app_platform_v3.cpp',
                                              'app_manifest_v3.cpp','app_set_boot_v3.cpp','native_app_set_v3.cpp',
                                              'app_set_files_v3.cpp','native_app_file_boot_v3.cpp','app_supervision_v3.cpp','app_set_journal_v3.cpp','app_set_selection_v3.cpp',
