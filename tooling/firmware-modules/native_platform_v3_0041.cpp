@@ -51,8 +51,10 @@ void *start(void *p){
     platform.stageSelected(selector);
     // The worker never returns after publication: journal and service live for
     // this boot. HTTP and health both own the same maintenance-operation lease.
+    // Res is 1.25 MiB. Keep 256 KiB beyond candidate/Manifest/journal bytes;
+    // existing packages and business files are already charged by statfs used.
     Ap01SetServiceV3 service(ap01RomVfs(),journal,platform.set().shared().transactionGate(),
-        platform.installReboot(),platform.installLimits(),mac,platform.set().shared().bootIdentity(),1u<<20);
+        platform.installReboot(),platform.installLimits(),mac,platform.set().shared().bootIdentity(),1u<<18);
     service.runtime(&platform,[](void *p){return ((Ap01NativeAppFileBootV3 *)p)->runtime();});
     platform.attachInstaller(&service);
     platform.set().shared().endAppOperation();

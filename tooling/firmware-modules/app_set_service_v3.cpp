@@ -54,7 +54,7 @@ void Ap01SetServiceV3::tick(uint32_t now){
     if(result==Ap01SetCleanupResultV3::Unknown)frozen=true;
     if(result==Ap01SetCleanupResultV3::Ok)gate.hold(false);
 }
-Ap01HttpReply Ap01SetServiceV3::reply(int status,const char *error,bool disclose){
+Ap01HttpReply Ap01SetServiceV3::reply(int status,const char *error,bool disclose,bool storage){
     NativeJsonAllocator0041 allocator;JsonDocument doc(&allocator);
     doc["protocol"]=3;doc["device_mac"]=device;doc["boot_id"]=boot;doc["error_code"]=error;
     doc["next_action"]=frozen||!journal.writable()?"query_original_operation":status>=400?"read_status":"query_result";
@@ -65,6 +65,13 @@ Ap01HttpReply Ap01SetServiceV3::reply(int status,const char *error,bool disclose
     budget["tasks"]=limits.tasks;budget["pages"]=limits.pages;budget["capabilities"]=limits.capabilities;
     budget["ram_bytes"]=limits.ram_bytes;budget["resident_bytes"]=limits.resident_bytes;
     doc["storage_reserve"]=reserve;
+    if(storage){
+        uint64_t total=0,used=0;
+        auto space=doc["storage"].to<JsonObject>();space["path"]="/resource";
+        bool valid=io.statfs&&!io.statfs(io.context,"/resource",&total,&used)&&used<=total;
+        space["available"]=valid;
+        if(valid){space["total_bytes"]=total;space["used_bytes"]=used;space["free_bytes"]=total-used;}
+    }
     doc["runtime_reporting"]=bool(runtimeSnapshot);
     if(runtimeSnapshot){
         auto snapshot=runtimeSnapshot(runtimeContext);auto runtime=doc["runtime"].to<JsonObject>();
@@ -113,7 +120,7 @@ Ap01HttpReply Ap01SetServiceV3::handle(const Ap01HttpRequest &request,const char
         if(r&&strcmp(r->principal,principal))return reply(404,"receipt_not_found",false);
     }
     if(frozen||!journal.writable())return reply(503,"operation_unknown");
-    if(command.action==A::Status)return reply(200,"");
+    if(command.action==A::Status)return reply(200,"",true,true);
     if(command.action!=A::Begin&&(!r||memcmp(command.transaction,r->transaction,16)))return reply(404,"receipt_expired",false);
     if(command.action==A::Result)return reply(terminal(r->phase)?200:202,"");
     if(command.action==A::Begin){

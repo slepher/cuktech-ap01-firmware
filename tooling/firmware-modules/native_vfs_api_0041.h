@@ -28,7 +28,7 @@ typedef struct Ap01VfsOps {
     int (*mkdir)(void *, const char *);
     int (*remove)(void *, const char *);
     int (*rename)(void *, const char *, const char *);
-    int (*statfs)(void *, const char *, uint64_t *, uint64_t *);
+    int (*statfs)(void *, const char *, uint64_t *total, uint64_t *used);
 } Ap01VfsOps;
 #ifdef __cplusplus
 }

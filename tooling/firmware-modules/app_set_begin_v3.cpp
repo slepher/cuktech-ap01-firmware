@@ -103,9 +103,9 @@ Ap01SetBeginResultV3 ap01BeginSetV3(Ap01SetJournalV3 &journal,const Ap01VfsOps &
     auto result=ap01PlanSetBeginV3(journal,previous.get(),validated,transaction,mac,principal,UINT64_MAX,0,plan);
     if(result!=R::New)return result;
     if(!io.statfs||!io.exists||!io.mkdir)return R::Storage;
-    uint64_t total=0,free=0;
-    if(io.statfs(io.context,"/resource",&total,&free)||free>total)return R::Storage;
-    result=ap01PlanSetBeginV3(journal,previous.get(),validated,transaction,mac,principal,free,maintenanceReserve,plan);
+    uint64_t total=0,used=0;
+    if(io.statfs(io.context,"/resource",&total,&used)||used>total)return R::Storage;
+    result=ap01PlanSetBeginV3(journal,previous.get(),validated,transaction,mac,principal,total-used,maintenanceReserve,plan);
     if(result!=R::New)return result;
     const char *directories[]={"/resource/app-store","/resource/app-store/manifests","/resource/app-store/packages","/resource/app-store/incoming"};
     for(auto path:directories){int exists=io.exists(io.context,path);if(exists<0)return R::Storage;

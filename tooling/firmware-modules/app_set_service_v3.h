@@ -26,7 +26,7 @@ class Ap01SetServiceV3 {
     uint32_t cleanupAt=0;
     bool readManifest(std::unique_ptr<ManifestFile> &,const uint8_t *,uint64_t);
     bool hydrate();
-    Ap01HttpReply reply(int,const char *,bool disclose=true);
+    Ap01HttpReply reply(int,const char *,bool disclose=true,bool storage=false);
 public:
     Ap01SetServiceV3(const Ap01VfsOps &,Ap01SetJournalV3 &,Ap01AppWriteGateV3 &,Ap01AppRebootV3 &,
         const Ap01ManifestLimitsV3 &,const uint8_t mac[6],uint64_t boot,uint64_t maintenanceReserve);

@@ -55,7 +55,7 @@ struct Disk {
                 CHECK(r.phase==P::Succeeded||r.phase==P::FailedRolledBack||r.phase==P::Cancelled);}
             if(d.removeFails)return -1;d.files.erase(path);return d.removeLost?-1:0;};
         v.mkdir=[](void *p,const char *path){auto &d=*(Disk*)p;if(d.mkdirFails)return -1;d.files[path]={};return 0;};
-        v.statfs=[](void *p,const char *,uint64_t *total,uint64_t *free){*total=1u<<26;*free=((Disk*)p)->freeBytes;return 0;};
+        v.statfs=[](void *p,const char *,uint64_t *total,uint64_t *used){*total=1u<<26;*used=*total-((Disk*)p)->freeBytes;return 0;};
         v.rename=[](void *p,const char *from,const char *to){auto &d=*(Disk*)p;++d.renames;
             if(d.renameFails||!d.files.count(from)||d.files.count(to))return -1;
             d.files[to]=d.files[from];d.files.erase(from);return d.renameLost?-1:0;};
@@ -648,6 +648,10 @@ static void runtimeReporting(){
     auto read=[&](){auto reply=service.handle(request,"owner",100);CHECK(reply.status==200);
         CHECK(!deserializeJson(doc,reply.bytes.c_str()));CHECK(doc["runtime_reporting"].as<bool>());};
     read();CHECK(doc["limits"]["ram_bytes"].as<uint64_t>()==limits.ram_bytes&&doc["storage_reserve"].as<uint64_t>()==4096);CHECK(!strcmp(doc["runtime"]["boot_state"],"pending")&&doc["runtime"]["running"].size()==0);
+    disk.freeBytes=123456;read();CHECK(doc["storage"]["available"].as<bool>());
+    CHECK(doc["storage"]["total_bytes"].as<uint64_t>()==(1u<<26));
+    CHECK(doc["storage"]["used_bytes"].as<uint64_t>()==(1u<<26)-123456);
+    CHECK(doc["storage"]["free_bytes"].as<uint64_t>()==123456);
     Ap01ManifestV3 running{};running.count=2;running.sequence=42;running.digest[0]=9;
     running.order[0]=1;running.order[1]=0;
     strcpy(running.entries[0].id,"unstarted");strcpy(running.entries[1].id,"actual");strcpy(running.entries[1].version,"running-v1");
