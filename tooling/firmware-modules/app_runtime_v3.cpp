@@ -5,7 +5,8 @@
 #include <time.h>
 namespace {const Ap01PlatformApiV3 *api;void *context;}
 extern "C" int ap01BindRuntimeV3(const Ap01PlatformApiV3 *p,void *c){
-    if(api||!p||!c||p->abi_major!=3||p->struct_bytes<sizeof(*p)||p->reserved||
+    if(api||!p||!c||p->abi_major!=3||p->abi_minor<1||
+       p->struct_bytes<offsetof(Ap01PlatformApiV3,write_scope)+sizeof(p->write_scope)||!p->write_scope||p->reserved||
        (p->capabilities&AP01_CODEX_CAPS_V3)!=AP01_CODEX_CAPS_V3||!p->private_root||
        !p->platform_build||!p->app_digest||!p->rom_bytes||
        !p->boot_id||!p->now_ms||!p->pause_ms||!p->random||!p->mac||!p->utc_seconds||

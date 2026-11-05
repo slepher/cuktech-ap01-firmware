@@ -11,6 +11,9 @@ struct Ap01MaintenanceBridge0041 {
     // bindings; file-loaded Apps must supply their gate and captured generation.
     Ap01AppGeneration0041 *gate=nullptr;
     uint32_t generation=0;
+    // Resident ABI 3 adapter only: its VFS mutations take the platform lease.
+    // Legacy bindings retain the maintenance handler's outer operation lock.
+    bool coordinatesWrites=false;
 };
 
 class Ap01MaintenanceCall0041 {

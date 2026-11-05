@@ -14,5 +14,5 @@ class Ap01AppBindingBridgeV3 {
     static bool online(void *);
 public:
     int32_t bind(const Ap01AppBindingV3 &);
-    Ap01MaintenanceBridge0041 bridge(){return {this,principal,pairing,online,nullptr,0};}
+    Ap01MaintenanceBridge0041 bridge(){return {this,principal,pairing,online,nullptr,0,true};}
 };

@@ -29,6 +29,19 @@ for name in sources:
 binary=a.out.resolve()/'test-maintenance-gate'
 subprocess.run(['clang++','-fsanitize=address,undefined',*map(str,objects),'-o',str(binary)],check=True)
 result=subprocess.check_output([str(binary)],text=True,timeout=30)
+service_names=['test_native_services_0041.cpp','native_services_0041.cpp',
+               'native_wifi_switch_0041.cpp','native_http_transport_0041.cpp','app_files_v3.cpp','app_binding_v3.cpp']
+service_objects=[]
+for name in service_names:
+    obj=a.out.resolve()/(name+'.o');service_objects.append(obj)
+    subprocess.run(['clang++','-std=c++17','-g','-fsanitize=address,undefined',
+                    '-fno-omit-frame-pointer','-I'+str(modules),
+                    '-c',str(modules/name),'-o',str(obj)],check=True)
+service_test=a.out.resolve()/'test-native-services'
+subprocess.run(['clang++','-fsanitize=address,undefined',*map(str,objects[1:]+service_objects),
+                '-o',str(service_test)],check=True)
+result+=subprocess.check_output([str(service_test)],text=True,timeout=30)
+sources.extend(service_names+['app_write_gate_v3.h','app_binding_v3.h','native_app_port_0041.h'])
 report={'passed':True,'checks':result.strip(),'device_accessed':False,
         'sources':{name:hashlib.sha256((modules/name).read_bytes()).hexdigest() for name in sources}}
 if a.rom:

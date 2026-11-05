@@ -98,7 +98,9 @@ struct Ap01NativeServices0041::State {
         s.listening.store(false,std::memory_order_release);closeFd(fd);return nullptr;
     }
 };
+#if defined(__riscv)
 __attribute__((section(".ap01_platform_budget"),used))
+#endif
 const uint32_t Ap01NativeServices0041::State::budget[6]={sizeof(State),sizeof(Ap01Maintenance0041),sizeof(Ap01NativeServices0041),sizeof(Ap01WifiSwitch0041),sizeof(LittleFSClass),sizeof(Ap01HttpWorkspace0041)};
 Ap01NativeServices0041::Ap01NativeServices0041()=default;
 Ap01NativeServices0041::~Ap01NativeServices0041()=default;
@@ -140,7 +142,7 @@ bool Ap01NativeServices0041::tryAppOperation(){
     return true;
 }
 void Ap01NativeServices0041::endAppOperation(){auto *s=live.load(std::memory_order_acquire);if(s)State::leaveOperation(s);}
-bool Ap01NativeServices0041::busy() const {auto *s=live.load(std::memory_order_acquire);return s&&(!s->ready.load(std::memory_order_acquire)||s->maintenance->active()||s->wifi.busy());}
+bool Ap01NativeServices0041::busy() const {auto *s=live.load(std::memory_order_acquire);return s&&(!s->ready.load(std::memory_order_acquire)||s->maintenance->active()||State::firmwareBusy(s));}
 bool Ap01NativeServices0041::listening() const {auto *s=live.load(std::memory_order_acquire);return s&&s->listening.load(std::memory_order_acquire);}
 uint32_t Ap01NativeServices0041::heartbeat() const {auto *s=live.load(std::memory_order_acquire);return s?s->heartbeat.load(std::memory_order_acquire):0;}
 int Ap01NativeServices0041::selectWifi(const char *ssid) {

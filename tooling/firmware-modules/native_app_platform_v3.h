@@ -30,7 +30,9 @@ class Ap01NativeAppSharedV3 {
     static void event(void *,void *);
     static void blocked(ap01_screen_host *,int);
 public:
-    explicit Ap01NativeAppSharedV3(uint64_t boot,uint32_t appCapacity):bootId(boot),capacity(appCapacity){}
+    explicit Ap01NativeAppSharedV3(uint64_t boot,uint32_t appCapacity):
+        writeGate(&services,[](void *p){return ((Ap01NativeServices0041 *)p)->tryAppOperation();},
+            [](void *p){((Ap01NativeServices0041 *)p)->endAppOperation();}),bootId(boot),capacity(appCapacity){}
     Ap01NativeAppSharedV3(const Ap01NativeAppSharedV3 &)=delete;
     Ap01NativeAppSharedV3 &operator=(const Ap01NativeAppSharedV3 &)=delete;
     bool bindWindow(void *,void (*)(void *));

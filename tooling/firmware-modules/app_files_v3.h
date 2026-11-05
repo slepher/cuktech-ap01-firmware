@@ -14,6 +14,9 @@ class Ap01AppFilesV3 {
     uint32_t nextHandle=1;
     bool writable=false,failed=false;
     Ap01AppWriteGateV3 *collection=nullptr;
+    void *threadContext=nullptr;
+    uintptr_t (*currentThread)(void *)=nullptr;
+    std::atomic<uintptr_t> writeOwner{0};
     std::atomic_flag lock=ATOMIC_FLAG_INIT;
     struct Guard {
         Ap01AppFilesV3 &self;bool held;
@@ -26,6 +29,11 @@ class Ap01AppFilesV3 {
         explicit Permit(Guard &g,bool mutation=true){
             if(!g)return;
             if(!mutation){allowed=true;return;}
+            uintptr_t owner=g.self.writeOwner.load(std::memory_order_acquire);
+            if(owner){
+                allowed=g.self.currentThread&&g.self.currentThread(g.self.threadContext)==owner;
+                return;
+            }
             if(g.self.collection){if(g.self.collection->enter()){gate=g.self.collection;allowed=true;}}
             else allowed=g.self.writable;
         }
@@ -56,4 +64,13 @@ public:
     bool writes(bool allow);
     // Resident construction only, before exposing table(). No per-App override.
     void bindGate(Ap01AppWriteGateV3 &gate){collection=&gate;}
+    // Resident construction only. Zero identity refuses scoped admission.
+    void threadIdentity(void *context,uintptr_t (*identity)(void *)){
+        threadContext=context;currentThread=identity;
+    }
+    // Worker-only synchronous callback. False means no callback/no side effect;
+    // true reports the callback's result separately, including real I/O failure.
+    // A scope owns one collection lease; same-thread VFS mutations borrow it.
+    // Other threads and nested scopes cannot borrow it. No callback exceptions.
+    bool writeScope(int32_t (*callback)(void *),void *,int32_t &result);
 };

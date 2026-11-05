@@ -527,8 +527,9 @@ static void httpService(const char *appPath,const char *manifestPath,const char 
         Disk disk;disk.cut=1024;Ap01SetJournalV3 journal(disk.ops(),mac);CHECK(journal.load()==R::Empty);
         Ap01AppWriteGateV3 gate;CHECK(gate.writes(true));Ap01AppRebootV3 reboot;
         Ap01SetServiceV3 service(disk.ops(),journal,gate,reboot,limits,mac,11,4096);
-        struct Route {Ap01SetServiceV3 &service;bool held=false;unsigned calls=0;} route{service};
+        struct Route {Ap01SetServiceV3 &service;bool held=false,busy=false;unsigned calls=0;} route{service};
         Ap01MaintenancePort0041 port{};port.context=&route;
+        port.firmware.context=&route;port.firmware.busy=[](void *p){return ((Route *)p)->busy;};
         port.deviceCode=[](void *,char code[9]){memcpy(code,"01234567",9);return 0;};
         port.enterOperation=[](void *p){auto &r=*(Route *)p;if(r.held)return false;r.held=true;return true;};
         port.leaveOperation=[](void *p){auto &r=*(Route *)p;CHECK(r.held);r.held=false;};
@@ -569,6 +570,20 @@ static void httpService(const char *appPath,const char *manifestPath,const char 
         }
         CHECK(beginRequest(0).status==200);auto seq=journal.current()->sequence;
         CHECK(beginRequest(1).status==200&&journal.current()->sequence==seq);
+        if(scenario>=2){
+            route.busy=true;request.body=nullptr;request.length=0;
+            auto files=disk.files;auto writes=disk.writes,removes=disk.removes,renames=disk.renames;
+            CHECK(send("GET","/api/app/v3/status",2).status==200);
+            auto receipt=send("GET","/api/app/v3/update/result",2);
+            CHECK(receipt.status==202&&strstr(receipt.bytes.c_str(),"\"phase\":\"receiving\""));
+            CHECK(strstr(receipt.bytes.c_str(),"01000000000000000000000000000000"));
+            CHECK(beginRequest(2).status==409);
+            CHECK(send("POST","/api/app/v3/update/commit",2).status==409);
+            CHECK(send("POST","/api/app/v3/update/cancel",2).status==409);
+            CHECK(disk.files==files&&disk.writes==writes&&disk.removes==removes&&disk.renames==renames);
+            CHECK(journal.current()->sequence==seq&&!route.held);
+            route.busy=false;
+        }
         CHECK(send("POST","/api/app/v3/update/begin",2,"stranger").status==404);
         for(unsigned i=0;i<2;++i){
             std::string path="/api/app/v3/package/"+std::to_string(i)+"/chunk";

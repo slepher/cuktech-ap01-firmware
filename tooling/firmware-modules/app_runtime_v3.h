@@ -7,6 +7,9 @@ extern "C" {
 int ap01BindRuntimeV3(const Ap01PlatformApiV3 *,void *);
 const Ap01PlatformApiV3 *ap01RuntimeApiV3(void);
 void *ap01RuntimeContextV3(void);
+static inline int32_t ap01RuntimeWriteScopeV3(int32_t (*callback)(void *),void *argument,int32_t *result){
+    return ap01WriteScopeV3(ap01RuntimeApiV3(),ap01RuntimeContextV3(),callback,argument,result);
+}
 #ifdef __cplusplus
 }
 #endif

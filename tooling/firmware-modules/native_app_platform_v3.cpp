@@ -53,10 +53,11 @@ Ap01NativeAppPlatformV3::Ap01NativeAppPlatformV3(uint64_t boot,const Ap01BootPor
         if(!strcmp(grant.id,other.id)||(grant.tcp&&grant.tcp==other.tcp)||(grant.udp&&grant.udp==other.udp)){validGrant=false;return;}}
     registryIndex=shared->count;shared->contexts[shared->count++]=this;
     files.bindGate(shared->writeGate);
+    files.threadIdentity(nullptr,[](void *){return ap01_native0041::threadIdentity();});
     refreshWindow();
     const char *hex="0123456789abcdef";
     for(unsigned i=0;i<16;++i){uint8_t v=ap01_native_manifest[36+i];build[i*2]=hex[v>>4];build[i*2+1]=hex[v&15];}
-    api.abi_major=3;api.struct_bytes=sizeof(api);api.capabilities=validGrant?grant.capabilities:0;api.boot_id=boot;
+    api.abi_major=3;api.abi_minor=1;api.struct_bytes=sizeof(api);api.capabilities=validGrant?grant.capabilities:0;api.boot_id=boot;
     api.private_root=privateRoot;api.platform_build=build;api.app_digest=digest;
     const uint8_t *n=ap01_native_manifest+12;
     api.rom_bytes=uint32_t(n[0])|uint32_t(n[1])<<8|uint32_t(n[2])<<16|uint32_t(n[3])<<24;
@@ -75,6 +76,12 @@ Ap01NativeAppPlatformV3::Ap01NativeAppPlatformV3(uint64_t boot,const Ap01BootPor
     api.bind=[](void *p,const Ap01AppBindingV3 *b)->int32_t{auto &s=*(Ap01NativeAppPlatformV3 *)p;
         return b&&!strcmp(s.grant.id,"codex_status")?s.shared->binding.bind(*b):-1;};
     api.files=files.table();api.network=network.table();
+    api.write_scope=[](void *p,int32_t (*callback)(void *),void *argument,int32_t *result)->int32_t {
+        auto &s=*(Ap01NativeAppPlatformV3 *)p;
+        if(!callback||!result)return AP01_APP_V3_INVALID;
+        if(!(s.grant.capabilities&AP01_CAP_FILES_V3))return AP01_APP_V3_UNSUPPORTED;
+        return s.files.writeScope(callback,argument,*result)?AP01_APP_V3_OK:AP01_APP_V3_PENDING;
+    };
     api.ui={&shared->host,&shared->apps[registryIndex],&appWindow,&ap01_lvgl_0041,&ap01_host_api,attach,
         ap01_host_current,ap01_host_retire,ap01_host_poll,ap01_host_set_blocked,ap01_host_cancel,
         ap01_host_button,ap01_host_rotate,ap01_host_short,ap01_window_active,ap01_window_visible,

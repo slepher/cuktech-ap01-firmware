@@ -118,6 +118,37 @@ int main(int argc,char **argv){
         assert(set.execution().startedCount()==2&&set.execution().health()==AP01_APP_V3_OK);
         assert(instances[0].api->ui.host==instances[1].api->ui.host);
         assert(set.writes(true));
+        auto &instance=instances[0];auto *api=instance.api;
+        assert(api->abi_minor==1&&api->struct_bytes==sizeof(*api));
+        int32_t scopeResult=123;
+        auto mutation=[](void *p)->int32_t{
+            auto &s=*(Instance *)p;std::string path=std::string(s.api->private_root)+"/scope";
+            auto &f=s.api->files;assert(f.mkdir(f.context,path.c_str())==0);
+            int32_t nested=99;
+            assert(ap01WriteScopeV3(s.api,s.context,[](void *)->int32_t{assert(false);return 0;},
+                nullptr,&nested)==AP01_APP_V3_PENDING&&nested==99);
+            ap01ModelV3.threadIdentity=2;assert(f.mkdir(f.context,path.c_str())<0);
+            ap01ModelV3.threadIdentity=1;return -7;
+        };
+        ap01ModelV3.allowMkdir=true;unsigned mkdirBefore=ap01ModelV3.mkdirCalls;
+        ap01ModelV3.busy=true;
+        assert(ap01WriteScopeV3(api,instance.context,mutation,&instance,&scopeResult)==AP01_APP_V3_PENDING);
+        assert(scopeResult==123&&ap01ModelV3.mkdirCalls==mkdirBefore);
+        ap01ModelV3.busy=false;ap01ModelV3.threadIdentity=0;
+        assert(ap01WriteScopeV3(api,instance.context,mutation,&instance,&scopeResult)==AP01_APP_V3_PENDING&&scopeResult==123);
+        ap01ModelV3.threadIdentity=1;
+        assert(ap01WriteScopeV3(api,instance.context,mutation,&instance,&scopeResult)==AP01_APP_V3_OK);
+        assert(scopeResult==-7&&ap01ModelV3.mkdirCalls==mkdirBefore+1);
+        auto oldApi=*api;oldApi.abi_minor=0;
+        assert(ap01WriteScopeV3(&oldApi,instance.context,mutation,&instance,&scopeResult)==AP01_APP_V3_UNSUPPORTED);
+        oldApi.abi_minor=1;oldApi.struct_bytes=offsetof(Ap01PlatformApiV3,write_scope);
+        assert(ap01WriteScopeV3(&oldApi,instance.context,mutation,&instance,&scopeResult)==AP01_APP_V3_UNSUPPORTED);
+        assert(ap01WriteScopeV3(api,instance.context,nullptr,nullptr,&scopeResult)==AP01_APP_V3_INVALID);
+        ap01ModelV3.allowMkdir=false;
+        auto &coordinated=set.shared().transactionGate();
+        assert(coordinated.enter());coordinated.leave();
+        ap01ModelV3.busy=true;assert(!coordinated.enter()&&coordinated.writable());
+        ap01ModelV3.busy=false;assert(coordinated.enter());coordinated.leave();
         for(auto &s:instances){assert(s.api->writes_allowed(s.context)==1);
             assert(!((Ap01NativeAppPlatformV3 *)s.context)->writes(false));}
         assert(set.writes(false)&&set.writesDrained());

@@ -23,6 +23,18 @@ Ap01AppFilesV3::Slot *Ap01AppFilesV3::slot(int handle){
     return nullptr;
 }
 bool Ap01AppFilesV3::writes(bool allow){Guard g(this);if(!g||collection)return false;writable=allow;return true;}
+bool Ap01AppFilesV3::writeScope(int32_t (*callback)(void *),void *context,int32_t &result){
+    {
+        Guard g(this);
+        if(!g||!callback||!collection||!currentThread||writeOwner.load(std::memory_order_acquire))return false;
+        uintptr_t owner=currentThread(threadContext);
+        if(!owner||!collection->enter())return false;
+        writeOwner.store(owner,std::memory_order_release);
+    }
+    result=callback(context);
+    writeOwner.store(0,std::memory_order_release);
+    collection->leave();return true;
+}
 int Ap01AppFilesV3::capacity(void *p,const char *root,uint64_t *total,uint64_t *used){
     Guard g(p);auto &s=g.self;
     if(!g||!root||!s.root||strcmp(root,s.root)||!total||!used||!s.io.statfs)return -1;

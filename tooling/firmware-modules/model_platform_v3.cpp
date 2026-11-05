@@ -23,6 +23,7 @@ bool Ap01NativeServices0041::tryAppOperation(){return !ap01ModelV3.busy;}
 void Ap01NativeServices0041::endAppOperation(){}
 bool Ap01NativeServices0041::busy() const{return ap01ModelV3.busy;}
 namespace ap01_native0041 {
+uintptr_t threadIdentity(){return ap01ModelV3.threadIdentity;}
 uint64_t nowMs(){return ap01ModelV3.now;}
 bool monotonicMs(uint64_t &out){if(ap01ModelV3.clockFailed)return false;out=ap01ModelV3.now;return true;}
 void pause(unsigned n){ap01ModelV3.now+=n;if(ap01ModelV3.pause)ap01ModelV3.pause(n);}

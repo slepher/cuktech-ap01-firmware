@@ -9,6 +9,7 @@ struct Ap01ModelPlatformV3 {
     uint64_t now=100;
     bool listening=false,busy=false,packageOpen=false;
     bool clockFailed=false;
+    uintptr_t threadIdentity=1; // Explicit logical task identity; no scheduler claim.
     bool allowMkdir=false;unsigned mkdirCalls=0;
     const uint8_t *package=nullptr;uint32_t packageBytes=0,position=0;
     unsigned mountedPages=0,activeChild=0,eventCode=0,eventKey=0;void *eventTarget=nullptr;

@@ -91,7 +91,22 @@ struct Ap01PlatformApiV3 {
     Ap01VfsOps files;
     Ap01NetworkOpsV3 network;
     Ap01UiV3 ui;
+    uint32_t reserved_v3_0_padding; /* Preserve the old RV32 tail padding. */
+    /* ABI 3.1 append-only. Worker-only, synchronous, non-nested callback.
+     * PENDING means callback was not called and *result is unchanged. OK means
+     * it ran; *result is its return value, not necessarily business success.
+     * No exceptions, asynchronous work, or waiting for another writer inside.
+     * Require abi_minor>=1 and struct_bytes through this member before use. */
+    int32_t (*write_scope)(void *,int32_t (*callback)(void *),void *,int32_t *result);
 };
+
+static inline int32_t ap01WriteScopeV3(const Ap01PlatformApiV3 *api,void *context,
+        int32_t (*callback)(void *),void *argument,int32_t *result){
+    if(!api||api->abi_major!=3||api->abi_minor<1||
+       api->struct_bytes<offsetof(Ap01PlatformApiV3,write_scope)+sizeof(api->write_scope)||
+       !api->write_scope)return AP01_APP_V3_UNSUPPORTED;
+    return api->write_scope(context,callback,argument,result);
+}
 
 #ifdef __cplusplus
 }
@@ -102,7 +117,8 @@ struct Ap01PlatformApiV3 {
 #else
 #define AP01_ABI_ASSERT_V3 _Static_assert
 #endif
-AP01_ABI_ASSERT_V3(sizeof(Ap01PlatformApiV3)==296,"ABI 3 platform layout");
+AP01_ABI_ASSERT_V3(offsetof(Ap01PlatformApiV3,write_scope)==296,"ABI 3.0 prefix unchanged");
+AP01_ABI_ASSERT_V3(sizeof(Ap01PlatformApiV3)==304,"ABI 3.1 platform layout");
 AP01_ABI_ASSERT_V3(sizeof(Ap01UiV3)==100,"ABI 3 UI layout");
 AP01_ABI_ASSERT_V3(sizeof(Ap01AppBindingV3)==16,"ABI 3 binding layout");
 AP01_ABI_ASSERT_V3(sizeof(Ap01HttpRequestV3)==48,"ABI 3 HTTP layout");

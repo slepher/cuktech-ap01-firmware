@@ -85,7 +85,7 @@ int main() {
     operation.held=true; // Installer owns the short operation lease.
     assert(coordinated.handle(health,10).status==200);coordinated.afterResponse(true);
     assert(operation.held&&!operation.leaves&&!operation.enters);
-    auto update=request("/api/app/result","01234567");
+    auto update=request("/api/app/v3/update/result","01234567");
     assert(coordinated.handle(update,11).status==409);coordinated.afterResponse(true);
     assert(operation.held&&!operation.updates&&!operation.leaves);
     coordinated.tick(12);assert(operation.held&&!operation.leaves);
@@ -97,8 +97,28 @@ int main() {
     coordinated.afterResponse(true);assert(!operation.held&&operation.leaves==2);
     coordinated.tick(15);assert(!operation.held&&operation.leaves==3);
     operation.busy=true;
-    assert(coordinated.handle(update,16).status==409&&operation.updates==1);
+    assert(coordinated.handle(update,16).status==200&&operation.updates==2);
     coordinated.afterResponse(true);assert(!operation.held);
+    auto appStatusRequest=request("/api/app/v3/status","01234567");
+    assert(coordinated.handle(appStatusRequest,16).status==200&&operation.updates==3);
+    coordinated.afterResponse(false);assert(!operation.held);
+    unauthorized=update;unauthorized.token="bad";
+    assert(coordinated.handle(unauthorized,16).status==401&&operation.updates==3);
+    coordinated.afterResponse(true);assert(!operation.held);
+    // The exception is method- and path-exact, never all GET or prefix matches.
+    for(const char *path:{"/api/app/v3/update/commit","/api/app/v3/update/begin",
+            "/api/app/v3/update/cancel","/api/app/v3/package/0/chunk",
+            "/api/app/v3/status/extra","/api/app/v3/update/result/extra"}){
+        auto denied=request(path,"01234567");
+        for(const char *method:{"GET","POST"}){
+            denied.method=method;
+            assert(coordinated.handle(denied,16).status==409&&operation.updates==3);
+            coordinated.afterResponse(true);assert(!operation.held);
+        }
+    }
+    appStatusRequest.method="POST";update.method="POST";
+    assert(coordinated.handle(appStatusRequest,16).status==409&&operation.updates==3);coordinated.afterResponse(true);
+    assert(coordinated.handle(update,16).status==409&&operation.updates==3);coordinated.afterResponse(true);
     assert(coordinated.handle(health,17).status==200);coordinated.afterResponse(true);
     printf("maintenance gate: pairing/principal/online protected; manual health survives stop; stale bindings rejected\n");
 }

@@ -4,7 +4,7 @@ using Result=Ap01BootResultV3;
 Result Ap01AppBootV3::boot(const Apx2Reader &reader,const Apx2Limits &limits,const uint8_t digest[32],
                          const Ap01PlatformApiV3 &api,void *context){
     if(attempted)return Result::AlreadyAttempted;
-    if(!digest||!context||limits.abi_major!=3||api.abi_major!=3||api.struct_bytes<sizeof(api)||
+    if(!digest||!context||limits.abi_major!=3||api.abi_major!=3||api.struct_bytes<offsetof(Ap01PlatformApiV3,write_scope)||
        api.reserved||!port.maintenance_ready||!port.reserve||!port.publish)return Result::Invalid;
     if(!port.maintenance_ready(port.context))return Result::Waiting;
     attempted=true;

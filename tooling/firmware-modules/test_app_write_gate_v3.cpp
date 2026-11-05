@@ -50,5 +50,50 @@ int main(){
     assert(!gate.hold(true)&&gate.held()&&!gate.drained()&&!gate.writes(true));
     gate.leave();assert(gate.drained()&&!gate.writes(true));
     assert(gate.hold(false)&&!gate.writable()&&gate.writes(true));
+    struct Coordinator {Ap01AppWriteGateV3 *gate=nullptr;bool busy=false,revoke=false;unsigned enters=0,leaves=0;} coordinator;
+    Ap01AppWriteGateV3 coordinated(&coordinator,[](void *p){auto &c=*(Coordinator *)p;
+        if(c.busy)return false;++c.enters;if(c.revoke)c.gate->hold(true);return true;},
+        [](void *p){++((Coordinator *)p)->leaves;});
+    coordinator.gate=&coordinated;
+    assert(!coordinated.enter()&&!coordinator.enters); // Closed admission never takes the coordinator.
+    assert(coordinated.writes(true));coordinator.busy=true;
+    assert(!coordinated.enter()&&!coordinator.enters&&!coordinator.leaves);
+    coordinator.busy=false;coordinator.revoke=true;
+    assert(!coordinated.enter()&&coordinated.held()&&coordinated.drained());
+    assert(coordinator.enters==1&&coordinator.leaves==1); // Revocation after lock acquisition releases it.
+    assert(coordinated.hold(false)&&coordinated.writes(true));coordinator.revoke=false;
+    assert(coordinated.enter()&&coordinator.enters==2&&coordinator.leaves==1);
+    coordinated.leave();assert(coordinator.leaves==2&&coordinated.writable());
+    struct Scope {
+        Ap01AppFilesV3 &files;Ap01AppWriteGateV3 &gate;unsigned calls=0;
+        static int32_t run(void *p){auto &s=*(Scope *)p;++s.calls;auto io=s.files.table();
+            int fd=io.open(io.context,"/scope/value",1);assert(fd>0);
+            int32_t nested=99;assert(!s.files.writeScope(run,p,nested)&&nested==99);
+            assert(io.write(io.context,fd,"a",1)==1);
+            // An already admitted operation finishes while commit drains it.
+            assert(!s.gate.hold(true)&&!s.gate.drained());
+            std::thread other([&]{
+                assert(io.write(io.context,fd,"b",1)<0&&io.mkdir(io.context,"/scope/dir")<0);
+                int32_t untouched=77;assert(!s.files.writeScope(run,p,untouched)&&untouched==77);
+                int read=io.open(io.context,"/scope/value",0);assert(read>0&&io.close(io.context,read)==0);
+            });other.join();
+            assert(io.write(io.context,fd,"c",1)==1&&io.close(io.context,fd)==0);
+            return -7; // Real callback failure is distinct from no admission.
+        }
+    };
+    Ap01AppFilesV3 scoped(disk.io(),"/scope");scoped.bindGate(coordinated);
+    Scope scope{scoped,coordinated};int32_t outcome=123;
+    assert(!scoped.writeScope(Scope::run,&scope,outcome)&&!scope.calls&&outcome==123);
+    scoped.threadIdentity(nullptr,[](void *)->uintptr_t{return 0;});
+    assert(!scoped.writeScope(Scope::run,&scope,outcome)&&!scope.calls&&outcome==123);
+    scoped.threadIdentity(nullptr,[](void *)->uintptr_t{static thread_local int identity;return (uintptr_t)&identity;});
+    coordinator.busy=true;
+    assert(!scoped.writeScope(Scope::run,&scope,outcome)&&!scope.calls&&outcome==123);
+    coordinator.busy=false;
+    assert(scoped.writeScope(Scope::run,&scope,outcome)&&scope.calls==1&&outcome==-7);
+    assert(coordinator.enters==3&&coordinator.leaves==3&&coordinated.drained());
+    assert(!scoped.writeScope(Scope::run,&scope,outcome)&&scope.calls==1);
+    assert(coordinated.hold(false)&&coordinated.writes(true));
+    assert(scoped.writeScope(Scope::run,&scope,outcome)&&scope.calls==2);
     puts("collection write gate: common admission, in-flight drain, old-handle revoke, metadata/sync denial, readonly access and explicit reopen passed");
 }

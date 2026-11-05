@@ -5,6 +5,10 @@
 extern "C" const uint8_t ap01_native_manifest[256];
 #endif
 namespace {
+bool appObservation(const Ap01HttpRequest &request) {
+    return !strcmp(request.method,"GET")&&(!strcmp(request.path,"/api/app/v3/status")||
+        !strcmp(request.path,"/api/app/v3/update/result"));
+}
 void imageIdentity(JsonDocument &out) {
     out["fw"] = "1.0.2_0041";
 #if defined(__riscv)
@@ -76,13 +80,18 @@ bool Ap01Maintenance0041::manualAuth(const Ap01HttpRequest &request, uint64_t no
 
 Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_t now) {
     bool observation=!strcmp(request.method,"GET")&&(!strcmp(request.path,"/health")||!strcmp(request.path,"/api/maintenance/status"));
-    if(!observation&&port.enterOperation){
+    // ABI 3 pairing calls back through the coordinated VFS. Holding the same
+    // non-recursive operation lock here would reject every pairing write.
+    bool delegated=bridge.coordinatesWrites&&!strncmp(request.path,"/api/pairing",12);
+    if(!observation&&!delegated&&port.enterOperation){
         if(operationHeld||!port.leaveOperation||!port.enterOperation(port.context)){
             Ap01HttpReply reply;error(reply,409,"maintenance_busy","platform_operation");return reply;
         }
         operationHeld=true;
     }
-    if(!observation)tickLocked(now);
+    // App queries retain the operation lock: resolving Unknown reloads journal
+    // caches. They must not advance maintenance writes just to read a receipt.
+    if(!observation&&!delegated&&!appObservation(request))tickLocked(now);
     return handleLocked(request,now);
 }
 void Ap01Maintenance0041::afterResponse(bool sent){
@@ -93,7 +102,7 @@ Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,u
     Ap01HttpReply reply;
     if(!strncmp(request.path,"/api/app/",9)) {
         if(!manualAuth(request,now,reply))return reply;
-        if(active()||(port.firmware.busy&&port.firmware.busy(port.firmware.context))){
+        if(!appObservation(request)&&(active()||(port.firmware.busy&&port.firmware.busy(port.firmware.context)))){
             error(reply,409,"maintenance_busy","app_install");return reply;
         }
         if(!port.appUpdate){error(reply,501,"app_install_unavailable","maintenance_router");return reply;}
