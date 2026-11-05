@@ -1,4 +1,5 @@
 #include "native_app_set_v3.h"
+#include "native_exec_memory_v3.h"
 #include "native_app_file_boot_v3.h"
 #include <map>
 #include <string>
@@ -116,7 +117,33 @@ static void bundleModelFiles(){
     assert(io.close(io.context,writer)==0);
     puts("Bundle model VFS: independent read/append cursors, seek, close-before-rename/remove, UI and size limits passed");
 }
+static uintptr_t execAddress=0;static unsigned execAllocations=0,execReleases=0;
+static void *fakeExecAllocate(size_t){++execAllocations;return (void *)execAddress;}
+static void fakeExecRelease(void *){++execReleases;}
+static void executableMemory(){
+    Apx2View view{};view.abi_major=3;view.image_bytes=64;view.text_bytes=32;view.bss_bytes=32;
+    Ap01NativeExecMemoryV3 memory(222,fakeExecAllocate,fakeExecRelease);auto port=memory.port();
+    Ap01BootMemoryV3 out{};
+    for(uintptr_t address:{uintptr_t(0),uintptr_t(0x6302f270),uintptr_t(0xa83fffc0),uintptr_t(0xa8400000)}){
+        execAddress=address;assert(!port.reserve(port.context,view,out));assert(!out.bytes&&!memory.retainedImages());
+    }
+    assert(execAllocations==4&&execReleases==3);
+    execAddress=0xa8000003;assert(port.reserve(port.context,view,out));
+    assert(out.base==0xa8000010&&out.capacity==96&&memory.retainedBytes()==111);
+    auto first=out;execAddress=0xa8000100;assert(port.reserve(port.context,view,out));
+    assert(first.base==0xa8000010&&memory.retainedImages()==2&&execReleases==3);
+    unsigned calls=execAllocations;assert(!port.reserve(port.context,view,out)&&execAllocations==calls);
+    Ap01NativeExecMemoryV3 other(4096,fakeExecAllocate,fakeExecRelease);auto p=other.port();
+    view.bss_bytes=UINT32_MAX;assert(!p.reserve(p.context,view,out));view.bss_bytes=32;
+    view.abi_major=2;assert(!p.reserve(p.context,view,out));view.abi_major=3;
+    for(unsigned i=0;i<8;++i){execAddress=0xa8010000+256*i;assert(p.reserve(p.context,view,out));}
+    assert(!p.reserve(p.context,view,out));
+    Ap01AppEntriesV3 entries{};assert(!p.publish(p.context,first,view,entries));
+    view.entries[0]=31;assert(!p.publish(p.context,out,view,entries));assert(!entries.start);
+    puts("native execution memory: aligned retained images, ROM RAM bounds, overflow, budgets, allocation failure and ownership checks passed");
+}
 int main(int argc,char **argv){
+    executableMemory();
     bundleModelFiles();
     assert(argc==4);auto manifest=file(argv[1]);auto real=file(argv[2]),peer=file(argv[3]);
     Ap01ManifestLimitsV3 limits{8,1u<<24,1u<<23,1u<<23,1u<<20,16,32,127,1u<<25,1u<<20};

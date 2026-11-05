@@ -1,5 +1,6 @@
 // Included by the existing model guest after its allocator/scheduler definitions.
 #include "native_app_file_boot_v3.h"
+#include "native_exec_memory_v3.h"
 #ifdef AP01_MODEL_BUSINESS_TEMPLATE
 #include "business-bundle.h"
 #endif
@@ -56,11 +57,14 @@ static int32_t fileSize(void *p,int fd){auto &s=*(CollectionModel *)p;
 static int readFile(void *p,int fd,void *out,size_t n){auto &s=*(CollectionModel *)p;
     if(!s.worker||fd!=10||!s.file||n>s.file->size-s.position)return -1;
     memcpy(out,s.file->bytes+s.position,n);s.position+=uint32_t(n);return int(n);}
-static bool reserveSet(void *p,const Apx2View &v,Ap01BootMemoryV3 &out){
-    auto &s=*(CollectionModel *)p;uint32_t n=(v.image_bytes+v.bss_bytes+15)&~15u;
-    if(n>s.limit-s.cursor)return false;
-    out={(uint8_t *)s.cursor,n,s.cursor};s.cursor+=n;return true;
+// Only the allocation address source is modeled. Production reserve/publish,
+// including the 0041 cache instruction sequence, execute unchanged.
+static CollectionModel *execModel=nullptr;
+static void *allocateExec(size_t n){
+    auto &s=*execModel;if(n>s.limit-s.cursor)return nullptr;
+    void *p=(void *)s.cursor;s.cursor+=uint32_t(n);return p;
 }
+static void freeRejectedExec(void *){__builtin_trap();}
 extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_t base,const uint8_t *package,uint32_t bytes){
     asm volatile("li t0,0x6000\ncsrs mstatus,t0":::"t0");
     ap01ModelV3=Ap01ModelPlatformV3{};
@@ -153,7 +157,8 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     const auto expectedVersion=record.newVersion;const auto *expectedDigest=record.newDigest;
 #endif
     Ap01SetSelectorV3 selector(journal,bootId);
-    auto *boot=new Ap01NativeAppFileBootV3(bootId,io,{&model,nullptr,reserveSet,publish},limits,1u<<22);
+    execModel=&model;Ap01NativeExecMemoryV3 executable(0x80000,allocateExec,freeRejectedExec);
+    auto *boot=new Ap01NativeAppFileBootV3(bootId,io,executable.port(),limits,1u<<22);
     CHECK(boot);auto *set=&boot->set();
     CHECK(set->shared().bindWindow((void *)1,ap01ModelStockV3));
     CHECK(boot->stageSelected(selector).mode==Ap01SetBootModeV3::Maintenance&&!ap01ModelV3.taskCount);
@@ -195,6 +200,7 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     CHECK(model.opens==model.closes&&!model.file&&!ap01ModelV3.taskCount);
     model.worker=false;Ap01NativeAppSharedV3::poll(&set->shared());
     CHECK(boot->result()==Ap01AppSetResultV3::Started&&set->shared().registered()==2);
+    CHECK(executable.retainedImages()==2&&executable.retainedBytes()==model.cursor-base);
     CHECK(ap01ModelV3.mounts==2&&ap01ModelV3.taskCount==2);
     CHECK(set->execution().health()==AP01_APP_V3_PENDING);
     ap01ModelV3.pause=pauseTask;

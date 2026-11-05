@@ -57,6 +57,7 @@ def main():
         assert all(probe.get('guest_bss') for _,probe in fixtures)
         assert all(probe.get('journal_export') for _,probe in fixtures) or all(probe.get('business_export') for _,probe in fixtures)
         assert all(probe['bases']==fixtures[0][1]['bases'] for _,probe in fixtures)
+        assert all(probe.get('cpu','rv32')==fixtures[0][1].get('cpu','rv32') for _,probe in fixtures)
     probe=fixtures[0][1];image=args.fixture_dir/'guest.bin';package=args.fixture_dir/'app.apx2'
     extras=probe.get('extra_inputs',[])
     results = {}
@@ -77,7 +78,7 @@ def main():
             kernel.write_bytes(struct.pack('<I', 0x0000006f) + bytes(8188))  # j .; no original ROM
             for base in (probe['bases'] if args.direct_v3 else (0x62fca000, 0xa8000000)):
                 socket_path = root / 'gdb.sock';qmp_path=root/'qmp.sock'
-                command = [str(args.qemu), '-M', 'ap01', '-cpu', 'rv32', '-kernel', str(kernel),
+                command = [str(args.qemu), '-M', 'ap01', '-cpu', probe.get('cpu','rv32'), '-kernel', str(kernel),
                            '-S', '-display', 'none', '-serial', 'none', '-monitor', 'none',
                            '-gdb', f'unix:{socket_path},server=on,wait=off',
                            '-qmp',f'unix:{qmp_path},server=on,wait=off']

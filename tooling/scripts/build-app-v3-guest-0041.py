@@ -74,7 +74,7 @@ if a.business_template:
                            bundle_bytes=len(payload),template_id=source['id'],fonts=[])
 tool=native.tools(a.tool_prefix)
 names=['app_heap_0041.cpp','probe_app_v3_guest.cpp','native_app_platform_v3.cpp','app_boot_v3.cpp','app_binding_v3.cpp','app_files_v3.cpp','app_network_v3.cpp','apx2.cpp','native_sha256_0041.cpp','model_platform_v3.cpp','runtime_libc_0041.cpp','app_runtime_format_v2.cpp','screen_host_0041.c']
-if a.manifest:names+=['native_app_set_v3.cpp','app_set_boot_v3.cpp','app_manifest_v3.cpp','app_set_files_v3.cpp','native_app_file_boot_v3.cpp','app_supervision_v3.cpp','app_set_journal_v3.cpp','app_set_selection_v3.cpp']
+if a.manifest:names+=['native_exec_memory_v3.cpp','native_app_set_v3.cpp','app_set_boot_v3.cpp','app_manifest_v3.cpp','app_set_files_v3.cpp','native_app_file_boot_v3.cpp','app_supervision_v3.cpp','app_set_journal_v3.cpp','app_set_selection_v3.cpp']
 objects=[]
 for name in names:
     obj=out/(name+'.o');objects.append(str(obj))
@@ -103,6 +103,9 @@ if template_evidence:
     assert a.peer.stat().st_size<=0xf000
 if a.manifest:
     report['collection']=True;report['extra_inputs']=[]
+    report['execution_backend']='native_exec_memory_v3'
+    report['cpu']='rv32,xtheadcmo=true'
+    report['substitutes'].append('fixed-address executable allocation instead of ROM heap; production reserve/publish unchanged')
     for source,name,address,bound in [(a.manifest,'set.amf3',0xa81c0000,0x1000),(a.peer,'peer.apx2',0xa81c1000,0x3e000 if a.snapshot else 0x3f000)]:
         assert source.stat().st_size<=bound
         if source.resolve()!=out/name:shutil.copyfile(source,out/name)
