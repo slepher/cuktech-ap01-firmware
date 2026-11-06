@@ -273,9 +273,9 @@ static const Cmap NormalCmap = {45,36786,1,NormalUnicode,nullptr,29,3,0};
 
 static const FontData NormalData = {NormalBitmap,NormalGlyphs,&NormalCmap,nullptr,0x08010000,0};
 
-static const Font NormalFallback = {0xa00e4864,0xa00e45aa,0,20,2,0x0001fe00,&NormalData,nullptr,nullptr};
+static const Font NormalFallback = {AP01_ROM_ADDR(0xa00e4864),AP01_ROM_ADDR(0xa00e45aa),0,20,2,0x0001fe00,&NormalData,nullptr,nullptr};
 
-static const Font NormalFont = {0xa00e4864,0xa00e45aa,0,20,2,0x0001fe00,(const void *)0xa01c477c,&NormalFallback,nullptr};
+static const Font NormalFont = {AP01_ROM_ADDR(0xa00e4864),AP01_ROM_ADDR(0xa00e45aa),0,20,2,0x0001fe00,(const void *)AP01_ROM_ADDR(0xa01c477c),&NormalFallback,nullptr};
 
 static const uint8_t SelectedBitmap[] = {
     0,0,0,0,143,240,0,0,0,0,0,0,0,0,143,240,0,0,0,0,
@@ -529,9 +529,9 @@ static const Cmap SelectedCmap = {20013,17313,1,SelectedUnicode,nullptr,22,3,0};
 
 static const FontData SelectedData = {SelectedBitmap,SelectedGlyphs,&SelectedCmap,nullptr,0x08010000,0};
 
-static const Font SelectedFallback = {0xa00e4864,0xa00e45aa,0,20,2,0x0001fe00,&SelectedData,nullptr,nullptr};
+static const Font SelectedFallback = {AP01_ROM_ADDR(0xa00e4864),AP01_ROM_ADDR(0xa00e45aa),0,20,2,0x0001fe00,&SelectedData,nullptr,nullptr};
 
-static const Font SelectedFont = {0xa00e4864,0xa00e45aa,0,20,2,0x0001fe00,(const void *)0xa037bfec,&SelectedFallback,nullptr};
+static const Font SelectedFont = {AP01_ROM_ADDR(0xa00e4864),AP01_ROM_ADDR(0xa00e45aa),0,20,2,0x0001fe00,(const void *)AP01_ROM_ADDR(0xa037bfec),&SelectedFallback,nullptr};
 
 static const uint8_t TitleBitmap[] = {
     14,238,238,224,0,255,255,255,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -893,6 +893,6 @@ static const Cmap TitleCmap = {45,36786,1,TitleUnicode,nullptr,24,3,0};
 
 static const FontData TitleData = {TitleBitmap,TitleGlyphs,&TitleCmap,nullptr,0x08010000,0};
 
-static const Font TitleFallback = {0xa00e4864,0xa00e45aa,0,25,4,0x0001fe00,&TitleData,nullptr,nullptr};
+static const Font TitleFallback = {AP01_ROM_ADDR(0xa00e4864),AP01_ROM_ADDR(0xa00e45aa),0,25,4,0x0001fe00,&TitleData,nullptr,nullptr};
 
-static const Font TitleFont = {0xa00e4864,0xa00e45aa,0,25,4,0x0001fe00,(const void *)0xa01c4794,&TitleFallback,nullptr};
+static const Font TitleFont = {AP01_ROM_ADDR(0xa00e4864),AP01_ROM_ADDR(0xa00e45aa),0,25,4,0x0001fe00,(const void *)AP01_ROM_ADDR(0xa01c4794),&TitleFallback,nullptr};

@@ -7,6 +7,7 @@ import re
 import shutil
 import struct
 import subprocess
+from rom_target import load_target, profile_identity, validate_original
 
 ROOT = Path(__file__).resolve().parents[2]
 MODULES = ROOT / 'tooling/firmware-modules'
@@ -87,13 +88,17 @@ def read_app_config(path):
     return config
 
 
-def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=None, boot_app_v3=False):
+def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=None, boot_app_v3=False, rom_target='0041'):
+    profile = load_target(rom_target)
+    validate_original(profile, (ROOT / profile['original']['path']).read_bytes())
     out = out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     executable = tools(prefix)
     config = read_app_config(app_config) if app_config else None
     if boot_app_v3 and config:
         raise ValueError('ABI 3 boot platform cannot embed a resident business App')
+    if rom_target != '0041' and config:
+        raise ValueError('0055 supports platform base/App-loader builds; resident legacy App layouts are 0041-only')
     if screen_host_probe and not config:
         raise ValueError('--screen-host-probe requires an App configuration')
     json_header = (json_header or ROOT / 'tooling/vendor/ArduinoJson/src').resolve()
@@ -114,18 +119,21 @@ def audit(out, prefix, app_config=None, screen_host_probe=False, json_header=Non
     if len({p.stem for p in sources}) != len(sources):
         raise ValueError('Source object names must be unique')
     flags = FLAGS + ['-I' + str(p) for p in includes]
+    if rom_target != '0041':
+        flags += ['-DAP01_ROM_0055=1', '-DAP01_BASE_ROM_VERSION="1.0.2_0055"']
     headers = sorted({p for directory in includes for p in directory.rglob('*')
                       if p.is_file() and p.suffix in ('.h', '.hpp', '.inc')})
     report = {'passed': False, 'scope': 'firmware-owned RV32 audit; execution verified separately',
               'boot_app_v3': boot_app_v3, 'executable_backend_verified': False,
-              'runtime': 'application' if config else 'platform', 'firmware_target': 'cuktech-ap01-0041',
+              'runtime': 'application' if config else 'platform', 'firmware_target': 'cuktech-ap01-' + rom_target,
+              'rom_target': rom_target, 'target_profile_sha256': profile_identity(rom_target),
               'flashable': False, 'hardware_verified': False, 'flags': flags, 'objects': [],
               'compiler': subprocess.check_output([executable('g++'), '--version'], text=True).splitlines()[0],
               'generator_sha256': sha(Path(__file__)),
               'input_headers': [{'path': str(p), 'sha256': sha(p)} for p in headers]}
     versions = dict(re.findall(r'^#define AP01_(BASE|MODIFIED)_ROM_VERSION "([^"]+)"$',
                               (MODULES / 'native_version_0041.h').read_text(), re.M))
-    report['rom_versions'] = {'base_version': versions['BASE'], 'modified_version': versions['MODIFIED']}
+    report['rom_versions'] = {'base_version': '1.0.2_' + rom_target, 'modified_version': versions['MODIFIED']}
     if config:
         report['app_config'] = {'path': str(config['path']), 'sha256': sha(config['path'])}
     write_json(out / 'native-core-audit.json', report)
@@ -170,6 +178,10 @@ def validate_audit(out):
     report = json.loads((out / 'native-core-audit.json').read_text(encoding='utf-8'))
     if not report.get('passed'):
         raise ValueError('Native audit did not pass')
+    target = report.get('rom_target', '0041')
+    if 'target_profile_sha256' in report or target != '0041':
+        if report.get('target_profile_sha256') != profile_identity(target):
+            raise ValueError('ROM profile changed: rerun audit')
     for item in report['objects']:
         if sha(Path(item['source'])) != item['source_sha256'] or sha(Path(item['file'])) != item['sha256']:
             raise ValueError('Source/object changed: rerun audit')

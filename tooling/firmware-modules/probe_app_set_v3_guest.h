@@ -1,6 +1,7 @@
 // Included by the existing model guest after its allocator/scheduler definitions.
 #include "native_app_file_boot_v3.h"
 #include "native_exec_memory_v3.h"
+#include "native_rom_addresses.h"
 #ifdef AP01_MODEL_BUSINESS_TEMPLATE
 #include "business-bundle.h"
 #endif
@@ -220,7 +221,7 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     // Empty business has no active content page; configured restore does.
     ap01ModelV3.activeChild=7;ap01ModelV3.eventCode=0x11;ap01ModelV3.eventKey=0x13;
     ap01ModelV3.window->event(ap01ModelV3.window->context,(void *)1);
-    CHECK(ap01ModelV3.activeChild==17); // Native 7 -> peer's one page after codex's eight slots.
+    CHECK(ap01ModelV3.activeChild==AP01_STOCK_SCREEN_COUNT+8); // Native 7 -> peer after eight codex slots.
 #endif
     ap01ModelV3.eventCode=0x29;ap01ModelV3.eventTarget=(void *)1;
     ap01ModelV3.window->event(ap01ModelV3.window->context,(void *)1);

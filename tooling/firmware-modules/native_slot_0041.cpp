@@ -1,3 +1,4 @@
+#include "native_rom_addresses.h"
 // Exact 0041 partition table/raw Flash read ABI. No erase or write of slots.
 #include "native_slot_0041.h"
 #include "native_diagnostic_0041.h"
@@ -18,18 +19,18 @@ struct Reader {
         if(offset>0x700000||length>0x700000-offset)return false;
         // The original partition-table reader handles the physical Flash/cache
         // critical section. Avoid the VFS temporary block proxy for slot reads.
-        return !FN(0xa0058e12,int (*)(uint32_t,void *,unsigned))(base+offset,bytes,length);
+        return !FN(AP01_ROM_ADDR(0xa0058e12),int (*)(uint32_t,void *,unsigned))(base+offset,bytes,length);
     }
 };
 }
 int ap01DiagnosticFlash0041(void *,uint32_t offset,uint8_t *bytes,unsigned length) {
     if(!length||length>1024||offset>=0x1000000u||length>0x1000000u-offset)return -22;
-    int rc=FN(0xa0058e12,int (*)(uint32_t,void *,unsigned))(offset,bytes,length);
+    int rc=FN(AP01_ROM_ADDR(0xa0058e12),int (*)(uint32_t,void *,unsigned))(offset,bytes,length);
     return rc? -5:int(length);
 }
 int ap01SelectedSlot0041() {
     // 0041 ff13 table; copy index at 62fc8cf4 is separate from FW activeIndex.
-    const uint8_t *p=(const uint8_t *)(uintptr_t)0x62fc8cf8;
+    const uint8_t *p=(const uint8_t *)(uintptr_t)AP01_ROM_ADDR(0x62fc8cf8);
     unsigned count=unsigned(p[6])|unsigned(p[7])<<8;
     if(le32(p)!=0x54504642||!count||count>16||ap01_native_crc32(p,12)!=le32(p+12)||ap01_native_crc32(p+16,count*36)!=le32(p+16+count*36))return -1;
     for(unsigned i=0;i<count;++i) {
@@ -78,12 +79,12 @@ bool ap01InspectSlot0041(unsigned slot,bool running,Ap01SlotImage &out) {
 }
 int ap01SelectSlot0041(unsigned slot) {
     int selected=ap01SelectedSlot0041();
-    volatile uint8_t *copy=(volatile uint8_t *)(uintptr_t)0x62fc8cf4;
-    if(slot>1||selected<0||*copy>1||le32((const uint8_t *)(uintptr_t)0x62fc8d00)==UINT32_MAX)return -1;
+    volatile uint8_t *copy=(volatile uint8_t *)(uintptr_t)AP01_ROM_ADDR(0x62fc8cf4);
+    if(slot>1||selected<0||*copy>1||le32((const uint8_t *)(uintptr_t)AP01_ROM_ADDR(0x62fc8d00))==UINT32_MAX)return -1;
     if(selected==int(slot))return 1;
     uint8_t previous=*copy;
     const char *path=slot?"/dev/fw2":"/dev/fw1";
-    int result=FN(0xa0055a14,int (*)(uint32_t,const void *))(0xff13,path);
+    int result=FN(AP01_ROM_ADDR(0xa0055a14),int (*)(uint32_t,const void *))(0xff13,path);
     if(result||ap01SelectedSlot0041()!=int(slot))return -1;
     // ff13 writes the other table but leaves this RAM selector unchanged.
     // Advance only after success, so the next commit preserves that table.

@@ -1,4 +1,5 @@
 #include "screen_host_0041.h"
+#include "native_rom_addresses.h"
 #include <string.h>
 
 static int id_valid(const char *id) {
@@ -33,7 +34,7 @@ static int apps_valid(ap01_screen_app *apps,unsigned count) {
         if(!apps[a].slots||!apps[a].capacity||apps[a].capacity>AP01_SCREEN_SET_LIMIT)return AP01_HOST_CAPACITY;
         for(i=0;i<apps[a].capacity;++i) {
             ap01_screen_slot *s=&apps[a].slots[i];
-            if(!s->root||s->child<9)return AP01_HOST_INVALID;
+            if(!s->root||s->child<AP01_STOCK_SCREEN_COUNT)return AP01_HOST_INVALID;
             for(b=0;b<=a;++b)for(j=0;j<(b==a?i:apps[b].capacity);++j)
                 if(s->child==apps[b].slots[j].child||s->root==apps[b].slots[j].root)return AP01_HOST_INVALID;
         }

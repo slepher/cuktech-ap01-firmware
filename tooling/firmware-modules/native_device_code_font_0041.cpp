@@ -1,3 +1,4 @@
+#include "native_rom_addresses.h"
 #include "native_device_code_font_0041.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -38,12 +39,12 @@ static_assert(sizeof(Glyph) == 8 && sizeof(Cmap) == 20 && sizeof(FontData) == 24
 #include "native_device_code_font_0041.inc"
 // Stock selected face has all ten digits; the normal subset lacks 5/6/7/9.
 // Keep an error-text fallback, but never mix individual digit faces.
-static const Font NumberFont = {0xa00e4864,0xa00e45aa,0,20,2,0x0001fe00,
-    (const void *)0xa037bfec,&NormalFont,nullptr};
+static const Font NumberFont = {AP01_ROM_ADDR(0xa00e4864),AP01_ROM_ADDR(0xa00e45aa),0,20,2,0x0001fe00,
+    (const void *)AP01_ROM_ADDR(0xa037bfec),&NormalFont,nullptr};
 // Exact complete original Montserrat14 descriptor: all printable ASCII,
 // including Y and every digit. One face for the whole SSID in both states.
-static const Font WifiFont = {0xa00e4864,0xa00e45aa,0,16,3,0x0001ff00,
-    (const void *)0xa025fad8,&NormalFont,nullptr};
+static const Font WifiFont = {AP01_ROM_ADDR(0xa00e4864),AP01_ROM_ADDR(0xa00e45aa),0,16,3,0x0001ff00,
+    (const void *)AP01_ROM_ADDR(0xa025fad8),&NormalFont,nullptr};
 }
 
 const void *ap01WifiSsidFont0041() {return &WifiFont;}

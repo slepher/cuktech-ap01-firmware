@@ -1,3 +1,4 @@
+#include "native_rom_addresses.h"
 #include "native_wifi_profiles_port_0041.h"
 #include "native_vfs_0041.h"
 #include <memory>
@@ -15,20 +16,20 @@ constexpr const char *Temporary = "/data/e#ap01_wifi.profiles.new";
 
 int current(void *, char *ssid, unsigned ssidBytes, char *password, unsigned passwordBytes) {
     if (ssidBytes < 33 || passwordBytes < 65) return -22;
-    void *mutex = *(void *volatile *)(uintptr_t)0x62fca9d8;
+    void *mutex = *(void *volatile *)(uintptr_t)AP01_ROM_ADDR(0x62fca9d8);
     if (!mutex) return -11;
     // Original timedlock returns 0 on success, positive errno on failure.
-    if (AP01_WIFI_ROM_FN(0xa005f3d8, int (*)(void *, uint32_t))(mutex,1000)) return -11;
-    bool configured = *(volatile uint8_t *)(uintptr_t)0x62fca824 != 0;
-    memcpy(ssid,(const void *)(uintptr_t)0x62fca831,33);
-    memcpy(password,(const void *)(uintptr_t)0x62fca853,65);
-    AP01_WIFI_ROM_FN(0xa01b3c8c, void (*)(void *))(mutex);
+    if (AP01_WIFI_ROM_FN(AP01_ROM_ADDR(0xa005f3d8), int (*)(void *, uint32_t))(mutex,1000)) return -11;
+    bool configured = *(volatile uint8_t *)(uintptr_t)AP01_ROM_ADDR(0x62fca824) != 0;
+    memcpy(ssid,(const void *)(uintptr_t)AP01_ROM_ADDR(0x62fca831),33);
+    memcpy(password,(const void *)(uintptr_t)AP01_ROM_ADDR(0x62fca853),65);
+    AP01_WIFI_ROM_FN(AP01_ROM_ADDR(0xa01b3c8c), void (*)(void *))(mutex);
     if (!configured) {ssid[0]=password[0]=0;return 0;}
     return memchr(ssid,0,33)&&memchr(password,0,65) ? 0 : -22;
 }
 
 int readEncrypted(const char *key, uint8_t *out, unsigned capacity) {
-    return AP01_WIFI_ROM_FN(0xa005f6d8, int (*)(const char *,const char *,void *,uint32_t))
+    return AP01_WIFI_ROM_FN(AP01_ROM_ADDR(0xa005f6d8), int (*)(const char *,const char *,void *,uint32_t))
         (Namespace,key,out,capacity);
 }
 
@@ -46,7 +47,7 @@ int store(void *, const uint8_t *bytes, unsigned length) {
     auto check=std::unique_ptr<uint8_t[]>(new(std::nothrow) uint8_t[MaxBytes]);
     if (!check) return -12;
     auto io=ap01RomVfs();
-    int n=AP01_WIFI_ROM_FN(0xa005f8d8, int (*)(const char *,const char *,const void *,uint32_t))
+    int n=AP01_WIFI_ROM_FN(AP01_ROM_ADDR(0xa005f8d8), int (*)(const char *,const char *,const void *,uint32_t))
         (Namespace,"profiles.new",bytes,length);
     bool valid=n==int((length/16+1)*16) &&
         readEncrypted("profiles.new",check.get(),MaxBytes)==int(length) &&

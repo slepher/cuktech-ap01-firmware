@@ -1,6 +1,10 @@
 #pragma once
 #include "app_platform_api_v3.h"
+#ifdef __cplusplus
+#include <cstdio>
+#else
 #include <stdio.h>
+#endif
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,6 +17,7 @@ static inline int32_t ap01RuntimeWriteScopeV3(int32_t (*callback)(void *),void *
 #ifdef __cplusplus
 }
 #endif
-// Force-include for App translation units, after stdio declarations. Varargs
+// Include C++ stdio before installing the macro: <cstdio> otherwise undefines
+// snprintf when another App header includes it later. Varargs
 // pass directly to the platform implementation; no private printf engine.
 #define snprintf(...) (ap01RuntimeApiV3()->format(__VA_ARGS__))

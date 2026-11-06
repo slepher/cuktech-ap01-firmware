@@ -1,5 +1,6 @@
 #include "native_maintenance_0041.h"
 #include "native_json_0041.h"
+#include "native_version_0041.h"
 #include <new>
 #if defined(__riscv)
 extern "C" const uint8_t ap01_native_manifest[256];
@@ -10,7 +11,7 @@ bool appObservation(const Ap01HttpRequest &request) {
         !strcmp(request.path,"/api/app/v3/update/result"));
 }
 void imageIdentity(JsonDocument &out) {
-    out["fw"] = "1.0.2_0041";
+    out["fw"] = AP01_BASE_ROM_VERSION;
 #if defined(__riscv)
     char build[33]; const char *hex="0123456789abcdef";
     for (unsigned i=0;i<16;++i) {uint8_t v=ap01_native_manifest[36+i];build[2*i]=hex[v>>4];build[2*i+1]=hex[v&15];}
@@ -137,7 +138,7 @@ Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,u
     }
     if(!strcmp(request.method,"GET")&&(!strcmp(request.path,"/health")||!strcmp(request.path,"/api/maintenance/status"))) {
         NativeJsonAllocator0041 allocator;JsonDocument out(&allocator);
-        out["device_mac"]=mac;out["fw_target"]="cuktech-ap01-0041";out["boot_id"]=boot;imageIdentity(out);
+        out["device_mac"]=mac;out["fw_target"]=AP01_FIRMWARE_TARGET;out["boot_id"]=boot;imageIdentity(out);
         out["service"]="ap01-maintenance";out["http_port"]=18080;
         Ap01SupervisorSnapshotV3 appStatus{};
         if(port.appStatus){

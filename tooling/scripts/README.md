@@ -1,5 +1,9 @@
 # AP01 固件构建与诊断工具
 
+`build-firmware-0041.py --target 0055` 生成新版基版，增加 `--boot-app-v3` 生成独立 App 应用版；默认目标仍是 0041。固定地址表、原厂 11 页适配和 App 格式验证见 [0055 迁移记录](../../docs/0055-address-migration.md)。`test-rom-target.py --target 0041|0055` 检查七处补丁，`test-rom-migration-0055.py` 检查地址覆盖及 40 项精确 ABI 指令，`test-stock-screen-count.py --out <新目录>` 原生执行两目标页面边界/导航回归。
+
+`test-native-0055-qemu.py` 在既有 Linux/WSL AP01 QEMU 执行新版原厂指令及候选跳板，要求固定输入摘要；`build-app-v3-guest-0041.py --target 0055` 选择 11 页的业务模型平台，使用现有 `test-app-abi-qemu-0041.py --direct-v3` 执行真实 App。当前 WSL 工具链、实际通过范围和最终候选见 [0055 QEMU 验证](../../docs/0055-qemu-validation-20261106.md)。
+
 arm64 macOS 的已验证工具链、32 位时间 ABI、平台/App 构建命令及 S1 限制见 [S1 构建记录](../../project-workflow/ap01-app-update/s1-build.md)。`probe-app-pic-0041.py` 仅做真实 App 的离线 PIE 编译与重定位清点，不生成可加载包或访问设备。
 
 `test-app-pic-load-0041.py` 执行独立最小样本的两基址 RV32 加载与错误修正拒绝检查；依赖和实机边界见 [S1 加载实验](../../project-workflow/ap01-app-update/s1-load-probe.md)。
@@ -12,6 +16,7 @@ D1 真实 ABI 3 路径：`build-app-v3-0041.py` 生成独立 ELF/APX2，`test-ap
 
 | 工具 | 用途 |
 | --- | --- |
+| `download_official.py` | 官方固件查询/下载：`--latest` 接受最新版、`--version` 校验指定版本、`--info` 仅查询，复用 DPAPI 缓存；不带版本参数时保持 0041。见 [获取说明](../../docs/official-firmware-extraction.md) |
 | `build-firmware-0041.py` | 默认独立构建平台 ROM；`--app-config` 从 App 源码配置构建；支持 audit/link/rom 阶段 |
 | `native_build_0041.py` | 唯一 RV32 平台源码清单、编译参数、XIP 审计、资源预算与链接实现 |
 | `test-native-build-0041.py` | App 配置路径边界、源码/对象/配置变化使链接失效的回归 |

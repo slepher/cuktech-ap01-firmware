@@ -1,0 +1,25 @@
+{
+  "format": 1,
+  "target": "0055",
+  "status": "static_verified",
+  "original": {
+    "path": "roms/0055/ap01-1.0.2_0055.bin",
+    "bytes": 6389800,
+    "sha256": "0d4a2c10314e984e8425f77385f3be89ebe33937eaa711938fda8f318a909bb7"
+  },
+  "mapping_base": "0x9ffff000",
+  "payload_offset": "0x675000",
+  "ui_hook": {"offset": "0x79bce", "original_hex": "97b01300e7802028"},
+  "timer_delete": {
+    "offset": "0x7eeec",
+    "original_hex": "411106c622c426c2",
+    "nonnull_tail": "0xa007def4"
+  },
+  "menu_hooks": [
+    {"offset": "0xc3cc4", "original_hex": "ef10cf189385e46b", "symbol": "ap01MenuRegisterOne0041"},
+    {"offset": "0xc3cd2", "original_hex": "ef10ef179385e46b", "symbol": "ap01MenuRegisterTwo0041"},
+    {"offset": "0xc3ce0", "original_hex": "ef100f17b7d50fa0", "symbol": "ap01MenuRegisterThree0041"},
+    {"offset": "0xc3df4", "original_hex": "efe01d4a814523a4a900", "symbol": "ap01MenuList0041"}
+  ],
+  "unsigned_ota": {"offset": "0x6cd60", "original_hex": "dde7", "replacement_hex": "7da0"}
+}

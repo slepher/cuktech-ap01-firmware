@@ -1,3 +1,4 @@
+#include "native_rom_addresses.h"
 #include "native_filesystem_0041.h"
 #include "native_diagnostic_0041.h"
 
@@ -23,38 +24,38 @@ class Mount {
 public:
     explicit Mount(const char *path) {
         lookup.path = path; lookup.nofollow = 1;
-        held = ROM_FN(0xa01a3772, int (*)(Lookup *))(&lookup) >= 0;
+        held = ROM_FN(AP01_ROM_ADDR(0xa01a3772), int (*)(Lookup *))(&lookup) >= 0;
     }
     ~Mount() {
-        if (held && lookup.node) ROM_FN(0xa0027c44, void (*)(void *))(lookup.node);
-        if (lookup.linkBuffer) ROM_FN(0xa002e14e, void (*)(void *))(lookup.linkBuffer);
+        if (held && lookup.node) ROM_FN(AP01_ROM_ADDR(0xa0027c44), void (*)(void *))(lookup.node);
+        if (lookup.linkBuffer) ROM_FN(AP01_ROM_ADDR(0xa002e14e), void (*)(void *))(lookup.linkBuffer);
     }
     bool valid() const {
         if (!held || !lookup.node || !lookup.relative) return false;
         const uint8_t *inode = (const uint8_t *)lookup.node;
         uint16_t flags; uintptr_t operations;
         memcpy(&flags, inode + 14, 2); memcpy(&operations, inode + 16, 4);
-        return (flags & 15) == 3 && operations == 0xa01bf590u;
+        return (flags & 15) == 3 && operations == AP01_ROM_ADDR(0xa01bf590);
     }
     void *node() const { return lookup.node; }
     const char *relative() const { return lookup.relative; }
 };
 int statPath(const char *path, Stat &out) {
     Mount mount(path);
-    return mount.valid() ? ROM_FN(0xa0044cd4, int (*)(void *, const char *, Stat *))
+    return mount.valid() ? ROM_FN(AP01_ROM_ADDR(0xa0044cd4), int (*)(void *, const char *, Stat *))
         (mount.node(), mount.relative(), &out) : -19;
 }
 int mkdirPath(void *, const char *path) {
     Mount mount(path);
-    return mount.valid() ? ROM_FN(0xa00485e4, int (*)(void *, const char *, unsigned))
+    return mount.valid() ? ROM_FN(AP01_ROM_ADDR(0xa00485e4), int (*)(void *, const char *, unsigned))
         (mount.node(), mount.relative(), 0700) : -19;
 }
 int syncFile(int fd) {
     void *file = nullptr;
-    int result = ROM_FN(0xa0025904, int (*)(int, void **))(fd, &file);
+    int result = ROM_FN(AP01_ROM_ADDR(0xa0025904), int (*)(int, void **))(fd, &file);
     if (result < 0) return result;
-    result = ROM_FN(0xa0025988, int (*)(void *))(file);
-    ROM_FN(0xa0027e54, void (*)(void *))(file);
+    result = ROM_FN(AP01_ROM_ADDR(0xa0025988), int (*)(void *))(file);
+    ROM_FN(AP01_ROM_ADDR(0xa0027e54), void (*)(void *))(file);
     return result;
 }
 int prepare(void *, const char *root) {
@@ -68,21 +69,21 @@ int openFile(void *, const char *path, unsigned mode) {
     // Verified NuttX flags: RDONLY=1, WRONLY=2, CREAT=4, APPEND=16, TRUNC=32.
     unsigned flags = mode == 0 ? 1 : mode == 1 ? 38 : mode == 2 ? 22 : 0;
     if (!flags) return -1;
-    int fd = ROM_FN(0xa003f4f6, int (*)(const char *, int, ...))(path, flags, 0600);
+    int fd = ROM_FN(AP01_ROM_ADDR(0xa003f4f6), int (*)(const char *, int, ...))(path, flags, 0600);
     if (fd >= 0 && mode && syncFile(fd)) {
-        ROM_FN(0xa0026888, int (*)(int))(fd); return -1;
+        ROM_FN(AP01_ROM_ADDR(0xa0026888), int (*)(int))(fd); return -1;
     }
     return fd;
 }
-int closeFile(void *, int fd) { return ROM_FN(0xa0026888, int (*)(int))(fd); }
+int closeFile(void *, int fd) { return ROM_FN(AP01_ROM_ADDR(0xa0026888), int (*)(int))(fd); }
 int readFile(void *, int fd, void *out, size_t n) {
-    return n <= INT32_MAX ? ROM_FN(0xa003f6a2, int (*)(int, void *, size_t))(fd, out, n) : -1;
+    return n <= INT32_MAX ? ROM_FN(AP01_ROM_ADDR(0xa003f6a2), int (*)(int, void *, size_t))(fd, out, n) : -1;
 }
 int writeFile(void *, int fd, const void *bytes, size_t n) {
     if (n > INT32_MAX) return -1;
     size_t done = 0;
     while (done < n) {
-        int result = ROM_FN(0xa0027e94, int (*)(int, const void *, size_t))
+        int result = ROM_FN(AP01_ROM_ADDR(0xa0027e94), int (*)(int, const void *, size_t))
             (fd, (const uint8_t *)bytes + done, n - done);
         if (result <= 0) return -1;
         done += result;
@@ -90,7 +91,7 @@ int writeFile(void *, int fd, const void *bytes, size_t n) {
     return syncFile(fd) ? -1 : (int)done;
 }
 int32_t seekFile(void *, int fd, int32_t offset, unsigned origin) {
-    return ROM_FN(0xa00281d8, int32_t (*)(int, int32_t, int))(fd, offset, origin);
+    return ROM_FN(AP01_ROM_ADDR(0xa00281d8), int32_t (*)(int, int32_t, int))(fd, offset, origin);
 }
 int32_t fileSize(void *context, int fd) {
     int32_t current = seekFile(context, fd, 0, 1);
@@ -103,16 +104,16 @@ int exists(void *, const char *path) {
     Stat info{}; int result = statPath(path, info);
     return result == 0 ? 1 : result == -2 ? 0 : -1;
 }
-int removeFile(void *, const char *path) { return ROM_FN(0xa003f6fa, int (*)(const char *))(path); }
+int removeFile(void *, const char *path) { return ROM_FN(AP01_ROM_ADDR(0xa003f6fa), int (*)(const char *))(path); }
 int renameFile(void *, const char *from, const char *to) {
     Mount a(from), b(to);
     if (!a.valid() || !b.valid() || a.node() != b.node()) return -19;
-    return ROM_FN(0xa004888c, int (*)(void *, const char *, const char *))
+    return ROM_FN(AP01_ROM_ADDR(0xa004888c), int (*)(void *, const char *, const char *))
         (a.node(), a.relative(), b.relative());
 }
 int statFs(void *, const char *path, uint64_t *total, uint64_t *used) {
     Mount mount(path); StatFs stats{};
-    if (!mount.valid() || ROM_FN(0xa00421bc, int (*)(void *, StatFs *))(mount.node(), &stats) ||
+    if (!mount.valid() || ROM_FN(AP01_ROM_ADDR(0xa00421bc), int (*)(void *, StatFs *))(mount.node(), &stats) ||
         stats.magic != 0x0a732923 || !stats.blockSize || stats.free > stats.blocks) return -1;
     *total = uint64_t(stats.blockSize) * stats.blocks;
     *used = uint64_t(stats.blockSize) * (stats.blocks - stats.free);
@@ -128,13 +129,13 @@ int ap01DiagnosticFile0041(void *, const char *path, uint32_t offset, uint8_t *b
     bool log = !strcmp(path,"/dev/ramlog");
     if (offset > INT32_MAX || (log && offset)) return -22;
     // NuttX O_RDONLY=1, O_NONBLOCK=64. Reading an empty ramlog must not block maintenance.
-    int fd=ROM_FN(0xa003f4f6,int (*)(const char *,int,...))(path,log?65:1);
-    if(fd<0)return -*ROM_FN(0xa00267c0,int *(*)())();
+    int fd=ROM_FN(AP01_ROM_ADDR(0xa003f4f6),int (*)(const char *,int,...))(path,log?65:1);
+    if(fd<0)return -*ROM_FN(AP01_ROM_ADDR(0xa00267c0),int *(*)())();
     int32_t size=log?-1:fileSize(nullptr,fd);
     int result=0;
     if(log) {
         result=readFile(nullptr,fd,bytes,length);*total=UINT32_MAX;
-        if(result<0&&*ROM_FN(0xa00267c0,int *(*)())()==11)result=0;
+        if(result<0&&*ROM_FN(AP01_ROM_ADDR(0xa00267c0),int *(*)())()==11)result=0;
     } else if(size<0 || offset>uint32_t(size) || seekFile(nullptr,fd,offset,0)!=int32_t(offset)) result=-22;
     else {
         *total=size;

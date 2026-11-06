@@ -1,4 +1,5 @@
 #include "model_platform_v3.h"
+#include "native_rom_addresses.h"
 #include "native_services_0041.h"
 #include "native_io_0041.h"
 #include "native_vfs_0041.h"
@@ -148,7 +149,7 @@ extern "C" {
 const ap01_lvgl_api_0041 ap01_lvgl_0041={1,sizeof(ap01_lvgl_api_0041),create,destroy,resize,align,hide,label,present,retire,onDraw,text,color,color,font};
 int ap01_window_bind(ap01_window_0041 *w){ap01ModelV3.window=w;ap01ModelV3.mountedPages=0;w->timer=w;w->event_root=w->win;return 1;}
 int ap01_window_mount(ap01_window_0041 *,ap01_screen_slot *slots,ap01_page_0041 *pages,unsigned count){
-    for(unsigned i=0;i<count;++i){slots[i].root=&pages[i];slots[i].child=9+ap01ModelV3.mountedPages+i;}
+    for(unsigned i=0;i<count;++i){slots[i].root=&pages[i];slots[i].child=AP01_STOCK_SCREEN_COUNT+ap01ModelV3.mountedPages+i;}
     ap01ModelV3.mountedPages+=count;++ap01ModelV3.mounts;return 1;
 }
 ap01_screen_port ap01_window_port(ap01_window_0041 *w){return {w,active,yes,yes,slide,edge};}

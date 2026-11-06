@@ -25,7 +25,7 @@ def main():
         shutil.copytree(ROOT / directory, isolated / directory)
     scripts = isolated / 'tooling/scripts'
     scripts.mkdir(parents=True)
-    for name in ('build-firmware-0041.py', 'native_build_0041.py', 'build-native-app-rom-0041.py', 'test-firmware-0041.py',
+    for name in ('build-firmware-0041.py', 'native_build_0041.py', 'rom_target.py', 'build-native-app-rom-0041.py', 'test-firmware-0041.py',
                  'patch_0041_unsigned_ota.py', 'test_0041_unsigned_ota.py'):
         shutil.copyfile(ROOT / 'tooling/scripts' / name, scripts / name)
     original = isolated / 'roms/0041/ap01-1.0.2_0041.bin'

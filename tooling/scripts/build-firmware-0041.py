@@ -5,13 +5,15 @@ import json
 import subprocess
 import sys
 import native_build_0041 as native
+from rom_target import load_target
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, help='New complete ROM filename (required for rom stage)')
-    parser.add_argument('--build-dir', '--out', type=Path, default=native.ROOT / 'build/0041')
-    parser.add_argument('--original', type=Path, default=native.ROOT / 'roms/0041/ap01-1.0.2_0041.bin')
+    parser.add_argument('--target', choices=('0041', '0055'), default='0041')
+    parser.add_argument('--build-dir', '--out', type=Path)
+    parser.add_argument('--original', type=Path)
     parser.add_argument('--tool-prefix')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--app-config', type=Path, help='App source/configuration JSON; firmware compiles and links it')
@@ -28,6 +30,7 @@ def main():
     if args.screen_host_probe and (not args.app_config or args.stage == 'link'):
         parser.error('--screen-host-probe requires --app-config at audit/rom stage')
     try:
+        profile = load_target(args.target)
         tool = native.tool_prefix(args.tool_prefix)
         output = args.output.resolve() if args.output else None
         if output:
@@ -35,22 +38,24 @@ def main():
                 ('.payload.bin', '.manifest.json', '.elf', '.audit.json', '.link.json', '.map')]
             if len(set(destinations)) != len(destinations) or any(p.exists() for p in destinations):
                 parser.error('Use a new .bin output filename; candidate artifacts must not exist')
-        out = (args.app_source_dir or args.build_dir).resolve()
+        out = (args.app_source_dir or args.build_dir or native.ROOT / ('build/' + args.target)).resolve()
         if not args.app_source_dir:
             if args.stage != 'link':
-                audited = native.audit(out, tool, args.app_config, args.screen_host_probe, args.json_header,args.boot_app_v3)
+                audited = native.audit(out, tool, args.app_config, args.screen_host_probe, args.json_header,args.boot_app_v3,args.target)
                 if args.stage == 'audit':
                     print(json.dumps({'passed': True, 'flashable': False,
                         'report': str(out / 'native-core-audit.json'), 'budget': audited['budget']}))
                     return
+            if native.validate_audit(out).get('rom_target', '0041') != args.target:
+                raise ValueError('Compiled objects target differs from requested target')
             linked = native.link(out, tool)
             if args.stage == 'link':
                 print(json.dumps(linked['elf']))
                 return
         output.parent.mkdir(parents=True, exist_ok=True)
         subprocess.run([sys.executable, '-B', str(Path(__file__).with_name('build-native-app-rom-0041.py')),
-            '--source-dir', str(out), '--output', str(output), '--original', str(args.original.resolve()),
-            '--tool-prefix', tool], check=True)
+            '--source-dir', str(out), '--output', str(output), '--original', str((args.original or native.ROOT / profile['original']['path']).resolve()),
+            '--tool-prefix', tool, '--target', args.target], check=True)
     except (ValueError, FileNotFoundError) as error:
         parser.error(str(error))
 

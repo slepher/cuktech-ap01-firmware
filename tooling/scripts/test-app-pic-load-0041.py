@@ -29,6 +29,41 @@ SECTIONS {
 '''
 
 
+def check_call_pair(pair, site, resolved):
+    """Both CALL spellings resolve to the same local AUIPC/JALR pair."""
+    upper, lower = struct.unpack('<II', pair)
+    register = (upper >> 7) & 31
+    if (upper & 127 != 0x17 or not register or lower & 0x707f != 0x67 or
+            (lower >> 15) & 31 != register or (lower >> 7) & 31 not in (0, 1)):
+        raise ValueError('Invalid local CALL instruction pair')
+    high = upper & 0xfffff000
+    if high & 0x80000000:
+        high -= 1 << 32
+    low = lower >> 20
+    if low & 0x800:
+        low -= 0x1000
+    if (site + high + low) & 0xfffffffe != resolved:
+        raise ValueError('Local CALL target differs from relocation')
+
+
+def check_call_pair_cases():
+    pair = struct.pack('<II', 0x00000097, 0x010080e7)
+    check_call_pair(pair, 0x10000, 0x10010)
+    rejected = []
+    for name, candidate, target in (
+        ('call-wrong-target', pair, 0x10012),
+        ('call-absolute-upper', struct.pack('<II', 0x000000b7, 0x010080e7), 0x10010),
+        ('call-wrong-base-register', struct.pack('<II', 0x00000097, 0x010100e7), 0x10010),
+    ):
+        try:
+            check_call_pair(candidate, 0x10000, target)
+        except ValueError:
+            rejected.append(name)
+        else:
+            raise AssertionError('Accepted ' + name)
+    return rejected
+
+
 def extract(path, allow_differences=False):
     from elftools.elf.elffile import ELFFile
     from elftools.elf.relocation import RelocationSection
@@ -50,7 +85,7 @@ def extract(path, allow_differences=False):
         # Link-resolved, base-invariant relocations. This is only a fixture whitelist.
         # pyelftools 0.32 does not name RISC-V relocations. These IDs are also
         # checked against the saved GNU readelf output from the actual fixture.
-        names = {1: 'R_RISCV_32', 16: 'R_RISCV_BRANCH', 17: 'R_RISCV_JAL', 19: 'R_RISCV_CALL_PLT', 23: 'R_RISCV_PCREL_HI20',
+        names = {1: 'R_RISCV_32', 16: 'R_RISCV_BRANCH', 17: 'R_RISCV_JAL', 18: 'R_RISCV_CALL', 19: 'R_RISCV_CALL_PLT', 23: 'R_RISCV_PCREL_HI20',
                  24: 'R_RISCV_PCREL_LO12_I', 25: 'R_RISCV_PCREL_LO12_S',
                  44: 'R_RISCV_RVC_BRANCH', 45: 'R_RISCV_RVC_JUMP'}
         if allow_differences:
@@ -71,7 +106,7 @@ def extract(path, allow_differences=False):
                 # They do not patch runtime bytes; require an adjacent instruction relocation.
                 if rel['r_info_type'] == 51:
                     if (previous is None or previous['r_offset'] != rel['r_offset'] or
-                            previous['r_info_type'] not in (19, 23, 24, 25) or
+                            previous['r_info_type'] not in (18, 19, 23, 24, 25) or
                             rel['r_info_sym'] != 0 or rel['r_addend'] != 0):
                         raise ValueError('Invalid RELAX hint in fixture')
                     counts['R_RISCV_RELAX'] += 1
@@ -86,6 +121,15 @@ def extract(path, allow_differences=False):
                 index = symbol['st_shndx']
                 if not isinstance(index, int) or not elf.get_section(index)['sh_flags'] & 2:
                     raise ValueError('Non-local relocation: ' + name)
+                if name in ('R_RISCV_CALL', 'R_RISCV_CALL_PLT'):
+                    defining = elf.get_section(index)
+                    resolved = symbol['st_value'] + rel['r_addend']
+                    at = rel['r_offset'] - base
+                    if (target.name != '.text' or defining.name != '.text' or
+                            not target['sh_addr'] <= rel['r_offset'] <= target['sh_addr'] + target['sh_size'] - 8 or
+                            not defining['sh_addr'] <= resolved < defining['sh_addr'] + defining['sh_size']):
+                        raise ValueError('CALL outside local text')
+                    check_call_pair(image[at:at+8], rel['r_offset'], resolved)
                 if name in ('R_RISCV_ADD32', 'R_RISCV_SUB32'):
                     resolved = symbol['st_value'] + rel['r_addend']
                     defining = elf.get_section(index)
@@ -201,7 +245,7 @@ def main():
     checks = {}
     for base in (0x200000, 0x400000):
         checks[hex(base)] = execute(probe, base)
-    rejected = []
+    rejected = check_call_pair_cases()
     for label, change in (
         ('entry-outside-text', {'entry': probe['memory']}),
         ('entry-odd', {'entry': 1}),

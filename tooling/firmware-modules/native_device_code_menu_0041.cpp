@@ -1,3 +1,4 @@
+#include "native_rom_addresses.h"
 #include "native_device_code_menu_0041.h"
 #include "native_device_code_0041.h"
 #include "native_device_code_font_0041.h"
@@ -16,7 +17,7 @@
 #endif
 
 #ifndef AP01_MENU_ACTIVITY
-#define AP01_MENU_ACTIVITY() (*(volatile uint8_t *)(uintptr_t)0x62fc403a = 1)
+#define AP01_MENU_ACTIVITY() (*(volatile uint8_t *)(uintptr_t)AP01_ROM_ADDR(0x62fc403a) = 1)
 #endif
 
 namespace {
@@ -42,34 +43,34 @@ __attribute__((section(".ap01_menu_budget"),used))
 static const uint32_t menuBudget[]={sizeof(Context),sizeof(WifiRow),sizeof(Ap01WifiProfiles0041),9};
 void *&userData(Object object) { return *(void **)((uint8_t *)object + 0x10); }
 Object child(Object object, int index) {
-    return AP01_MENU_ROM_FN(0xa00dcee4, Object (*)(Object, int))(object, index);
+    return AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00dcee4), Object (*)(Object, int))(object, index);
 }
 unsigned children(Object object) {
-    return AP01_MENU_ROM_FN(0xa00dd144, unsigned (*)(Object))(object);
+    return AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00dd144), unsigned (*)(Object))(object);
 }
 void destroy(Object object) {
-    if (object) AP01_MENU_ROM_FN(0xa00ded6c, void (*)(Object))(object);
+    if (object) AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00ded6c), void (*)(Object))(object);
 }
 void text(Object label, const char *value) {
-    AP01_MENU_ROM_FN(0xa0091b3a, void (*)(Object, const char *))(label, value);
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa0091b3a), void (*)(Object, const char *))(label, value);
 }
 void font(Object label, bool selected, bool number = false) {
-    AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019d0ae), void (*)(Object, const void *))
         (label, number ? ap01DeviceCodeNumberFont0041() : ap01DeviceCodeFont0041(selected));
 }
 void color(Object object, uint32_t value) {
-    AP01_MENU_ROM_FN(0xa019cd48, void (*)(Object, uint32_t))(object, value);
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019cd48), void (*)(Object, uint32_t))(object, value);
 }
 void background(Object object, uint32_t value) {
-    AP01_MENU_ROM_FN(0xa019cd76, void (*)(Object, unsigned))(object, 255);
-    AP01_MENU_ROM_FN(0xa019cd92, void (*)(Object, uint32_t))(object, value);
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019cd76), void (*)(Object, unsigned))(object, 255);
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019cd92), void (*)(Object, uint32_t))(object, value);
 }
 void registerEvent(Object object, void (*callback)(void *), unsigned filter, void *user) {
-    AP01_MENU_ROM_FN(0xa01ad654, void (*)(Object, void (*)(void *), unsigned, void *))
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa01ad654), void (*)(Object, void (*)(void *), unsigned, void *))
         (object, callback, filter, user);
 }
 void original(void *event) {
-    AP01_MENU_ROM_FN(0xa00fd1ac, void (*)(void *))(event);
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00fd1ac), void (*)(void *))(event);
 }
 void **pageData(Context &context) {
     auto metadata = (void **)userData(context.page);
@@ -80,32 +81,32 @@ void cleanup(void *event) {
     if ((words[2] & ~0x8000u) != 0x29) return;
     auto context = (Context *)words[3];
     if (context) {
-        if(context->wifiTimer) AP01_MENU_ROM_FN(0xa008ae58,void (*)(void *))(context->wifiTimer);
+        if(context->wifiTimer) AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa008ae58),void (*)(void *))(context->wifiTimer);
         memset(context->code,0,sizeof(context->code));delete context;
     }
 }
 Object mainList(Object parent, Context *context) {
-    Object list = AP01_MENU_ROM_FN(0xa01a2c02, Object (*)(Object))(parent);
+    Object list = AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa01a2c02), Object (*)(Object))(parent);
     if (!list || !context) return list;
-    Object row = AP01_MENU_ROM_FN(0xa019cdc0, Object (*)(Object, const char *, int, int))
+    Object row = AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019cdc0), Object (*)(Object, const char *, int, int))
         (list, "", 0, 0);
     if (!row) return list;
     userData(row) = context;
     font(child(row, 0), false);
     text(child(row, 0), "\u8bbe\u5907\u7801");
-    AP01_MENU_ROM_FN(0xa00de128, void (*)(Object, int))(row, 6);
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00de128), void (*)(Object, int))(row, 6);
     userData(child(list,0))=context;
-    Object wifi=AP01_MENU_ROM_FN(0xa019cdc0,Object (*)(Object,const char *,int,int))(list,"",0,0);
+    Object wifi=AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019cdc0),Object (*)(Object,const char *,int,int))(list,"",0,0);
     if(!wifi){destroy(list);return nullptr;}
     font(child(wifi,0),false,true);text(child(wifi,0),"Wi-Fi");
     // Keep all six stock indices and native flex layout unchanged.
-    AP01_MENU_ROM_FN(0xa00de128,void (*)(Object,int))(wifi,7);
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00de128),void (*)(Object,int))(wifi,7);
     return list;
 }
 Object codeList(Object parent, Context &context) {
     // Reuse the exact original settings container, including flex, padding,
     // scroll direction and position. Only its rows are replaced.
-    Object list = AP01_MENU_ROM_FN(0xa01a2c02, Object (*)(Object))(parent);
+    Object list = AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa01a2c02), Object (*)(Object))(parent);
     if (!list) return nullptr;
     while (children(list)) destroy(child(list, -1));
     const char *labels[] = {context.code[0] ? context.code :
@@ -113,8 +114,8 @@ Object codeList(Object parent, Context &context) {
                            "\u91cd\u65b0\u751f\u6210", "\u8fd4\u56de\u4e3b\u83dc\u5355"};
     for (unsigned index = 0; index < 3; ++index) {
         Object row = index == 2 ?
-            AP01_MENU_ROM_FN(0xa019ce64, Object (*)(Object, int, int))(list, 0, 0) :
-            AP01_MENU_ROM_FN(0xa019cdc0, Object (*)(Object, const char *, int, int))
+            AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019ce64), Object (*)(Object, int, int))(list, 0, 0) :
+            AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019cdc0), Object (*)(Object, const char *, int, int))
                 (list, "", 0, 0);
         if (!row) { destroy(list); return nullptr; }
         if (index == 0) userData(row) = &context;
@@ -122,7 +123,7 @@ Object codeList(Object parent, Context &context) {
         // These are a readout and an action, not navigation into another page.
         if (index < 2) {
             Object arrow = child(row, 1);
-            if (arrow) AP01_MENU_ROM_FN(0xa00d8f7c, void (*)(Object, uint32_t))(arrow, 1);
+            if (arrow) AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00d8f7c), void (*)(Object, uint32_t))(arrow, 1);
         }
     }
     return list;
@@ -138,29 +139,29 @@ Object wifiList(Object parent,Context &context) {
     std::unique_ptr<WifiRow[]> names(count?new(std::nothrow) WifiRow[count]:nullptr);
     if(count&&!names)return nullptr;
     for(unsigned i=0;i<count;++i){strcpy(names[i].ssid,snapshot->profiles[i].ssid);names[i].current=snapshot->profiles[i].current;}
-    Object list=AP01_MENU_ROM_FN(0xa01a2c02,Object (*)(Object))(parent);
+    Object list=AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa01a2c02),Object (*)(Object))(parent);
     if(!list)return nullptr;
     while(children(list))destroy(child(list,-1));
     for(unsigned i=0;i<=count;++i){
-        Object row=i==count?AP01_MENU_ROM_FN(0xa019ce64,Object (*)(Object,int,int))(list,0,0):
-            AP01_MENU_ROM_FN(0xa019cdc0,Object (*)(Object,const char *,int,int))(list,"",0,0);
+        Object row=i==count?AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019ce64),Object (*)(Object,int,int))(list,0,0):
+            AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019cdc0),Object (*)(Object,const char *,int,int))(list,"",0,0);
         if(!row){destroy(list);return nullptr;}
         userData(row)=&context;
         font(child(row,0),false,i<count);
         if(i<count){
             Object label=child(row,0);
-            AP01_MENU_ROM_FN(0xa019d0ae,void (*)(Object,const void *))(label,ap01WifiSsidFont0041());
+            AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019d0ae),void (*)(Object,const void *))(label,ap01WifiSsidFont0041());
             // 0041 lv_label_t recovered at a0092022/a0091f8a: mode is
             // low4 bits at5c, static-text bit4. New labels have no animation
             // or DOT allocation; CLIP4 gives a bounded single line.
             auto &mode=*((uint8_t *)label+0x5c);mode=(mode&0xf0)|4;
-            AP01_MENU_ROM_FN(0xa00d8e96,void (*)(Object,int,int))(label,225,26);
+            AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00d8e96),void (*)(Object,int,int))(label,225,26);
             text(label,names[i].ssid);
             destroy(child(row,1));
-            Object mark=AP01_MENU_ROM_FN(0xa00a62ee,Object (*)(Object,Object,const void *,int,int,uint32_t,int,int,int))
-                (row,row,(void *)0x62fc54d0,3,2,0x89d8f3,7,0x101,0);
+            Object mark=AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00a62ee),Object (*)(Object,Object,const void *,int,int,uint32_t,int,int,int))
+                (row,row,(void *)AP01_ROM_ADDR(0x62fc54d0),3,2,0x89d8f3,7,0x101,0);
             if(!mark){destroy(list);return nullptr;}
-            if(!names[i].current)AP01_MENU_ROM_FN(0xa00d8f7c,void (*)(Object,uint32_t))(mark,1);
+            if(!names[i].current)AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00d8f7c),void (*)(Object,uint32_t))(mark,1);
         }
     }
     context.networks=std::move(names);context.wifiCount=count;context.wifiPhase=-1;
@@ -186,7 +187,7 @@ void wifiPoll(void *timer) {
         memset(password,0,sizeof(password));
         for(unsigned i=0;i<context->wifiCount;++i){
             auto &row=context->networks[i];row.current=!strcmp(row.ssid,ssid);
-            AP01_MENU_ROM_FN(row.current?0xa00d9044:0xa00d8f7c,void (*)(Object,uint32_t))(child(child(data[2],i),1),1);
+            AP01_MENU_ROM_FN(row.current?AP01_ROM_ADDR(0xa00d9044):AP01_ROM_ADDR(0xa00d8f7c),void (*)(Object,uint32_t))(child(child(data[2],i),1),1);
         }
     }
 }
@@ -195,12 +196,12 @@ void select(Context &context, Object list, unsigned previous, unsigned next) {
     background(oldRow, 0x262626); background(newRow, 0x22363d);
     Object oldLabel = child(oldRow, 0), newLabel = child(newRow, 0);
     if (context.submenu || previous == 6 || previous == 7) font(oldLabel, false, context.wifi ? previous<context.wifiCount : context.submenu ? previous==0 : previous==7);
-    else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(oldLabel, (void *)0xa025488c);
+    else AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019d0ae), void (*)(Object, const void *))(oldLabel, (void *)AP01_ROM_ADDR(0xa025488c));
     if (context.submenu || next == 6 || next == 7) font(newLabel, true, context.wifi ? next<context.wifiCount : context.submenu ? next==0 : next==7);
-    else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(newLabel, (void *)0xa055fb7c);
+    else AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019d0ae), void (*)(Object, const void *))(newLabel, (void *)AP01_ROM_ADDR(0xa055fb7c));
     if(context.wifi) {
-        if(previous<context.wifiCount)AP01_MENU_ROM_FN(0xa019d0ae,void (*)(Object,const void *))(oldLabel,ap01WifiSsidFont0041());
-        if(next<context.wifiCount)AP01_MENU_ROM_FN(0xa019d0ae,void (*)(Object,const void *))(newLabel,ap01WifiSsidFont0041());
+        if(previous<context.wifiCount)AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019d0ae),void (*)(Object,const void *))(oldLabel,ap01WifiSsidFont0041());
+        if(next<context.wifiCount)AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019d0ae),void (*)(Object,const void *))(newLabel,ap01WifiSsidFont0041());
     }
     Object oldArrow = child(oldRow, 1), newArrow = child(newRow, 1);
     unsigned back = context.wifi ? context.wifiCount : context.submenu ? 2 : 8;
@@ -211,13 +212,13 @@ void select(Context &context, Object list, unsigned previous, unsigned next) {
     unsigned first = context.submenu && !context.wifi ? 1 : 0;
     bool wrapped = previous != next && ((previous == first && next == back) || (previous == back && next == first));
     // A wrap must expose its destination before the next encoder step.
-    AP01_MENU_ROM_FN(0xa00de5dc, void (*)(Object, int, unsigned))(list, y, wrapped ? 0 : 1);
+    AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00de5dc), void (*)(Object, int, unsigned))(list, y, wrapped ? 0 : 1);
     context.selected = next;
 }
 void resetTimer(void **data) {
     if (data[3]) {
-        AP01_MENU_ROM_FN(0xa008bd70, void (*)(Object))(data[3]);
-        AP01_MENU_ROM_FN(0xa008c2d0, void (*)(Object))(data[3]);
+        AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa008bd70), void (*)(Object))(data[3]);
+        AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa008c2d0), void (*)(Object))(data[3]);
     }
 }
 bool replaceList(Context &context, bool submenu, bool wifi=false) {
@@ -229,9 +230,9 @@ bool replaceList(Context &context, bool submenu, bool wifi=false) {
     unsigned returnIndex=context.wifi?7:6;
     context.submenu=submenu;context.wifi=wifi;context.selected=0;
     text(data[0], "");
-    if (submenu) AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))
+    if (submenu) AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019d0ae), void (*)(Object, const void *))
         (data[0], ap01DeviceCodeTitleFont0041());
-    else AP01_MENU_ROM_FN(0xa019d0ae, void (*)(Object, const void *))(data[0], (void *)0xa02548d4);
+    else AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa019d0ae), void (*)(Object, const void *))(data[0], (void *)AP01_ROM_ADDR(0xa02548d4));
     text(data[0],wifi?"Wi-Fi":submenu?"\u8bbe\u5907\u7801":"\u8bbe\u7f6e");
     select(context,next,0,wifi?0:submenu?1:returnIndex);
     if(!submenu)context.networks.reset();
@@ -241,7 +242,7 @@ bool replaceList(Context &context, bool submenu, bool wifi=false) {
 void event(void *raw) {
     auto words = (uintptr_t *)raw;
     Object page = nullptr; void **pageValues = nullptr;
-    int found = AP01_MENU_ROM_FN(0xa00a72ae, int (*)(Object, unsigned, Object *, void ***))
+    int found = AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00a72ae), int (*)(Object, unsigned, Object *, void ***))
         ((Object)words[0], 0x1a, &page, &pageValues);
     Object list = found && pageValues ? pageValues[2] : nullptr;
     unsigned rows = list ? children(list) : 0;
@@ -259,8 +260,8 @@ void event(void *raw) {
     auto data = pageData(*context);
     if (!data || !data[2]) return;
     AP01_MENU_ACTIVITY();
-    int key = AP01_MENU_ROM_FN(0xa00d8af6, int (*)(void *))(raw);
-    if (AP01_MENU_ROM_FN(0xa00a769a, int (*)())()) {
+    int key = AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00d8af6), int (*)(void *))(raw);
+    if (AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa00a769a), int (*)())()) {
         ap01WifiMenuTrace0041(Ap01WifiTrace0041::WakeConsumed,key,context->selected,context->wifi,context->submenu);return;
     }
     if (!context->submenu) context->selected = state[1] >= 0x30 && state[1] <= 0x38 ? state[1] - 0x30 : 0;
@@ -335,12 +336,12 @@ extern "C" void *ap01SettingsList0041(void *parent) {
     if (!list || children(list) != 9) { delete context; return list; }
     context->page = parent; context->window = *(void **)((uint8_t *)parent + 4);
     registerEvent(parent, cleanup, 0x29, context);
-    context->wifiTimer=AP01_MENU_ROM_FN(0xa008bc64,Object (*)(void (*)(void *),unsigned,void *))(wifiPoll,200,context);
+    context->wifiTimer=AP01_MENU_ROM_FN(AP01_ROM_ADDR(0xa008bc64),Object (*)(void (*)(void *),unsigned,void *))(wifiPoll,200,context);
     return list;
 }
 
 extern "C" void ap01SettingsRegister0041(void *object, void (*callback)(void *), unsigned filter, void *user) {
-    if ((uintptr_t)callback != 0xa00fd1ac) { registerEvent(object, callback, filter, user); return; }
+    if ((uintptr_t)callback != AP01_ROM_ADDR(0xa00fd1ac)) { registerEvent(object, callback, filter, user); return; }
     // Registration can precede construction of the settings page. Resolve its
     // context through the live native page/list when each event is dispatched.
     registerEvent(object, event, filter, nullptr);

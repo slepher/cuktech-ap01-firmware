@@ -15,6 +15,9 @@ spec.loader.exec_module(packager)
 
 def check(manifest_path):
     manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+    target = manifest.get('rom_target', '0041')
+    assert target in ('0041', '0055')
+    assert manifest['firmware_target'] == 'cuktech-ap01-' + target
     image = Path(manifest['image']['path']).read_bytes()
     packager.validate_candidate(image, manifest_path)
     assert image[:0x1000] == Path(manifest['original']['path']).read_bytes()[:0x1000]
@@ -27,6 +30,7 @@ def check(manifest_path):
     assert not manifest['flashable'] and not manifest['hardware_verified']
     audit_path = Path(manifest['audit']['path'])
     audit = json.loads(audit_path.read_text(encoding='utf-8'))
+    assert audit.get('rom_target', '0041') == target
     link = json.loads(Path(manifest['link']['path']).read_text(encoding='utf-8'))
     assert audit['passed'] and link['linked'] and not link['undefined_imports']
     assert hashlib.sha256(audit_path.read_bytes()).hexdigest() == link['audit_sha256']

@@ -1,4 +1,4 @@
-"""Download AP01 0041 using a reusable local Xiaomi login; no device commands."""
+"""Query/download official AP01 firmware using a cached Xiaomi login; no device commands."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import queue
+import re
 from pathlib import Path
 import sys
 import tempfile
@@ -128,9 +129,16 @@ class CheckedSession(requests.Session):
         return super().send(request, **kwargs)
 
 
-def check_version(info) -> None:
-    if info.model != "njcuk.enstor.ap01" or info.version not in VERSIONS:
-        raise DownloadRejected("小米云返回的型号或版本不是目标 AP01 0041，已停止")
+def check_version(info, expected_version: str | None = "1.0.2_0041") -> None:
+    if info.model != "njcuk.enstor.ap01":
+        raise DownloadRejected("小米云返回的型号不是 AP01，已停止")
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", info.version):
+        raise DownloadRejected("小米云返回的版本不能安全用于文件名，已停止")
+    allowed = VERSIONS if expected_version in VERSIONS else {expected_version}
+    if expected_version is not None and info.version not in allowed:
+        raise DownloadRejected("小米云返回的版本不是指定目标，已停止")
+    if not re.fullmatch(r"[0-9a-f]{32}", info.md5):
+        raise DownloadRejected("小米云返回的 MD5 格式无效，已停止")
 
 
 def check_md5(actual: str, expected: str) -> None:
@@ -138,8 +146,8 @@ def check_md5(actual: str, expected: str) -> None:
         raise DownloadRejected("固件 MD5 与同次云端查询不符，已停止")
 
 
-def save_rom(info) -> dict:
-    check_version(info)
+def save_rom(info, expected_version: str | None = "1.0.2_0041") -> dict:
+    check_version(info, expected_version)
     check_url(info.url, "GET", firmware=True)
     target = OUTPUT / f"ap01-{info.version}.bin"
     report_path = target.with_suffix(".json")
@@ -170,8 +178,12 @@ def save_rom(info) -> dict:
         if not size:
             raise DownloadRejected("固件为空")
         check_md5(md5.hexdigest(), info.md5)
-        # Hard link commits the complete file without overwriting a concurrent file.
-        os.link(temporary_path, target)
+        # Windows rename refuses existing targets and avoids restricted hard links.
+        # On POSIX, use link because rename would overwrite a concurrent file.
+        if os.name == "nt":
+            os.rename(temporary_path, target)
+        else:
+            os.link(temporary_path, target)
         created_target = True
         if hashlib.sha256(target.read_bytes()).hexdigest() != sha256.hexdigest():
             raise DownloadRejected("固件保存后读回校验失败")
@@ -194,14 +206,14 @@ def save_rom(info) -> dict:
             temporary_path.unlink(missing_ok=True)
 
 
-def download_with_retry(client) -> dict:
+def download_with_retry(client, expected_version: str | None = "1.0.2_0041") -> dict:
     """Keep account/session in the calling process during bounded operator retries."""
     for attempt in range(3):
         try:
             info = client.firmware_info()
             print("小米云查询结果：" + json.dumps(info.public_dict(), ensure_ascii=False), flush=True)
             print("固件下载域名：" + (urlsplit(info.url).hostname or ""), flush=True)
-            return save_rom(info)
+            return save_rom(info, expected_version)
         except Exception as exc:
             reason = str(exc) if isinstance(exc, DownloadRejected) else type(exc).__name__
             print("下载未完成：" + reason, flush=True)
@@ -255,9 +267,16 @@ def self_test() -> None:
         except DownloadRejected:
             continue
         raise AssertionError("unsafe URL or API was accepted")
-    check_version(SimpleNamespace(model="njcuk.enstor.ap01", version="1.0.2_0041"))
+    valid = dict(model="njcuk.enstor.ap01", version="1.0.2_0041", md5="a" * 32)
+    check_version(SimpleNamespace(**valid))
+    check_version(SimpleNamespace(**(valid | {"version": "1.0.2_0099"})), None)
+    check_version(SimpleNamespace(**(valid | {"version": "1.0.2_0099"})), "1.0.2_0099")
     for operation in (
-        lambda: check_version(SimpleNamespace(model="njcuk.enstor.ap01", version="1.0.2_0031")),
+        lambda: check_version(SimpleNamespace(**(valid | {"version": "1.0.2_0031"}))),
+        lambda: check_version(SimpleNamespace(**valid), "1.0.2_0099"),
+        lambda: check_version(SimpleNamespace(**(valid | {"version": "../../escape"})), None),
+        lambda: check_version(SimpleNamespace(**(valid | {"model": "other.device"})), None),
+        lambda: check_version(SimpleNamespace(**(valid | {"md5": "invalid"})), None),
         lambda: check_md5("a" * 32, "b" * 32),
     ):
         try:
@@ -314,6 +333,30 @@ def self_test() -> None:
             assert load_account() == fake_account
     finally:
         cache_test.unlink(missing_ok=True)
+    # Exercise the actual latest-version download/save path with an offline response.
+    payload = b"AP01 official firmware fixture"
+    latest = SimpleNamespace(
+        model="njcuk.enstor.ap01", version="1.0.2_0099",
+        md5=hashlib.md5(payload).hexdigest(), url="https://iot-ota-cdn.io.mi.com/test.bin",
+        public_dict=lambda: {"model": "njcuk.enstor.ap01", "version": "1.0.2_0099"},
+    )
+    with tempfile.TemporaryDirectory(dir=OUTPUT) as directory, \
+         patch(__name__ + ".OUTPUT", Path(directory)), \
+         patch(__name__ + ".CheckedSession") as session_class:
+        response = session_class.return_value.__enter__.return_value.get.return_value.__enter__.return_value
+        response.iter_content.return_value = iter([payload])
+        report = save_rom(latest, None)
+        assert Path(report["path"]).read_bytes() == payload
+        assert report["md5"] == latest.md5
+        assert report["sha256"] == hashlib.sha256(payload).hexdigest()
+        assert report["device_update_sent"] is False
+        assert "url" not in json.loads(Path(report["path"]).with_suffix(".json").read_text())["cloud"]
+        try:
+            save_rom(latest, None)
+        except DownloadRejected:
+            pass
+        else:
+            raise AssertionError("existing firmware was overwritten")
     print("self-test PASS: HTTPS/domain/API/redirect/version/MD5/retry/persisted login; no network or real credentials")
 
 
@@ -321,13 +364,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--login", action="store_true", help="重新扫码并保存登录态；默认复用已保存凭据")
+    target = parser.add_mutually_exclusive_group()
+    target.add_argument("--latest", action="store_true", help="接受云端当前最新 AP01 版本")
+    target.add_argument("--version", help="仅接受指定版本；不指定时仍固定 0041")
+    parser.add_argument("--info", action="store_true", help="仅查询版本，不下载固件")
     args = parser.parse_args()
+    expected_version = None if args.latest else (args.version or "1.0.2_0041")
+    OUTPUT.mkdir(parents=True, exist_ok=True)
     if args.self_test:
         self_test()
         return 0
-    if not OUTPUT.is_dir():
-        print("先按仓库规则创建 evidence/private 目录", flush=True)
-        return 2
     qr = OUTPUT / "xiaomi-login-qr.png"
     if qr.exists() and (args.login or not CREDENTIALS.exists()):
         print("已有二维码文件；请确认旧查询进程已退出并清理后重试", flush=True)
@@ -350,7 +396,13 @@ def main() -> int:
                 save_account(account)
                 print("登录凭据已保存并读回校验：" + str(CREDENTIALS), flush=True)
             client = XiaomiCloudClient(account=account, session=session)
-            print(json.dumps(download_with_retry(client), ensure_ascii=False, indent=2), flush=True)
+            if args.info:
+                info = client.firmware_info()
+                check_version(info, expected_version)
+                print(json.dumps({"cloud": info.public_dict(), "device_update_sent": False},
+                                 ensure_ascii=False, indent=2), flush=True)
+            else:
+                print(json.dumps(download_with_retry(client, expected_version), ensure_ascii=False, indent=2), flush=True)
         return 0
     except DownloadRejected as exc:
         print("已停止：" + str(exc), flush=True)

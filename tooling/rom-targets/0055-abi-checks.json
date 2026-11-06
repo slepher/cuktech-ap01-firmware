@@ -1,0 +1,246 @@
+{
+  "format": 1,
+  "description": "Exact consumed-layout instruction bytes reviewed against pinned0041/0055 ROMs; static evidence, not target execution.",
+  "checks": [
+    {
+      "contract": "PollFd24: array stride24",
+      "old": "0xa003f5c6",
+      "new": "0xa003f5c6",
+      "instruction_hex": "e147"
+    },
+    {
+      "contract": "PollFd24: array iterator+24",
+      "old": "0xa003f664",
+      "new": "0xa003f664",
+      "instruction_hex": "e104"
+    },
+    {
+      "contract": "PollFd24: fd offset0",
+      "old": "0xa003f5e6",
+      "new": "0xa003f5e6",
+      "instruction_hex": "03a50900"
+    },
+    {
+      "contract": "PollFd24: events offset4",
+      "old": "0xa003e2d2",
+      "new": "0xa003e2d2",
+      "instruction_hex": "5841"
+    },
+    {
+      "contract": "PollFd24: revents offset8",
+      "old": "0xa003e2d4",
+      "new": "0xa003e2d4",
+      "instruction_hex": "1445"
+    },
+    {
+      "contract": "PollFd24: private slot offset12",
+      "old": "0xa003f5ea",
+      "new": "0xa003f5ea",
+      "instruction_hex": "23a69901"
+    },
+    {
+      "contract": "PollFd24: private callback offset16",
+      "old": "0xa003f5ee",
+      "new": "0xa003f5ee",
+      "instruction_hex": "23a87901"
+    },
+    {
+      "contract": "PollFd24: private slot offset20",
+      "old": "0xa003f5f6",
+      "new": "0xa003f5f6",
+      "instruction_hex": "23aa0900"
+    },
+    {
+      "contract": "Address16: family uint16 offset0",
+      "old": "0xa0037338",
+      "new": "0xa0037338",
+      "instruction_hex": "03d70500"
+    },
+    {
+      "contract": "Address16: minimum Address length16 threshold15",
+      "old": "0xa0037346",
+      "new": "0xa0037346",
+      "instruction_hex": "bd47"
+    },
+    {
+      "contract": "Address16: reject lengths<=15",
+      "old": "0xa003734a",
+      "new": "0xa003734a",
+      "instruction_hex": "63fcc702"
+    },
+    {
+      "contract": "Address16: port uint16 offset2",
+      "old": "0xa00373d8",
+      "new": "0xa00373d8",
+      "instruction_hex": "83552900"
+    },
+    {
+      "contract": "Address16: IPv4 address uint32 offset4",
+      "old": "0xa0037392",
+      "new": "0xa0037392",
+      "instruction_hex": "83274900"
+    },
+    {
+      "contract": "Clock8: seconds int32 offset0",
+      "old": "0xa002647c",
+      "new": "0xa002647c",
+      "instruction_hex": "14c1"
+    },
+    {
+      "contract": "Clock8: nanos int32 offset4",
+      "old": "0xa0026482",
+      "new": "0xa0026482",
+      "instruction_hex": "5cc1"
+    },
+    {
+      "contract": "Clock8: clock seconds offset0",
+      "old": "0xa00269e8",
+      "new": "0xa00269e8",
+      "instruction_hex": "98c1"
+    },
+    {
+      "contract": "Clock8: clock nanos offset4",
+      "old": "0xa00269ea",
+      "new": "0xa00269ea",
+      "instruction_hex": "dcc1"
+    },
+    {
+      "contract": "Lookup28: path pointer offset0",
+      "old": "0xa0026e90",
+      "new": "0xa0026e90",
+      "instruction_hex": "1c41"
+    },
+    {
+      "contract": "Lookup28: inode pointer offset4",
+      "old": "0xa0025b14",
+      "new": "0xa0025b14",
+      "instruction_hex": "23229900"
+    },
+    {
+      "contract": "Lookup28: peer pointer offset8",
+      "old": "0xa0025b18",
+      "new": "0xa0025b18",
+      "instruction_hex": "23246901"
+    },
+    {
+      "contract": "Lookup28: parent pointer offset12",
+      "old": "0xa0025b1c",
+      "new": "0xa0025b1c",
+      "instruction_hex": "23265901"
+    },
+    {
+      "contract": "Lookup28: relative pointer offset16",
+      "old": "0xa0025b20",
+      "new": "0xa0025b20",
+      "instruction_hex": "2328f900"
+    },
+    {
+      "contract": "Lookup28: linkBuffer pointer offset20",
+      "old": "0xa0025b0a",
+      "new": "0xa0025b0a",
+      "instruction_hex": "232af900"
+    },
+    {
+      "contract": "Lookup28: nofollow byte offset24",
+      "old": "0xa0026efe",
+      "new": "0xa0026efe",
+      "instruction_hex": "03c78401"
+    },
+    {
+      "contract": "Stat60: stat output clear length60",
+      "old": "0xa0044cea",
+      "new": "0xa0044cea",
+      "instruction_hex": "1306c003"
+    },
+    {
+      "contract": "Stat60: last stat uint32 ends at60",
+      "old": "0xa0044e34",
+      "new": "0xa0044e34",
+      "instruction_hex": "9cdc"
+    },
+    {
+      "contract": "StatFs24: magic offset0",
+      "old": "0xa00421d6",
+      "new": "0xa00421d6",
+      "instruction_hex": "9cc1"
+    },
+    {
+      "contract": "StatFs24: nameMax offset4",
+      "old": "0xa00421dc",
+      "new": "0xa00421dc",
+      "instruction_hex": "dcc1"
+    },
+    {
+      "contract": "StatFs24: blockSize offset8",
+      "old": "0xa00421e6",
+      "new": "0xa00421e6",
+      "instruction_hex": "9cc5"
+    },
+    {
+      "contract": "StatFs24: blocks offset12",
+      "old": "0xa00421ec",
+      "new": "0xa00421ec",
+      "instruction_hex": "dcc5"
+    },
+    {
+      "contract": "StatFs24: free offset16",
+      "old": "0xa00421ee",
+      "new": "0xa00421ee",
+      "instruction_hex": "9cc9"
+    },
+    {
+      "contract": "StatFs24: available offset20 ends at24",
+      "old": "0xa00421f4",
+      "new": "0xa00421f4",
+      "instruction_hex": "dcc9"
+    },
+    {
+      "contract": "Inode: inode operations pointer offset16",
+      "old": "0xa0025994",
+      "new": "0xa0025994",
+      "instruction_hex": "984b"
+    },
+    {
+      "contract": "Inode: inode flags uint16 offset14",
+      "old": "0xa0025996",
+      "new": "0xa0025996",
+      "instruction_hex": "83d7e700"
+    },
+    {
+      "contract": "Inode: inode type low4 bits",
+      "old": "0xa002599c",
+      "new": "0xa002599c",
+      "instruction_hex": "bd8b"
+    },
+    {
+      "contract": "Inode: mountpoint type3",
+      "old": "0xa002599a",
+      "new": "0xa002599a",
+      "instruction_hex": "8d46"
+    },
+    {
+      "contract": "Flash8: Flash fd int32 offset0",
+      "old": "0xa00b5032",
+      "new": "0xa00a0820",
+      "instruction_hex": "23209900"
+    },
+    {
+      "contract": "Flash8: Flash flip int32 offset4",
+      "old": "0xa00b5036",
+      "new": "0xa00a0824",
+      "instruction_hex": "2322f900"
+    },
+    {
+      "contract": "Flash8: verify fd offset0",
+      "old": "0xa00b51fa",
+      "new": "0xa00a09ec",
+      "instruction_hex": "8840"
+    },
+    {
+      "contract": "Flash8: verify flip offset4",
+      "old": "0xa00b5238",
+      "new": "0xa00a0a2a",
+      "instruction_hex": "83a94400"
+    }
+  ]
+}
