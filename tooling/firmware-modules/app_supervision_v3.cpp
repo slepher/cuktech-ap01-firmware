@@ -25,12 +25,17 @@ void Ap01AppSupervisionV3::fail(Ap01SupervisorFaultV3 fault,uint32_t index){
     if(fault==Ap01SupervisorFaultV3::None)return;
     uint32_t old=status.load(std::memory_order_acquire);
     uint32_t next=uint32_t(Ap01SupervisorStateV3::Fault)|(uint32_t(fault)<<8)|((index&0xffff)<<16);
-    while((old&255)!=uint32_t(Ap01SupervisorStateV3::Fault)&&
+    while(((old&255)!=uint32_t(Ap01SupervisorStateV3::Fault)||
+           (uiRecoveryAllowed.load(std::memory_order_acquire)&&((old>>8)&255)==uint32_t(Ap01SupervisorFaultV3::UiStale)&&fault!=Ap01SupervisorFaultV3::UiStale))&&
           !status.compare_exchange_weak(old,next,std::memory_order_acq_rel)){}
 }
 void Ap01AppSupervisionV3::tick(uint32_t now,int boot,bool listening,uint32_t maintenanceBeat,bool windowPresent){
     if(!begun){begun=true;startedAt=now;}
-    if((status.load(std::memory_order_acquire)&255)==uint32_t(Ap01SupervisorStateV3::Fault))return;
+    uint32_t observed=status.load(std::memory_order_acquire);
+    bool recovering=uiRecoveryAllowed.load(std::memory_order_acquire)&&
+        (observed&255)==uint32_t(Ap01SupervisorStateV3::Fault)&&
+        ((observed>>8)&255)==uint32_t(Ap01SupervisorFaultV3::UiStale);
+    if((observed&255)==uint32_t(Ap01SupervisorStateV3::Fault)&&!recovering)return;
     if(boot<0){fail(Ap01SupervisorFaultV3::Boot);return;}
     if(listening)sawMaintenance=true;
     else if(sawMaintenance){fail(Ap01SupervisorFaultV3::MaintenanceStale);return;}
@@ -40,7 +45,14 @@ void Ap01AppSupervisionV3::tick(uint32_t now,int boot,bool listening,uint32_t ma
     if(!windowPresent){pending=false;next=uint32_t(Ap01SupervisorStateV3::WindowAbsent);}
     else {
         uint32_t word=0,time=0;
-        if(!sample(word,time)||stale(now,time,5000)){
+        if(!sample(word,time)){
+            // A preempted seqlock publisher is not proof of a stalled UI.
+            // Retain the last coherent sample's deadline; retries never renew it.
+            if(stale(now,haveUiSample?lastUiSampleAt:startedAt,5000))fail(Ap01SupervisorFaultV3::UiStale);
+            return;
+        }
+        lastUiSampleAt=time;haveUiSample=true;
+        if(stale(now,time,5000)){
             if(uint32_t(now-startedAt)>5000)fail(Ap01SupervisorFaultV3::UiStale);
             return;
         }
@@ -54,7 +66,9 @@ void Ap01AppSupervisionV3::tick(uint32_t now,int boot,bool listening,uint32_t ma
         }else {pending=false;next=uint32_t(Ap01SupervisorStateV3::Healthy);}
     }
     // A concurrent initialization failure must not be overwritten by a healthy observation.
-    if((old&255)!=uint32_t(Ap01SupervisorStateV3::Fault))status.compare_exchange_strong(old,next,std::memory_order_acq_rel);
+    if((old&255)!=uint32_t(Ap01SupervisorStateV3::Fault)||
+       (recovering&&old==observed&&next==uint32_t(Ap01SupervisorStateV3::Healthy)))
+        status.compare_exchange_strong(old,next,std::memory_order_acq_rel);
 }
 Ap01SupervisorSnapshotV3 Ap01AppSupervisionV3::snapshot()const{
     uint32_t value=status.load(std::memory_order_acquire),word=0,time=0;

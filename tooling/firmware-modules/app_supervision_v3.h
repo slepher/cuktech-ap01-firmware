@@ -21,13 +21,16 @@ struct Ap01RuntimeSnapshotV3 {
     Ap01SupervisorSnapshotV3 health{};
 };
 // UI owns publish(); a separate platform worker owns tick(). HTTP only reads.
-// Faults latch until reboot. This observer never calls App code or reboots.
+// Only UI staleness may recover after durable approval; other faults latch.
+// This observer never calls App code or reboots.
 class Ap01AppSupervisionV3 {
     std::atomic<uint32_t> revision{0},sampleTime{0},sampleWord{0};
+    std::atomic<bool> uiRecoveryAllowed{false};
     std::atomic<uint32_t> status{0}; // state low byte, reason next, index high 16
-    uint32_t startedAt=0,pendingAt=0;bool begun=false,pending=false,sawMaintenance=false;
+    uint32_t startedAt=0,pendingAt=0,lastUiSampleAt=0;bool begun=false,pending=false,sawMaintenance=false,haveUiSample=false;
     bool sample(uint32_t &,uint32_t &)const;
 public:
+    void allowUiRecovery(){uiRecoveryAllowed.store(true,std::memory_order_release);}
     void publish(uint32_t now,const int32_t *,uint32_t count);
     // boot: 0 still starting, 1 loaded, -1 failed. All timestamps use uint32 ms.
     void tick(uint32_t now,int boot,bool listening,uint32_t maintenanceBeat,bool windowPresent);

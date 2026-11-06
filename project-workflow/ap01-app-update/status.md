@@ -1,3 +1,22 @@
+## 2026-11-06 startup latency follow-up (deployed)
+
+User authorized stable restart without repeat trial. Stable/Empty accepts first healthy sample; Trial/Rollback retain 30 seconds. No persisted-format or RAM changes. Native host write-gate/recovery tests and 103189 journal checks passed; candidate 0.1.2-cuktech build 1e311c12e2881d7ea0195ac00743233d, 6935928 B SHA256 0c840a788b73d72e2e0e2a8a69c0b1d4c19a6fd6907232420e5fa508903aeacb. Final image and independent maintenance tests passed. Deployed slot1 at 17:31, authenticated at 17:32 with App .109/set3 unchanged. Reboot request to Data245 applied 16.77s; first send uses current context, no rejection/reconciliation round. Rescue slot0 boot verified and samples/Wi-Fi unchanged. User confirms ota_1 controls smooth; ota_0 knob lag during upload reported, idle comparison unverified. Evidence in sibling codex_status artifacts/ap01-protocol-deploy-20261106/evidence/startup-*. Uncommitted.
+
+# 2026-11-06 UI supervision repair deployed
+
+AP01 34F01557210B now runs slot1 0.1.1-cuktech, build 99ad180acb5c37c4f3cc96db912131e9. Image build/claim-ui-stale-20261106/ap01-0.1.1-cuktech-app-final.bin: 6935928 B, SHA256 07e2af965ab8d433928efb2fd53309873ed08e6e3803df7edeec1c3d60e2b560. App 0.18.109-ap01/set3 unchanged. Slot0 0.1.0 rescue boot and independent maintenance verified before uploading only inactive slot1; rescue head/manifest/tail samples and Wi-Fi profiles unchanged (not a full-slot readback).
+
+Fix: failed coherent-snapshot reads retain the last confirmed UI deadline. After durable approval, UI-only staleness recovers only with a fresh coherent all-healthy sample; trial and fatal failures stay latched. Transaction holds and unknown persistence remain authoritative. RV32 supervisor size 28 to 36 B; no heap/persistent-format growth. Production race failed before/passed after; ASan/UBSan native collection tests include recovery, hold exclusion and fatal Worker retention; RV32/build validation and independent maintenance/OTA/no-stable switch regressions passed.
+
+17:14:50 Data242 applied; 17:15:43 automatic claim renewal200; 17:16 authenticated displayed, healthy/fault0, clean coordinator. User confirms updated screen and normal controls. Evidence in sibling codex_status/artifacts/ap01-protocol-deploy-20261106/evidence/claim-repair-*.json; full investigation in sibling project-workflow/bridge-device-protocol-remediation/ap01-sync-investigation-20261106.md. No deliberate hardware UI-stall injection or long-run claim. Both repositories uncommitted. Earlier investigation below is historical.
+
+# 2026-11-06 AP01 停更修复接续（进行中）
+
+Plan：同MAC现场已证明集合succeeded但监督器fault4/UiStale，当前App health=0且UI正常，业务写门永久关闭；Bridge claim返回app_trial_readonly。生产监督器并发健康发布测试首轮复现相同fault4：seqlock三次读取失败被误判UI停滞。修复只使用最近一致快照的原期限处理竞争，不延长真实失联期限，不解除其他锁存故障。
+Task：回归/资源核对/新基座候选/救援通道验证/部署与数据续租验收。
+Status：监督器修复源码，尚未部署；没有变更原厂归档ROM或救援槽。
+Review：并发反例证明可导致此次症状的缺陷；现机缺失故障瞬间记录，不能证明当时一定是该竞态而非真实UI延迟。用户确认当前操作正常。
+
 # 当前状态
 
 2026-11-05 双槽版本协议部署：槽 0 保留 `0.1.0-cuktech` 无载入器救援基座，基于 `1.0.2_0041`；槽 1 部署同版本支持 App 的 ROM，当前运行槽 1。诊断 `versions`/`status` 已实机返回基础版本、修改版、build ID、supports_app 和本次已加载 App 列表。槽 0 ROM `build/version-protocol-20261105/ap01-0.1.0-cuktech-base.bin`，6885128 B，SHA256 `39b4d342b0d2de99852f2c5416ce3bbd74d386cd9b94f751ce1258c576ce3c5d`，build `d5bc8464d3a6ef62953992dcdb524441`；槽 1 `ap01-0.1.0-cuktech-app.bin`，6935752 B，SHA256 `cf0f39c78129b571d6d6534daac02fd7f0fe86de9e0cb7cc3c5fadbdf117a4e6`，build `677bc30246d7ae8f7cd73698fe4086d6`。槽 1 更新全程只写非活动槽 1；槽 0 头/manifest/尾抽样与原文件一致，未宣称整槽读回。切槽前后 Wi-Fi 修订号 7、3 个网络及当前网络完全一致；未修改密码或切换网络。界面/旋钮未重新目视验收。

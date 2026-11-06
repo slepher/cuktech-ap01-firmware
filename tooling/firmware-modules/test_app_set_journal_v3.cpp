@@ -173,6 +173,17 @@ static void selection(){
 }
 static void observation(){
     using D=Ap01SetHealthDecisionV3;
+    // Stable restart waits for real health, never writes a new acceptance record.
+    for(bool fault: {false,true}){
+        Disk disk;auto r=initial();r.phase=P::Succeeded;r.readyMask=3;r.trialStarts=1;r.trialBoot=98;
+        install(disk,0,r);Ap01SetJournalV3 journal(disk.ops(),mac);CHECK(journal.load()==R::Ok);
+        Ap01SetSelectorV3 select(journal,99);Preflight check;
+        CHECK(select.select(&check,Preflight::check).mode==Ap01SetBootModeV3::Stable);
+        select.beginObservation(100);
+        CHECK(select.observe(100,false,false)==D::Waiting);
+        CHECK(select.observe(101,true,fault)==(fault?D::Maintenance:D::Approved));
+        CHECK(journal.current()->sequence==r.sequence&&journal.current()->phase==P::Succeeded);
+    }
     for(unsigned scenario=0;scenario<7;++scenario){Disk disk;auto r=initial();r.phase=P::SwitchPending;r.readyMask=3;
         install(disk,0,r);Ap01SetJournalV3 journal(disk.ops(),mac);CHECK(journal.load()==R::Ok);
         Ap01SetSelectorV3 select(journal,1);Preflight check;CHECK(select.select(&check,Preflight::check).mode==Ap01SetBootModeV3::Trial);
@@ -746,7 +757,7 @@ static int httpPeer(){
                 else {
                     selector.beginObservation(now);
                     for(unsigned t=0;t<=30000;t+=1000)CHECK(selector.observe(now+t,true,false)==
-                        (t==30000?Ap01SetHealthDecisionV3::Approved:Ap01SetHealthDecisionV3::Waiting));
+                        ((selected.mode==Ap01SetBootModeV3::Stable||selected.mode==Ap01SetBootModeV3::Empty||t==30000)?Ap01SetHealthDecisionV3::Approved:Ap01SetHealthDecisionV3::Waiting));
                     now+=30000;runtime.complete=true;runtime.started=running.count;
                     runtime.health.state=Ap01SupervisorStateV3::Healthy;runtime.health.count=running.count;runtime.health.sampled_at=now;
                 }

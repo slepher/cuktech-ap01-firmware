@@ -264,17 +264,18 @@ int main(int argc,char **argv){
         }
         assert(disk.opens==disk.closes);
     }
-    for(unsigned fault=0;fault<4;++fault){
+    for(unsigned fault=0;fault<5;++fault){
         ap01ModelV3={};starts=0;mode=0;instances[0]=Instance{};instances[1]=Instance{};
         Store backend;Disk disk;disk.add(real);disk.add(peer);
         std::string path="/resource/app-store/manifests/";const char *hex="0123456789abcdef";
         for(unsigned i=32;i<64;++i){path+=hex[manifest[i]>>4];path+=hex[manifest[i]&15];}
         if(fault!=3)disk.files[path+".amf3"]=manifest;
-        Ap01SetRecordV3 record{};record.sequence=1;record.phase=Ap01SetPhaseV3::SwitchPending;
+        Ap01SetRecordV3 record{};record.sequence=1;record.phase=fault==4?Ap01SetPhaseV3::Succeeded:Ap01SetPhaseV3::SwitchPending;
         for(unsigned i=0;i<8;++i)record.newVersion|=uint64_t(manifest[16+i])<<(i*8);
         if(fault==2)++record.newVersion;
         memcpy(record.newDigest,manifest.data()+32,32);record.mac[0]=1;record.transaction[0]=1;record.requestDigest[0]=1;
         strcpy(record.principal,"owner");record.changedMask=record.readyMask=3;record.changedBytes=real.size()+peer.size();
+        if(fault==4){record.trialStarts=1;record.trialBoot=28;}
         uint8_t bytes[320];assert(ap01EncodeSetRecordV3(record,bytes));
         disk.files["/resource/app-store/update.0"]={bytes,bytes+320};
         Ap01SetJournalV3 journal(disk.io(),record.mac);assert(journal.load()==Ap01SetJournalResultV3::Ok);
@@ -285,23 +286,23 @@ int main(int argc,char **argv){
         if(fault==1)disk.scenario=20;
         auto selected=boot.stageSelected(selector);
         assert(!starts&&!backend.reserves&&disk.opens==disk.closes);
-        assert(selected.mode==(fault==0?Ap01SetBootModeV3::Trial:fault==1?Ap01SetBootModeV3::Maintenance:Ap01SetBootModeV3::Rollback));
+        assert(selected.mode==(fault==4?Ap01SetBootModeV3::Stable:fault==0?Ap01SetBootModeV3::Trial:fault==1?Ap01SetBootModeV3::Maintenance:Ap01SetBootModeV3::Rollback));
         if(fault==0)assert(journal.current()->phase==Ap01SetPhaseV3::TrialStarted);
         if(fault==1)assert(!journal.current());
-        if(fault>=2)assert(journal.current()->phase==Ap01SetPhaseV3::RollbackStarted&&!selected.version);
+        if(fault==2||fault==3)assert(journal.current()->phase==Ap01SetPhaseV3::RollbackStarted&&!selected.version);
         disk.worker=false;disk.files.clear();
         Ap01NativeAppSharedV3::poll(&boot.set().shared());
-        assert(starts==(fault==0?2u:0u));assert(boot.set().writesDrained());
-        if(fault==0){
+        assert(starts==((fault==0||fault==4)?2u:0u));assert(boot.set().writesDrained());
+        if(fault==0||fault==4){
             disk.worker=true;
             for(unsigned second=0;second<=30;++second){
                 Ap01NativeAppSharedV3::poll(&boot.set().shared());boot.monitor(uint32_t(ap01ModelV3.now));
                 auto decision=boot.healthSelected(selector,uint32_t(ap01ModelV3.now));
-                assert(decision==(second==30?Ap01SetHealthDecisionV3::Approved:Ap01SetHealthDecisionV3::Waiting));
-                for(auto &instance:instances)assert(instance.api->writes_allowed(instance.context)==int(second==30));
+                assert(decision==((fault==4||second==30)?Ap01SetHealthDecisionV3::Approved:Ap01SetHealthDecisionV3::Waiting));
+                for(auto &instance:instances)assert(instance.api->writes_allowed(instance.context)==int(fault==4||second==30));
                 ap01ModelV3.now+=1000;
             }
-            assert(journal.current()->phase==Ap01SetPhaseV3::Succeeded&&journal.current()->cleanupPending);
+            assert(journal.current()->phase==Ap01SetPhaseV3::Succeeded&&bool(journal.current()->cleanupPending)==(fault==0));
             auto &gate=boot.set().shared().transactionGate();
             assert(gate.hold(true));
             assert(boot.healthSelected(selector,uint32_t(ap01ModelV3.now))==Ap01SetHealthDecisionV3::Approved);
@@ -311,6 +312,19 @@ int main(int argc,char **argv){
             ap01ModelV3.now+=5001;boot.monitor(uint32_t(ap01ModelV3.now));
             assert(boot.healthSelected(selector,uint32_t(ap01ModelV3.now))==Ap01SetHealthDecisionV3::Maintenance);
             assert(boot.set().writesDrained());
+            assert(boot.status().fault==Ap01SupervisorFaultV3::UiStale);
+            // Fresh UI + App health restores an already approved collection, but never bypasses a transaction hold.
+            assert(gate.hold(true));
+            Ap01NativeAppSharedV3::poll(&boot.set().shared());boot.monitor(uint32_t(ap01ModelV3.now));
+            assert(boot.status().state==Ap01SupervisorStateV3::Healthy);
+            assert(boot.healthSelected(selector,uint32_t(ap01ModelV3.now))==Ap01SetHealthDecisionV3::Approved);
+            assert(gate.held()&&!gate.writable());
+            assert(gate.hold(false));
+            assert(boot.healthSelected(selector,uint32_t(ap01ModelV3.now))==Ap01SetHealthDecisionV3::Approved&&gate.writable());
+            boot.workerFailed();
+            Ap01NativeAppSharedV3::poll(&boot.set().shared());boot.monitor(uint32_t(ap01ModelV3.now));
+            assert(boot.healthSelected(selector,uint32_t(ap01ModelV3.now))==Ap01SetHealthDecisionV3::Maintenance);
+            assert(boot.set().writesDrained()&&boot.status().fault==Ap01SupervisorFaultV3::Worker);
         }
     }
     puts("journal-selected files: real package preflight, durable trial before UI execution, lost ACK denial, version mismatch/missing candidate -> empty rollback passed");

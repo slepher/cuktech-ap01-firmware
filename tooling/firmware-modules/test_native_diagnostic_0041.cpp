@@ -28,7 +28,7 @@ int main() {
     ArduinoJson::JsonDocument version;
     assert(!ArduinoJson::deserializeJson(version,reply.bytes.c_str()));
     assert(version["rom"]["base_version"]=="1.0.2_0041");
-    assert(version["rom"]["modified_version"]=="0.1.0-cuktech");
+    assert(version["rom"]["modified_version"]=="0.1.2-cuktech");
     assert(version["rom"]["supports_app"]==false && version["apps"].is<ArduinoJson::JsonArray>());
     assert(version["apps"].size()==0 && version["apps_scope"]=="loaded_this_boot");
     Ap01ManifestV3 manifest;manifest.count=3;manifest.order[0]=1;manifest.order[1]=0;

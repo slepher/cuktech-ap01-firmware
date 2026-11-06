@@ -90,7 +90,8 @@ Ap01SetHealthDecisionV3 Ap01SetSelectorV3::observe(uint32_t now,bool healthy,boo
     if(healthy){
         seenHealthy=true;
         if(!continuous){continuous=true;healthyAt=now;}
-        if(uint32_t(now-healthyAt)>=30000){
+        // A verified stable collection needs current health, not another trial.
+        if(mode==M::Stable||mode==M::Empty||uint32_t(now-healthyAt)>=30000){
             decision=accept()?D::Approved:D::Maintenance;return decision;
         }
     }

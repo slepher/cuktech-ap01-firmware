@@ -49,6 +49,7 @@ Ap01SetHealthDecisionV3 Ap01NativeAppFileBootV3::healthSelected(Ap01SetSelectorV
     bool healthy=snapshot.state==Ap01SupervisorStateV3::Healthy;
     auto decision=selector.observe(now,healthy,snapshot.state==Ap01SupervisorStateV3::Fault);
     if(decision==Ap01SetHealthDecisionV3::Approved&&healthy){
+        supervisor.allowUiRecovery();
         auto &gate=apps.shared().transactionGate();
         if(snapshot.count&&!gate.held()&&!gate.writable()&&!apps.writes(true))return Ap01SetHealthDecisionV3::Maintenance;
     }else{
