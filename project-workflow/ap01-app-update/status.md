@@ -1,3 +1,5 @@
+> 历史记录：自 2026-11-20 起停止持续维护，本文不代表实时状态。后续任务不再自动追加或刷新本文，除非用户明确要求。
+
 ## 2026-11-06 startup latency follow-up (deployed)
 
 User authorized stable restart without repeat trial. Stable/Empty accepts first healthy sample; Trial/Rollback retain 30 seconds. No persisted-format or RAM changes. Native host write-gate/recovery tests and 103189 journal checks passed; candidate 0.1.2-cuktech build 1e311c12e2881d7ea0195ac00743233d, 6935928 B SHA256 0c840a788b73d72e2e0e2a8a69c0b1d4c19a6fd6907232420e5fa508903aeacb. Final image and independent maintenance tests passed. Deployed slot1 at 17:31, authenticated at 17:32 with App .109/set3 unchanged. Reboot request to Data245 applied 16.77s; first send uses current context, no rejection/reconciliation round. Rescue slot0 boot verified and samples/Wi-Fi unchanged. User confirms ota_1 controls smooth; ota_0 knob lag during upload reported, idle comparison unverified. Evidence in sibling codex_status artifacts/ap01-protocol-deploy-20261106/evidence/startup-*. Uncommitted.
