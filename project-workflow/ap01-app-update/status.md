@@ -1,5 +1,17 @@
 > 历史记录：自 2026-11-20 起停止持续维护，本文不代表实时状态。后续任务不再自动追加或刷新本文，除非用户明确要求。
 
+## 2026-11-13 0055 应用槽升级
+
+按用户要求，仅将带 App 的槽 1 从原厂基线 `1.0.2_0041` 升至 `1.0.2_0055`；修改版编号仍为 `0.1.2-cuktech`。源码为 `9f6c82e`（0055 迁移分支），使用本机 xPack GCC 12.5.0-1 构建。镜像 `build/install-0055-20261113/ap01-0055-app.bin`，6,935,944 B，SHA256 `ef9b16d7a7a793ab6104ceaf82b3e9723bdfb95ad7e63cb5a516d49f0c1178ba`，build ID `2d2c3f33c68009ce58f20c0d0eb27cd1`。
+
+安装前完成 0041/0055 目标检查、135 处地址映射/40 项 ABI 指令检查、镜像重建/CRC/篡改拒绝、两版原厂页面边界、现有 0.18.109 App 的宿主集合/监督/写门，以及独立维护 OTA/切槽回归。在用户明确允许传送 ROM/ELF/脚本后，于 james.local 隔离 Docker 执行本次精确镜像的 23 项原厂指令/跳板/未签名 OTA 检查，全部通过。QEMU 与传输脚本沿用历史固定摘要；运行容器 ID `d29c1eed03635c6f51fe3c1c5b27c541341b397e8043e6e8150c8d7755db336b`。未安装宿主依赖；局部 QEMU 检查不等于完整 ROM 启动验收。
+
+先启动并验证槽 0 的 `0.1.0-cuktech` 无 App 救援基座，再仅向非活动槽 1 上传/提交并重启。设备回报 running_slot=1、目标 build 一致、boot_confirmed=true；`codex_status 0.18.109-ap01`、集合版本 3、Manifest/载荷摘要保持，succeeded/healthy、fault=0，业务服务在线。Wi-Fi 修订号 7 和三个配置与升级前完全一致。槽 0 头/manifest/尾抽样逐字节等于原镜像，未写槽 0，也未宣称整槽读回。用户于 2026-11-13 确认“显示和旋钮均正常”；新增原厂页面未单独逐页确认。
+
+短时观察 24 次请求中取得 22 份健康样本，两次响应断言失败未由历史观察脚本保留具体原因；随后的 8 次完整查询均成功、业务在线、fault=0，boot ID 未变。保留这两次查询缺口，不将其归因为已确认的 maintenance_busy。
+
+私有现场证据和检查报告仅保存在 `build/install-0055-20261113/`，不提交设备凭据或网络明细。
+
 ## 2026-11-06 startup latency follow-up (deployed)
 
 User authorized stable restart without repeat trial. Stable/Empty accepts first healthy sample; Trial/Rollback retain 30 seconds. No persisted-format or RAM changes. Native host write-gate/recovery tests and 103189 journal checks passed; candidate 0.1.2-cuktech build 1e311c12e2881d7ea0195ac00743233d, 6935928 B SHA256 0c840a788b73d72e2e0e2a8a69c0b1d4c19a6fd6907232420e5fa508903aeacb. Final image and independent maintenance tests passed. Deployed slot1 at 17:31, authenticated at 17:32 with App .109/set3 unchanged. Reboot request to Data245 applied 16.77s; first send uses current context, no rejection/reconciliation round. Rescue slot0 boot verified and samples/Wi-Fi unchanged. User confirms ota_1 controls smooth; ota_0 knob lag during upload reported, idle comparison unverified. Evidence in sibling codex_status artifacts/ap01-protocol-deploy-20261106/evidence/startup-*. Uncommitted.
