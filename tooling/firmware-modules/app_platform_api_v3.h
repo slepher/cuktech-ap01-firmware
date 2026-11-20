@@ -1,9 +1,9 @@
 #ifndef AP01_APP_PLATFORM_API_V3_H
 #define AP01_APP_PLATFORM_API_V3_H
 #include "app_abi_v3.h"
-#include "native_vfs_api_0041.h"
+#include "native_vfs_api.h"
 #include "app_network_api_v3.h"
-#include "screen_port_0041.h"
+#include "screen_port.h"
 #ifdef __cplusplus
 extern "C" {
 #endif

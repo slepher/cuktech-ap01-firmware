@@ -18,7 +18,7 @@ def main():
     if not out.is_dir(): p.error('Precreate output directory')
     root = Path(__file__).resolve().parents[1] / 'firmware-modules'
     binary = out / 'test-apx2'
-    sources = [root / name for name in ('apx2.cpp', 'native_sha256_0041.cpp', 'test_apx2.cpp')]
+    sources = [root / name for name in ('apx2.cpp', 'native_sha256.cpp', 'test_apx2.cpp')]
     subprocess.run(['clang++', '-std=c++17', '-Wall', '-Wextra', '-Werror', '-g',
                     '-fsanitize=address,undefined', '-fno-omit-frame-pointer',
                     *map(str, sources), '-o', str(binary)], check=True)
@@ -32,12 +32,12 @@ def main():
     image = bytes(48)
     config = dict(app_id='golden.app', version='1.0.0', text_bytes=16, ro_offset=16, ro_bytes=16,
                   data_offset=32, data_bytes=16, bss_bytes=16, heap_bytes=128, stack_bytes=256,
-                  entries=[0, 2, 4, 6, 8], data_read_min=1, data_read_max=3,
+                  entries=[0, 2, 4], data_read_min=1, data_read_max=3,
                   data_write_version=2, required_services=1, fixups=[[16, 0], [32, 0]])
     golden = apx2.package(image, config)
     bad_configs = [dict(text_bytes=0), dict(ro_offset=15), dict(ro_bytes=17),
                    dict(data_offset=16), dict(data_bytes=15), dict(bss_bytes=0xffffffff),
-                   dict(entries=[1, 2, 4, 6, 8]), dict(entries=[16, 2, 4, 6, 8]),
+                   dict(entries=[1, 2, 4]), dict(entries=[16, 2, 4]),
                    dict(stack_bytes=240), dict(stack_bytes=257), dict(data_read_min=3),
                    dict(fixups=[[0, 0]]), dict(fixups=[[16, 64]]),
                    dict(fixups=[[32, 0], [16, 0]]), dict(fixups=[[16, 0], [16, 0]])]
@@ -55,10 +55,7 @@ def main():
     direct = apx2.package(image, direct_config)
     direct_path = out / 'golden-v3.apx2';direct_path.write_bytes(direct)
     subprocess.run([str(binary), '--package-v3', str(direct_path)], check=True)
-    for mode, package_path in (('--package', direct_path), ('--package-v3', path)):
-        rejected = subprocess.run([str(binary), mode, str(package_path)], capture_output=True, text=True)
-        assert rejected.returncode == 1 and rejected.stdout.strip() == 'abi'
-    for change in (dict(abi_major=4), dict(abi_major=True), dict(entries=[0, 2, 4, 0, 0])):
+    for change in (dict(abi_major=2), dict(abi_major=4), dict(abi_major=True), dict(entries=[0, 2, 4, 0, 0])):
         try:
             apx2.package(image, dict(direct_config, **change))
         except ValueError:
@@ -71,10 +68,10 @@ def main():
               'golden_bytes': len(golden), 'golden_file_sha256': hashlib.sha256(golden).hexdigest(),
               'golden_content_sha256': golden[192:224].hex(), 'hardware_verified': False,
               'direct_abi': {'major': 3, 'golden_file_sha256': hashlib.sha256(direct).hexdigest(),
-                             'cross_abi_rejected': True, 'reserved_entries_rejected': True},
+                             'unsupported_abi_rejected': True, 'reserved_entries_rejected': True},
               'sources': {s.name: hashlib.sha256(s.read_bytes()).hexdigest() for s in sources}}
     if args.tool_prefix:
-        import native_build_0041 as native
+        import native_build as native
         objects = []
         for source in sources[:2]:
             obj = out / (source.stem + '.rv32.o')

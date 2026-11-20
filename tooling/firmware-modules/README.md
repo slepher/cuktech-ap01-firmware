@@ -1,6 +1,8 @@
 # AP01 固件模块
 
-## 0041 诊断版本协议
+当前平台支持 0055 与 App ABI 3。共享文件名不绑定 ROM 版本，0041 与 ABI 2 支持已移除；下文历史 0031 记录独立保留。
+
+## 平台诊断版本协议
 
 `GET /api/diagnostic/versions` 返回版本 JSON；`GET /api/diagnostic/status` 同时包含这些字段。
 两者沿用诊断接口的设备码 Bearer 鉴权、限流和维护互斥，不开放匿名访问。
@@ -10,7 +12,7 @@
 {
   "versions_protocol": 1,
   "rom": {
-    "base_version": "1.0.2_0041",
+    "base_version": "1.0.2_0055",
     "modified_version": "0.1.0-cuktech",
     "build_id": "<本次 ROM 构建的 32 位十六进制标识>",
     "supports_app": true
@@ -20,9 +22,9 @@
 }
 ```
 
-原厂基线与 CUKTECH 修改版版本的源码唯一入口为 `native_version_0041.h`。
+原厂基线与 CUKTECH 修改版版本的源码唯一入口为 `native_version.h`。
 CUKTECH 从 `0.1.0-cuktech` 独立递增；同一发布的无载入器/有载入器构建由
-`supports_app` 和 `build_id` 区分，原厂兼容目标仍为 0041。
+`supports_app` 和 `build_id` 区分，当前原厂目标为 0055。
 App 版本由 App 仓库源码配置的 `version` 字段声明，构建器读取该字段；`--version` 可显式覆盖。
 固件仓库不内置业务 App 的默认版本，不从已有包推导新版本。`codex_status` AP01 沿用
 Note4/1.54 的业务版本系列，当前声明 `0.18.108-ap01`，独立于 CUKTECH ROM 发布。
@@ -35,32 +37,32 @@ ROM 与 App 分别发版，修改源码版本后须重新构建和安装才会�
 返回 `supports_app: true` 和 `apps: []`。`supports_app` 指此 ROM 支持 ABI 3 文件 App 加载。
 无效运行快照返回 HTTP 503 / `runtime_snapshot`，不返回误导性的空列表。
 
-客户端：`python -B tooling/scripts/diagnostic-client-0041.py --host IP:18080 --token-file CREDENTIAL.json --mac MAC --operation versions`。
+客户端：`python -B tooling/scripts/diagnostic-client.py --host IP:18080 --token-file CREDENTIAL.json --mac MAC --operation versions`。
 
-## 0041 共享屏幕宿主与平台代码
+## 共享屏幕宿主与平台代码
 
-`native_platform_0041.cpp` 提供默认无 App 启动入口：保持原厂页面与事件注册，通过独立窗口观察器/50ms timer 保存服务生命周期，在后台启动维护服务；窗口 DELETE 后解除订阅，下一次创建窗口时复用服务。`native_sha256_0041.cpp` 为独立构建提供已有字节工具实现。构建/打包入口为 `tooling/scripts/build-firmware-0041.py`，不依赖 `codex_status` 或逆向仓库；外部 App 的整合构建仍可使用下述平台模块。
+`native_platform.cpp` 提供默认无 App 启动入口：保持原厂页面与事件注册，通过独立窗口观察器/50ms timer 保存服务生命周期，在后台启动维护服务；窗口 DELETE 后解除订阅，下一次创建窗口时复用服务。`native_sha256.cpp` 为独立构建提供已有字节工具实现。构建/打包入口为 `tooling/scripts/build-firmware.py`，不依赖 `codex_status` 或逆向仓库；外部 App 的整合构建仍可使用下述平台模块。
 
-`screen_host_0041.h/.c` 是不依赖LVGL/ROM地址的宿主核心：调用方提供实际容量的root槽位和应用清单，每应用按稳定screen ID替换屏幕集，支持异步进入准备、双向导航、焦点锁/3秒逃生和隐藏态UI轮询。物理root不删除或重排；逻辑顺序与物理索引分开。只读 `ap01_host_api` 和 `ap01_lvgl_0041` 提供版本与结构长度。
+`screen_host.h/.c` 是不依赖LVGL/ROM地址的宿主核心：调用方提供实际容量的root槽位和应用清单，每应用按稳定screen ID替换屏幕集，支持异步进入准备、双向导航、焦点锁/3秒逃生和隐藏态UI轮询。物理root不删除或重排；逻辑顺序与物理索引分开。只读 `ap01_host_api` 和 `ap01_lvgl_0041` 提供版本与结构长度。
 
-`screen_port_0041.h/.cpp` 绑定精确0041的原厂窗口、普通页面、标签、定时器和LVGL/I4图像；为每页保留独立root/descriptor，图像帧按需分配，离开动画完成才退役源帧。实际draw回调与切入完成分开。普通控件在 `prepare` 中按需创建，`unbind` 清理逻辑页面资源；物理窗口整体由mount/unmount管理。动画期间依赖原厂idle标志，不用300ms固定延迟替代完成。
+`screen_port.h/.cpp` 通过当前地址映射绑定原厂原厂窗口、普通页面、标签、定时器和LVGL/I4图像；为每页保留独立root/descriptor，图像帧按需分配，离开动画完成才退役源帧。实际draw回调与切入完成分开。普通控件在 `prepare` 中按需创建，`unbind` 清理逻辑页面资源；物理窗口整体由mount/unmount管理。动画期间依赖原厂idle标志，不用300ms固定延迟替代完成。
 
 窗口DELETE期间通过 `ap01_window_detach` 解除本窗口的原厂通知订阅，保留50ms定时器/context作为生命周期锚点；回调必须在缺窗时检查ready。下一次挂钩用 `ap01_window_find` 复用原Runtime/服务，仅重建UI资源。该操作在UI线程、旧对象仍处于DELETE回调时执行。完整对象删除使用原厂公共入口；打包器另装配NULL定时器删除保护，非NULL沿原件尾部执行。验证和补丁范围见[共存与热重建](../../../cuktech-ap01-firmware-reverse/reverse/reports/ap01/screen-host-lifecycle-20261020.md)。
 
-`test_screen_peer_0041.*` 是独立的两页离线应用，仅 `codex_status/tools/check-ap01-native.py --screen-host-probe` 装配；普通候选不含测试入口。它验证自有图像/输入锁/隐藏轮询与codex_status八模板共存，不新增业务HTTP或维护执行器。
+`test_screen_peer.*` 是独立的两页离线应用，仅 `codex_status/tools/check-ap01-native.py --screen-host-probe` 装配；普通候选不含测试入口。它验证自有图像/输入锁/隐藏轮询与codex_status八模板共存，不新增业务HTTP或维护执行器。
 
 从 `codex_status/ports/ap01` 提取的平台实现：
 
 | 模块 | 职责 |
 | --- | --- |
-| `native_io_0041.*` | 时钟、任务、socket、Flash叶调用、原厂入口识别 |
-| `native_diagnostic_0041.*` | 维护鉴权后的独立状态、原厂文件/ramlog和物理Flash只读导出；单块1024 B及CRC |
-| `native_vfs_0041.*`、`native_filesystem_0041.h` | 原厂LittleFS/VFS绑定与调用方持有的文件对象 |
-| `native_firmware_0041.*`、`native_slot_0041.*` | 独立维护事务、恢复/槽位与原厂分区读写绑定 |
-| `native_ota_image_0041.*` | 0041原生维护使用的镜像准入/完整性检查；与0031模块分别构建 |
-| `native_runtime_0041.cpp`、`native_string_0041.h`、`native_calendar_0041.cpp` | freestanding运行库、原生String兼容层、UTC+8日历 |
-| `native_http_0041.h`、`native_json_0041.h`、`native_integrity_0041.h` | 业务无关的HTTP值类型、请求局部分配器与完整性工具声明 |
-| `native_application_0041.ld` | XIP布局、原厂运行库导入及禁止可写静态/TLS/构造器的链接约束 |
+| `native_io.*` | 时钟、任务、socket、Flash叶调用、原厂入口识别 |
+| `native_diagnostic.*` | 维护鉴权后的独立状态、原厂文件/ramlog和物理Flash只读导出；单块1024 B及CRC |
+| `native_vfs.*`、`native_filesystem.h` | 原厂LittleFS/VFS绑定与调用方持有的文件对象 |
+| `native_firmware.*`、`native_slot.*` | 独立维护事务、恢复/槽位与原厂分区读写绑定 |
+| `native_ota_image.*` | 平台原生维护使用的镜像准入/完整性检查；与0031模块分别构建 |
+| `native_runtime.cpp`、`native_string.h`、`native_calendar.cpp` | freestanding运行库、原生String兼容层、UTC+8日历 |
+| `native_http.h`、`native_json.h`、`native_integrity.h` | 业务无关的HTTP值类型、请求局部分配器与完整性工具声明 |
+| `native_application.ld` | XIP布局、原厂运行库导入及禁止可写静态/TLS/构造器的链接约束 |
 
 维护模块使用ArduinoJson头文件和 `syncSha256` 字节工具；独立构建由本仓库提供，外部 App 可沿用自己的依赖和同名字节工具（只链接一份实现）。它不依赖 `Ap01Business` / `Ap01Application` / C2协议头。维护鉴权调度由平台或 App 启动入口接入，只启动一个维护执行器。`codex_status` 保留绑定、Bundle、共享渲染与业务HTTP，并通过兼容头引用这里的实现。平台函数地址不能混用于0031。
 
@@ -68,8 +70,8 @@ ROM 与 App 分别发版，修改源码版本后须重新构建和安装才会�
 
 ```sh
 cc -std=c11 -Wall -Wextra -Werror -fsanitize=address,undefined \
-  tooling/firmware-modules/screen_host_0041.c \
-  tooling/firmware-modules/test_screen_host_0041.c -o /tmp/ap01-screen-host-check
+  tooling/firmware-modules/screen_host.c \
+  tooling/firmware-modules/test_screen_host.c -o /tmp/ap01-screen-host-check
 /tmp/ap01-screen-host-check
 ```
 
@@ -131,10 +133,10 @@ APX1 为112字节显式小端头：magic/format/header/total/ABI/flags、固定X
 
 ## AP01 平台与外部 App 边界（2026-10-22）
 
-本目录拥有 `native_maintenance_0041.*` 的维护路由、设备码鉴权/限流、OTA/切槽生命周期；`native_services_0041.*` 拥有原生 Flash/slot 回调、18080 执行器和 Wi-Fi 切网/恢复。`native_http_transport_0041.*` 拥有有界 HTTP 解析及系统端点请求预算；`native_device_code_menu_0041.*`、字体和 hooks 拥有原厂设置菜单。所有现有事务/持久格式、路径、设备码轮换和 Bridge 凭据兼容保持。
+本目录拥有 `native_maintenance.*` 的维护路由、设备码鉴权/限流、OTA/切槽生命周期；`native_services.*` 拥有原生 Flash/slot 回调、18080 执行器和 Wi-Fi 切网/恢复。`native_http_transport.*` 拥有有界 HTTP 解析及系统端点请求预算；`native_device_code_menu.*`、字体和 hooks 拥有原厂设置菜单。所有现有事务/持久格式、路径、设备码轮换和 Bridge 凭据兼容保持。
 
-外部 `codex_status` 仅拥有 Bridge 配对/绑定、C2 业务和模板显示。平台通过 `native_app_port_0041.h` 的配对、principal 复制、在线回调连接 App；App 只观察系统 busy 门。`native_services_0041.h` 为启动/生命周期连接，不允许在 App 入口重新实现 Flash/切槽/切网策略。菜单通过既有 window/timer 的 services 指针定位固件服务，不读取 App 私有布局，不新增全局可写 singleton 或线程。
+外部 `codex_status` 仅拥有 Bridge 配对/绑定、C2 业务和模板显示。平台通过 `native_app_port.h` 的配对、principal 复制、在线回调连接 App；App 只观察系统 busy 门。`native_services.h` 为启动/生命周期连接，不允许在 App 入口重新实现 Flash/切槽/切网策略。菜单通过既有 window/timer 的 services 指针定位固件服务，不读取 App 私有布局，不新增全局可写 singleton 或线程。
 
-完整 ROM 打包和四个固定 Settings hooks 由 `tooling/scripts/build-native-app-rom-0041.py` 负责；外部 `tools/build-ap01-rom.py` 仅为兼容入口。输出包含原 NULL timer guard 与原 OTA/恢复校验。`build-firmware-0041.py` 与 `native_build_0041.py` 统一负责独立版及 App 版的平台编译、审计、预算提取、链接与打包；接入外部 App 时只需传入 `--app-config`，App 的旧 audit/link 命令仅转发。`test_native_maintenance_0041.cpp` 保留维护回归，并通过 `AP01_MAINTENANCE_ONLY_TEST=1` 在不链接 App/渲染器时验证八位码 OTA、轮换/重放、重启恢复和无稳定记录切槽。
+完整 ROM 打包和四个固定 Settings hooks 由 `tooling/scripts/build-native-app-rom.py` 负责；外部 `tools/build-ap01-rom.py` 仅为兼容入口。输出包含原 NULL timer guard 与原 OTA/恢复校验。`build-firmware.py` 与 `native_build.py` 统一负责独立版及 App 版的平台编译、审计、预算提取、链接与打包；接入外部 App 时只需传入 `--app-config`，App 的旧 audit/link 命令仅转发。`test_native_maintenance.cpp` 保留维护回归，并通过 `AP01_MAINTENANCE_ONLY_TEST=1` 在不链接 App/渲染器时验证八位码 OTA、轮换/重放、重启恢复和无稳定记录切槽。
 
 本次是源码职责迁移，不是设备部署。Wi-Fi 菜单原有未完成验收仍留待办；不把编译或 App 回归通过当作菜单/RF/物理救援验收。

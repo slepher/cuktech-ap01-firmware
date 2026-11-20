@@ -48,13 +48,13 @@ App 内容摘要：`c7e249647aa527ab6600abfbd8ee9f27679583ba91662e92f60453ac08bb
 
 ```sh
 (cd build/hardware-validation-20261105 && shasum -a 256 -c SHA256SUMS)
-python3 -B tooling/scripts/test-firmware-0041.py --manifest build/hardware-validation-20261105/platform-0041.manifest.json
+python3 -B tooling/scripts/test-firmware.py --manifest build/hardware-validation-20261105/platform-0041.manifest.json
 ```
 
 本包实际平台构建命令如下；复建须换全新的输出目录/文件，不能覆盖证据：
 
 ```sh
-python3 -B tooling/scripts/build-firmware-0041.py --boot-app-v3 \
+python3 -B tooling/scripts/build-firmware.py --boot-app-v3 \
   --build-dir build/hardware-validation-20261105/platform-build \
   --output build/hardware-validation-20261105/platform-0041.bin \
   --tool-prefix build/s1/toolchains/xpack-riscv-none-elf-gcc-12.5.0-1/bin/riscv-none-elf-

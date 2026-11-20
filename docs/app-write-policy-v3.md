@@ -30,11 +30,11 @@
 
 ABI 3 配对回调会通过相同 VFS 写门保存绑定，维护路由不能在调用它时再次持有不可重入的平台锁。固件内部 ABI 3 适配器标记 `coordinatesWrites`，该回调不持外层操作锁、不执行维护 tick，变更由其 VFS 租约保护；旧适配器继续使用原有外层锁。此标记不属于 App C 表，App 无权设置。
 
-`test_native_services_0041.cpp` 直接组合生产服务、维护路由、ABI 3 配对桥与文件适配器：阻塞底层写入时另一线程的维护/切网无法进入，写入失败后锁释放，OTA/Wi-Fi 忙时新写被拒绝；配对写入正常通过，忙时失败，旧外层锁路径仍保持。集合测试核对共享平台接线，写门测试覆盖取得平台锁之后遇到撤权的释放路径。原厂 OTA 自己的启动入口仍未接此锁，忙状态采样不能消除其检查/启动竞态；存储预算和救援优先策略也仍未全部闭环。
+`test_native_services.cpp` 直接组合生产服务、维护路由、ABI 3 配对桥与文件适配器：阻塞底层写入时另一线程的维护/切网无法进入，写入失败后锁释放，OTA/Wi-Fi 忙时新写被拒绝；配对写入正常通过，忙时失败，旧外层锁路径仍保持。集合测试核对共享平台接线，写门测试覆盖取得平台锁之后遇到撤权的释放路径。原厂 OTA 自己的启动入口仍未接此锁，忙状态采样不能消除其检查/启动竞态；存储预算和救援优先策略也仍未全部闭环。
 
 ### 已复现的业务恢复争用缺口
 
-2026-11-05 进一步用真实 `Ap01Business/BundleStore`、生产直接文件适配器和已安装 Bundle 复现：写门已获健康批准，但平台操作锁占用，第一次 `syncWritePermission(true)` 在底层任何变更之前失败；释放平台锁后再次调用仍失败，因为 `writeResumeFailed` 已锁存。原文件内容及变更计数保持不变。这是缺口证据，不是“争用可恢复”验收；`test-app-readonly-0041.py --direct-files` 报告明确标记 `writable_restore_contention_resolved=false`。
+2026-11-05 进一步用真实 `Ap01Business/BundleStore`、生产直接文件适配器和已安装 Bundle 复现：写门已获健康批准，但平台操作锁占用，第一次 `syncWritePermission(true)` 在底层任何变更之前失败；释放平台锁后再次调用仍失败，因为 `writeResumeFailed` 已锁存。原文件内容及变更计数保持不变。这是缺口证据，不是“争用可恢复”验收；`test-app-readonly.py --direct-files` 报告明确标记 `writable_restore_contention_resolved=false`。
 
 下一步必须在业务开始改变内存/持久状态之前取得完整写操作的准入：未取得只返回 Pending，保留只读状态和健康心跳，之后可以重试；已取得之后遇到真实 I/O 失败或提交未知仍保留既有失败/Unknown 语义，不盲重试。准入应覆盖恢复、Bundle 变更、配对保存与激活的实际写调用点，并与平台维护共用所有权；需处理嵌套 VFS 调用及同 App 多线程，不能用全局“当前 App 已持锁”标志让其他线程误借租约。只在 worker 先读 busy、延长轮询、或把任意 begin 失败都改成重试，均不能消除检查/写入竞态。当前逐 VFS 操作互斥不能作为这一项的完成证据。
 
@@ -58,7 +58,7 @@ ABI 3 配对回调会通过相同 VFS 写门保存绑定，维护路由不能在
 
 - `test_app_write_gate_v3.cpp`：阻塞一个真实文件适配器写调用，在另一 App 上撤权；新写、元数据操作、旧句柄和 sync 拒绝，读操作仍可用；释放原写调用后才报告排空；显式重新开放后恢复写入。ASan/UBSan 通过。
 - `test_native_app_set_v3.cpp`：启动前拒绝开放，两张 C 表同步观察同一许可，单 App 上下文不能修改集合许可。
-- `test-app-readonly-0041.py --direct-files`：实际 Bundle/渲染/配对及 HTTP 故障回归，独立文件服务的只读/可写恢复逻辑通过；不把此测试当作生产自动授权接线。
+- `test-app-readonly.py --direct-files`：实际 Bundle/渲染/配对及 HTTP 故障回归，独立文件服务的只读/可写恢复逻辑通过；不把此测试当作生产自动授权接线。
 - `d2-gate-run01.json`：真实双包在 james.local Docker 两基址回归，默认集合门关闭；该 QEMU 测试不证明持久批准后已自动恢复业务写入。
 
 ## 业务许可恢复接线（2026-11-04）
@@ -91,7 +91,7 @@ ABI 3 配对回调会通过相同 VFS 写门保存绑定，维护路由不能在
 
 生产服务的 `busy()` 此前只包含平台维护与 Wi-Fi 状态，遗漏原厂 OTA，和 `tryAppOperation()` 的判断不一致。现复用后者已有的 `State::firmwareBusy`，使业务 C 表和 UI 调度也能观察原厂 OTA。业务 Runtime 的 `systemBusy` 通过 C 表读取该值；未修改原厂 OTA 入口或关闭救援通道。
 
-`test_native_services_0041.cpp` 直接链接生产服务、维护及 Wi-Fi 状态机，替换 ROM/VFS/线程端点且不启动执行器。旧实现触发 busy 断言，新实现通过原厂 OTA 开始/结束、操作锁竞争与释放、Wi-Fi 入队互斥；与独立无绑定 OTA/重放/重启回执/切槽测试一起纳入 `test-app-maintenance-gate-0041.py`。这证明状态传播，尚不证明原厂检查/启动原子性、业务在途写排空或完整资源协调。先前“安装 HTTP 待绑定”的记录已被后续 D3/D4 绑定与闭环证据取代，剩余协调限制仍有效。
+`test_native_services.cpp` 直接链接生产服务、维护及 Wi-Fi 状态机，替换 ROM/VFS/线程端点且不启动执行器。旧实现触发 busy 断言，新实现通过原厂 OTA 开始/结束、操作锁竞争与释放、Wi-Fi 入队互斥；与独立无绑定 OTA/重放/重启回执/切槽测试一起纳入 `test-app-maintenance-gate-0041.py`。这证明状态传播，尚不证明原厂检查/启动原子性、业务在途写排空或完整资源协调。先前“安装 HTTP 待绑定”的记录已被后续 D3/D4 绑定与闭环证据取代，剩余协调限制仍有效。
 
 2026-11-05：HTTP 整请求准入的宿主专项已覆盖认证 claim、Bundle begin/chunk/commit：Busy 不推进请求序号，原请求重试成功，成功回执重放无额外持久写入；只读 status 在 Busy 时仍可用。测试使用真实 Application/C2/Bundle 与 AppFilesV3，底层磁盘和线程身份为宿主替身；不代表 RV32 HTTP、配对确认或本地激活已验收。
 

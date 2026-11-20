@@ -7,9 +7,9 @@
 #include "app_set_cleanup_v3.h"
 #include "app_set_http_v3.h"
 #include "app_set_service_v3.h"
-#include "native_maintenance_0041.h"
-#include "native_json_0041.h"
-#include "native_integrity_0041.h"
+#include "native_maintenance.h"
+#include "native_json.h"
+#include "native_integrity.h"
 #include <algorithm>
 #include <array>
 #include <cstdio>

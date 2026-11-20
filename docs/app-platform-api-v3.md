@@ -19,7 +19,7 @@
 - 核心时钟为单调毫秒；UTC 返回 int64 秒，当前 App 的旧 time_t 薄适配限制为有符号 32 位。random 成功为 0，长度 1–256；mac 成功为 0、写入 12 个十六进制字符及 NUL。pause 仅工作线程使用。
 - 分配失败为 null；释放仅接受本 context 分配的有效指针或 null，不能跨 App/free 两次。平台使用 malloc/free 加配额头，不使用独立 Arena。配额包含管理头；realloc 增长时旧、新分配同时计费，失败保留旧内容；缩小时可保留原计费。底层分配器必须线程安全，D1 模型 bump allocator 不证明硬件行为。
 - task_start 返回 0 或负数；异步工作线程执行 entry，不内联。栈须 16 B 对齐且至少 256 B；当前限 4 线程且累计栈不超过包声明。线程返回也不退还启动预算；创建失败归还预算。maintenance 的线程和存活期归平台。
-- 文件操作只在工作线程进行，缓冲区在调用期间借用；平台锁、路径/句柄检查与写许可继续有效。write/rename 语义见 `native_vfs_api_0041.h`。D1 固定根 `/resource/codex-status`，写门默认关闭，不执行 trial/成功开放；D2 要审计维护与业务完整写集，当前根不是已完成的多 App 私有目录隔离。
+- 文件操作只在工作线程进行，缓冲区在调用期间借用；平台锁、路径/句柄检查与写许可继续有效。write/rename 语义见 `native_vfs_api.h`。D1 固定根 `/resource/codex-status`，写门默认关闭，不执行 trial/成功开放；D2 要审计维护与业务完整写集，当前根不是已完成的多 App 私有目录隔离。
 - 网络工作线程使用直接表；TCP 接收/发送等待绝对单调期限，UDP 非阻塞。listen/accept 返回正句柄；close 成功 0，其余字节数/事件位见头文件。仅准许 TCP 18081/UDP 8767。2026-11-05 固定 ROM 静态审计确认阻塞 accept 不使用接收超时；共享 listener 已用原厂支持的 socket type 0x800 标志，空队列返回 EAGAIN。见 `tooling/scripts/audit-native-network-0041.py`。`test-native-network-qemu-0041.py` 在 james.local Docker 执行原厂标志传播和空队列 accept 分支已通过（连接分配/setup 为替身）；此修正不证明内核锁/调度时延，原厂 accept 的实际耗时仍未硬件验证；单地址空间也不提供沙箱。
 - format 是平台 snprintf，固定 RV32 变参/标准返回值；App 不链接私有 formatter。errno_slot 是平台当前调用线程的 errno。format 不拥有传入缓冲区。
 - busy/writes_allowed 只读；App 不能自行开放写门。busy 包括维护未监听、原厂 OTA、平台维护 OTA 和 Wi-Fi 切网状态；它是观察值，不是跨检查/写入的锁，不能替代集合写门或平台操作锁。bind 只成功一次，复制 C 回调表，release/acquire 发布。维护请求字符串和 body 仅调用期间有效；pairing 必须且只能 emit 一次，status 100–599、body 不超过 4096 B；平台复制后 emit 才返回。回调在维护工作线程执行，应有界，不访问 UI。绑定前维护仍工作，业务身份/配对返回未就绪。

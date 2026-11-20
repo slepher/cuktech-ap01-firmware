@@ -7,7 +7,6 @@ ROOT = Path(__file__).resolve().parents[2]
 MENU_SYMBOLS = ('ap01MenuRegisterOne0041', 'ap01MenuRegisterTwo0041',
                 'ap01MenuRegisterThree0041', 'ap01MenuList0041')
 BASELINES = {
-    '0041': (6769704, '972db4c136c7ed9e24a83c07c1a7fd62040ca018b08ca285216d26b1fee3c6b9'),
     '0055': (6389800, '0d4a2c10314e984e8425f77385f3be89ebe33937eaa711938fda8f318a909bb7'),
 }
 
@@ -39,7 +38,7 @@ def validate_profile(raw, target):
     profile['original'] = dict(original)
     profile['mapping_base'] = _integer(raw['mapping_base'])
     profile['payload_offset'] = _integer(raw['payload_offset'])
-    # Both targets intentionally share the existing immutable-module linker script.
+    # The reviewed target uses the immutable-module linker script.
     if profile['mapping_base'] != 0x9ffff000 or profile['payload_offset'] != 0x675000:
         raise ValueError('Unsupported mapping or module link address')
     if original['bytes'] > profile['payload_offset']:
@@ -87,21 +86,10 @@ def validate_profile(raw, target):
     return profile
 
 
-def load_target(target='0041'):
-    if target == '0041':
-        raw = {'format': 1, 'target': target, 'status': 'static_verified',
-            'original': {'path': 'roms/0041/ap01-1.0.2_0041.bin', 'bytes': BASELINES[target][0], 'sha256': BASELINES[target][1]},
-            'mapping_base': '0x9ffff000', 'payload_offset': '0x675000',
-            'ui_hook': {'offset': '0x5e180', 'original_hex': '97001500e780404d'},
-            'timer_delete': {'offset': '0x8be58', 'original_hex': '411106c622c426c2', 'nonnull_tail': '0xa008ae60'},
-            'menu_hooks': [dict(offset=hex(offset), original_hex=before, symbol=symbol)
-                for offset, before, symbol in zip((0xb262c, 0xb263a, 0xb2648, 0xb2754),
-                ('efc08f0281460546', 'efc0af0181462d46', 'efc0cf00b7450fa0', 'ef10ef4a814523a4a900'), MENU_SYMBOLS)],
-            'unsigned_ota': {'offset': '0x707fc', 'original_hex': 'dde7', 'replacement_hex': '7da0'}}
-    elif target == '0055':
-        raw = json.loads((ROOT / 'tooling/rom-targets/0055.json').read_text(encoding='utf-8'))
-    else:
-        raise ValueError('Unsupported ROM target')
+def load_target(target='0055'):
+    if target not in BASELINES:
+        raise ValueError('Unsupported ROM target; only 0055 is supported')
+    raw = json.loads((ROOT / 'tooling/rom-targets/current.json').read_text(encoding='utf-8'))
     return validate_profile(raw, target)
 
 

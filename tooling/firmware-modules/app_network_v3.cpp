@@ -94,13 +94,13 @@ int32_t Ap01AppNetworkV3::send(void *p,int32_t handle,const uint8_t *in,uint32_t
 int32_t Ap01AppNetworkV3::receiveFrom(void *p,int32_t handle,uint8_t *out,uint32_t n,Ap01PeerV3 *peer){
     Guard g(p);auto &s=g.self;if(!g||!out||!n||n>INT32_MAX||!peer||!s.io.receive)return -1;
     auto *slot=s.slot(handle);if(!slot||slot->kind!=2)return -1;
-    ap01_app_peer_v2 native{};int got=s.io.receive(s.io.context,slot->fd,out,n,&native);
+    Ap01PeerV3 native{};int got=s.io.receive(s.io.context,slot->fd,out,n,&native);
     if(got<0||uint32_t(got)>n||!native.port||native.reserved)return -1;
     memcpy(peer->ip,native.ip,4);peer->port=native.port;peer->reserved=0;return got;
 }
 int32_t Ap01AppNetworkV3::sendTo(void *p,int32_t handle,const uint8_t *in,uint32_t n,const Ap01PeerV3 *peer){
     Guard g(p);auto &s=g.self;if(!g||(n&&!in)||n>INT32_MAX||!peer||!peer->port||peer->reserved||!s.io.send)return -1;
     auto *slot=s.slot(handle);if(!slot||slot->kind!=2)return -1;
-    ap01_app_peer_v2 native{};memcpy(native.ip,peer->ip,4);native.port=peer->port;
+    Ap01PeerV3 native{};memcpy(native.ip,peer->ip,4);native.port=peer->port;
     int got=s.io.send(s.io.context,slot->fd,in,n,&native);return got<0||uint32_t(got)!=n?-1:got;
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "app_network_api_v3.h"
-#include "app_network_0041.h"
+#include "native_network_port.h"
 
 // Resident adapter reuses the existing ROM transport, not its invoke protocol.
 class Ap01AppNetworkV3 {

@@ -1,9 +1,9 @@
 #include "model_platform_v3.h"
 #include "native_rom_addresses.h"
-#include "native_services_0041.h"
-#include "native_io_0041.h"
-#include "native_vfs_0041.h"
-#include "app_network_0041.h"
+#include "native_services.h"
+#include "native_io.h"
+#include "native_vfs.h"
+#include "native_network_port.h"
 #include <string.h>
 #include <new>
 Ap01ModelPlatformV3 ap01ModelV3;
@@ -115,12 +115,12 @@ int netClose(void *,int fd){auto &m=ap01ModelV3;
 int poll(void *,int fd,unsigned events){auto &m=ap01ModelV3;
     return (fd==100&&m.httpQueued)||(fd==102&&m.httpActive)?int(events):0;
 }
-int receive(void *,int fd,uint8_t *out,uint32_t n,ap01_app_peer_v2 *){auto &m=ap01ModelV3;
+int receive(void *,int fd,uint8_t *out,uint32_t n,Ap01PeerV3 *){auto &m=ap01ModelV3;
     if(fd!=102||!m.httpActive||!m.httpInput)return AP01_NET_AGAIN;
     if(n>7)n=7;if(n>m.httpLength-m.httpRead)n=m.httpLength-m.httpRead;
     memcpy(out,m.httpInput+m.httpRead,n);m.httpRead+=n;return int(n);
 }
-int send(void *,int fd,const uint8_t *in,uint32_t n,const ap01_app_peer_v2 *){auto &m=ap01ModelV3;
+int send(void *,int fd,const uint8_t *in,uint32_t n,const Ap01PeerV3 *){auto &m=ap01ModelV3;
     if(fd!=102||!m.httpActive||!m.httpOutput)return AP01_NET_AGAIN;
     if(n>11)n=11;if(n>m.httpCapacity-m.httpWritten)return -1;
     memcpy(m.httpOutput+m.httpWritten,in,n);m.httpWritten+=n;return int(n);

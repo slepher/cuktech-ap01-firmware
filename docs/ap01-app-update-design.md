@@ -16,7 +16,7 @@
 
 ## 2. 复用现有多 App 框架
 
-复用 [screen_host_0041.h](../tooling/firmware-modules/screen_host_0041.h)、[screen_host_0041.c](../tooling/firmware-modules/screen_host_0041.c) 的 App 数组、页面集合、轮询与切换，以及 [双 App 测试](../tooling/firmware-modules/test_screen_host_0041.c)。现有 codex_status 普通构建注册一个 App，AP01_SCREEN_HOST_PROBE 注册第二个测试 App；这证明宿主已有多 App 接口，不证明多个独立文件包已安装运行。
+复用 [screen_host.h](../tooling/firmware-modules/screen_host.h)、[screen_host.c](../tooling/firmware-modules/screen_host.c) 的 App 数组、页面集合、轮询与切换，以及 [双 App 测试](../tooling/firmware-modules/test_screen_host.c)。现有 codex_status 普通构建注册一个 App，AP01_SCREEN_HOST_PROBE 注册第二个测试 App；这证明宿主已有多 App 接口，不证明多个独立文件包已安装运行。
 
 目标是由常驻平台创建唯一宿主，开机按 Manifest 的确定顺序加载 App，再为各 App 注册自己的页面集合；App 只获得本 App 的注册上下文。现有页面切换/销毁保护仍用于正常 UI 行为，不为更新增加动态撤销全部代码回调的链路。App 注册失败视为启动失败；本次启动内不释放其代码或尝试原地重新加载。
 
@@ -53,7 +53,7 @@ S1 硬件准入仍未通过：0041 可执行内存权限、容量、缓存/中�
 
 接口约束：显式宽度类型、明确缓冲区长度/返回值/所有权、调用线程约束和阻塞期限；不得跨边界传 STL、异常或编译器私有对象。文件/UI 对象可用 opaque handle 或明确冻结的 C 结构，优先适配现有宿主接口，不把原厂内部结构全部暴露出去。表只允许兼容追加，缺少必需能力明确拒绝；不匹配精确固件 build。
 
-App 入口已固定为 start(api, app_context, out_instance)、event 与 health，详见 [ABI 3.0 合同](app-platform-api-v3.md)。不再要求为更新实现 prepare_stop/stop；正常资源关闭仍由对应 API 提供。任务/UI 回调允许存活至本次启动结束。旧 ABI v2 五入口与通用 invoke 的包不得被静默解释为新合同；已实现 APX2 容器 2 / ABI 3 的 start/event/health 三入口编码，旧入口执行器拒绝 ABI 3。详见 [D1 记录](../project-workflow/ap01-app-update/d1-direct-app.md)。
+App 入口已固定为 start(api, app_context, out_instance)、event 与 health，详见 [ABI 3.0 合同](app-platform-api-v3.md)。不再要求为更新实现 prepare_stop/stop；正常资源关闭仍由对应 API 提供。任务/UI 回调允许存活至本次启动结束。旧 ABI v2 五入口与通用 invoke 的包不得被静默解释为新合同；已实现 APX2 容器 2 / ABI 3 的 start/event/health 三入口编码，旧 ABI 2 入口执行器和服务接口已移除，加载器仅接受 ABI 3。详见 [D1 记录](../project-workflow/ap01-app-update/d1-direct-app.md)。
 
 malloc/free 等可通过平台配额包装；保留平台维护内存和每 App/整机预算，不能裸透传导致业务耗尽维护资源。C++ new/delete 的本地薄适配和 libgcc 编译器辅助函数仍可能必要。格式化等优先复用平台实现，确需可变参数接口时固定 RV32 ABI 并验证；不为消除导入继续自研完整 libc。数学、GOT、虚表/数据指针和全局初始化逐项审计，不能由函数表替代最终链接证明。
 

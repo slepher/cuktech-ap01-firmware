@@ -1,5 +1,7 @@
 # App 更新日志 AUT2
 
+> 历史合同：对应的 ABI 2 单包更新接口、客户端与测试已移除。当前接口见 [App 集合 HTTP](app-set-http-v3.md) 和 [集合日志](app-set-journal-v3.md)。以下内容仅供追溯，不是可执行使用说明。
+
 > 2026-11-03 设计修订提示：本文保留现有单包/旧 ABI 实现及历史验证，不能作为新多 App 重启切换合同。目标已改为复用现有多 App 宿主、直接 C 函数表、Manifest 集合事务与重启切换；见 [当前设计](ap01-app-update-design.md) 第 4–7 节及 [任务](../project-workflow/ap01-app-update/task.md)。APX2 入口/ABI、AUT2 日志和 HTTP 单包字段需显式版本化；相关实现尚未修改。正文中的待办及导入数量是当时记录，当前状态以 [状态总览](../project-workflow/ap01-app-update/status.md) 为准。
 
 实现：`app_update_record_0041.{h,cpp}`。这是安装事务的持久化基础，尚未接入 HTTP、文件切换或启动执行器，不代表完整事务已完成。

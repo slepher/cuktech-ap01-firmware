@@ -1,5 +1,5 @@
 #pragma once
-#include "native_vfs_api_0041.h"
+#include "native_vfs_api.h"
 
 enum class Ap01SetPhaseV3:uint32_t {Receiving=1,Ready,SwitchPending,TrialStarted,RollbackPending,
     RollbackStarted,Succeeded,FailedRolledBack,RecoveryRequired,Cancelled};

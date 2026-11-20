@@ -9,18 +9,17 @@ import time
 import uuid
 from app_set_client_v3 import inspect_manifest, inspect_packages, changed_packages, verify_running, check_capabilities
 
-_spec=importlib.util.spec_from_file_location('legacy_app_client',Path(__file__).with_name('app-update-client-0041.py'))
-legacy=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(legacy)
-Uncertain=legacy.Uncertain
-TERMINAL=legacy.TERMINAL
+import app_client_common as common
+Uncertain=common.Uncertain
+TERMINAL=common.TERMINAL
 
 
-class Transport(legacy.Transport):
+class Transport(common.Transport):
     def __call__(self,method,endpoint,params=None,body=None,binary=False):
         return super().__call__(method,'v3/'+endpoint,params,body,binary)
 
 
-class Installer(legacy.Installer):
+class Installer(common.Installer):
     # Reuse durable receipt writes, transport deadlines and bounded backoff.
     def load_receipt(self):
         self.record=json.loads(self.path.read_text())
@@ -62,7 +61,7 @@ class Installer(legacy.Installer):
         if old.get('phase') in TERMINAL and value.get('phase')!=old['phase']:
             raise ValueError('terminal decision changed')
         r['result']=value;r['acknowledged']=True
-        legacy.persist(self.path,r)
+        common.persist(self.path,r)
         return status,value
 
     def query(self):
@@ -115,7 +114,7 @@ class Installer(legacy.Installer):
             self.manifest=wanted
             self.record=dict(protocol=3,device_mac=self.mac,host=self.host,operation_id=uuid.uuid4().hex,
                              manifest_hex=manifest_blob.hex(),expected_manifest=old,expected_version=version,original_boot=boot)
-            legacy.persist(self.path,self.record,create=True)
+            common.persist(self.path,self.record,create=True)
             status=404
         while True:
             if self.clock()>=self.deadline:
@@ -146,7 +145,7 @@ class Installer(legacy.Installer):
                         if type(maximum) is not int or not 1<=maximum<=1024:raise ValueError('invalid chunk limit')
                         part=blob[offset:offset+maximum]
                         status,value=self.mutate('PUT',f'package/{i}/chunk',part,
-                            dict(offset=offset,sha256=legacy.hashlib.sha256(part).hexdigest()),True)
+                            dict(offset=offset,sha256=common.hashlib.sha256(part).hexdigest()),True)
                         if status in (200,202) and value['received'][i]==offset:self.pause()
                     else:status,value=self.mutate('POST',f'package/{i}/ready')
                     continue

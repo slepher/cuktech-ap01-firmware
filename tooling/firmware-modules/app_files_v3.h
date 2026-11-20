@@ -1,5 +1,5 @@
 #pragma once
-#include "native_vfs_api_0041.h"
+#include "native_vfs_api.h"
 #include <atomic>
 #include "app_write_gate_v3.h"
 

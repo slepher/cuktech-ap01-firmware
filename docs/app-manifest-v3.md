@@ -70,7 +70,7 @@ Manifest Entry 现可直接构造 `Ap01NativeAppPlatformV3` 上下文，条目�
 
 ## D2 固定文件引导（2026-11-04）
 
-生产 `native_platform_v3_0041` 现构造 `Ap01NativeAppFileBootV3`，使用以下平台专属命名空间：
+生产 `native_platform_v3` 现构造 `Ap01NativeAppFileBootV3`，使用以下平台专属命名空间：
 
 - Manifest：`/resource/app-store/current.amf3`。
 - 包：`/resource/app-store/packages/<64位小写APX2内容摘要>.apx2`。这里是 APX2 头中 192..223 字节的内容摘要，不是整个包文件 SHA256。

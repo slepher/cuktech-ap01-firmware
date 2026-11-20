@@ -1,6 +1,7 @@
+#include "native_rom_addresses.h"
 #include "native_app_platform_v3.h"
 #include "model_platform_v3.h"
-#include "native_integrity_0041.h"
+#include "native_integrity.h"
 #include <cassert>
 #include <cstdio>
 #include <cstring>
@@ -199,10 +200,10 @@ int main(int argc,char **argv){
         assert(sharedTicks[0]==1&&sharedTicks[1]==1&&sharedPolls[0]==1&&sharedPolls[1]==1);
         ap01ModelV3.activeChild=7;ap01ModelV3.eventCode=0x11;ap01ModelV3.eventKey=0x13;
         ap01ModelV3.window->event(ap01ModelV3.window->context,(void *)1);
-        assert(ap01ModelV3.activeChild==9&&ap01ModelV3.stockEvents==0);
+        assert(ap01ModelV3.activeChild==AP01_STOCK_SCREEN_COUNT&&ap01ModelV3.stockEvents==0);
         Ap01NativeAppSharedV3::poll(&resident);
         ap01ModelV3.window->event(ap01ModelV3.window->context,(void *)1);
-        assert(ap01ModelV3.activeChild==10&&ap01ModelV3.stockEvents==0);
+        assert(ap01ModelV3.activeChild==AP01_STOCK_SCREEN_COUNT+1&&ap01ModelV3.stockEvents==0);
         ap01ModelV3.eventKey=99;ap01ModelV3.window->event(ap01ModelV3.window->context,(void *)1);
         assert(ap01ModelV3.stockEvents==1);
     }

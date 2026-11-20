@@ -2,7 +2,7 @@
 import argparse,importlib.util,json,subprocess
 from pathlib import Path
 import apx2
-import native_build_0041 as native
+import native_build as native
 p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
 p.add_argument('--package',type=Path,required=True);p.add_argument('--tool-prefix',required=True);a=p.parse_args()
 if not a.out.is_dir():p.error('Precreate output directory')
@@ -20,7 +20,7 @@ config={'sequence':9,'apps':[
 manifest=module.manifest(config,a.out);path=a.out/'two-apps.amf3';path.write_bytes(manifest)
 assert module.manifest(dict(sequence=9,apps=list(reversed(config['apps']))),a.out)==manifest
 empty=module.manifest(dict(sequence=1,apps=[]),a.out);assert len(empty)==64
-names=['app_manifest_v3.cpp','app_set_boot_v3.cpp','app_boot_v3.cpp','apx2.cpp','native_sha256_0041.cpp','test_app_manifest_v3.cpp']
+names=['app_manifest_v3.cpp','app_set_boot_v3.cpp','app_boot_v3.cpp','apx2.cpp','native_sha256.cpp','test_app_manifest_v3.cpp']
 binary=a.out.resolve()/'test-app-manifest-v3';report=a.out/'manifest-report.json'
 native.write_json(report,{'passed':False})
 subprocess.run(['clang++','-std=c++17','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-g',

@@ -1,0 +1,58 @@
+"""Compile actual codex_status App sources and verify read-only trial startup."""
+import argparse,json,hashlib,subprocess,tempfile
+from pathlib import Path
+p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
+p.add_argument('--thread-sanitizer',action='store_true',help='Use host ThreadSanitizer for the blocked-save concurrency check')
+p.add_argument('--tool-prefix',help='Also compile the direct resident adapters for RV32')
+a=p.parse_args()
+if not a.out.is_dir():p.error('Precreate output directory')
+firmware=Path(__file__).resolve().parents[2];app=firmware.parent/'codex_status';m=firmware/'tooling/firmware-modules'
+source=json.loads((app/'tools/test-bridge/templates/codex-status-ap01.json').read_text())
+bundle=dict(job_id='readonly-test',firmware_target='cuktech-ap01-0041',render_target='lcd-jd9853-320x240-palette4',compiler_abi=2,
+            profile=dict(template_ids=[source['id']],initial_active_id=source['id']),templates=[dict(key=dict(template_id=source['id'],render_target=source['render_target']),source=source)],fonts=[])
+# Two valid templates let activation checks prove a real index change.
+second=json.loads(json.dumps(source));second['id']='codex-status-b'
+bundle['profile']['template_ids'].append(second['id'])
+bundle['templates'].append(dict(key=dict(template_id=second['id'],render_target=second['render_target']),source=second))
+payload=a.out.resolve()/'bundle.json';payload.write_text(json.dumps(bundle))
+names=['template_engine.cpp','GUI_Paint.cpp','font_asset.cpp','bundle_store.cpp','bundle_payload.cpp','v2_runtime.cpp','v2_data_command.cpp','v2_bundle_command.cpp','v2_activate_command.cpp','v2_command_envelope.cpp','v2_status_snapshot.cpp','ap01_binding.cpp','ap01_pairing.cpp','sha256.cpp']+['font'+str(n)+'.cpp' for n in (8,12,16,20,24)]
+sources=[app/'src'/s for s in names]+[app/'ports/ap01/business.cpp',app/'ports/ap01/application.cpp',app/'ports/ap01/http.cpp',m/'native_http_transport.cpp',m/'native_calendar.cpp',m/'test_app_readonly.cpp']
+sources.append(m/'app_files_v3.cpp')
+sources.append(m/'app_network_v3.cpp')
+flags=['-std=c++17','-O1','-g','-fsanitize=thread' if a.thread_sanitizer else '-fsanitize=address,undefined','-DCODEX_AP01_NATIVE=1','-DCODEX_RENDER_NOTE4_FONTS=1','-DARDUINOJSON_ENABLE_ARDUINO_STRING=1','-DARDUINOJSON_ENABLE_STD_STRING=0','-DARDUINOJSON_ENABLE_STD_STREAM=0','-Wno-deprecated-declarations']
+for folder in (app/'ports/ap01',app/'src',app/'bridge/crates/render/shim',m,firmware/'tooling/vendor/ArduinoJson/src'):flags+=['-I'+str(folder)]
+stem='readonly-direct'+('-tsan' if a.thread_sanitizer else '')
+report=a.out/(stem+'-report.json');report.write_text('{"passed":false}\n');binary=a.out.resolve()/('test-'+stem)
+subprocess.run(['clang++',*flags,*map(str,sources),'-o',str(binary)],check=True)
+with tempfile.TemporaryDirectory(prefix='readonly-',dir=a.out.resolve()) as state:
+    result=subprocess.check_output([str(binary),state,str(payload)],text=True,timeout=60)
+dependencies=sources+[m/'native_filesystem.h']
+dependencies += [app/'ports/ap01/application.h',app/'ports/ap01/business.h',app/'src/v2_command_envelope.h',m/'app_platform_api_v3.h']
+dependencies += [m/'native_vfs_api.h',m/'app_files_v3.h',m/'app_write_gate_v3.h']
+dependencies += [m/n for n in ('app_network_v3.h','app_network_api_v3.h','app_network_client_v3.h')]
+evidence=dict(passed=True,checks=result.strip(),device_accessed=False,
+              sanitizer='thread' if a.thread_sanitizer else 'address,undefined',
+              direct_file_network_tables=True,
+              sources={str(s.relative_to(s.parent.parent)):hashlib.sha256(s.read_bytes()).hexdigest() for s in dependencies})
+evidence['writable_restore_contention_resolved']=True
+evidence['scoped_admission_candidate_verified']=True
+evidence['scoped_admission_boundary']='Production business restoration via C API helper with host admission/identity substitutes; actual RV32 worker execution is separate evidence.'
+evidence['scoped_http_retry_and_replay_verified']=True
+evidence['local_activation_admission_verified']=True
+evidence['deferred_pair_confirmation_verified']=True
+evidence['concurrent_pair_save_exclusion_verified']=True
+evidence['known_gaps']=['Host evidence covers deferred pairing confirmation (Busy/cancel/replace/expiry), claim, Bundle begin/chunk/commit and remote/local activation; native UI/worker concurrency and RV32 HTTP execution remain unverified.']
+symbols=subprocess.check_output(['nm','-C',str(binary)],text=True)
+for name in ('Ap01AppCore0041::invoke','Ap01AppFiles0041::invoke','Ap01AppNetwork0041::invoke','Ap01AppHeap0041::invoke'):
+    assert name not in symbols,('legacy invoke linked into direct path',name)
+evidence['legacy_invoke_linked']=False
+if a.tool_prefix:
+    import native_build as native
+    evidence['rv32_adapters']=[]
+    for name in ('app_files_v3','app_network_v3'):
+        obj=a.out.resolve()/(name+'.rv32.o')
+        subprocess.run([a.tool_prefix+'g++',*native.FLAGS,'-Wall','-Wextra','-Werror',
+                        '-c',str(m/(name+'.cpp')),'-o',str(obj)],check=True)
+        evidence['rv32_adapters'].append(dict(object=obj.name,sha256=hashlib.sha256(obj.read_bytes()).hexdigest(),
+                                              stack_usage=obj.with_suffix('.su').read_text()))
+report.write_text(json.dumps(evidence,indent=2)+'\n');print(result,end='')

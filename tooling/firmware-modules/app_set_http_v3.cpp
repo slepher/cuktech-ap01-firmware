@@ -1,5 +1,5 @@
 #include "app_set_http_v3.h"
-#include "native_integrity_0041.h"
+#include "native_integrity.h"
 #include <string.h>
 namespace {
 bool hex(const char *text,uint8_t *out,unsigned n){

@@ -1,6 +1,6 @@
 #pragma once
 #include "app_manifest_v3.h"
-#include "native_vfs_api_0041.h"
+#include "native_vfs_api.h"
 #include <memory>
 
 // Worker-owned staging, then immutable UI reads. No filesystem callback from UI.

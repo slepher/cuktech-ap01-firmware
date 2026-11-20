@@ -18,11 +18,11 @@ def package(image, config):
                 'data_read_min', 'data_read_max', 'data_write_version', 'required_services', 'fixups'}
     if set(config) - {'abi_major'} != required:
         raise ValueError('Exact APX2 manifest fields required: ' + ', '.join(sorted(required)))
-    abi = config.get('abi_major', 2)
-    if type(abi) is not int or abi not in (2, 3):
-        raise ValueError('Supported ABI majors: 2 (legacy), 3 (direct C)')
-    if len(config['entries']) != (5 if abi == 2 else 3):
-        raise ValueError('ABI 2 requires five entries; ABI 3 requires start/event/health')
+    abi = config.get('abi_major', 3)
+    if type(abi) is not int or abi != 3:
+        raise ValueError('Only App ABI 3 is supported')
+    if len(config['entries']) != 3:
+        raise ValueError('ABI 3 requires start/event/health')
     integers = [config[k] for k in required - {'app_id','version','entries','fixups','required_services'}]
     integers += config['entries']
     for fix in config['fixups']:
@@ -63,7 +63,7 @@ def package(image, config):
     total = HEADER + len(image) + 8 * len(fixes)
     if total > 0xffffffff:
         raise ValueError('Package exceeds uint32 size')
-    entries = config['entries'] + ([0, 0] if abi == 3 else [])
+    entries = config['entries'] + [0, 0]
     words = [2, HEADER, total, 1, 1, abi, 0, services & 0xffffffff, services >> 32,
              HEADER, len(image), 0, config['text_bytes'], config['ro_offset'], config['ro_bytes'],
              config['data_offset'], config['data_bytes'], config['bss_bytes'], 16,

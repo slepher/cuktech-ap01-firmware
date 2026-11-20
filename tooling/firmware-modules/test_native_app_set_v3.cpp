@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include "model_platform_v3.h"
-#include "native_vfs_0041.h"
+#include "native_vfs.h"
 #include <cassert>
 #include <cstring>
 #include <fstream>

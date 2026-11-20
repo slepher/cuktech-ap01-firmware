@@ -1,5 +1,5 @@
 #include "app_set_journal_v3.h"
-#include "native_integrity_0041.h"
+#include "native_integrity.h"
 #include <string.h>
 #include <initializer_list>
 namespace {

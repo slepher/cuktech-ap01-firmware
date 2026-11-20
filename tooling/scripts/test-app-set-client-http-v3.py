@@ -68,7 +68,7 @@ class Peer:
         self.snapshots.append({'name':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
         if a.rv32_results:
             output=a.snapshot_dir/f'rv32-{len(self.executions)}';output.mkdir()
-            command=[sys.executable,'-B',str(Path(__file__).with_name('run-app-set-rv32-result-0041.py')),
+            command=[sys.executable,'-B',str(Path(__file__).with_name('run-app-set-rv32-result.py')),
                      '--snapshot',str(path),'--out',str(output),'--tool-prefix',a.tool_prefix]
             if self.failed:command.append('--failed')
             if a.qemu_image:command+=['--qemu-image',a.qemu_image,'--expected-image-id',a.expected_image_id]

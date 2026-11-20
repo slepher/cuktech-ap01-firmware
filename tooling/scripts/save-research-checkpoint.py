@@ -41,8 +41,8 @@ def save(directory):
         'tooling/rom-targets/*.json', 'tooling/firmware-modules/native_rom_addresses*.h',
         'tooling/scripts/*0055*.py', 'tooling/scripts/*rom-target*.py',
         'tooling/scripts/rom_target.py', 'tooling/scripts/save-research-checkpoint.py',
-        'tooling/scripts/build-app-v3-0041.py', 'tooling/scripts/build-app-v3-guest-0041.py',
-        'tooling/scripts/test-app-abi-qemu-0041.py', 'tooling/scripts/test-app-pic-load-0041.py',
+        'tooling/scripts/build-app-v3.py', 'tooling/scripts/build-app-v3-guest.py',
+        'tooling/scripts/test-app-abi-qemu.py', 'tooling/scripts/test-app-pic-load.py',
         'tooling/firmware-modules/model_platform_v3.cpp',
         'tooling/firmware-modules/probe_app_v3_guest.cpp',
         'tooling/firmware-modules/probe_app_set_v3_guest.h',
@@ -79,7 +79,7 @@ def save(directory):
     # Large linear-decode caches are cheap to regenerate and not approved maps.
     selected = {p for p in selected if p.name not in ('decode-cache.json', 'new-disassembly.json')}
     required = [ROOT / 'evidence/0055-address-migration-20261106/rea-0055-snapshot.json',
-                ROOT / 'tooling/firmware-modules/native_rom_addresses_0055.h',
+                ROOT / 'tooling/firmware-modules/native_rom_map.h',
                 ROOT / 'build/0055-qemu-verified-20261106/release.json']
     if any(path not in selected for path in required):
         raise FileNotFoundError('Missing current research checkpoint inputs')

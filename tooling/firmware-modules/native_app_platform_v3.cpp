@@ -1,6 +1,6 @@
 #include "native_app_platform_v3.h"
-#include "native_vfs_0041.h"
-#include "native_io_0041.h"
+#include "native_vfs.h"
+#include "native_io.h"
 #include <stdlib.h>
 #include <new>
 #include <string.h>

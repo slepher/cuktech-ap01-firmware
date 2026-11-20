@@ -1,8 +1,7 @@
 // Model only: real App instructions, production loader/provider/host, fake ROM I/O.
 #include "native_app_platform_v3.h"
 #include "model_platform_v3.h"
-#include "app_heap_0041.h"
-#include "app_heap_client_v2.h"
+#include "model_heap.h"
 #include <new>
 #include <stdlib.h>
 #include <string.h>
@@ -11,21 +10,18 @@
 namespace std {const nothrow_t nothrow{};}
 // Test-only reuse of the validated arena; production ABI 3 still uses ROM malloc.
 // QEMU maps this arena through 0xa83fffff, not the old bump limit 0xa8500000.
-static Ap01AppHeapClientV2 &modelHeap(){
-    alignas(Ap01AppGeneration0041) static uint8_t gateStorage[sizeof(Ap01AppGeneration0041)];
-    alignas(Ap01AppHeap0041) static uint8_t heapStorage[sizeof(Ap01AppHeap0041)];
-    alignas(Ap01AppHeapClientV2) static uint8_t clientStorage[sizeof(Ap01AppHeapClientV2)];
+static Ap01ModelHeap &modelHeap(){
+    alignas(Ap01ModelHeap) static uint8_t storage[sizeof(Ap01ModelHeap)];
     static bool ready=false;
     if(!ready){
-        auto *gate=new(gateStorage) Ap01AppGeneration0041;
-        auto *heap=new(heapStorage) Ap01AppHeap0041(*gate);
-        if(!heap->bind(1,(void *)0xa8200000,0x200000)||gate->begin()!=1)__builtin_trap();
-        new(clientStorage) Ap01AppHeapClientV2(heap->table(1));ready=true;
+        auto *heap=new(storage) Ap01ModelHeap;
+        if(!heap->bind((void *)0xa8200000,0x200000))__builtin_trap();
+        ready=true;
     }
-    return *(Ap01AppHeapClientV2 *)clientStorage;
+    return *(Ap01ModelHeap *)storage;
 }
-extern "C" void *malloc(size_t n){return modelHeap().allocate(n);}
-extern "C" void free(void *p){if(p)modelHeap().free(p);}
+extern "C" void *malloc(size_t n){return modelHeap().reallocate(nullptr,n);}
+extern "C" void free(void *p){if(p)modelHeap().reallocate(p,0);}
 extern "C" void *realloc(void *p,size_t n){return modelHeap().reallocate(p,n);}
 void *operator new(size_t n){return malloc(n);}
 void *operator new(size_t n,const std::nothrow_t &) noexcept{return malloc(n);}

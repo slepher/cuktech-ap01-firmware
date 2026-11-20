@@ -3,8 +3,8 @@
 #include "app_abi_v3.h"
 
 // APX2 v2: explicit little-endian bytes, not a serialized native struct.
-enum : uint32_t { APX2_HEADER = 256, APX2_ABI_MAJOR = 2, APX2_TARGET_0041 = 1,
-                  APX2_ISA_RV32IMAFC_ILP32F = 1, APX2_ENTRY_COUNT = 5,
+enum : uint32_t { APX2_HEADER = 256, APX2_ABI_MAJOR = AP01_APP_ABI_MAJOR_V3, APX2_TARGET_AP01 = 1,
+                  APX2_ISA_RV32IMAFC_ILP32F = 1, APX2_ENTRY_COUNT = AP01_APP_V3_ENTRY_COUNT,
                   APX2_DIRECT_ABI_MAJOR = AP01_APP_ABI_MAJOR_V3,
                   APX2_DIRECT_ENTRY_COUNT = AP01_APP_V3_ENTRY_COUNT };
 enum class Apx2Error : uint32_t {

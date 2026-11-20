@@ -1,5 +1,5 @@
 #include "apx2.h"
-#include "native_integrity_0041.h"
+#include "native_integrity.h"
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -25,8 +25,8 @@ static void seal(std::vector<uint8_t> &p) {
 }
 static std::vector<uint8_t> fixture() {
     std::vector<uint8_t> p(320);memcpy(p.data(),"APX2",4);
-    const uint32_t words[]={2,256,320,1,1,2,0,1,0,256,48,0,16,16,16,32,16,16,16,128,256,
-                            0,2,4,6,8,304,2,1,3,2};
+    const uint32_t words[]={2,256,320,1,1,3,0,1,0,256,48,0,16,16,16,32,16,16,16,128,256,
+                            0,2,4,0,0,304,2,1,3,2};
     for(unsigned i=0;i<31;++i)put(p.data()+4+4*i,words[i]);
     memcpy(p.data()+128,"test.app",9);memcpy(p.data()+160,"1.0.0",6);
     put(p.data()+288,48);put(p.data()+304,16);put(p.data()+308,0);put(p.data()+312,32);put(p.data()+316,48);
@@ -85,16 +85,12 @@ static void run() {
     assert(apx2Load(input.reader(),l,memory,63,0x62fc0000,view)==Apx2Error::Memory);
     assert(apx2Load(input.reader(),l,memory,64,0xfffffff0,view)==Apx2Error::Memory);
     assert(apx2Load(input.reader(),l,memory,64,0x62fc0001,view)==Apx2Error::Memory);
-    // New boot path refuses legacy five-entry ABI even when the digest is valid.
-    l.abi_major=APX2_DIRECT_ABI_MAJOR;
+    // Unsupported ABI packages are rejected even with a valid digest.
+    input.bytes=fixture();put(input.bytes.data()+24,2);seal(input.bytes);
     assert(apx2Load(input.reader(),l,memory,64,0x62fc0000,view)==Apx2Error::Abi);
-    input.bytes=fixture();put(input.bytes.data()+24,3);
-    put(input.bytes.data()+100,0);put(input.bytes.data()+104,0);seal(input.bytes);
+    input.bytes=fixture();
     assert(apx2Load(input.reader(),l,memory,64,0x62fc0000,view)==Apx2Error::Ok);
-    assert(view.abi_major==3&&view.entries[2]==4&&view.entries[3]==0&&view.entries[4]==0);
-    l.abi_major=2;
-    assert(apx2Validate(input.reader(),l,view)==Apx2Error::Abi);
-    l.abi_major=3;
+    assert(view.abi_major==3&&view.entries[2]==4);
     for(unsigned offset:{100u,104u}) {
         put(input.bytes.data()+offset,2);seal(input.bytes);
         memset(memory,0xa5,64);

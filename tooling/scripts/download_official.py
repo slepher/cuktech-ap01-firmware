@@ -27,7 +27,7 @@ from features.official_firmware_source.xiaomi_cloud import XiaomiCloudClient
 OUTPUT = PROJECT / "evidence/private"
 CREDENTIALS = OUTPUT / "xiaomi-account.dpapi"
 MAX_ROM_BYTES = 16 * 1024 * 1024
-VERSIONS = {"1.0.2_0041", "1.02_0041"}
+VERSIONS = {"1.0.2_0055", "1.02_0055"}
 FIRMWARE_HOSTS = {"bigota.d.miui.com", "iot-ota-cdn.io.mi.com"}
 
 
@@ -129,7 +129,7 @@ class CheckedSession(requests.Session):
         return super().send(request, **kwargs)
 
 
-def check_version(info, expected_version: str | None = "1.0.2_0041") -> None:
+def check_version(info, expected_version: str | None = "1.0.2_0055") -> None:
     if info.model != "njcuk.enstor.ap01":
         raise DownloadRejected("小米云返回的型号不是 AP01，已停止")
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", info.version):
@@ -146,7 +146,7 @@ def check_md5(actual: str, expected: str) -> None:
         raise DownloadRejected("固件 MD5 与同次云端查询不符，已停止")
 
 
-def save_rom(info, expected_version: str | None = "1.0.2_0041") -> dict:
+def save_rom(info, expected_version: str | None = "1.0.2_0055") -> dict:
     check_version(info, expected_version)
     check_url(info.url, "GET", firmware=True)
     target = OUTPUT / f"ap01-{info.version}.bin"
@@ -206,7 +206,7 @@ def save_rom(info, expected_version: str | None = "1.0.2_0041") -> dict:
             temporary_path.unlink(missing_ok=True)
 
 
-def download_with_retry(client, expected_version: str | None = "1.0.2_0041") -> dict:
+def download_with_retry(client, expected_version: str | None = "1.0.2_0055") -> dict:
     """Keep account/session in the calling process during bounded operator retries."""
     for attempt in range(3):
         try:
@@ -267,7 +267,7 @@ def self_test() -> None:
         except DownloadRejected:
             continue
         raise AssertionError("unsafe URL or API was accepted")
-    valid = dict(model="njcuk.enstor.ap01", version="1.0.2_0041", md5="a" * 32)
+    valid = dict(model="njcuk.enstor.ap01", version="1.0.2_0055", md5="a" * 32)
     check_version(SimpleNamespace(**valid))
     check_version(SimpleNamespace(**(valid | {"version": "1.0.2_0099"})), None)
     check_version(SimpleNamespace(**(valid | {"version": "1.0.2_0099"})), "1.0.2_0099")
@@ -308,7 +308,7 @@ def self_test() -> None:
     from unittest.mock import Mock
     client = Mock()
     client.firmware_info.return_value = SimpleNamespace(
-        url="https://iot-ota-cdn.io.mi.com/test.bin", public_dict=lambda: {"version": "1.0.2_0041"}
+        url="https://iot-ota-cdn.io.mi.com/test.bin", public_dict=lambda: {"version": "1.0.2_0055"}
     )
     with patch(__name__ + ".save_rom", side_effect=[requests.Timeout(), {"verified": True}]) as save, \
          patch("builtins.input", return_value="retry"), contextlib.redirect_stdout(io.StringIO()):
@@ -366,10 +366,10 @@ def main() -> int:
     parser.add_argument("--login", action="store_true", help="重新扫码并保存登录态；默认复用已保存凭据")
     target = parser.add_mutually_exclusive_group()
     target.add_argument("--latest", action="store_true", help="接受云端当前最新 AP01 版本")
-    target.add_argument("--version", help="仅接受指定版本；不指定时仍固定 0041")
+    target.add_argument("--version", help="仅接受指定版本；不指定时仍固定 0055")
     parser.add_argument("--info", action="store_true", help="仅查询版本，不下载固件")
     args = parser.parse_args()
-    expected_version = None if args.latest else (args.version or "1.0.2_0041")
+    expected_version = None if args.latest else (args.version or "1.0.2_0055")
     OUTPUT.mkdir(parents=True, exist_ok=True)
     if args.self_test:
         self_test()

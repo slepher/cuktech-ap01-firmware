@@ -1,6 +1,6 @@
 #include "app_manifest_v3.h"
 #include "app_set_boot_v3.h"
-#include "native_integrity_0041.h"
+#include "native_integrity.h"
 #include <cassert>
 #include <cstdio>
 #include <cstring>

@@ -1,5 +1,5 @@
 #include "app_manifest_v3.h"
-#include "native_integrity_0041.h"
+#include "native_integrity.h"
 #include <string.h>
 namespace {
 uint16_t u16(const uint8_t *p){return uint16_t(p[0])|uint16_t(p[1])<<8;}

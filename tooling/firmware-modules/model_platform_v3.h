@@ -1,6 +1,6 @@
 #pragma once
-#include "native_app_port_0041.h"
-#include "screen_port_0041.h"
+#include "native_app_port.h"
+#include "screen_port.h"
 #include <memory>
 // Explicit lowest-platform substitutes for host/RV32 model checks. Never linked
 // into a ROM. Real loader/provider/host/App code uses these instead of ROM I/O.

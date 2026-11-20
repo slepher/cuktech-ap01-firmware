@@ -1,5 +1,5 @@
 #include "apx2.h"
-#include "native_integrity_0041.h"
+#include "native_integrity.h"
 #include <string.h>
 
 namespace {
@@ -44,8 +44,8 @@ Apx2Error apx2Validate(const Apx2Reader &r,const Apx2Limits &limit,Apx2View &out
     if(memcmp(h,"APX2",4)||u32(h+4)!=2||u32(h+8)!=APX2_HEADER||u32(h+12)!=r.size)
         return Apx2Error::Header;
     for(unsigned i=224;i<APX2_HEADER;++i) if(h[i]) return Apx2Error::Header;
-    if(u32(h+16)!=APX2_TARGET_0041||u32(h+20)!=APX2_ISA_RV32IMAFC_ILP32F) return Apx2Error::Target;
-    if((limit.abi_major!=APX2_ABI_MAJOR&&limit.abi_major!=APX2_DIRECT_ABI_MAJOR)||
+    if(u32(h+16)!=APX2_TARGET_AP01||u32(h+20)!=APX2_ISA_RV32IMAFC_ILP32F) return Apx2Error::Target;
+    if(limit.abi_major!=APX2_ABI_MAJOR||
        u32(h+24)!=limit.abi_major||u32(h+28)!=0) return Apx2Error::Abi;
     Apx2View v{};
     v.abi_major=limit.abi_major;
@@ -76,12 +76,9 @@ Apx2Error apx2Validate(const Apx2Reader &r,const Apx2Limits &limit,Apx2View &out
        v.data_write_version!=limit.data_version) return Apx2Error::DataVersion;
     for(unsigned i=0;i<APX2_ENTRY_COUNT;++i) {
         v.entries[i]=u32(h+88+4*i);
-        if(v.abi_major==APX2_DIRECT_ABI_MAJOR&&i>=APX2_DIRECT_ENTRY_COUNT) {
-            if(v.entries[i]) return Apx2Error::Entry;
-            continue;
-        }
         if((v.entries[i]&1)||!inside(v.entries[i],2,0,v.text_bytes)) return Apx2Error::Entry;
     }
+    if(u32(h+100)||u32(h+104))return Apx2Error::Entry;
     uint32_t previous=0;
     for(uint32_t i=0;i<v.fixup_count;++i) {
         uint8_t record[8],word[4];

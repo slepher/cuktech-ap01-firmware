@@ -10,7 +10,7 @@ import argparse
 
 from rom_target import ROOT, load_target, validate_original, validate_profile
 
-spec = importlib.util.spec_from_file_location('packager', Path(__file__).with_name('build-native-app-rom-0041.py'))
+spec = importlib.util.spec_from_file_location('packager', Path(__file__).with_name('build-native-app-rom.py'))
 packager = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(packager)
 
@@ -25,7 +25,7 @@ def rejected(operation):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--target', choices=('0041', '0055'), default='0041')
+    parser.add_argument('--target', choices=('0055',), default='0055')
     target = parser.parse_args().target
     profile = load_target(target)
     original = (ROOT / profile['original']['path']).read_bytes()
@@ -72,7 +72,7 @@ def main():
     assert image.count(b'0x5245434f56455259544147') == 2
     rejected(lambda: packager.assemble(original, bytes(payload), entry - 256, True, entry, target))
     rejected(lambda: packager.assemble(original, bytes(payload), entry, True, entry,
-                                     '0055' if target == '0041' else '0041'))
+                                     '0041'))
     print(json.dumps({'passed': True, 'target': target, 'patch_paths': 7,
                       'unlisted_original_bytes_preserved': True, 'device_accessed': False}))
 
