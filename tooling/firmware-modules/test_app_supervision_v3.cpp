@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstdio>
 #include <thread>
+#include <initializer_list>
 using State=Ap01SupervisorStateV3;using Fault=Ap01SupervisorFaultV3;
 static void expect(const Ap01AppSupervisionV3 &s,State state,Fault fault=Fault::None){auto v=s.snapshot();assert(v.state==state&&v.fault==fault);}
 int main(){
