@@ -24,6 +24,6 @@
 | `ap01-0055-base-0.1.2.bin` | 无 App 基版，提供独立维护服务 |
 | `ap01-0055-app-platform-0.1.2.bin` | ABI 3 App 集合加载平台 |
 
-每种固件附带 payload、ELF、map、manifest、审计与链接报告。附件版本取自 `native_version.h`；文件大小和 SHA256 以对应 Release 的附件与 `SHA256SUMS` 为准。
+Release 仅附带上述两个完整固件和 `SHA256SUMS`，校验清单只列这两个 BIN。payload、ELF、map、manifest、审计与链接报告位于对应 Actions 运行的 `ap01-build-details-<tag>` 构建产物中，保留 90 天，刷机无需下载。附件版本取自 `native_version.h`；文件大小和 SHA256 以对应 Release 的附件与 `SHA256SUMS` 为准。
 
 构建与发布命令见 [README](../README.md)。候选标记 `flashable=false`、`hardware_verified=false`；离线校验通过不代表实机验收。厂商镜像及其内含资源的许可见 [NOTICE](../NOTICE.md)。

@@ -12,7 +12,7 @@ python3 -B tooling/scripts/build-firmware.py --target 0055 --boot-app-v3 --build
 python3 -B tooling/scripts/test-firmware.py --manifest build/check/ap01-0055-app-platform-0.1.2.manifest.json
 ```
 
-检查包含原件身份、补丁边界、恢复标记、镜像长度与 CRC、产物摘要、源码审计和链接结果。manifest 引用构建机上的原件与审计路径，应在对应构建目录中运行校验。
+检查包含原件身份、补丁边界、恢复标记、镜像长度与 CRC、产物摘要、源码审计和链接结果。Release 只包含两个完整 BIN 和对应的 `SHA256SUMS`。构建细节可在 Actions 下载 `ap01-build-details-<tag>`（保留 90 天）。manifest 引用构建机上的原件与审计路径，应在对应构建目录中运行校验。
 
 ## App 包与平台检查
 

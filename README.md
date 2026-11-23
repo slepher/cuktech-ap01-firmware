@@ -36,7 +36,7 @@ git tag -a v0.1.2 -m "AP01 0055 platform release"
 git push origin v0.1.2
 ```
 
-Release 附件包含 `ap01-0055-base-0.1.2.bin`、`ap01-0055-app-platform-0.1.2.bin`、各自的 payload／ELF／map／manifest／审计与链接报告，以及 `SHA256SUMS`。附件版本号读取 `native_version.h` 中的 `AP01_MODIFIED_ROM_VERSION`（当前为 `0.1.2`，不带后缀），与设备上报的修改版版本一致；原厂基础平台版本仍为 0055。发布前更新源码版本，再推送对应 tag（如 `v0.1.2`）。仅创建本地 tag 不触发 CI；工作流使用内置 `GITHUB_TOKEN` 的 `contents: write` 权限，无需额外发布密钥。自动发布仅表示构建与离线校验通过，不代表完成实机验收。
+Release 附件包含 `ap01-0055-base-0.1.2.bin`、`ap01-0055-app-platform-0.1.2.bin`和 `SHA256SUMS`（仅包含这两个完整 BIN 的校验和）。payload、ELF、map、manifest、审计与链接报告存放在对应 Actions 运行的 `ap01-build-details-<tag>` 构建产物中，保留 90 天，刷机无需下载。附件版本号读取 `native_version.h` 中的 `AP01_MODIFIED_ROM_VERSION`（当前为 `0.1.2`，不带后缀），与设备上报的修改版版本一致；原厂基础平台版本仍为 0055。发布前更新源码版本，再推送对应 tag（如 `v0.1.2`）。仅创建本地 tag 不触发 CI；工作流使用内置 `GITHUB_TOKEN` 的 `contents: write` 权限，无需额外发布密钥。自动发布仅表示构建与离线校验通过，不代表完成实机验收。
 
 APX2 名称中的 2 是容器版本，与 App ABI 不同。业务 Bundle 的 `compiler_abi: 2` 也属于另一套协议。
 

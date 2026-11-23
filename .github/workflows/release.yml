@@ -4,12 +4,19 @@ on:
   push:
     tags:
       - '**'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing release whose debug assets should be archived
+        required: true
+        type: string
 
 permissions:
   contents: write
 
 jobs:
   release:
+    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     defaults:
@@ -35,15 +42,28 @@ jobs:
       - name: Build and validate 0055 firmware
         run: |
           version=$(python -c 'import pathlib, re; text = pathlib.Path("tooling/firmware-modules/native_version.h").read_text(); print(re.search(r"^#define AP01_MODIFIED_ROM_VERSION \"([0-9]+\.[0-9]+\.[0-9]+)\"$", text, re.M)[1])')
+          echo "ROM_VERSION=$version" >> "$GITHUB_ENV"
           python -B tooling/scripts/test-rom-target.py
           python -B tooling/scripts/build-firmware.py --target 0055 --build-dir build/release-base --output "dist/ap01-0055-base-${version}.bin" --tool-prefix riscv-none-elf-
           python -B tooling/scripts/test-firmware.py --manifest "dist/ap01-0055-base-${version}.manifest.json"
           python -B tooling/scripts/build-firmware.py --target 0055 --boot-app-v3 --build-dir build/release-app-platform --output "dist/ap01-0055-app-platform-${version}.bin" --tool-prefix riscv-none-elf-
           python -B tooling/scripts/test-firmware.py --manifest "dist/ap01-0055-app-platform-${version}.manifest.json"
 
+      - name: Archive build details
+        uses: actions/upload-artifact@v4
+        with:
+          name: ap01-build-details-${{ github.ref_name }}
+          path: |
+            dist/*.json
+            dist/*.map
+            dist/*.elf
+            dist/*.payload.bin
+          if-no-files-found: error
+          retention-days: 90
+
       - name: Generate checksums
         working-directory: dist
-        run: sha256sum ./* > SHA256SUMS
+        run: sha256sum "ap01-0055-base-${ROM_VERSION}.bin" "ap01-0055-app-platform-${ROM_VERSION}.bin" > SHA256SUMS
 
       - name: Publish GitHub Release
         env:
@@ -51,4 +71,31 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          gh release create "$RELEASE_TAG" dist/* --verify-tag --title "$RELEASE_TAG" --generate-notes --notes '基于原厂 1.0.2_0055，包含无 App 基版和 ABI 3 App 加载平台。仅通过构建与离线校验，尚未完成实机验收。'
+          gh release create "$RELEASE_TAG" "dist/ap01-0055-base-${ROM_VERSION}.bin" "dist/ap01-0055-app-platform-${ROM_VERSION}.bin" dist/SHA256SUMS --verify-tag --title "$RELEASE_TAG" --generate-notes --notes '基于原厂 1.0.2_0055，包含无 App 基版和 ABI 3 App 加载平台。仅通过构建与离线校验，尚未完成实机验收。'
+
+  archive-release:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Download and verify existing release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          gh release download "$RELEASE_TAG" --dir dist
+          cd dist
+          sha256sum --check SHA256SUMS
+      - name: Archive existing build details
+        uses: actions/upload-artifact@v4
+        with:
+          name: ap01-build-details-${{ inputs.release_tag }}
+          path: |
+            dist/*.json
+            dist/*.map
+            dist/*.elf
+            dist/*.payload.bin
+          if-no-files-found: error
+          retention-days: 90
