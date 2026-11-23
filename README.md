@@ -12,7 +12,7 @@
 | [包格式](docs/apx2-package-format.md) | APX2 容器版本 2，App ABI 3 |
 | [固件模块](tooling/firmware-modules/README.md) | 平台、维护、OTA、UI 和 ABI 3 服务 |
 | [构建工具](tooling/scripts/README.md) | 构建、打包、诊断和离线验证 |
-| [刷机说明](docs/flashing.md) | 官方 ROM 转自定义 ROM、升级限制与安装验收 |
+| [刷机说明](docs/flashing.md) | 官方 ROM 转自定义 ROM、升级限制、30 秒试启动保护与失败恢复 |
 | [ROM 清单](roms/CATALOG.md) | 0055 原件与发布附件 |
 
 构建需要 Python 3 和支持 `rv32imafc/ilp32f` 的 RISC-V GCC。ArduinoJson 已随仓库保存；平台构建不依赖外部仓库。

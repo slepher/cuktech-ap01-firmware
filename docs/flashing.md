@@ -30,10 +30,41 @@
 
 先读取当前维护接口的能力、版本、槽位和事务状态。使用独立维护协议时，按设备回执执行 begin、分块上传、commit 和状态查询；未知结果继续查询同一事务，不创建第二笔升级。当前维护实现选择非活动槽，升级前必须确认该槽没有需要保留的恢复镜像。
 
-`tooling/scripts/upload-ota-0031.py` 只接受其声明的特定 0031 镜像格式，**不能用于上传本项目 0055 ROM**。`download_official.py` 只查询和下载官方原件，不刷设备。App 集合更新客户端只安装 App，不安装完整 ROM。
+## ROM 启动失败与恢复
+
+### 30 秒试启动保护的含义
+
+**30 秒是固件启动保护启用后的试运行超时，不是断电后必须等待的时长，也不是原厂通用的“断电 30 秒恢复出厂”操作。** 本项目的 ROM 保护流程如下：
+
+1. 必须事先登记一个有效的稳定槽，且该槽的镜像仍完整可用。
+2. 新 ROM 运行在另一个槽时，维护服务核对稳定槽镜像的长度、CRC 和 build 身份，并先把**下次启动目标**设为稳定槽。成功后状态为 `armed`；当前运行不会立即切槽。
+3. 维护监听和平台提供的健康检查连续通过 **9 秒**后，下次启动目标改为当前新 ROM，状态为 `healthy_locked`。
+4. 从保护启用起 **30 秒**仍未通过健康检查，状态变为 `retained_stable`，下次启动目标继续保留为稳定槽。该分支本身**不会主动重启**；随后正常重启或断电再上电，才会尝试启动稳定槽。
+
+计时从 `armBoot()` 启用保护开始，不保证与接通电源或屏幕亮起的时间一致。平台健康检查也不等于所有 App、页面和外设功能均已验收。App 集合的“连续健康 30 秒”属于另一层机制，不能用它判断 ROM 的回退状态。
+
+### 刷机前准备恢复槽
+
+通过已认证的 `GET /api/firmware/slots` 核对 `running_slot`、`stable_slot`、`stable_revision`、`stability` 和 `boot_safety`。只有 `stability=explicitly_confirmed` 且稳定镜像检查通过，才具备这套保护所需的稳定槽记录。
+
+稳定槽登记接口为 `POST /api/firmware/stable`，要求 `device_mac`、唯一 `request_id`、`slot`、`confirm=true` 和读取到的 `expected_stable_revision`；**只能登记当前正在运行的槽**。应在确认该 ROM 正常时登记，不能在启动失败后猜测另一个槽号并标记。登记只记录镜像身份，不备份或重写镜像；还必须检查下一次 OTA 的目标，避免覆盖该槽。
+
+原厂 0031 不提供本项目的稳定槽登记接口。**首次从原厂刷入自定义 ROM 不能默认已经配置了这套 30 秒保护。** `stable_slot=null` 或 `boot_safety=unconfigured` 表示不能依赖此机制恢复。
+
+### 发生启动故障时
+
+1. **先排除仍在刷写。** 下载、Flash 写入、校验和提交过程中不要断电。OTA 响应超时不等于刷写停止，先查询原事务或 OTA 状态，不重复安装。
+2. **维护仍可访问时，先查状态。** 读取 `/api/firmware/status` 和 `/api/firmware/slots`，核对设备、运行槽、稳定槽及保护状态。处于 `armed` 时观察其转为 `healthy_locked` 或 `retained_stable`，不要把“已等 30 秒”作为回退已准备好的唯一依据。
+3. **确认 `retained_stable` 后恢复。** 确认无 Flash 写入或提交进行中，使用已核对的重启路径；维护不可用但已确认稳定槽启动选择保留时，可断开 AP01 电源，确认设备完全掉电后再上电。代码没有规定“断电后再等 30 秒”。重新上电后核对实际版本、运行槽、画面和网络，不能只凭亮屏判定恢复成功。
+4. **已经 `healthy_locked` 时不能靠等待回退。** 此时下次启动目标是新 ROM，即使随后出现功能故障，断电重启通常仍启动它。维护仍可用时，可通过 `POST /api/firmware/switch` 明确选择已验证可用的另一个槽，再按事务回执执行 `/api/firmware/reboot`。切槽请求需绑定设备、唯一 `request_id`、`target_slot` 和当前 `expected_revision`；不得猜槽或反复重放新事务。
+5. **`unconfigured`、`unknown` 或未进入维护启动阶段时，不保证断电可救回。** 若保护未执行、稳定槽损坏或启动选择写入失败，本机制不能保证恢复。停止循环断电和重复刷写，转用刷前已核实的物理恢复入口或厂商维修；本仓库不提供可保证成功的通用硬件救砖操作。
+
+这套机制保存的是可启动槽位选择，不会自动恢复被覆盖的 ROM、用户数据或所有硬件故障。当前依据为实现和宿主回归，0055／0.1.2 的断电切槽仍需实机验收。
 
 ## 核查依据
 
 - [上游首次安装说明](https://github.com/wqytommy666/cuktech-screen-controller/blob/main/skills/cuktech-ap01-screen-kit/references/realtime-firmware.md)：说明官方 0041 对未签名 Loader 的拒绝，以及 FDS 中转不能绕过签名门禁。
 - [0055 目标配置](../tooling/rom-targets/current.json) 中 `unsigned_ota` 定义文件偏移 `0x6cd60` 的 `dde7` → `7da0` 补丁；[打包器](../tooling/scripts/build-native-app-rom.py) 在两种自定义镜像中应用该补丁。
 - [平台离线验证](0055-qemu-validation-20261106.md) 与 [ROM 清单](../roms/CATALOG.md) 说明产物校验和实机验收边界。来源与许可见 [NOTICE](../NOTICE.md)。
+
+- [ROM 启动保护实现](../tooling/firmware-modules/native_firmware.cpp) 与 [维护回归](../tooling/firmware-modules/test_native_maintenance.cpp)：稳定槽登记、9 秒连续健康、30 秒超时与故障状态。
