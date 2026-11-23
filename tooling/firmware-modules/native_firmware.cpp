@@ -10,6 +10,7 @@ extern "C" {
 #include "native_integrity.h"
 namespace {
 constexpr uint32_t MIN_ROM=296, MAX_ROM=0x700000, MANIFEST=0x675000;
+constexpr uint32_t HEALTH_WINDOW_MS=30000, TRIAL_TIMEOUT_MS=60000;
 enum Phase { Receiving=1, Committing=2, Applied=3, Failed=4, Unknown=5 };
 uint32_t le32(const uint8_t *p) {return uint32_t(p[0])|uint32_t(p[1])<<8|uint32_t(p[2])<<16|uint32_t(p[3])<<24;}
 void put32(uint8_t *p,uint32_t n) {for(unsigned i=0;i<4;++i)p[i]=uint8_t(n>>(8*i));}
@@ -17,6 +18,17 @@ bool id(const char *p) {
     size_t n=p?strlen(p):0;if(!n||n>64)return false;
     for(;*p;++p)if(!((*p>='a'&&*p<='z')||(*p>='A'&&*p<='Z')||(*p>='0'&&*p<='9')||*p=='-'||*p=='_'))return false;
     return true;
+}
+bool romKind(const char *kind) {
+    for(const char *value:{"base","app_platform","official_0031","official_0041","official_0055","third_party"})
+        if(!strcmp(kind,value))return true;
+    return false;
+}
+const char *romWarning(const char *kind) {
+    if(!strcmp(kind,"official_0041"))return "official_0041_restricts_third_party_ota";
+    if(!strcmp(kind,"official_0055"))return "official_0055_restricts_third_party_ota";
+    if(!strcmp(kind,"third_party"))return "third_party_recovery_unknown";
+    return nullptr;
 }
 bool hex32(const char *p,uint32_t &value) {
     if(!p||strlen(p)!=8)return false;value=0;
@@ -37,24 +49,23 @@ bool matches(File &f,const uint8_t *p,size_t n) {
 }
 }
 struct Ap01Firmware::Record {
-    String owner,request,targetBuild,error;
+    String owner,request,targetBuild,error,romKind="third_party";
+    bool force=false;
     uint32_t revision=0,length=0,recoveryCrc=0,position=0,lastOffset=0,lastBytes=0;
     uint64_t deadline=0;
     Phase phase=Receiving;
     bool switching=false,trialPending=false;
     int targetSlot=-1;
-    uint8_t lastDigest[32]={},manifest[52]={};
+    uint8_t lastDigest[32]={},manifest[256]={};
     ota_image image{};
 };
 struct Ap01Firmware::Stable {
     unsigned slot=0,revision=0;
-    Ap01SlotImage image;
     String owner,request;
 };
 bool Ap01Firmware::saveStable(const Stable &value) {
     NativeJsonAllocator0041 a;JsonDocument doc(&a);
     doc["device_mac"]=mac;doc["slot"]=value.slot;doc["revision"]=value.revision;
-    doc["length"]=value.image.length;doc["crc"]=value.image.crc;doc["build"]=value.image.build;
     doc["owner"]=value.owner;doc["request_id"]=value.request;
     uint8_t bytes[525];size_t n=measureJson(doc);
     if(doc.overflowed()||!n||n>512||serializeJson(doc,(char *)bytes+12,513)!=n)return false;
@@ -70,51 +81,49 @@ bool Ap01Firmware::loadStable() {
     if(n<=12||n>524||f.read(bytes,n)!=n||memcmp(bytes,"APS1",4)||le32(bytes+4)!=n-12||ap01_native_crc32(bytes+12,n-12)!=le32(bytes+8))return false;
     NativeJsonAllocator0041 a;JsonDocument doc(&a);
     if(deserializeJson(doc,bytes+12,n-12)||strcmp(doc["device_mac"]|"",mac)||!doc["slot"].is<unsigned>()||doc["slot"].as<unsigned>()>1||
-       !doc["revision"].is<unsigned>()||!doc["revision"].as<unsigned>()||!doc["length"].is<uint32_t>()||
-       doc["length"].as<uint32_t>()<MIN_ROM||doc["length"].as<uint32_t>()>MAX_ROM||!doc["crc"].is<uint32_t>()||
+       !doc["revision"].is<unsigned>()||!doc["revision"].as<unsigned>()||
        !doc["owner"].is<const char *>()||!strlen(doc["owner"]|"")||strlen(doc["owner"]|"")>64||!id(doc["request_id"]|""))return false;
-    const char *build=doc["build"]|"";if(strlen(build)!=32)return false;
-    for(const char *p=build;*p;++p)if(!((*p>='0'&&*p<='9')||(*p>='a'&&*p<='f')))return false;
-    for(const char *field:{"device_mac","owner","request_id","build"}) {
+    for(const char *field:{"device_mac","owner","request_id"}) {
         JsonString value=doc[field].as<JsonString>();if(value.size()!=strlen(value.c_str()))return false;
     }
     stable.reset(new(std::nothrow) Stable);if(!stable)return false;
-    stable->slot=doc["slot"];stable->revision=doc["revision"];stable->image.length=doc["length"];stable->image.crc=doc["crc"];
-    memcpy(stable->image.build,build,33);stable->owner=doc["owner"].as<const char *>();stable->request=doc["request_id"].as<const char *>();
+    stable->slot=doc["slot"];stable->revision=doc["revision"];
+    stable->owner=doc["owner"].as<const char *>();stable->request=doc["request_id"].as<const char *>();
     return stable->owner.length()&&stable->request.length();
 }
-Ap01HttpReply Ap01Firmware::slots(const Ap01HttpRequest &request,const char *principal,uint64_t) {
+Ap01HttpReply Ap01Firmware::slots(const Ap01HttpRequest &request,const char *principal,uint64_t now) {
     if(!port.runningSlot||!port.inspectSlot||!port.selectSlot)return reject(501,"slot_port_unavailable");
     int running=port.runningSlot(port.context);if(running<0||running>1)return reject(503,"running_slot_unknown","slot_inspect");
     bool marking=!strcmp(request.path,"/api/firmware/stable");
     if(marking) {
         if(stableCorrupt)return reject(503,"stable_storage_unavailable","firmware_storage");
         if(strcmp(request.method,"POST"))return reject(405,"method");
-        if(safety==Armed||safety==RetainedStable||safety==SafetyUnknown)return reject(409,"boot_safety_pending","boot_safety");
+        if(safety==Armed||safety==RetainedStable)return reject(409,"boot_safety_pending","boot_safety");
         if(blocksBusiness()||port.busy(port.context))return reject(409,"firmware_busy");
         NativeJsonAllocator0041 a;JsonDocument input(&a);
         if(!request.length||request.length>1024||memchr(request.body,0,request.length)||deserializeJson(input,request.body,request.length)||
            strcmp(input["device_mac"]|"",mac)||!id(input["request_id"]|"")||!input["slot"].is<unsigned>()||
-           input["slot"].as<unsigned>()!=unsigned(running)||input["confirm"]!=true||!input["expected_stable_revision"].is<unsigned>())return reject(400,"stable_envelope");
-        const char *requestId=input["request_id"];unsigned revision=input["expected_stable_revision"];
+           input["slot"].as<unsigned>()>1||input["confirm"]!=true)return reject(400,"stable_envelope");
+        const char *requestId=input["request_id"];unsigned target=input["slot"];
         if(input["device_mac"].as<JsonString>().size()!=12||input["request_id"].as<JsonString>().size()!=strlen(requestId))return reject(400,"stable_envelope");
         if(stable&&stable->owner==principal&&stable->request==requestId) {
-            if(stable->slot!=unsigned(running)||revision!=stable->revision-1)return reject(409,"request_conflict");
+            if(stable->slot!=target)return reject(409,"request_conflict");
         } else {
-            if(revision!=(stable?stable->revision:0)||revision==UINT32_MAX)return reject(409,"stable_revision_conflict");
+            unsigned revision=stable?stable->revision:0;
+            if(revision!=UINT32_MAX)++revision;
             std::unique_ptr<Stable> value(new(std::nothrow) Stable);if(!value)return reject(503,"slot_oom");
-            value->slot=running;value->revision=revision+1;value->owner=principal;value->request=requestId;
+            value->slot=target;value->revision=revision;value->owner=principal;value->request=requestId;
             if(value->owner!=principal||value->request!=requestId)return reject(503,"slot_oom");
-            if(!port.inspectSlot(port.context,running,value->image))return reject(409,value->image.error,"slot_inspect");
             if(!saveStable(*value)){stableCorrupt=true;return reject(503,"stable_storage_unknown","firmware_storage",true);}
             stable=std::move(value);
         }
+        safety=Unconfigured;armBoot(now);
     } else if(strcmp(request.method,"GET"))return reject(405,"method");
     NativeJsonAllocator0041 a;JsonDocument out(&a);out["result"]=marking?"applied":"ok";out["device_mac"]=mac;
-    out["running_slot"]=running;out["stable_revision"]=stable?stable->revision:0;
+    out["running_slot"]=running;
     if(stableCorrupt)out["stable_error"]="stable_storage_unavailable";
-    out["boot_safety"]=safetyName();out["health_window_ms"]=9000;out["trial_timeout_ms"]=30000;
-    if(stable){out["stable_slot"]=stable->slot;out["stable_image_crc"]=stable->image.crc;out["stable_image_length"]=stable->image.length;out["stable_build"]=stable->image.build;out["stability"]="explicitly_confirmed";}
+    out["boot_safety"]=safetyName();out["health_window_ms"]=HEALTH_WINDOW_MS;out["trial_timeout_ms"]=TRIAL_TIMEOUT_MS;
+    if(stable){out["stable_slot"]=stable->slot;out["stability"]="explicitly_confirmed";}
     else {out["stable_slot"]=nullptr;out["stability"]="unconfirmed";}
     out["service"]="ap01-maintenance";return jsonReply(out,200);
 }
@@ -132,14 +141,11 @@ const char *Ap01Firmware::safetyName() const {
         case RetainedStable:return "retained_stable";case SafetyUnknown:return "unknown";default:return "unconfigured";}
 }
 void Ap01Firmware::armBoot(uint64_t now) {
-    if(!port.bootHealthy||!port.runningSlot||!port.inspectSlot||!port.selectSlot||!stable)return;
+    if(!port.runningSlot||!port.selectSlot||!stable)return;
     int running=port.runningSlot(port.context);
     if(running<0||running>1){safety=SafetyUnknown;return;}
     if(unsigned(running)==stable->slot){safety=StableRunning;return;}
-    Ap01SlotImage image;
-    if(!port.inspectSlot(port.context,stable->slot,image)||image.length!=stable->image.length||image.crc!=stable->image.crc||strcmp(image.build,stable->image.build)) {
-        safety=SafetyUnknown;return;
-    }
+    if(!port.bootHealthy){safety=Unconfigured;return;}
     if(record&&record->targetSlot==running&&record->targetBuild==port.build&&
        (record->phase==Applied||record->phase==Committing||record->phase==Unknown||record->trialPending)) {
         // Old stable ROMs understand Failed, and remain usable after fallback.
@@ -153,10 +159,10 @@ void Ap01Firmware::armBoot(uint64_t now) {
 void Ap01Firmware::tick(uint64_t now) {
     if(record&&record->phase==Receiving&&now>=record->deadline)failed("receive_timeout");
     if(safety!=Armed)return;
-    if(now>=armedAt&&now-armedAt>=30000){safety=RetainedStable;if(record&&record->trialPending)record->error="boot_health_timeout";return;}
+    if(now>=armedAt&&now-armedAt>=TRIAL_TIMEOUT_MS){safety=RetainedStable;if(record&&record->trialPending)record->error="boot_health_timeout";return;}
     if(port.bootHealthy(port.context)) {
         if(!healthyObserved){healthySince=now;healthyObserved=true;}
-        if(now>=healthySince&&now-healthySince>=9000) {
+        if(now>=healthySince&&now-healthySince>=HEALTH_WINDOW_MS) {
             int running=port.runningSlot(port.context);
             safety=running>=0&&running<=1&&port.selectSlot(port.context,unsigned(running))==1?Healthy:SafetyUnknown;
             if(safety==Healthy&&record&&record->trialPending){record->phase=Applied;record->error="";booted=true;}
@@ -173,6 +179,7 @@ bool Ap01Firmware::save() {
     doc["target_build"]=record->targetBuild;doc["error"]=record->error;
     doc["operation"]=record->switching?"switch":"upload";doc["target_slot"]=record->targetSlot;
     doc["boot_trial_pending"]=record->trialPending;
+    doc["rom_kind"]=record->romKind;doc["force"]=record->force;
     size_t n=measureJson(doc);if(doc.overflowed()||!n||n>1024)return false;
     std::unique_ptr<uint8_t[]> bytes(new(std::nothrow) uint8_t[n+13]);if(!bytes)return false;
     memcpy(bytes.get(),"APF1",4);put32(bytes.get()+4,n);
@@ -210,6 +217,9 @@ bool Ap01Firmware::load() {
     if((!doc["operation"].isNull()&&(!doc["operation"].is<const char *>()||doc["operation"].as<JsonString>().size()!=strlen(operation)))||
        (!doc["target_slot"].isNull()&&!doc["target_slot"].is<int>()))return false;
     if(strcmp(operation,"upload")&&strcmp(operation,"switch"))return false;
+    const char *kind=doc["rom_kind"]|"third_party";
+    if(!romKind(kind)||(!doc["force"].isNull()&&!doc["force"].is<bool>()))return false;
+    record->romKind=kind;record->force=doc["force"]|false;
     record->switching=!strcmp(operation,"switch");record->targetSlot=doc["target_slot"]|-1;
     if(!doc["boot_trial_pending"].isNull()&&!doc["boot_trial_pending"].is<bool>())return false;
     record->trialPending=doc["boot_trial_pending"]|false;
@@ -295,10 +305,15 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
         uint32_t checksum=0;
         if(!input["length"].is<uint32_t>()||!input["expected_revision"].is<uint32_t>()||!hex32(input["recovery_crc"]|"",checksum))return reject(400,"firmware_envelope");
         uint32_t length=input["length"],revision=input["expected_revision"];
+        const char *kind=input["rom_kind"]|"third_party";
+        if((!input["rom_kind"].isNull()&&(!input["rom_kind"].is<const char *>()||input["rom_kind"].as<JsonString>().size()!=strlen(kind)))||
+           !romKind(kind)||(!input["force"].isNull()&&!input["force"].is<bool>()))return reject(400,"rom_policy_envelope");
+        bool force=input["force"]|false;
+
         if(length<MIN_ROM||length>MAX_ROM||now>UINT64_MAX-300000)return reject(413,"firmware_bounds");
         bool same=record&&record->owner==principal&&record->request==queryId;
         if(same) {
-            if(record->switching||record->length!=length||record->recoveryCrc!=checksum||revision!=record->revision-1)return reject(409,"request_conflict");
+            if(record->switching||record->length!=length||record->recoveryCrc!=checksum||revision!=record->revision-1||record->romKind!=kind||record->force!=force)return reject(409,"request_conflict");
         } else {
             if(blocksBusiness())return reject(409,"firmware_busy");
             uint32_t current=record?record->revision:0;
@@ -308,8 +323,10 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
             if(port.runningSlot) {
                 int running=port.runningSlot(port.context);if(running<0||running>1)return reject(503,"running_slot_unknown");target=running^1;
             }
+            if(stable&&target==int(stable->slot)&&!strcmp(kind,"app_platform")&&!force)
+                return reject(409,"stable_slot_app_platform_requires_force","firmware_admission");
             std::unique_ptr<Record> next(new(std::nothrow) Record);if(!next)return reject(503,"firmware_oom");
-            next->owner=principal;next->request=queryId;
+            next->owner=principal;next->request=queryId;next->romKind=kind;next->force=force;
             if(next->owner!=principal||next->request!=queryId)return reject(503,"firmware_oom");
             next->revision=current+1;next->length=length;next->recoveryCrc=checksum;next->deadline=now+300000;
             next->targetSlot=target;
@@ -343,7 +360,7 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
         } else {
             if(offset!=record->position||request.length>record->length-record->position)return reject(409,"chunk_offset");
             uint32_t lo=record->position>MANIFEST?record->position:MANIFEST;
-            uint32_t hi=record->position+request.length<MANIFEST+52?record->position+request.length:MANIFEST+52;
+            uint32_t hi=record->position+request.length<MANIFEST+sizeof(record->manifest)?record->position+request.length:MANIFEST+sizeof(record->manifest);
             if(lo<hi)memcpy(record->manifest+(lo-MANIFEST),request.body+(lo-record->position),hi-lo);
             if(ota_image_chunk(&record->image,request.body,request.length)||!port.write(port.context,record->position,request.body,request.length)) {
                 failed("flash_write");return reject(500,"flash_write","firmware_write");
@@ -354,6 +371,11 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
         if(!opened||record->position!=record->length)return reject(409,"incomplete");
         if(!ota_image_valid(&record->image)||record->image.recovery_crc!=record->recoveryCrc) {
             failed("image_integrity");return reject(400,"image_integrity","firmware_verify");
+        }
+        if(record->length>=MANIFEST+256&&!memcmp(record->manifest,"AP01APP1",8)) {
+            uint32_t kind=le32(record->manifest+252);
+            const char *actual=kind==1?"base":kind==2?"app_platform":nullptr;
+            if(actual&&record->romKind!=actual){failed("rom_kind_mismatch");return reject(409,"rom_kind_mismatch","firmware_verify");}
         }
         // Optional receipt metadata, never an image-admission requirement.
         if(record->length>=MANIFEST+52&&!memcmp(record->manifest,"AP01APP1",8)&&le32(record->manifest+8)==1&&
@@ -392,6 +414,13 @@ Ap01HttpReply Ap01Firmware::handle(const Ap01HttpRequest &request,const char *pr
     if(record->trialPending&&safety==Armed){out["result"]="trial";out["phase"]="boot_trial";}
     out["target_build"]=record->targetBuild;out["boot_confirmed"]=booted;out["reboot_required"]=record->phase==Applied&&!booted;
     out["operation"]=record->switching?"switch":"upload";out["target_slot"]=record->targetSlot;
+    if(!record->switching){
+        out["rom_kind"]=record->romKind;out["force"]=record->force;
+        if(const char *warning=romWarning(record->romKind.c_str()))out["warning"]=warning;
+        if(stable&&record->targetSlot==int(stable->slot)&&record->romKind=="app_platform"&&record->force)
+            out["warning"]="stable_slot_app_platform_forced";
+    }
+
     if(record->error.length()){out["error"]=record->error;out["stage"]="firmware_commit";out["action"]=record->phase==Unknown?"query_original_request":"read_maintenance_status";}
     return jsonReply(out,record->phase==Unknown?503:200);
 }

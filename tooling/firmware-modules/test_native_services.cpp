@@ -47,7 +47,7 @@ Ap01VfsOps ap01RomVfs(){
     return p;
 }
 int ap01SelectedSlot0041(){return 0;}
-bool ap01InspectSlot0041(unsigned,bool,Ap01SlotImage &){assert(false);return false;}
+bool ap01InspectSlot0041(unsigned,Ap01SlotImage &){assert(false);return false;}
 int ap01SelectSlot0041(unsigned){assert(false);return -1;}
 int ap01DeviceCodeLoad0041(const Ap01VfsOps &,char out[9]){memcpy(out,"01234567",9);return 0;}
 int ap01DiagnosticFile0041(void *,const char *,uint32_t,uint8_t *,unsigned,uint32_t *){assert(false);return -1;}

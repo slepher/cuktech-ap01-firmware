@@ -62,6 +62,20 @@ if a.rom:
         (Path(state)/'f21').mkdir()
         regression_result=subprocess.check_output([str(regression),state,str(a.rom.resolve())],
                                                  text=True,timeout=120)
+    recovery_obj=a.out.resolve()/'test_native_maintenance_recovery.cpp.o'
+    subprocess.run(['clang++','-std=c++17','-g','-fsanitize=address,undefined',
+                    '-DARDUINOJSON_ENABLE_ARDUINO_STRING=1',
+                    '-DARDUINOJSON_ENABLE_STD_STRING=0','-DARDUINOJSON_ENABLE_STD_STREAM=0',
+                    '-I'+str(modules),'-I'+str(root/'tooling/vendor/ArduinoJson/src'),
+                    '-c',str(modules/'test_native_maintenance_recovery.cpp'),'-o',str(recovery_obj)],check=True)
+    recovery=a.out.resolve()/'test-maintenance-recovery'
+    subprocess.run(['clang++','-fsanitize=address,undefined',*map(str,objects),
+                    str(extra[1]),str(recovery_obj),'-o',str(recovery)],check=True)
+    with tempfile.TemporaryDirectory(prefix='ap01-recovery-') as state:
+        for n in range(6):(Path(state)/('maintenance-'+str(n))).mkdir()
+        recovery_result=subprocess.check_output([str(recovery),state],text=True,timeout=120)
+    report['recovery_and_rom_policy']=recovery_result.strip()
+    print(recovery_result,end='')
     report['independent_maintenance']=regression_result.strip()
     report['rom_sha256']=hashlib.sha256(a.rom.read_bytes()).hexdigest()
     for name in ('test_native_maintenance.cpp','native_http_transport.cpp',

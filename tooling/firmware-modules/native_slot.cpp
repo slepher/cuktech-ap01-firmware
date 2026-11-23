@@ -40,7 +40,7 @@ int ap01SelectedSlot0041() {
     }
     return -1;
 }
-bool ap01InspectSlot0041(unsigned slot,bool running,Ap01SlotImage &out) {
+bool ap01InspectSlot0041(unsigned slot,Ap01SlotImage &out) {
     out=Ap01SlotImage{};
     if(slot>1){out.error="slot_bounds";return false;}Reader file(slot);
     // Derive framing from the checked native recovery record, not an optional
@@ -60,16 +60,13 @@ bool ap01InspectSlot0041(unsigned slot,bool running,Ap01SlotImage &out) {
         }
     }
     if(!length){out.error="slot_recovery_length";return false;}
-    ota_image image;if(ota_image_begin(&image,length))return false;
-    for(uint32_t at=0;at<length;) {
-        unsigned n=length-at>1024?1024:length-at;
-        if(!file.read(at,bytes,n)){out.error="slot_read";return false;}
-        if(running&&!at&&memcmp(bytes,(const void *)(uintptr_t)0x9ffff000,256)){out.error="slot_running_mapping";return false;}
-        if(ota_image_chunk(&image,bytes,n)){out.error="slot_length";return false;}
-        at+=n;
-    }
-    if(!ota_image_valid(&image)){out.error="slot_header_or_crc";return false;}
-    out.length=length;out.crc=image.recovery_crc;
+    // OTA validates the transport CRC before committing. Installed ROM bytes
+    // need not retain that transport CRC; registration uses the internal ROM
+    // type and explicit confirmation, not a second whole-image admission test.
+    if(!file.read(0,bytes,256)){out.error="slot_read";return false;}
+    if(ap01_native_crc32(bytes,252)!=le32(bytes+252)){out.error="slot_header_crc";return false;}
+    if(!file.read(length-40,bytes,40)){out.error="slot_read";return false;}
+    out.length=length;out.crc=le32(bytes+36); // Stored upload identity, not a recomputed CRC.
     uint8_t manifest[52];bool custom=length>=0x675000+sizeof(manifest)&&file.read(0x675000,manifest,sizeof(manifest))&&
         !memcmp(manifest,"AP01APP1",8)&&le32(manifest+8)==1&&le32(manifest+12)==length&&le32(manifest+16)==0x675000;
     const char *hex="0123456789abcdef";

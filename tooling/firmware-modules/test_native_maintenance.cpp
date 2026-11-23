@@ -66,7 +66,11 @@ Ap01HttpRequest request(const char *method,const char *path,const std::string &b
 }
 std::string beginBody(const std::string &image,const char *id="fw-test",unsigned revision=0){
     uint32_t crc=0;for(unsigned i=0;i<4;++i)crc|=uint32_t(uint8_t(image[image.size()-4+i]))<<(8*i);char hex[9];snprintf(hex,9,"%08x",crc);
-    return "{\"device_mac\":\"AABBCCDDEEFF\",\"request_id\":\""+std::string(id)+"\",\"expected_revision\":"+std::to_string(revision)+",\"length\":"+std::to_string(image.size())+",\"recovery_crc\":\""+hex+"\"}";
+    std::string kind="third_party";
+    if(image.size()>=0x675100&&!memcmp(image.data()+0x675000,"AP01APP1",8)) {
+        unsigned type=uint8_t(image[0x6750fc]);if(type==1)kind="base";else if(type==2)kind="app_platform";
+    }
+    return "{\"device_mac\":\"AABBCCDDEEFF\",\"request_id\":\""+std::string(id)+"\",\"expected_revision\":"+std::to_string(revision)+",\"rom_kind\":\""+kind+"\",\"length\":"+std::to_string(image.size())+",\"recovery_crc\":\""+hex+"\"}";
 }
 const std::string commitBody="{\"device_mac\":\"AABBCCDDEEFF\",\"request_id\":\"fw-test\"}";
 void upload(Ap01Firmware &fw,const std::string &image,size_t first=0){
@@ -83,16 +87,43 @@ void unboundMaintenance(const std::string &folder,const std::string &image,Disk 
         static int select(void *p,unsigned slot){auto &s=*(Slots *)p;++s.selections;s.selected=slot;return 1;}
         Ap01FirmwarePort callbacks(){auto result=port();result.runningSlot=current;result.inspectSlot=inspect;result.selectSlot=select;return result;}
     } fake;
-    fake.expected=image;fake.identity.length=image.size();fake.identity.crc=1234;
+    fake.expected=image;fake.identity.length=image.size();fake.identity.crc=1234;memcpy(fake.identity.build,fake.build,33);
     LittleFSClass fs(ops,folder.c_str());assert(fs.inspect("/bindings.bin")==0);
     Ap01MaintenancePort0041 servicePort{&disk,fake.callbacks()};
     servicePort.deviceCode=[](void *p,char out[9]){memcpy(out,((Disk *)p)->code,9);return 0;};
+    {
+        std::string stableFolder=folder+"/stable-policy";assert(!mkdir(stableFolder.c_str(),0700));
+        LittleFSClass stableFs(ops,stableFolder.c_str());
+        auto appPort=servicePort;
+        appPort.diagnostic.runtime=[](void *){return Ap01RuntimeSnapshotV3{};};
+        const std::string mark=R"({"device_mac":"AABBCCDDEEFF","request_id":"stable-policy","slot":0,"confirm":true})";
+        Ap01Maintenance0041 app(stableFs,appPort,{},"AABBCCDDEEFF",29);assert(app.begin());
+        auto other=mark;other.replace(other.find("\"slot\":0"),8,"\"slot\":1");
+        auto assigned=app.handle(request("POST","/api/firmware/stable",other,disk.code),1);
+        assert(assigned.status==200&&strstr(assigned.bytes.c_str(),"\"stable_slot\":1"));
+        Ap01Maintenance0041 base(stableFs,servicePort,{},"AABBCCDDEEFF",29);assert(base.begin());
+        assert(base.handle(request("POST","/api/firmware/stable",mark,"99999999"),1).status==401);
+        auto baseMark=mark;baseMark.replace(baseMark.find("stable-policy"),13,"base-policy");
+        auto applied=base.handle(request("POST","/api/firmware/stable",baseMark,disk.code),1);
+        assert(applied.status==200&&strstr(applied.bytes.c_str(),"\"boot_safety\":\"stable_running\""));
+        assert(!strstr(applied.bytes.c_str(),"stable_revision"));
+        auto receipt=readAll((stableFolder+"/stable.bin").c_str());
+        auto replay=base.handle(request("POST","/api/firmware/stable",baseMark,disk.code),2);
+        assert(replay.status==200&&!strstr(replay.bytes.c_str(),"stable_revision"));
+        assert(receipt==readAll((stableFolder+"/stable.bin").c_str()));
+        auto nextMark=mark;nextMark.replace(nextMark.find("stable-policy"),strlen("stable-policy"),"stable-next");
+        auto updated=base.handle(request("POST","/api/firmware/stable",nextMark,disk.code),3);
+        assert(updated.status==200&&!strstr(updated.bytes.c_str(),"stable_revision"));
+        Ap01Maintenance0041 restarted(stableFs,servicePort,{},"AABBCCDDEEFF",31);assert(restarted.begin());
+        auto stored=restarted.handle(request("GET","/api/firmware/slots",{},disk.code),2);
+        assert(stored.status==200&&strstr(stored.bytes.c_str(),"\"stable_slot\":0")&&!strstr(stored.bytes.c_str(),"stable_revision"));
+    }
     {
         Ap01Maintenance0041 maintenance(fs,servicePort,{},"AABBCCDDEEFF",30);assert(maintenance.begin());
         Ap01HttpWorkspace0041 workspace;
         assert(maintenance.handle(request("GET","/api/diagnostic/versions",{},""),1).status==401);
         auto versions=maintenance.handle(request("GET","/api/diagnostic/versions",{},disk.code),1);
-        assert(versions.status==200 && strstr(versions.bytes.c_str(),"\"modified_version\":\"0.1.2\""));
+        assert(versions.status==200 && strstr(versions.bytes.c_str(),"\"modified_version\":\"0.1.3\""));
         assert(strstr(versions.bytes.c_str(),"\"supports_app\":false") && strstr(versions.bytes.c_str(),"\"apps\":[]"));
         disk.denyLock=true;
         assert(maintenance.handle(request("GET","/health",{},disk.code),1).status==200);
@@ -238,8 +269,8 @@ int main(int argc,char **argv){
         fake.identity.length=image.size();fake.identity.crc=1234;memcpy(fake.identity.build,fake.build,33);
         std::string folder=root+"/f7";LittleFSClass fs(ops,folder.c_str());
         auto binding=readAll((root+"/bindings.bin").c_str());std::ofstream(folder+"/bindings.bin",std::ios::binary).write(binding.data(),binding.size());
-        const std::string mark="{\"device_mac\":\"AABBCCDDEEFF\",\"request_id\":\"stable-test\",\"slot\":0,\"expected_stable_revision\":0,\"confirm\":true}";
-        const std::string change="{\"device_mac\":\"AABBCCDDEEFF\",\"request_id\":\"switch-test\",\"target_slot\":0,\"expected_revision\":0,\"expected_stable_revision\":1,\"expected_image_crc\":1234}";
+        const std::string mark="{\"device_mac\":\"AABBCCDDEEFF\",\"request_id\":\"stable-test\",\"slot\":0,\"confirm\":true}";
+        const std::string change="{\"device_mac\":\"AABBCCDDEEFF\",\"request_id\":\"switch-test\",\"target_slot\":0,\"expected_revision\":0,\"expected_image_crc\":1234}";
         const std::string reboot="{\"device_mac\":\"AABBCCDDEEFF\",\"request_id\":\"switch-test\"}";
         {
             // Business never starts: maintenance still authenticates and works.
@@ -326,11 +357,11 @@ int main(int argc,char **argv){
                 Ap01Firmware fw(trialFs,callbacks,"AABBCCDDEEFF");assert(fw.begin(100));
                 auto status=[&](uint64_t now){return text(fw.handle(request("GET","/api/firmware/switch-test",{}),"bridge-test",now).bytes);};
                 if(scenario==7){assert(status(101).find("unconfigured")!=std::string::npos&&fake.selections==before);continue;}
-                if(scenario==3||scenario==4){assert(status(101).find("\"boot_safety\":\"unknown\"")!=std::string::npos);fw.tick(10000);assert(fake.selections==before+(scenario==3));continue;}
+                if(scenario==3){assert(status(101).find("\"boot_safety\":\"unknown\"")!=std::string::npos);fw.tick(10000);assert(fake.selections==before+(scenario==3));continue;}
                 assert(fake.selected==0&&fake.selections==before+1&&!fw.blocksBusiness());
                 assert(status(101).find("\"result\":\"trial\"")!=std::string::npos);
                 if(scenario==1||scenario==6) {
-                    fake.healthy=false;fw.tick(10000);fw.tick(30100);
+                    fake.healthy=false;fw.tick(10000);fw.tick(60100);
                     assert(fake.selected==0&&fake.selections==before+1&&status(30101).find("retained_stable")!=std::string::npos);
                 } else if(scenario==5) {
                     std::string manual=change;auto revision=manual.find("\"expected_revision\":0");manual[revision+20]='1';
@@ -339,10 +370,9 @@ int main(int argc,char **argv){
                     fw.tick(15000);auto slots=text(fw.handle(request("GET","/api/firmware/slots",{}),"bridge-test",15001).bytes);
                     assert(fake.selected==0&&slots.find("retained_stable")!=std::string::npos);
                 } else {
-                    fw.tick(9100);assert(fake.selected==0);
-                    if(scenario==2){fake.healthy=false;fw.tick(9101);fake.healthy=true;fw.tick(9200);fw.tick(18199);assert(fake.selected==0);fw.tick(18200);}
-                    else fw.tick(9101);
-                    assert(fake.selected==1&&fake.selections==before+2&&status(19000).find("healthy_locked")!=std::string::npos);
+                    if(scenario==2){fw.tick(9100);fake.healthy=false;fw.tick(9101);fake.healthy=true;fw.tick(9200);fw.tick(39199);assert(fake.selected==0);fw.tick(39200);}
+                    else {fw.tick(30100);assert(fake.selected==0);fw.tick(30101);}
+                    assert(fake.selected==1&&fake.selections==before+2&&status(40000).find("healthy_locked")!=std::string::npos);
                 }
             }
             // Persisted trial remains Failed for the older stable service.

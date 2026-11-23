@@ -22,7 +22,7 @@ def menu_hooks(payload,rom_target='0055'):
     for offset,target,span in records:
         if span != expected[offset][0] or target&1 or not base+offset_base+256 <= target < base+offset_base+len(payload):
             raise ValueError('menu hook bounds')
-    if any(payload[252:256]):raise ValueError('menu hook reserved bytes')
+    if struct.unpack_from('<I',payload,252)[0] not in (0,1,2):raise ValueError('unknown ROM kind')
     return records
 
 def call(target,site,base):
@@ -132,6 +132,7 @@ def main():
     h[192:200]=b'AP01MNU1';struct.pack_into('<I',h,200,4)
     settings_hooks=[(r['offset'],len(bytes.fromhex(r['original_hex'])),r['symbol']) for r in profile['menu_hooks']]
     for i,(offset,span,name) in enumerate(settings_hooks):struct.pack_into('<3I',h,204+12*i,offset,symbols[name],span)
+    struct.pack_into('<I',h,252,2 if audit.get('boot_app_v3') else 1)
     struct.pack_into('<I',h,32,zlib.crc32(h));payload[:256]=h
     image=assemble(original,bytes(payload),entry,True,symbols['ap01TimerDelete0041'],a.target)
     payload_path=output.with_suffix('.payload.bin');manifest_path=output.with_suffix('.manifest.json')
@@ -144,6 +145,7 @@ def main():
     manifest={'format':f'ap01-native-app-{a.target}-v1','firmware_target':target_name.decode(),'build_id':h[36:52].hex(),
         'rom_target':a.target,'target_profile_sha256':profile_identity(a.target),
         'rom_versions':audit.get('rom_versions'), 'supports_app':bool(audit.get('boot_app_v3')),
+        'rom_kind':'app_platform' if audit.get('boot_app_v3') else 'base',
         'flashable':False,'hardware_verified':False,'simulator_verified':False,'unsigned_ota':True,
         'native_recovery_compatible':True,'recovery_marker_count':2,
         'timer_delete_guard':{'entry':hex(symbols['ap01TimerDelete0041']),'offset':hex(profile['timer_delete']['offset']),'bytes':8,'null_is_noop':True,'nonnull_tail':hex(profile['timer_delete']['nonnull_tail'])},

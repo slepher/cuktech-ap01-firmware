@@ -74,7 +74,7 @@ struct Ap01NativeServices0041::State {
     static int firmwareCommit(void *p) {int slot=((State *)p)->bootSlot;return slot<0?-1:ap01SelectSlot0041(unsigned(slot)^1);}
     static void firmwareReboot(void *) {reboot();}
     static int runningSlot(void *p) {return ((State *)p)->bootSlot;}
-    static bool inspectSlot(void *p,unsigned slot,Ap01SlotImage &out) {return ap01InspectSlot0041(slot,int(slot)==((State *)p)->bootSlot,out);}
+    static bool inspectSlot(void *,unsigned slot,Ap01SlotImage &out) {return ap01InspectSlot0041(slot,out);}
     static int selectSlot(void *,unsigned slot) {return ap01SelectSlot0041(slot);}
     static bool bootHealthy(void *p) {
         auto &s=*(State *)p;

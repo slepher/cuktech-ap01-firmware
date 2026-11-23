@@ -1,4 +1,4 @@
-# 0055／0.1.2 平台离线验证
+# 0055／0.1.3 平台离线验证
 
 使用 Python 3 和 xPack RISC-V GCC 12.5.0-1，在仓库根目录执行。每次构建使用新的输出路径。
 
@@ -6,10 +6,10 @@
 
 ```sh
 python3 -B tooling/scripts/test-rom-target.py
-python3 -B tooling/scripts/build-firmware.py --target 0055 --build-dir build/check-base --output build/check/ap01-0055-base-0.1.2.bin --tool-prefix /path/to/riscv-none-elf-
-python3 -B tooling/scripts/test-firmware.py --manifest build/check/ap01-0055-base-0.1.2.manifest.json
-python3 -B tooling/scripts/build-firmware.py --target 0055 --boot-app-v3 --build-dir build/check-app-platform --output build/check/ap01-0055-app-platform-0.1.2.bin --tool-prefix /path/to/riscv-none-elf-
-python3 -B tooling/scripts/test-firmware.py --manifest build/check/ap01-0055-app-platform-0.1.2.manifest.json
+python3 -B tooling/scripts/build-firmware.py --target 0055 --build-dir build/check-base --output build/check/ap01-0055-base-0.1.3.bin --tool-prefix /path/to/riscv-none-elf-
+python3 -B tooling/scripts/test-firmware.py --manifest build/check/ap01-0055-base-0.1.3.manifest.json
+python3 -B tooling/scripts/build-firmware.py --target 0055 --boot-app-v3 --build-dir build/check-app-platform --output build/check/ap01-0055-app-platform-0.1.3.bin --tool-prefix /path/to/riscv-none-elf-
+python3 -B tooling/scripts/test-firmware.py --manifest build/check/ap01-0055-app-platform-0.1.3.manifest.json
 ```
 
 检查包含原件身份、补丁边界、恢复标记、镜像长度与 CRC、产物摘要、源码审计和链接结果。Release 只包含两个完整 BIN 和对应的 `SHA256SUMS`。构建细节可在 Actions 下载 `ap01-build-details-<tag>`（保留 90 天）。manifest 引用构建机上的原件与审计路径，应在对应构建目录中运行校验。

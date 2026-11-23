@@ -46,8 +46,13 @@ jobs:
           python -B tooling/scripts/test-rom-target.py
           python -B tooling/scripts/build-firmware.py --target 0055 --build-dir build/release-base --output "dist/ap01-0055-base-${version}.bin" --tool-prefix riscv-none-elf-
           python -B tooling/scripts/test-firmware.py --manifest "dist/ap01-0055-base-${version}.manifest.json"
+          python -B tooling/scripts/test-native-slot.py --rom "dist/ap01-0055-base-${version}.bin"
+          mkdir -p build/release-services
+          python -B tooling/scripts/test-native-services.py --out build/release-services --rom "dist/ap01-0055-base-${version}.bin"
           python -B tooling/scripts/build-firmware.py --target 0055 --boot-app-v3 --build-dir build/release-app-platform --output "dist/ap01-0055-app-platform-${version}.bin" --tool-prefix riscv-none-elf-
           python -B tooling/scripts/test-firmware.py --manifest "dist/ap01-0055-app-platform-${version}.manifest.json"
+          python -B tooling/scripts/test-native-slot.py --rom "dist/ap01-0055-app-platform-${version}.bin"
+          python -B tooling/scripts/test-rom-classification.py --base "dist/ap01-0055-base-${version}.bin" --app "dist/ap01-0055-app-platform-${version}.bin"
 
       - name: Archive build details
         uses: actions/upload-artifact@v4

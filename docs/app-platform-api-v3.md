@@ -1,6 +1,6 @@
 # App 平台 C ABI 3.1
 
-当前基础平台为原厂 **1.0.2_0055**，修改版为 **0.1.2**，独立 App 使用 ABI 3，平台函数表为 3.1。Release 中的 `ap01-0055-app-platform-0.1.2.bin` 提供 App 加载能力，`ap01-0055-base-0.1.2.bin` 不加载 App；构建与发布见 [README](../README.md)。
+当前基础平台为原厂 **1.0.2_0055**，修改版为 **0.1.3**，独立 App 使用 ABI 3，平台函数表为 3.1。Release 中的 `ap01-0055-app-platform-0.1.3.bin` 提供 App 加载能力，`ap01-0055-base-0.1.3.bin` 不加载 App；构建与发布见 [README](../README.md)。
 
 权威声明为 `tooling/firmware-modules/app_abi_v3.h`、`app_platform_api_v3.h` 及其引用的公开 C 结构。目标 RV32IMAFC、little-endian、ILP32F；指针/int/size_t 为 32 位，变参遵循同一 ABI。不传 C++ 私有对象、String、异常、STL 或 TLS。
 
