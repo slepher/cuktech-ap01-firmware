@@ -61,7 +61,7 @@ int open(void *,const char *path,unsigned mode){
         }
         return -1;
     }
-    if(mode||strcmp(path,"/resource/app-current.apx2")||!m.package||m.packageOpen)return -1;
+    if(mode||strcmp(path,"/resource/app-current.apx")||!m.package||m.packageOpen)return -1;
     m.packageOpen=true;m.position=0;return 10;
 }
 int close(void *,int fd){if(auto *h=handle(fd)){*h={};return 0;}

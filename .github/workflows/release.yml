@@ -44,10 +44,13 @@ jobs:
           version=$(python -c 'import pathlib, re; text = pathlib.Path("tooling/firmware-modules/native_version.h").read_text(); print(re.search(r"^#define AP01_MODIFIED_ROM_VERSION \"([0-9]+\.[0-9]+\.[0-9]+)\"$", text, re.M)[1])')
           echo "ROM_VERSION=$version" >> "$GITHUB_ENV"
           python -B tooling/scripts/test-rom-target.py
+          python -B tooling/scripts/test-app-set-errors-v3.py
           python -B tooling/scripts/build-firmware.py --target 0055 --build-dir build/release-base --output "dist/ap01-0055-base-${version}.bin" --tool-prefix riscv-none-elf-
           python -B tooling/scripts/test-firmware.py --manifest "dist/ap01-0055-base-${version}.manifest.json"
           python -B tooling/scripts/test-native-slot.py --rom "dist/ap01-0055-base-${version}.bin"
           mkdir -p build/release-services
+          clang++ -std=c++17 -Wall -Wextra -Werror -fsanitize=address,undefined -pthread tooling/firmware-modules/app_supervision_v3.cpp tooling/firmware-modules/test_app_supervision_v3.cpp -o build/release-services/test-app-supervision
+          build/release-services/test-app-supervision
           python -B tooling/scripts/test-native-services.py --out build/release-services --rom "dist/ap01-0055-base-${version}.bin"
           python -B tooling/scripts/build-firmware.py --target 0055 --boot-app-v3 --build-dir build/release-app-platform --output "dist/ap01-0055-app-platform-${version}.bin" --tool-prefix riscv-none-elf-
           python -B tooling/scripts/test-firmware.py --manifest "dist/ap01-0055-app-platform-${version}.manifest.json"
@@ -76,7 +79,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          gh release create "$RELEASE_TAG" "dist/ap01-0055-base-${ROM_VERSION}.bin" "dist/ap01-0055-app-platform-${ROM_VERSION}.bin" dist/SHA256SUMS --verify-tag --title "$RELEASE_TAG" --generate-notes --notes '基于原厂 1.0.2_0055，包含无 App 基版和 ABI 3 App 加载平台。仅通过构建与离线校验，尚未完成实机验收。'
+          gh release create "$RELEASE_TAG" "dist/ap01-0055-base-${ROM_VERSION}.bin" "dist/ap01-0055-app-platform-${ROM_VERSION}.bin" dist/SHA256SUMS --verify-tag --title "$RELEASE_TAG" --generate-notes --notes '基于原厂 1.0.2_0055，包含无 App 基版和 ABI 3 App 加载平台。安装与恢复操作见仓库 docs/flashing.md。'
 
   archive-release:
     if: github.event_name == 'workflow_dispatch'

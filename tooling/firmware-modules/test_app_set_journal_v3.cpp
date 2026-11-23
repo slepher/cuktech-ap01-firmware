@@ -254,7 +254,7 @@ static void publication(const char *package){
     e.package_bytes=bytes.size();e.image_bytes=view.image_bytes+view.bss_bytes;e.heap_bytes=view.heap_bytes;e.stack_bytes=view.stack_bytes;
     e.capabilities=view.required_services;e.data_min=view.data_read_min;e.data_max=view.data_read_max;e.data_write=view.data_write_version;
     const char *hex="0123456789abcdef";std::string final="/resource/app-store/packages/";
-    for(auto b:e.digest){final+=hex[b>>4];final+=hex[b&15];}final+=".apx2";
+    for(auto b:e.digest){final+=hex[b>>4];final+=hex[b&15];}final+=".apx";
     for(unsigned scenario=0;scenario<8;++scenario){
         using C=Ap01SetCommitResultV3;
         Disk disk;auto r=initial();r.changedMask=r.readyMask=1;r.changedBytes=bytes.size();r.received[0]=bytes.size();
@@ -288,7 +288,7 @@ static void publication(const char *package){
         unsigned reboots=0;reboot.tick(500,&reboots,[](void *p){++*(unsigned*)p;});CHECK(reboots==1);
         CHECK(call(5500)==C::RebootFailed&&journal.current()->sequence==sequence);
     }
-    for(unsigned fault=0;fault<6;++fault){Disk disk;disk.cut=1024;auto r=initial();r.changedMask=1;r.changedBytes=bytes.size();
+    for(unsigned fault=0;fault<7;++fault){Disk disk;disk.cut=1024;auto r=initial();r.changedMask=1;r.changedBytes=bytes.size();
         install(disk,0,r);Ap01SetJournalV3 journal(disk.ops(),mac);CHECK(journal.load()==R::Ok);
         Ap01SetDownloadV3 download(disk.ops(),journal,manifest);
         for(uint32_t at=0;at<bytes.size();at+=1024){uint32_t n=std::min(uint32_t(bytes.size())-at,1024u);
@@ -298,12 +298,13 @@ static void publication(const char *package){
         if(fault==3)disk.journalCut=31;
         if(fault==4)for(auto &f:disk.files)if(f.first.find(".part")!=std::string::npos)f.second.back()^=1;
         if(fault==5){disk.files[final]=bytes;disk.files[final].back()^=1;}
+        if(fault==6)disk.files[final+"2"]=bytes;
         auto result=download.ready(r.transaction,0,1);
-        CHECK(result==(fault==0?D::Ok:fault>=4?D::Package:D::Unknown));
-        if(fault>=4){CHECK(!journal.current()->readyMask&&!disk.renames);continue;}
+        CHECK(result==((fault==0||fault==6)?D::Ok:fault>=4?D::Package:D::Unknown));
+        if(fault==4||fault==5){CHECK(!journal.current()->readyMask&&!disk.renames);continue;}
         disk.renameLost=disk.renameFails=false;disk.journalCut=-1;CHECK(journal.load()==R::Ok);
         Ap01SetDownloadV3 resumed(disk.ops(),journal,manifest);CHECK(resumed.ready(r.transaction,0,1)==D::Ok);
-        CHECK(journal.current()->readyMask==1&&disk.files[final]==bytes);
+        CHECK(journal.current()->readyMask==1&&disk.files[fault==6?final+"2":final]==bytes);
         unsigned calls=disk.renames;CHECK(resumed.ready(r.transaction,0,1)==D::Ok&&calls==disk.renames);
         CHECK(resumed.chunk(r.transaction,0,0,bytes.data(),1)==D::State);
         CHECK(journal.load()==R::Ok&&journal.current()->readyMask==1);
@@ -425,7 +426,7 @@ static void cleanup(){
     old.entries[0].digest[0]=3;candidate.entries[0].digest[0]=4;
     old.entries[1].digest[0]=candidate.entries[1].digest[0]=5;
     auto packagePath=[](unsigned byte){std::string path="/resource/app-store/packages/";const char *hex="0123456789abcdef";
-        path+=hex[byte>>4];path+=hex[byte&15];path+=std::string(62,'0');return path+".apx2";};
+        path+=hex[byte>>4];path+=hex[byte&15];path+=std::string(62,'0');return path+".apx";};
     for(unsigned phase=0;phase<3;++phase)for(unsigned fault=0;fault<5;++fault){Disk disk;auto record=initial();
         record.sequence=2;record.oldVersion=1;record.oldDigest[0]=1;record.newVersion=2;record.newDigest[0]=2;
         record.readyMask=3;record.phase=phase==0?P::Succeeded:phase==1?P::FailedRolledBack:P::Cancelled;
@@ -435,7 +436,10 @@ static void cleanup(){
         auto prior=record;prior.sequence=1;prior.cleanupPending=0;
         prior.phase=phase==0?P::TrialStarted:phase==1?P::RollbackStarted:P::SwitchPending;
         install(disk,0,record);install(disk,1,prior);
-        for(unsigned digest=3;digest<=5;++digest)disk.files[packagePath(digest)]={uint8_t(digest)};
+        for(unsigned digest=3;digest<=5;++digest){
+            disk.files[packagePath(digest)]={uint8_t(digest)};
+            disk.files[packagePath(digest)+"2"]={uint8_t(digest)};
+        }
         std::string incoming="/resource/app-store/incoming/01"+std::string(30,'0')+"-0.part";
         disk.files[incoming]={1};
         disk.checkCleanupBarrier=true;
@@ -447,6 +451,8 @@ static void cleanup(){
         disk.cut=320;disk.removeFails=disk.removeLost=false;disk.lostWriteAt=0;
         CHECK(journal.load()==R::Ok);CHECK(ap01CleanupSetV3(journal,disk.ops(),&old,candidate)==C::Ok);
         CHECK(!journal.current()->cleanupPending&&!disk.files.count(packagePath(phase==0?3:4))&&!disk.files.count(incoming));
+        CHECK(!disk.files.count(packagePath(phase==0?3:4)+"2"));
+        CHECK(disk.files.count(packagePath(5)+"2")&&disk.files.count(packagePath(phase==0?4:3)+"2"));
         unsigned removes=disk.removes;CHECK(ap01CleanupSetV3(journal,disk.ops(),&old,candidate)==C::Ok&&disk.removes==removes);
     }
 }
@@ -465,7 +471,7 @@ static void fullTransactions(const char *appPath,const char *manifestPath,const 
         auto currentBytes=original;Ap01ManifestV3 current{};
         struct Store {Disk &disk;Ap01ManifestLimitsV3 limits;
             static bool open(void *p,const Ap01ManifestEntryV3 &e,Apx2Reader &out,uint32_t &version){auto &s=*(Store*)p;
-                auto it=s.disk.files.find(digestPath("/resource/app-store/packages/",e.digest,".apx2"));if(it==s.disk.files.end())return false;
+                auto it=s.disk.files.find(digestPath("/resource/app-store/packages/",e.digest,".apx"));if(it==s.disk.files.end())return false;
                 out=bytesReader(it->second);version=1;return true;}
             static void close(void *,Apx2Reader &r){r={};}
             static bool check(void *p,const uint8_t *digest,uint64_t version){auto &s=*(Store*)p;
@@ -524,9 +530,9 @@ static void fullTransactions(const char *appPath,const char *manifestPath,const 
             cleaner.tick(31000);CHECK(journal.current()->sequence==cleanupSequence&&disk.writes==cleanupWrites);
             const auto &kept=generation&&scenario>=2?current:next;
             CHECK(Store::check(&store,kept.digest,kept.sequence));
-            if(generation&&!(scenario&1))CHECK(disk.files[digestPath("/resource/app-store/packages/",kept.entries[1].digest,".apx2")]==originals[1]);
+            if(generation&&!(scenario&1))CHECK(disk.files[digestPath("/resource/app-store/packages/",kept.entries[1].digest,".apx")]==originals[1]);
             if(generation){const auto &removed=scenario>=2?next:current;
-                CHECK(!disk.files.count(digestPath("/resource/app-store/packages/",removed.entries[0].digest,".apx2")));}
+                CHECK(!disk.files.count(digestPath("/resource/app-store/packages/",removed.entries[0].digest,".apx")));}
             if(!generation){current=next;currentBytes=nextBytes;}
         }
     }
@@ -675,6 +681,10 @@ static void runtimeReporting(){
     snapshot.health.state=Ap01SupervisorStateV3::Healthy;snapshot.health.sampled_at=99;
     read();CHECK(doc["runtime"]["running"].size()==2&&doc["runtime"]["complete"].as<bool>());
     CHECK(doc["runtime"]["running"][0]["health"].as<int>()==0&&doc["runtime"]["failed_index"].isNull());
+    snapshot.health.fault=Ap01SupervisorFaultV3::AppFailed;snapshot.health.fault_health=-107;
+    snapshot.health.health[1]=-108;read();
+    CHECK(doc["runtime"]["fault_health"].as<int>()==-107&&doc["runtime"]["running"][0]["health"].as<int>()==-108);
+    snapshot.health.health[1]=0;read();CHECK(doc["runtime"]["fault_health"].as<int>()==-107);
     snapshot={};snapshot.attempted=true;read();CHECK(!strcmp(doc["runtime"]["boot_state"],"failed"));
 }
 static void httpParsing(){

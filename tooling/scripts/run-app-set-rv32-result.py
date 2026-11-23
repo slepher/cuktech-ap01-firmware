@@ -62,7 +62,7 @@ def main():
         call(command)
         remote = f'{REMOTE}/input/{prefix}-{mode}'
         ssh(['mkdir', remote])
-        call(['scp', *[str(folder / name) for name in ('guest.bin', 'app.apx2', 'set.amf3', 'peer.apx2', 'journals.bin', 'build-report.json')], 'james.local:' + remote + '/'])
+        call(['scp', *[str(folder / name) for name in ('guest.bin', 'app.apx', 'set.amf3', 'peer.apx', 'journals.bin', 'build-report.json')], 'james.local:' + remote + '/'])
         return folder, remote
 
     def execute(stages, label):

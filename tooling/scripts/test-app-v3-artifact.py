@@ -19,13 +19,13 @@ reports=[]
 for directory in (a.build,a.repeat):
     r=json.loads((directory/'build-report.json').read_text())
     assert r['built'] and r['unresolved_imports']==0 and r['normalized_link_bases_identical']
-    assert native.sha(directory/'app.apx2')==r['package_sha256']
+    assert native.sha(directory/'app.apx')==r['package_sha256']
     for obj in r['objects']:
         assert native.sha(Path(obj['source']))==obj['source_sha256']
         assert native.sha(directory/obj['object'])==obj['sha256']
     for path,digest in r['input_headers'].items():assert native.sha(Path(path))==digest,path
     reports.append(r)
-assert (a.build/'app.apx2').read_bytes()==(a.repeat/'app.apx2').read_bytes()
+assert (a.build/'app.apx').read_bytes()==(a.repeat/'app.apx').read_bytes()
 spec=importlib.util.spec_from_file_location('pic',Path(__file__).with_name('test-app-pic-load.py'))
 pic=importlib.util.module_from_spec(spec);spec.loader.exec_module(pic)
 elf_path=a.build/'app-10000.elf';blob=elf_path.read_bytes();location=None
@@ -59,7 +59,7 @@ binary=a.out.resolve()/'test-apx2-v3'
 sources=[native.MODULES/n for n in ('apx2.cpp','native_sha256.cpp','test_apx2.cpp')]
 subprocess.run(['clang++','-std=c++17','-Wall','-Wextra','-Werror','-g','-fsanitize=address,undefined',
                 *map(str,sources),'-o',str(binary)],check=True)
-result=subprocess.check_output([str(binary),'--app-v3',str((a.build/'app.apx2').resolve())],text=True)
+result=subprocess.check_output([str(binary),'--app-v3',str((a.build/'app.apx').resolve())],text=True)
 frames=[]
 for filename,usage in reports[0]['stack_usage'].items():
     for line in usage.splitlines():

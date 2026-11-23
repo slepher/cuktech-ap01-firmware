@@ -1,7 +1,7 @@
 """Build canonical AMF3 full-set manifests from independently built ABI 3 packages.
 
 Input JSON: {sequence, apps:[{package, order, tcp, udp, tasks, pages,
-requires:{app_id: APX2_content_sha256}}]}. Paths resolve relative to the JSON.
+requires:{app_id: APX_content_sha256}}]}. Paths resolve relative to the JSON.
 Resource admission is performed by the target's production manifest reader.
 """
 from pathlib import Path
@@ -19,8 +19,8 @@ def integer(value, maximum):
 
 
 def package_info(blob):
-    if len(blob) < 256 or blob[:4] != b'APX2':
-        raise ValueError('Not APX2')
+    if len(blob) < 256 or blob[:4] not in (b'APX\0', b'APX2'):
+        raise ValueError('Not APX')
     u = lambda at: struct.unpack_from('<I', blob, at)[0]
     if u(24) != 3 or u(44) > len(blob)-256 or 256+u(44)+u(112)*8 != len(blob):
         raise ValueError('ABI 3 and exact package bounds required')
@@ -31,7 +31,11 @@ def package_info(blob):
         data_read_min=u(116), data_read_max=u(120), data_write_version=u(124),
         required_services=struct.unpack_from('<Q',blob,32)[0],
         fixups=[list(struct.unpack_from('<II',blob,at)) for at in range(256+u(44),len(blob),8)])
-    if apx2.package(blob[256:256+u(44)],config) != blob:
+    canonical = bytearray(apx2.package(blob[256:256+u(44)],config))
+    canonical[:4] = blob[:4]
+    canonical[192:224] = bytes(32)
+    canonical[192:224] = hashlib.sha256(canonical).digest()
+    if canonical != blob:
         raise ValueError('Package integrity or canonical encoding mismatch')
     return config
 

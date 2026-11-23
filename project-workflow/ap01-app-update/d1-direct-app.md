@@ -30,4 +30,4 @@ python3 -B tooling/scripts/test-apx2.py --out build/apx2-check
 
 该命令验证 APX2 格式与加载器边界。`test-native-app-platform-v3.py` 是针对 `codex_status` 包及其资源预算的宿主回归，不能直接用 `z_probe` 包替代其输入。完整 ROM 和模型检查见 [平台离线验证](../../docs/0055-qemu-validation-20261106.md)。
 
-接口定义见 [平台 C ABI](../../docs/app-platform-api-v3.md)，二进制格式见 [APX2 格式](../../docs/apx2-package-format.md)。离线验证不代表实机验收。
+接口定义见 [平台 C ABI](../../docs/app-platform-api-v3.md)，二进制格式见 [APX2 格式](../../docs/apx-package-format.md)。离线验证不代表实机验收。

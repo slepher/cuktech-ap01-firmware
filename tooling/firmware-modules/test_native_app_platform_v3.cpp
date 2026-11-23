@@ -135,8 +135,8 @@ int main(int argc,char **argv){
         R result;
         if(scenario==7||scenario==8){
             ap01ModelV3.package=bytes.data();ap01ModelV3.packageBytes=uint32_t(bytes.size());
-            assert(platform.stageFile("/resource/app-current.apx2",limits));
-            assert(!platform.stageFile("/resource/app-current.apx2",limits));
+            assert(platform.stageFile("/resource/app-current.apx",limits));
+            assert(!platform.stageFile("/resource/app-current.apx",limits));
             Ap01NativeAppPlatformV3::poll(&platform);result=platform.result();
             assert(ap01ModelV3.packageCloses==1&&!ap01ModelV3.packageOpen);
         }else result=platform.boot(reader,limits,digest);

@@ -12,4 +12,4 @@ build/s1/python/bin/python -B tooling/scripts/build-app-v3.py \
   --tool-prefix build/s1/toolchains/xpack-riscv-none-elf-gcc-12.5.0-1/bin/riscv-none-elf-
 ```
 
-Manifest 条目为 tasks=1、pages=1、TCP/UDP=0。依赖可固定真实 codex_status 包的内容摘要。`build-app-v3-guest.py` 同时传入 `--manifest set.amf3 --peer app.apx2` 即编译集合 guest；未提供时仍构建单包 guest。沿用 `test-app-abi-qemu.py`，运行仅允许 james.local Docker。guest 检查集合启动、三任务共存、peer 页面切换及两包窗口重建。底层 ROM I/O/LVGL/维护服务及调度仍为模型替身。
+Manifest 条目为 tasks=1、pages=1、TCP/UDP=0。依赖可固定真实 codex_status 包的内容摘要。`build-app-v3-guest.py` 同时传入 `--manifest set.amf3 --peer app.apx` 即编译集合 guest；未提供时仍构建单包 guest。沿用 `test-app-abi-qemu.py`，运行仅允许 james.local Docker。guest 检查集合启动、三任务共存、peer 页面切换及两包窗口重建。底层 ROM I/O/LVGL/维护服务及调度仍为模型替身。

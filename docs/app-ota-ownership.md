@@ -8,7 +8,7 @@
 
 ```sh
 python3 tooling/scripts/app-set-client-v3.py --host HOST:18080 --mac MAC12 --code-file /private/path/code --action status
-python3 tooling/scripts/app-set-client-v3.py --host HOST:18080 --mac MAC12 --code-file /private/path/code --manifest set.amf3 --package business.apx2 --receipt /private/path/update.json
+python3 tooling/scripts/app-set-client-v3.py --host HOST:18080 --mac MAC12 --code-file /private/path/code --manifest set.amf3 --package business.apx --receipt /private/path/update.json
 ```
 
 单更只传变更包，Manifest 始终描述完整目标集合；批更重复 `--package`。同一回执用于续传；`--action result` 查询，`--action cancel` 取消。丢 ACK/重启断连按原事务恢复，不能换 ID 重装。结果包含持久集合和实际运行列表。设备码不入库。这些是操作说明，本次不连接设备。
@@ -17,7 +17,7 @@ python3 tooling/scripts/app-set-client-v3.py --host HOST:18080 --mac MAC12 --cod
 
 ## 当前交付主线
 
-1. 真实业务源码独立编译为 APX2，零外部导入，通过 C 函数表调用平台。
+1. 真实业务源码独立编译为 APX，零外部导入，通过 C 函数表调用平台。
 2. 平台开机读取并校验完整 Manifest，加载各包，调用 start；不做在线卸载。
 3. firmware OTA 下载并验证变更包，持久切换记录后重启；单更与批更共用一条路径。
 4. 启动成功确认，失败恢复旧集合；验证 Bundle 与绑定保持。

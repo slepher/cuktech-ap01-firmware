@@ -28,7 +28,7 @@ CUKTECH 当前源码版本为 `0.1.3`，独立递增；同一发布的无载入�
 App 版本由 App 仓库源码配置的 `version` 字段声明，构建器读取该字段；`--version` 可显式覆盖。
 固件仓库不内置业务 App 的默认版本，不从已有包推导新版本。ROM 与 App 分别发版，修改源码版本后须重新构建和安装才会改变设备返回值。
 
-[Release CI](../../.github/workflows/release.yml) 在推送 tag 时构建 0055 无 App 基版与 ABI 3 加载平台，离线校验通过后发布附件。tag 不自动改写 `native_version.h`；如需更新设备上报版本，须先修改该文件再打 tag。发布方法见 [README](../../README.md#tag-自动发布)。
+tag 与 Release 操作见 [版本发布](../../docs/releasing.md)。
 
 `apps` 仅列本次开机成功加载的 App，按启动顺序返回，不枚举磁盘上的旧包、候选包或未启动条目。
 部分启动失败时只返回已成功启动的前缀；健康状态查运行状态接口。
@@ -84,6 +84,5 @@ cc -std=c11 -Wall -Wextra -Werror -fsanitize=address,undefined \
 
 完整 ROM 打包和四个固定 Settings hooks 由 `tooling/scripts/build-native-app-rom.py` 负责。输出包含 NULL timer guard 与 OTA/恢复校验。`build-firmware.py` 与 `native_build.py` 统一负责独立版及 App 版的平台编译、审计、预算提取、链接与打包；外部 App 单独使用 `build-app-v3.py --app-config ...` 构建，不静态嵌入平台 ROM。`test_native_maintenance.cpp` 保留维护回归，并通过 `AP01_MAINTENANCE_ONLY_TEST=1` 在不链接 App/渲染器时验证八位码 OTA、轮换/重放、重启恢复和无稳定记录切槽。
 
-完整冷启动、Wi-Fi 菜单、外设与物理救援需实机验收。构建与离线检查不访问设备。
 
 维护凭据使用说明见 [本地维护凭据菜单](access-menu-0031.md)；App 接口见 [平台 C ABI](../../docs/app-platform-api-v3.md)。

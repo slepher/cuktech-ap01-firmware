@@ -8,6 +8,7 @@ enum class Ap01SupervisorStateV3:uint32_t {Starting,Healthy,WindowAbsent,Fault};
 enum class Ap01SupervisorFaultV3:uint32_t {None,Boot,StartupTimeout,MaintenanceStale,UiStale,AppFailed,AppTimeout,Worker};
 struct Ap01SupervisorSnapshotV3 {
     Ap01SupervisorStateV3 state;Ap01SupervisorFaultV3 fault;
+    int32_t fault_health=0;
     uint32_t app_index,count,sampled_at;int32_t health[AP01_MANIFEST_APPS_V3];
     Ap01RebootStateV3 reboot=Ap01RebootStateV3::Idle;
     uint32_t journal_result=UINT32_MAX,journal_phase=0;
@@ -24,11 +25,14 @@ struct Ap01RuntimeSnapshotV3 {
 // Only UI staleness may recover after durable approval; other faults latch.
 // This observer never calls App code or reboots.
 class Ap01AppSupervisionV3 {
-    std::atomic<uint32_t> revision{0},sampleTime{0},sampleWord{0};
+    std::atomic<uint32_t> revision{0},sampleTime{0},sampleCount{0};
+    std::atomic<int32_t> sampleHealth[AP01_MANIFEST_APPS_V3]{};
+    // Only tick writes this, before publishing the first AppFailed status.
+    std::atomic<int32_t> faultHealth{0};
     std::atomic<bool> uiRecoveryAllowed{false};
     std::atomic<uint32_t> status{0}; // state low byte, reason next, index high 16
     uint32_t startedAt=0,pendingAt=0,lastUiSampleAt=0;bool begun=false,pending=false,sawMaintenance=false,haveUiSample=false;
-    bool sample(uint32_t &,uint32_t &)const;
+    bool sample(uint32_t &,uint32_t &,int32_t *)const;
 public:
     void allowUiRecovery(){uiRecoveryAllowed.store(true,std::memory_order_release);}
     void publish(uint32_t now,const int32_t *,uint32_t count);

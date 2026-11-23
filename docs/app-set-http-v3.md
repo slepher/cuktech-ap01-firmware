@@ -69,20 +69,20 @@
 
 ### 客户端校验模块
 
-`tooling/scripts/app_set_client_v3.py` 检查有界 AMF3 摘要、规范元数据、启动顺序/依赖和端口冲突，复用打包器核对 APX2 与集合条目。未变更包可省略，但服务端 changed_mask 内所有包必须提供；实际资源预算仍由平台裁决。
+`tooling/scripts/app_set_client_v3.py` 检查有界 AMF3 摘要、规范元数据、启动顺序/依赖和端口冲突，复用打包器核对 APX 与集合条目。未变更包可省略，但服务端 changed_mask 内所有包必须提供；实际资源预算仍由平台裁决。
 
 成功核验要求候选身份正确、新的非零 boot_id、cleanup_pending=false，以及完整健康运行集合和逐 App 身份匹配。未采样、部分失败、原 boot 或待清理只能继续查询；身份不符拒绝。模块已接入 `app-set-client-v3.py` 上传/持久回执循环，旧单包客户端不能直接调用 v3。
 
 离线验证：
 ```sh
-python3 -B tooling/scripts/test-app-set-client-v3.py --manifest build/app-install/d2-resume-set/set.amf3 --package build/app-install/d2-business-resume-01/app.apx2 --package build/app-install/d2-peer-beats-02/app.apx2
+python3 -B tooling/scripts/test-app-set-client-v3.py --manifest build/app-install/d2-resume-set/set.amf3 --package build/app-install/d2-business-resume-01/app.apx --package build/app-install/d2-peer-beats-02/app.apx
 ```
 覆盖真实双包、单更/批更掩码、453 项无效输入拒绝及重启/运行集合确认，不连接设备。
 
 ### v3 CLI（离线流程验证完成，未操作设备）
 
 ```sh
-python3 -B tooling/scripts/app-set-client-v3.py --host DEVICE:18080 --mac AABBCCDDEEFF --code-file /path/to/menu-code --manifest /path/to/full-set.amf3 --package /path/to/changed-a.apx2 --package /path/to/changed-b.apx2 --receipt /path/to/operation.json
+python3 -B tooling/scripts/app-set-client-v3.py --host DEVICE:18080 --mac AABBCCDDEEFF --code-file /path/to/menu-code --manifest /path/to/full-set.amf3 --package /path/to/changed-a.apx --package /path/to/changed-b.apx --receipt /path/to/operation.json
 ```
 
 完整集合 Manifest 必须包含未变更 App；`--package` 可重复，单更只需提供变更包。首次修改前以独占创建方式落盘事务 ID、原集合摘要/版本和原 boot；不保存设备码。恢复时沿用相同命令与回执，也可使用 `--action result` 或 `--action cancel`（这两项无需提供包/Manifest）。`--action status` 不需要回执。
@@ -108,3 +108,13 @@ python3 -B tooling/scripts/app-set-client-v3.py --host DEVICE:18080 --mac AABBCC
 响应 `limits` 直接来自服务/加载器共用的 Ap01ManifestLimitsV3：package_bytes、image_bytes、heap_bytes、stack_bytes、tasks、pages 是全集合上限；capabilities 是允许位图；ram_bytes 是可计入 RAM，resident_bytes 包含维护及暂存预留。镜像总量逐 App 向上对齐 16 B，镜像+堆+栈不得超过 ram_bytes-resident_bytes。`app_max` 单独约束数量；`storage_reserve` 是 begin 空间检查的维护存储预留，不是 RAM 预留。
 
 CLI 新事务在创建回执和发送 begin 前检查这些字段；旧 Bridge `Manifest::check_capabilities` 曾使用相同算法；2026-11-05 起 App OTA 客户端归 firmware，Bridge 专用实现已撤出，见 [当前归属](app-ota-ownership.md)。缺字段、超量或未知服务位拒绝。设备准入仍是最终裁决；客户端检查不是存储预留或硬件容量证明，当前原生预算仍为模型阶段配置值。
+
+## 维护层错误与客户端校验
+
+成功响应和集合事务响应必须通过设备身份校验；事务响应还须匹配原回执中的操作 ID、集合摘要和版本。`409 maintenance_busy` 与临时 `503` 响应会退避并查询原事务，不推进回执，也不创建替代事务。安装前状态查询、安装和取消使用相同的重试规则。
+
+设备码错误、设备码限流、设备码不可用及请求格式错误保留 HTTP 状态码、`error`／`error_code`、`stage` 和 `action`，直接报告拒绝原因。维护服务错误响应携带 `device_mac`；无法分配响应内存时的静态兜底不依赖该字段。任何响应若携带不匹配的设备身份，客户端拒绝接受。
+
+错误处理回归：`python3 -B tooling/scripts/test-app-set-errors-v3.py`。
+
+运行状态中的 `health` 保留 App 返回的原始有符号健康码。`fault_health` 记录本次启动首次锁存的 App 失败码，后续健康采样不会覆盖它；非 App 失败为 `0`。`/api/maintenance/status` 的 `app_runtime` 和 App 状态接口的 `runtime` 均提供该字段。

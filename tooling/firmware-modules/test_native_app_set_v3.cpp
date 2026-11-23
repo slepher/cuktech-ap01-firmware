@@ -85,7 +85,7 @@ struct Disk {
     void add(const std::vector<uint8_t> &v){
         const char *hex="0123456789abcdef";std::string path="/resource/app-store/packages/";
         for(unsigned i=192;i<224;++i){path+=hex[v[i]>>4];path+=hex[v[i]&15];}
-        files[path+".apx2"]=v;
+        files[path+".apx"]=v;
     }
     Ap01VfsOps io(){Ap01VfsOps ops{};ops.context=this;ops.open=open;ops.close=close;ops.read=read;ops.size=size;
         ops.exists=[](void *p,const char *path){auto &s=*(Disk*)p;assert(s.worker);return int(s.files.count(path));};
@@ -219,10 +219,17 @@ int main(int argc,char **argv){
         assert(starts==2&&ap01ModelV3.maintenanceStarts==1);
         Ap01NativeAppSharedV3::poll(&set.shared());assert(instances[0].ticks==2&&instances[1].ticks==2);
     }
-    for(unsigned fault=0;fault<13;++fault){
+    for(unsigned fault=0;fault<15;++fault){
         ap01ModelV3={};starts=0;mode=0;instances[0]=Instance{};instances[1]=Instance{};
         Store backend;Disk disk;disk.scenario=fault;if(fault==12)mode=3;
         disk.files["/resource/app-store/current.amf3"]=manifest;disk.add(real);disk.add(peer);
+        if(fault>=13){
+            auto files=disk.files;
+            for(const auto &item:files)if(item.first.size()>4&&item.first.substr(item.first.size()-4)==".apx"){
+                if(fault==14&&item.second==peer)continue;
+                disk.files[item.first+"2"]=item.second;disk.files.erase(item.first);
+            }
+        }
         if(fault==1)disk.files.erase("/resource/app-store/current.amf3");
         if(fault==2)for(auto it=disk.files.begin();it!=disk.files.end();++it)if(it->second==peer){disk.files.erase(it);break;}
         if(fault==3)for(auto &item:disk.files)if(item.second==peer)item.second.back()^=1;
@@ -237,7 +244,7 @@ int main(int argc,char **argv){
         assert(!boot.runtime().attempted&&!boot.runtime().manifest);
         bool staged=boot.stage("/resource/app-store/current.amf3",expected);
         assert(!starts&&!backend.reserves&&disk.opens==disk.closes&&!disk.current);
-        assert(staged==(fault==0||fault==4||fault==9||fault==12));
+        assert(staged==(fault==0||fault==4||fault==9||fault==12||fault>=13));
         assert(!boot.stage("/resource/app-store/current.amf3",expected));
         disk.worker=false;disk.files.clear(); // UI must only read the immutable snapshot.
         Ap01NativeAppSharedV3::poll(&boot.set().shared());
@@ -328,5 +335,5 @@ int main(int argc,char **argv){
         }
     }
     puts("journal-selected files: real package preflight, durable trial before UI execution, lost ACK denial, version mismatch/missing candidate -> empty rollback passed");
-    puts("native collection: Manifest preflight -> per-App C tables -> shared host; root rebuild, partial failure retention, maintenance, reader ownership and 13 worker-file staging scenarios passed (host entries)");
+    puts("native collection: Manifest preflight -> per-App C tables -> shared host; root rebuild, partial failure retention, maintenance, reader ownership and 15 worker-file staging scenarios passed (host entries)");
 }

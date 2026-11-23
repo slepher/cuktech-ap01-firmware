@@ -80,6 +80,7 @@ Ap01HttpReply Ap01SetServiceV3::reply(int status,const char *error,bool disclose
         if(snapshot.failed!=UINT32_MAX)runtime["failed_index"]=snapshot.failed;
         const char *states[]={"starting","healthy","window_absent","fault"};
         runtime["health_state"]=states[unsigned(snapshot.health.state)<4?unsigned(snapshot.health.state):3];
+        runtime["fault_health"]=snapshot.health.fault_health;
         runtime["fault"]=unsigned(snapshot.health.fault);runtime["sampled_at"]=snapshot.health.sampled_at;
         auto running=runtime["running"].to<JsonArray>();
         if(snapshot.manifest){const auto &m=*snapshot.manifest;char digest[65];hex(m.digest,32,digest);

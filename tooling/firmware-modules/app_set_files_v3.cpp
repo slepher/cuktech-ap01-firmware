@@ -45,8 +45,11 @@ R Ap01AppSetFilesV3::stage(const char *path,const uint8_t *expected,const Ap01Ma
         b.bytes.reset(new(std::nothrow) uint8_t[e.package_bytes]);if(!b.bytes){discard();return R::Memory;}
         char path[112]="/resource/app-store/packages/";constexpr unsigned prefix=sizeof("/resource/app-store/packages/")-1;const char *hex="0123456789abcdef";
         for(unsigned j=0;j<32;++j){path[prefix+2*j]=hex[e.digest[j]>>4];path[prefix+2*j+1]=hex[e.digest[j]&15];}
-        memcpy(path+prefix+64,".apx2",6);
-        if(!readFile(path,b.bytes.get(),e.package_bytes,b.size,true)){discard();return R::Io;}
+        memcpy(path+prefix+64,".apx",5);
+        if(!readFile(path,b.bytes.get(),e.package_bytes,b.size,true)){
+            memcpy(path+prefix+64,".apx2",6);
+            if(!readFile(path,b.bytes.get(),e.package_bytes,b.size,true)){discard();return R::Io;}
+        }
     }
     if(ap01CheckManifestPackagesV3(manifest,packages())!=Ap01ManifestErrorV3::Ok){discard();return R::Package;}
     return R::Ready;

@@ -50,9 +50,9 @@ trial/rollback 次数分别只允许在进入相应 Started 时从 0 增到 1，
 
 ```sh
 python3 -B tooling/scripts/test-app-set-journal-v3.py --out build/app-install \
-  --package build/app-install/d2-business-resume-01/app.apx2 \
+  --package build/app-install/d2-business-resume-01/app.apx \
   --manifest build/app-install/d2-resume-set/set.amf3 \
-  --peer build/app-install/d2-peer-beats-02/app.apx2 \
+  --peer build/app-install/d2-peer-beats-02/app.apx \
   --tool-prefix build/s1/toolchains/xpack-riscv-none-elf-gcc-12.5.0-1/bin/riscv-none-elf-
 ```
 
@@ -73,7 +73,7 @@ python3 -B tooling/scripts/test-app-set-journal-v3.py --out build/app-install \
 
 ## 真实文件暂存接入
 
-`Ap01NativeAppFileBootV3::stageSelected(selector)` 已连接选择器与真实 AMF3/APX2 预检。Manifest 路径由摘要确定为 `/resource/app-store/manifests/<64 位十六进制内容摘要>.amf3`；同时验证文件内摘要及集合 sequence，不接受摘要正确但日志版本错误的候选。包仍使用既定按内容摘要命名的路径。
+`Ap01NativeAppFileBootV3::stageSelected(selector)` 已连接选择器与真实 AMF3/APX 预检。Manifest 路径由摘要确定为 `/resource/app-store/manifests/<64 位十六进制内容摘要>.amf3`；同时验证文件内摘要及集合 sequence，不接受摘要正确但日志版本错误的候选。包仍使用既定按内容摘要命名的路径。
 
 预检在 worker 私有暂存中完成；selector 的持久消耗成功返回后，才通过 release 发布给 UI。Unknown/Maintenance 会丢弃暂存，不留可执行入口；首次安装回退到版本 0 的空集合不读文件、不执行 App。候选预检失败允许重新暂存完整旧集合，因为尚未发布或执行任何代码。原固定路径 `stage()` 保留用于 D2 引导和模型，原生 hook 尚未切到事务入口。
 
@@ -113,13 +113,13 @@ python3 -B tooling/scripts/test-app-set-journal-v3.py --out build/app-install \
 
 `Ap01SetDownloadV3` 使用已验证且已持久发布的候选 Manifest，将 index、总长度、事务 ID 与 AUT3 摘要/序号核对。每块 1–1024 B，严格顺序；已确认范围内的重复块逐字节比较，不跨过已确认边界。暂存文件为 `/resource/app-store/incoming/<transaction 32hex>-<index>.part`，不得由调用者提供路径。
 
-append 前读取真实大小并比较未确认尾部，拒绝不同内容或超界；写入（含零长度重新同步）和 close 成功后，重新打开校验长度/字节，再持久更新该包偏移。潜在写入后的任何失败冻结下载器为 Unknown；须先 journal.load、重新验证 Manifest，再重建下载器继续。没有未知文件截断/删除。目录创建、空间预留、授权在 begin 层完成，当前还未接入；完整 APX2 校验、发布、Ready 位也尚未实现。
+append 前读取真实大小并比较未确认尾部，拒绝不同内容或超界；写入（含零长度重新同步）和 close 成功后，重新打开校验长度/字节，再持久更新该包偏移。潜在写入后的任何失败冻结下载器为 Unknown；须先 journal.load、重新验证 Manifest，再重建下载器继续。没有未知文件截断/删除。目录创建、空间预留、授权在 begin 层完成，当前还未接入；完整 APX 校验、发布、Ready 位也尚未实现。
 
 故障测试新增 512 个数据截断点与 320 个进度记录截断点，恢复后比较/补写再提交；两包偏移独立，重复不同字节及跨事务拒绝。日志/选择器/下载合计 53108 断言，ASan/UBSan 与 RV32 编译通过。该测试为字节持久模型，不代替 Flash 掉电。
 
-## APX2 发布与单包 Ready
+## APX 发布与单包 Ready
 
-`ready(transaction,index,dataVersion)` 已实现：校验暂存文件的完整 APX2、精确包长度及 Manifest 全部包字段；复用 `ap01CheckManifestPackageV3`，与开机全集合预检同规则。rename 到 `/resource/app-store/packages/<content-digest>.apx2` 后重新打开并完整校验，再保存 received/ready_mask。只改该包位，不自行将全集合阶段推进为 Ready；全集合/复用包预检仍属于 commit 前置。
+`ready(transaction,index,dataVersion)` 已实现：校验暂存文件的完整 APX、精确包长度及 Manifest 全部包字段；复用 `ap01CheckManifestPackageV3`，与开机全集合预检同规则。rename 到 `/resource/app-store/packages/<content-digest>.apx` 后重新打开并完整校验，再保存 received/ready_mask。只改该包位，不自行将全集合阶段推进为 Ready；全集合/复用包预检仍属于 commit 前置。
 
 若目标已存在，验证其内容后复用，不覆盖、不删坏目标；可恢复 rename 已成功但 ACK 丢失或 ready_mask 尚未写入的情况。潜在变更后失败一律 Unknown 并冻结当前下载器；重新 load 日志后可重新校验目标并补 Ready 位。完成 Ready 的包不再接受 chunk 修改；其余包仍可接收。未引用 incoming 文件的清理由后续 GC 负责，当前不提前删除。
 
@@ -183,6 +183,6 @@ Succeeded 保留候选集合，回退成功/取消保留旧集合；按包摘要
 
 `test-app-set-journal-v3.py` 新增四条组合路径，每条先从空日志实际 begin/双包上传/发布/commit 完成首装，再做单更 A 或批更 A+B，分别成功确认或试运行中断后整集回退。直接调用生产 begin/download/commit/journal/selector/cleanup，持久文件通过同一故障 Disk 保存；commit 重试不增序号，正常每次只派发一次重启请求，重新 load 日志模拟下一 boot 的裁决。
 
-输入为真实业务和 peer APX2；第二版本保留代码负载，仅修改包版本字段后重新计算 APX2 摘要，并更新 AMF3 版本/包摘要/依赖摘要与整体摘要。验证的是实际格式校验和事务组合，不是新版业务行为。单更 A 明确检查 B 摘要、文件字节及零上传偏移不变；回退选择整个旧 Manifest，清理后保留集合完整预检通过，淘汰 A 文件不存在。两包未齐 Ready 时 commit 拒绝。
+输入为真实业务和 peer APX；第二版本保留代码负载，仅修改包版本字段后重新计算 APX 摘要，并更新 AMF3 版本/包摘要/依赖摘要与整体摘要。验证的是实际格式校验和事务组合，不是新版业务行为。单更 A 明确检查 B 摘要、文件字节及零上传偏移不变；回退选择整个旧 Manifest，清理后保留集合完整预检通过，淘汰 A 文件不存在。两包未齐 Ready 时 commit 拒绝。
 
 累计 91452 项断言、ASan/UBSan/RV32 通过，报告包含业务包/peer/Manifest 输入 SHA256。此为宿主事务重建，不执行 App 指令、完整 ROM 或 CPU reboot；HTTP、原生维护锁/服务接入、孤儿扫描和 Bridge 仍不由这些测试证明。

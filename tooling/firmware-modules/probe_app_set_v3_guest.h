@@ -44,7 +44,7 @@ static int openFile(void *p,const char *path,unsigned flags){
     else if(!strcmp(path,manifestPath))chosen=&s.manifest;
     else for(auto &v:s.packages){char name[112]="/resource/app-store/packages/";const char *hex="0123456789abcdef";
         for(unsigned i=0;i<32;++i){name[29+2*i]=hex[v.bytes[192+i]>>4];name[30+2*i]=hex[v.bytes[192+i]&15];}
-        memcpy(name+93,".apx2",6);if(!strcmp(path,name))chosen=&v;}
+        memcpy(name+93,".apx",5);if(!strcmp(path,name))chosen=&v;}
     if(!chosen)return -1;
     if(flags){if(chosen!=&s.journals[0]&&chosen!=&s.journals[1])return -1;chosen->size=0;}
     else if(!chosen->size)return -1;

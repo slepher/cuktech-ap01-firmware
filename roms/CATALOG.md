@@ -15,15 +15,13 @@
 
 安装条件、官方升级限制和首刷流程见 [刷机说明](../docs/flashing.md)。
 
-## 发布附件
+## 固件类型
 
-[Release CI](../.github/workflows/release.yml) 在 tag 推送后构建、校验并发布附件：
+本项目提供两种完整固件：
 
 | 固件 | 用途 |
 | --- | --- |
 | `ap01-0055-base-0.1.3.bin` | 无 App 基版，提供独立维护服务 |
 | `ap01-0055-app-platform-0.1.3.bin` | ABI 3 App 集合加载平台 |
 
-Release 仅附带上述两个完整固件和 `SHA256SUMS`，校验清单只列这两个 BIN。payload、ELF、map、manifest、审计与链接报告位于对应 Actions 运行的 `ap01-build-details-<tag>` 构建产物中，保留 90 天，刷机无需下载。附件版本取自 `native_version.h`；文件大小和 SHA256 以对应 Release 的附件与 `SHA256SUMS` 为准。
-
-构建与发布命令见 [README](../README.md)。候选标记 `flashable=false`、`hardware_verified=false`；离线校验通过不代表实机验收。厂商镜像及其内含资源的许可见 [NOTICE](../NOTICE.md)。
+发布、下载附件和构建产物说明见 [版本发布](../docs/releasing.md)。厂商镜像及其内含资源的许可见 [NOTICE](../NOTICE.md)。

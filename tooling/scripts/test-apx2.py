@@ -5,6 +5,7 @@ import hashlib
 import json
 import subprocess
 import copy
+import importlib.util
 
 import apx2
 
@@ -35,6 +36,30 @@ def main():
                   entries=[0, 2, 4], data_read_min=1, data_read_max=3,
                   data_write_version=2, required_services=1, fixups=[[16, 0], [32, 0]])
     golden = apx2.package(image, config)
+    assert golden[:4] == b'APX\0'
+    spec = importlib.util.spec_from_file_location('manifest', Path(__file__).with_name('app-manifest-v3.py'))
+    manifest = importlib.util.module_from_spec(spec); spec.loader.exec_module(manifest)
+    for magic in (b'APX\0', b'APX2'):
+        blob = bytearray(golden); blob[:4] = magic; blob[192:224] = bytes(32)
+        blob[192:224] = hashlib.sha256(blob).digest()
+        assert manifest.package_info(blob)['app_id'] == config['app_id']
+        compatibility = out / ('compat-' + magic.hex() + '.bin'); compatibility.write_bytes(blob)
+        subprocess.run([str(binary), '--package-v3', str(compatibility)], check=True)
+        blob[-1] ^= 1
+        try:
+            manifest.package_info(blob)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('Corrupt package accepted')
+    unknown = bytearray(golden); unknown[:4] = b'APX3'
+    unknown[192:224] = bytes(32); unknown[192:224] = hashlib.sha256(unknown).digest()
+    try:
+        manifest.package_info(unknown)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('Unknown magic accepted')
     bad_configs = [dict(text_bytes=0), dict(ro_offset=15), dict(ro_bytes=17),
                    dict(data_offset=16), dict(data_bytes=15), dict(bss_bytes=0xffffffff),
                    dict(entries=[1, 2, 4]), dict(entries=[16, 2, 4]),
@@ -49,11 +74,11 @@ def main():
             pass
         else:
             raise AssertionError(('accepted invalid manifest', change))
-    path = out / 'golden.apx2';path.write_bytes(golden)
+    path = out / 'golden.apx';path.write_bytes(golden)
     subprocess.run([str(binary), '--package', str(path)], check=True)
     direct_config = dict(config, abi_major=3, entries=[0, 2, 4])
     direct = apx2.package(image, direct_config)
-    direct_path = out / 'golden-v3.apx2';direct_path.write_bytes(direct)
+    direct_path = out / 'golden-v3.apx';direct_path.write_bytes(direct)
     subprocess.run([str(binary), '--package-v3', str(direct_path)], check=True)
     for change in (dict(abi_major=2), dict(abi_major=4), dict(abi_major=True), dict(entries=[0, 2, 4, 0, 0])):
         try:

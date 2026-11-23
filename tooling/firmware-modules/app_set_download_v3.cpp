@@ -70,7 +70,7 @@ R Ap01SetDownloadV3::ready(const uint8_t transaction[16],unsigned index,uint32_t
     char final[112]="/resource/app-store/packages/";constexpr unsigned prefix=sizeof("/resource/app-store/packages/")-1;
     const char *hex="0123456789abcdef";
     for(unsigned i=0;i<32;++i){final[prefix+2*i]=hex[entry.digest[i]>>4];final[prefix+2*i+1]=hex[entry.digest[i]&15];}
-    memcpy(final+prefix+64,".apx2",6);
+    memcpy(final+prefix+64,".apx",5);
     auto validate=[&](const char *path){
         int fd=io.open(io.context,path,0);if(fd<0)return R::Storage;
         int32_t size=io.size(io.context,fd);
@@ -85,6 +85,11 @@ R Ap01SetDownloadV3::ready(const uint8_t transaction[16],unsigned index,uint32_t
         return result;
     };
     int exists=io.exists(io.context,final);if(exists<0)return R::Storage;
+    if(!exists){
+        memcpy(final+prefix+64,".apx2",6);
+        exists=io.exists(io.context,final);if(exists<0)return R::Storage;
+        if(!exists)memcpy(final+prefix+64,".apx",5);
+    }
     if(!exists){
         if(r->received[index]!=entry.package_bytes)return R::Bounds;
         char incoming[100];incomingPath(transaction,index,incoming);

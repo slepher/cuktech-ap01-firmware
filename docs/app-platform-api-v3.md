@@ -1,6 +1,6 @@
 # App 平台 C ABI 3.1
 
-当前基础平台为原厂 **1.0.2_0055**，修改版为 **0.1.3**，独立 App 使用 ABI 3，平台函数表为 3.1。Release 中的 `ap01-0055-app-platform-0.1.3.bin` 提供 App 加载能力，`ap01-0055-base-0.1.3.bin` 不加载 App；构建与发布见 [README](../README.md)。
+当前基础平台为原厂 **1.0.2_0055**，修改版为 **0.1.3**，独立 App 使用 ABI 3，平台函数表为 3.1。Release 中的 `ap01-0055-app-platform-0.1.3.bin` 提供 App 加载能力，`ap01-0055-base-0.1.3.bin` 不加载 App；构建见 [README](../README.md)，发布见 [版本发布](releasing.md)。
 
 权威声明为 `tooling/firmware-modules/app_abi_v3.h`、`app_platform_api_v3.h` 及其引用的公开 C 结构。目标 RV32IMAFC、little-endian、ILP32F；指针/int/size_t 为 32 位，变参遵循同一 ABI。不传 C++ 私有对象、String、异常、STL 或 TLS。
 
@@ -36,7 +36,7 @@
 
 平台根据 journal 选择 `/resource/app-store/manifests/<content-digest>.amf3`，核对清单身份、版本、包摘要和预算后启动集合。文件读取在 worker 执行，App start/event/health 由 UI 执行器调度。无可启动集合时保留维护服务。
 
-执行内存后端按 16 字节对齐分配映像，仅接受 `0xa8000000` 至 `0xa8400000` 范围内的分配结果，检查容量和入口后同步数据与指令缓存。已发布的代码保留至重启，不支持在线卸载。地址检查和离线模型不代表完整冷启动、外设或硬件容量已验收。
+执行内存后端按 16 字节对齐分配映像，仅接受 `0xa8000000` 至 `0xa8400000` 范围内的分配结果，检查容量和入口后同步数据与指令缓存。已发布的代码保留至重启，不支持在线卸载。
 
 ## 维护请求缓冲区预留
 

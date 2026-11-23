@@ -56,7 +56,7 @@ extern "C" __attribute__((section(".text.guest_entry"))) int guest_entry(uint32_
     auto *platform=new Ap01NativeAppPlatformV3(42,{(void *)base,nullptr,reserve,publish});
     CHECK(platform&&platform->bindWindow((void *)1,ap01ModelStockV3));
     Apx2Limits limits{1u<<22,1u<<23,1u<<21,40960,1,AP01_CODEX_CAPS_V3,"codex_status",3};
-    CHECK(platform->stageFile("/resource/app-current.apx2",limits));
+    CHECK(platform->stageFile("/resource/app-current.apx",limits));
     platform->poll(platform);CHECK(!platform->execution().entered()&&ap01ModelV3.taskCount==0);
     CHECK(platform->startMaintenance());platform->poll(platform);
     CHECK(platform->result()==Ap01BootResultV3::Started);

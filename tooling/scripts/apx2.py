@@ -1,4 +1,4 @@
-"""Offline APX2 package writer. Input is a normalized linked image, never arbitrary ELF.
+"""Offline APX package writer. Input is a normalized linked image, never arbitrary ELF.
 
 The target loader accepts only BASE32 records; ELF handling belongs to the linker.
 Use test-apx2.py to cross-check these bytes with the firmware validator.
@@ -17,7 +17,7 @@ def package(image, config):
                 'data_bytes', 'bss_bytes', 'heap_bytes', 'stack_bytes', 'entries',
                 'data_read_min', 'data_read_max', 'data_write_version', 'required_services', 'fixups'}
     if set(config) - {'abi_major'} != required:
-        raise ValueError('Exact APX2 manifest fields required: ' + ', '.join(sorted(required)))
+        raise ValueError('Exact APX manifest fields required: ' + ', '.join(sorted(required)))
     abi = config.get('abi_major', 3)
     if type(abi) is not int or abi != 3:
         raise ValueError('Only App ABI 3 is supported')
@@ -49,7 +49,7 @@ def package(image, config):
     if not config['data_read_min'] <= config['data_write_version'] <= config['data_read_max']:
         raise ValueError('App must read its own data version')
     h = bytearray(HEADER)
-    h[:4] = b'APX2'
+    h[:4] = b'APX\0'
     fixes = config['fixups']
     for at, target in fixes:
         if not (ro <= at and at + 4 <= ro + ro_size or data <= at and at + 4 <= len(image)):

@@ -88,11 +88,11 @@ manifest=dict(abi_major=3,app_id=a.app_id,version=a.version,text_bytes=spans['.t
               bss_bytes=image['memory']-len(image['image']),heap_bytes=a.heap_bytes,stack_bytes=a.stack_bytes,
               entries=offsets[0],data_read_min=1,data_read_max=1,data_write_version=1,
               required_services=a.capabilities,fixups=[[at,struct.unpack_from('<I',image['image'],at)[0]] for at in image['fixups']])
-(out/'app.apx2').write_bytes(apx2.package(image['image'],manifest))
+(out/'app.apx').write_bytes(apx2.package(image['image'],manifest))
 native.write_json(out/'app-manifest.json',manifest)
 report.update(built=True,normalized_link_bases_identical=True,unresolved_imports=0,
               image_bytes=len(image['image']),memory_bytes=image['memory'],fixup_count=len(image['fixups']),
-              package_sha256=native.sha(out/'app.apx2'),package_bytes=(out/'app.apx2').stat().st_size,
+              package_sha256=native.sha(out/'app.apx'),package_bytes=(out/'app.apx').stat().st_size,
               relocations=image['relocations'],entries=offsets[0],
               libraries={str(lib):native.sha(lib) for lib in libraries},
               extractor_sha256=native.sha(Path(pic.__file__)),

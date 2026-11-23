@@ -41,7 +41,7 @@ Apx2Error apx2Validate(const Apx2Reader &r,const Apx2Limits &limit,Apx2View &out
     if(r.size>limit.package_bytes) return Apx2Error::Budget;
     uint8_t h[APX2_HEADER];
     if(!read(r,0,h,sizeof(h))) return Apx2Error::Read;
-    if(memcmp(h,"APX2",4)||u32(h+4)!=2||u32(h+8)!=APX2_HEADER||u32(h+12)!=r.size)
+    if((memcmp(h,"APX\0",4)&&memcmp(h,"APX2",4))||u32(h+4)!=2||u32(h+8)!=APX2_HEADER||u32(h+12)!=r.size)
         return Apx2Error::Header;
     for(unsigned i=224;i<APX2_HEADER;++i) if(h[i]) return Apx2Error::Header;
     if(u32(h+16)!=APX2_TARGET_AP01||u32(h+20)!=APX2_ISA_RV32IMAFC_ILP32F) return Apx2Error::Target;

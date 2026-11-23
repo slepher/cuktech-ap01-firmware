@@ -92,6 +92,31 @@ void unboundMaintenance(const std::string &folder,const std::string &image,Disk 
     Ap01MaintenancePort0041 servicePort{&disk,fake.callbacks()};
     servicePort.deviceCode=[](void *p,char out[9]){memcpy(out,((Disk *)p)->code,9);return 0;};
     {
+        auto check=[](const Ap01HttpReply &reply,int status,const char *error){
+            assert(reply.status==status&&strstr(reply.bytes.c_str(),error));
+            assert(strstr(reply.bytes.c_str(),"\"device_mac\":\"AABBCCDDEEFF\""));
+        };
+        Ap01Maintenance0041 auth(fs,servicePort,{},"AABBCCDDEEFF",28);assert(auth.begin());
+        for(unsigned i=0;i<5;++i)check(auth.handle(request("GET","/api/app/v3/status",{},"99999999"),1),401,"device_code");
+        auto limited=auth.handle(request("GET","/api/app/v3/status",{},disk.code),2);
+        check(limited,429,"device_code_rate_limited");assert(strstr(limited.bytes.c_str(),"wait_30_seconds"));
+        auto unavailable=servicePort;unavailable.deviceCode=nullptr;
+        Ap01Maintenance0041 noCode(fs,unavailable,{},"AABBCCDDEEFF",28);assert(noCode.begin());
+        check(noCode.handle(request("GET","/api/app/v3/status",{},disk.code),1),503,"device_code_unavailable");
+        auto healthPort=servicePort;
+        healthPort.appStatus=[](void *,Ap01SupervisorSnapshotV3 &v){
+            v.state=Ap01SupervisorStateV3::Fault;v.fault=Ap01SupervisorFaultV3::AppFailed;
+            v.fault_health=-107;v.count=1;v.health[0]=-108;
+        };
+        Ap01Maintenance0041 healthService(fs,healthPort,{},"AABBCCDDEEFF",28);assert(healthService.begin());
+        auto healthReply=healthService.handle(request("GET","/api/maintenance/status",{},disk.code),1);
+        assert(healthReply.status==200&&strstr(healthReply.bytes.c_str(),"\"fault_health\":-107")&&strstr(healthReply.bytes.c_str(),"\"health\":[-108]"));
+        auto busyPort=servicePort;busyPort.enterOperation=[](void *){return false;};busyPort.leaveOperation=[](void *){};
+        Ap01Maintenance0041 busy(fs,busyPort,{},"AABBCCDDEEFF",28);assert(busy.begin());
+        check(busy.handle(request("GET","/api/app/v3/status",{},disk.code),1),409,"maintenance_busy");
+    }
+
+    {
         std::string stableFolder=folder+"/stable-policy";assert(!mkdir(stableFolder.c_str(),0700));
         LittleFSClass stableFs(ops,stableFolder.c_str());
         auto appPort=servicePort;

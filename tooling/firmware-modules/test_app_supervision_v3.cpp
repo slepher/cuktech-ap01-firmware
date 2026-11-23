@@ -25,8 +25,8 @@ int main(){
     {Ap01AppSupervisionV3 s;s.publish(0,nullptr,0);s.tick(0,1,true,0,true);expect(s,State::Healthy);}
     {Ap01AppSupervisionV3 s;s.publish(101,good,2);s.tick(100,1,true,101,true);expect(s,State::Healthy);}
     {Ap01AppSupervisionV3 s;std::atomic<bool> done{false};
-     std::thread writer([&]{for(unsigned n=1;n<=20000;++n){int32_t v[8];for(auto &x:v)x=n&1?AP01_APP_V3_FAILED:0;s.publish(n,v,8);}done.store(true);});
-     do{auto v=s.snapshot();if(v.count){assert(v.count==8);for(auto x:v.health)assert(x==(v.sampled_at&1?AP01_APP_V3_FAILED:0));}}while(!done.load());writer.join();}
+     std::thread writer([&]{for(unsigned n=1;n<=20000;++n){int32_t v[8];for(auto &x:v)x=n&1?-101:37;s.publish(n,v,8);}done.store(true);});
+     do{auto v=s.snapshot();if(v.count){assert(v.count==8);for(auto x:v.health)assert(x==(v.sampled_at&1?-101:37));}}while(!done.load());writer.join();}
     // All published samples are fresh. Seqlock contention must not latch UiStale.
     {Ap01AppSupervisionV3 s;s.publish(100,good,8);s.tick(100,1,true,100,true);
      s.publish(10000,good,8);s.tick(10000,1,true,10000,true);
@@ -46,5 +46,16 @@ int main(){
      s.tick(10301,1,true,10301,true);expect(s,State::Fault,Fault::UiStale);
      s.publish(10400,bad,8);s.tick(10400,1,true,10400,true);expect(s,State::Fault,Fault::AppFailed);
      s.publish(10500,good,8);s.tick(10500,1,true,10500,true);expect(s,State::Fault,Fault::AppFailed);}
+    // Raw ABI values survive publication; first fault survives later samples.
+    for(int32_t code:{-1,-2,-4,-101,-108,INT32_MIN}){
+        Ap01AppSupervisionV3 s;int32_t values[8]={};values[3]=code;
+        s.publish(100,values,8);s.tick(100,1,true,100,true);
+        auto failed=s.snapshot();assert(failed.fault_health==code&&failed.health[3]==code&&failed.app_index==3);
+        s.publish(101,good,8);s.tick(101,1,true,101,true);
+        auto recovered=s.snapshot();assert(recovered.fault==Fault::AppFailed&&recovered.fault_health==code&&recovered.health[3]==0);
+        values[3]=-109;s.publish(102,values,8);s.tick(102,1,true,102,true);assert(s.snapshot().fault_health==code);
+    }
+    {Ap01AppSupervisionV3 s;int32_t values[2]={0,37};s.publish(1,values,2);s.tick(1,1,true,1,true);
+     assert(s.snapshot().health[1]==37&&s.snapshot().fault_health==0);s.fail(Fault::Worker);assert(s.snapshot().fault_health==0);}
     puts("supervision: boot/startup, maintenance loss/stall, UI stall, indexed App failure/timeout, window recreation, wraparound, empty set, latched faults and concurrent snapshots passed");
 }

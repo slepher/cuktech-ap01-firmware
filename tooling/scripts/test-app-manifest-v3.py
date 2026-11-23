@@ -10,7 +10,7 @@ spec=importlib.util.spec_from_file_location('manifest',Path(__file__).with_name(
 module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 real=a.package.resolve();blob=real.read_bytes();info=module.package_info(blob)
 # A metadata-only second package; not the D2 independently executing peer App.
-peer=a.out.resolve()/'manifest-peer.apx2'
+peer=a.out.resolve()/'manifest-peer.apx'
 peer.write_bytes(apx2.package(bytes(16),dict(abi_major=3,app_id='z_probe',version='1',text_bytes=16,
  ro_offset=16,ro_bytes=0,data_offset=16,data_bytes=0,bss_bytes=0,heap_bytes=128,stack_bytes=256,
  entries=[0,2,4],data_read_min=1,data_read_max=1,data_write_version=1,required_services=0,fixups=[])))

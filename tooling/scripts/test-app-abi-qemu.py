@@ -46,7 +46,7 @@ def main():
     for directory in [args.fixture_dir,*args.next_fixture]:
         probe=json.loads((directory/'build-report.json').read_text())
         assert probe['built'] and sha(directory/'guest.bin')==probe['guest_sha256']
-        assert sha(directory/'app.apx2')==probe['package_sha256']
+        assert sha(directory/'app.apx')==probe['package_sha256']
         for item in probe.get('extra_inputs',[]):
             assert Path(item['name']).name==item['name']
             assert sha(directory/item['name'])==item['sha256']
@@ -57,7 +57,7 @@ def main():
         assert all(probe.get('journal_export') for _,probe in fixtures) or all(probe.get('business_export') for _,probe in fixtures)
         assert all(probe['bases']==fixtures[0][1]['bases'] for _,probe in fixtures)
         assert all(probe.get('cpu','rv32')==fixtures[0][1].get('cpu','rv32') for _,probe in fixtures)
-    probe=fixtures[0][1];image=args.fixture_dir/'guest.bin';package=args.fixture_dir/'app.apx2'
+    probe=fixtures[0][1];image=args.fixture_dir/'guest.bin';package=args.fixture_dir/'app.apx'
     extras=probe.get('extra_inputs',[])
     results = {}
     report = {'passed': False, 'engine_sha256': sha(args.qemu),
@@ -124,7 +124,7 @@ def main():
                                 reset_pc=struct.unpack_from('<I',reset_regs,32*4)[0]
                                 assert reset_pc!=stop and process.poll() is None
                                 results[hex(base)]['resets'].append({'pid':process.pid,'pc_after_reset':hex(reset_pc),**handoff})
-                            image=fixture/'guest.bin';package=fixture/'app.apx2';extras=probe.get('extra_inputs',[])
+                            image=fixture/'guest.bin';package=fixture/'app.apx';extras=probe.get('extra_inputs',[])
                             write(probe['guest_base'],image.read_bytes())
                             if probe.get('guest_bss'):
                                 bss=probe['guest_bss'];assert 0xa8100000<=bss['address']<=bss['address']+bss['size']<=0xa8180000

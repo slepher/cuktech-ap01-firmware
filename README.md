@@ -9,11 +9,12 @@
 | 目录 | 内容 |
 | --- | --- |
 | [平台接口](docs/app-platform-api-v3.md) | App ABI 3／平台 3.1 合同 |
-| [包格式](docs/apx2-package-format.md) | APX2 容器版本 2，App ABI 3 |
+| [包格式](docs/apx-package-format.md) | APX 容器版本 2，App ABI 3 |
 | [固件模块](tooling/firmware-modules/README.md) | 平台、维护、OTA、UI 和 ABI 3 服务 |
 | [构建工具](tooling/scripts/README.md) | 构建、打包、诊断和离线验证 |
-| [刷机说明](docs/flashing.md) | 官方 ROM 转自定义 ROM、升级限制、30 秒试启动保护与失败恢复 |
-| [ROM 清单](roms/CATALOG.md) | 0055 原件与发布附件 |
+| [刷机说明](docs/flashing.md) | 官方 ROM 转自定义 ROM、升级限制、30 秒健康窗口与失败恢复 |
+| [ROM 清单](roms/CATALOG.md) | 0055 原件与固件类型 |
+| [版本发布](docs/releasing.md) | tag、Release CI、固件附件和构建产物 |
 
 构建需要 Python 3 和支持 `rv32imafc/ilp32f` 的 RISC-V GCC。ArduinoJson 已随仓库保存；平台构建不依赖外部仓库。
 
@@ -27,19 +28,5 @@ python3 -B tooling/scripts/test-firmware.py --manifest build/app-platform.manife
 
 基础平台为原厂 **1.0.2_0055**（`roms/0055/ap01-1.0.2_0055.bin`），默认构建目标为 `0055`。输出必须使用新文件名。业务 App 单独通过 `build-app-v3.py --app-config ...` 构建，平台 ROM 与业务 App 分别构建。
 
-## Tag 自动发布
-
-向 GitHub 推送任意新 tag 后，[Release CI](.github/workflows/release.yml) 会使用 xPack RISC-V GCC 12.5.0-1 构建 0055 无 App 基版与 ABI 3 App 加载平台，运行原件及固件离线校验，通过后创建同名 GitHub Release，并自动生成变更说明。
-
-```sh
-git tag -a 0.1.3 -m "AP01 0055 platform release"
-git push origin 0.1.3
-```
-
-Release 附件包含 `ap01-0055-base-0.1.3.bin`、`ap01-0055-app-platform-0.1.3.bin`和 `SHA256SUMS`（仅包含这两个完整 BIN 的校验和）。payload、ELF、map、manifest、审计与链接报告存放在对应 Actions 运行的 `ap01-build-details-<tag>` 构建产物中，保留 90 天，刷机无需下载。附件版本号读取 `native_version.h` 中的 `AP01_MODIFIED_ROM_VERSION`（当前为 `0.1.3`，不带后缀），与设备上报的修改版版本一致；原厂基础平台版本仍为 0055。发布前更新源码版本，再推送对应 tag（如 `0.1.3`）。仅创建本地 tag 不触发 CI；工作流使用内置 `GITHUB_TOKEN` 的 `contents: write` 权限，无需额外发布密钥。自动发布仅表示构建与离线校验通过，不代表完成实机验收。
-
-APX2 名称中的 2 是容器版本，与 App ABI 不同。业务 Bundle 的 `compiler_abi: 2` 也属于另一套协议。
-
-完整冷启动和实机外设尚待验收，候选不代表可部署版本。本地构建和检查不访问设备。
 
 来源与许可见 [NOTICE](NOTICE.md) 和 [LICENSE](LICENSE)。

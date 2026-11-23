@@ -65,8 +65,8 @@ class Transport:
             value = json.loads(raw)
         except json.JSONDecodeError as error:
             raise Uncertain('incomplete response; query original operation') from error
-        if not isinstance(value, dict) or value.get('device_mac') != self.mac:
-            raise ValueError('response device identity mismatch')
+        if not isinstance(value, dict):
+            raise ValueError('response must be a JSON object')
         return response.code, value
 
 

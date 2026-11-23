@@ -22,18 +22,21 @@ void imageIdentity(JsonDocument &out) {
     out["app_build"] = "host-native-port";
 #endif
 }
-void error(Ap01HttpReply &reply, int status, const char *code, const char *stage, bool unknown = false) {
+void error(Ap01HttpReply &reply, const char *mac, int status, const char *code, const char *stage, bool unknown = false, const char *action = nullptr) {
     NativeJsonAllocator0041 allocator; JsonDocument out(&allocator);
     out["result"] = unknown ? "unknown" : "rejected";
+    out["device_mac"] = mac;
     out["error"] = code; out["stage"] = stage;
-    out["action"] = unknown ? "query_original_request" : "read_device_status";
+    out["action"] = action ? action : unknown ? "query_original_request" : "read_device_status";
     reply.status = status; reply.bytes = "";
-    if (!ap01EncodeJson0041(out, reply.bytes))
+    if (!ap01EncodeJson0041(out, reply.bytes)) {
+        reply.status = 503;
         reply.bytes = "{\"result\":\"unknown\",\"error\":\"reply_oom\",\"stage\":\"response\"}";
+    }
 }
-bool encode(JsonDocument &doc, Ap01HttpReply &reply) {
+bool encode(JsonDocument &doc, Ap01HttpReply &reply, const char *mac) {
     if (!ap01EncodeJson0041(doc, reply.bytes,4048)) {
-        error(reply, 503, "reply_limit", "response", true); return false;
+        error(reply,mac, 503, "reply_limit", "response", true); return false;
     }
     return true;
 }
@@ -55,14 +58,12 @@ bool Ap01Maintenance0041::begin(uint64_t now) {
 bool Ap01Maintenance0041::manualAuth(const Ap01HttpRequest &request, uint64_t now, Ap01HttpReply &reply) {
     // Maintenance has one executor. No code is cached across requests/rotation.
     if (now < manualRetryAt) {
-        reply.status = 429;
-        reply.bytes = "{\"result\":\"rejected\",\"error\":\"device_code_rate_limited\",\"stage\":\"manual_auth\",\"action\":\"wait_30_seconds\"}";
+        error(reply,mac,429,"device_code_rate_limited","manual_auth",false,"wait_30_seconds");
         return false;
     }
     char code[9] = {};
     if (!port.deviceCode || port.deviceCode(port.context, code)) {
-        reply.status = 503;
-        reply.bytes = "{\"result\":\"rejected\",\"error\":\"device_code_unavailable\",\"stage\":\"manual_auth\",\"action\":\"open_device_code_menu\"}";
+        error(reply,mac,503,"device_code_unavailable","manual_auth",false,"open_device_code_menu");
         return false;
     }
     unsigned mismatch = 0;
@@ -71,8 +72,7 @@ bool Ap01Maintenance0041::manualAuth(const Ap01HttpRequest &request, uint64_t no
     memset(code, 0, sizeof(code));
     if (mismatch) {
         if (++manualFailures >= 5) { manualFailures = 0; manualRetryAt = now + 30000; }
-        reply.status = 401;
-        reply.bytes = "{\"result\":\"rejected\",\"error\":\"device_code\",\"stage\":\"manual_auth\",\"action\":\"enter_current_menu_code\"}";
+        error(reply,mac,401,"device_code","manual_auth",false,"enter_current_menu_code");
         return false;
     }
     manualFailures = 0; manualRetryAt = 0;
@@ -86,7 +86,7 @@ Ap01HttpReply Ap01Maintenance0041::handle(const Ap01HttpRequest &request,uint64_
     bool delegated=bridge.coordinatesWrites&&!strncmp(request.path,"/api/pairing",12);
     if(!observation&&!delegated&&port.enterOperation){
         if(operationHeld||!port.leaveOperation||!port.enterOperation(port.context)){
-            Ap01HttpReply reply;error(reply,409,"maintenance_busy","platform_operation");return reply;
+            Ap01HttpReply reply;error(reply,mac,409,"maintenance_busy","platform_operation");return reply;
         }
         operationHeld=true;
     }
@@ -104,9 +104,9 @@ Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,u
     if(!strncmp(request.path,"/api/app/",9)) {
         if(!manualAuth(request,now,reply))return reply;
         if(!appObservation(request)&&(active()||(port.firmware.busy&&port.firmware.busy(port.firmware.context)))){
-            error(reply,409,"maintenance_busy","app_install");return reply;
+            error(reply,mac,409,"maintenance_busy","app_install");return reply;
         }
-        if(!port.appUpdate){error(reply,501,"app_install_unavailable","maintenance_router");return reply;}
+        if(!port.appUpdate){error(reply,mac,501,"app_install_unavailable","maintenance_router");return reply;}
         return port.appUpdate(port.context,request,"ap01-menu-maintenance",now);
     }
     bool wifi=!strncmp(request.path,"/api/wifi/",10), diagnostic=!strncmp(request.path,"/api/diagnostic/",16);
@@ -117,7 +117,7 @@ Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,u
     }
     if(!strncmp(request.path,"/api/pairing",12)) {
         if(bridge.pairing)return bridge.pairing(bridge.context,request,now);
-        error(reply,503,"application_unavailable","pairing");return reply;
+        error(reply,mac,503,"application_unavailable","pairing");return reply;
     }
     bool local=(!strncmp(request.path,"/api/firmware/",14)||!strcmp(request.path,"/health")||
                 !strcmp(request.path,"/api/maintenance/status"))&&(!request.token||strlen(request.token)!=32);
@@ -125,10 +125,10 @@ Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,u
     if(local) {if(!manualAuth(request,now,reply))return reply;}
     else {
         int status=bridge.principal?bridge.principal(bridge.context,request.token,principal):401;
-        if(status!=200){error(reply,status,status==401?"unauthorized":"maintenance_busy",status==401?"maintenance_auth":"bindings");return reply;}
+        if(status!=200){error(reply,mac,status,status==401?"unauthorized":"maintenance_busy",status==401?"maintenance_auth":"bindings");return reply;}
     }
     if(!strncmp(request.path,"/api/firmware/",14)) {
-        if(!firmware){error(reply,port.firmware.open?503:501,"firmware_port_unavailable","maintenance_router");return reply;}
+        if(!firmware){error(reply,mac,port.firmware.open?503:501,"firmware_port_unavailable","maintenance_router");return reply;}
         bool start=(!strcmp(request.path,"/api/firmware/begin")||!strcmp(request.path,"/api/firmware/switch"))&&!strcmp(request.method,"POST");
         if(start)gate.store(true,std::memory_order_release);
         reply=firmware->handle(request,principal,now);
@@ -153,6 +153,7 @@ Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,u
             const char *states[]={"starting","healthy","window_absent","fault"};
             const char *faults[]={"none","boot_failed","startup_timeout","maintenance_stale","ui_stale","app_failed","app_timeout","worker_failed"};
             runtime["state"]=uint32_t(status.state)<4?states[uint32_t(status.state)]:"unknown";
+            runtime["fault_health"]=status.fault_health;
             runtime["fault"]=uint32_t(status.fault)<8?faults[uint32_t(status.fault)]:"unknown";
             runtime["app_index"]=status.app_index;runtime["sampled_at_ms"]=status.sampled_at;
             auto health=runtime["health"].to<JsonArray>();
@@ -165,9 +166,9 @@ Ap01HttpReply Ap01Maintenance0041::handleLocked(const Ap01HttpRequest &request,u
             runtime["journal_result"]=status.journal_result<8?journals[status.journal_result]:"not_loaded";
             runtime["journal_phase"]=status.journal_phase;
         }
-        reply.status=200;encode(out,reply);return reply;
+        reply.status=200;encode(out,reply,mac);return reply;
     }
-    error(reply,404,"unsupported_endpoint","maintenance_router");return reply;
+    error(reply,mac,404,"unsupported_endpoint","maintenance_router");return reply;
 }
 void Ap01Maintenance0041::tick(uint64_t now) {
     if(port.enterOperation){

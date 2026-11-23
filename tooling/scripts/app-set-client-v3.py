@@ -14,6 +14,31 @@ Uncertain=common.Uncertain
 TERMINAL=common.TERMINAL
 
 
+def retryable(status, value):
+    error = value.get('error_code') or value.get('error')
+    return (status == 409 and error == 'maintenance_busy') or (
+        status == 503 and error not in {'device_code_unavailable', 'application_unavailable',
+                                       'app_install_unavailable', 'firmware_port_unavailable'})
+
+
+def check_response(status, value, mac):
+    if not isinstance(value, dict):
+        raise ValueError('response must be a JSON object')
+    if 'device_mac' in value and value['device_mac'] != mac:
+        raise ValueError('response device identity mismatch')
+    # Transient responses only trigger a fenced query; never update the receipt.
+    if retryable(status, value):
+        return
+    strict = status in (200, 202, 404, 409) or value.get('protocol') == 3 or 'error_code' in value
+    if (strict or 'device_mac' in value) and value.get('device_mac') != mac:
+        raise ValueError('response device identity mismatch')
+
+
+def rejection(status, value):
+    details = dict(value, status=status)
+    return ValueError('request rejected: ' + json.dumps(details, ensure_ascii=False, sort_keys=True))
+
+
 class Transport(common.Transport):
     def __call__(self,method,endpoint,params=None,body=None,binary=False):
         return super().__call__(method,'v3/'+endpoint,params,body,binary)
@@ -33,8 +58,9 @@ class Installer(common.Installer):
         self.manifest=inspect_manifest(bytes.fromhex(r['manifest_hex']))
 
     def checked(self,status,value,operation=True):
-        if value.get('device_mac')!=self.mac:
-            raise ValueError('wrong device')
+        check_response(status,value,self.mac)
+        if retryable(status,value):
+            return status,value
         if status not in (200,202):
             return status,value
         if value.get('protocol')!=3:
@@ -72,7 +98,7 @@ class Installer(common.Installer):
                 status,value=self.checked(*self.request('GET','update/result',{'operation_id':self.record['operation_id']}))
                 if status==404 and self.record.get('acknowledged'):
                     raise ValueError('acknowledged receipt expired; never create a replacement transaction')
-                if status!=503 and not (status==409 and value.get('error')=='maintenance_busy'):
+                if not retryable(status,value):
                     return status,value
             except Uncertain:
                 pass
@@ -84,8 +110,9 @@ class Installer(common.Installer):
         params=dict(extra or {},operation_id=self.record['operation_id'])
         try:
             status,value=self.checked(*self.request(method,endpoint,params,body,binary))
-            if status!=503:
+            if not retryable(status,value):
                 return status,value
+            self.pause()
         except Uncertain:
             pass
         return self.query()
@@ -98,8 +125,12 @@ class Installer(common.Installer):
                 raise ValueError('receipt belongs to a different manifest')
             status,value=self.query()
         else:
-            status,value=self.checked(*self.request('GET','status'),operation=False)
-            if (status!=200 or value.get('phase') not in {'idle','succeeded','failed_rolled_back','cancelled'}
+            while True:
+                status,value=self.checked(*self.request('GET','status'),operation=False)
+                if not retryable(status,value):break
+                self.pause()
+            if status!=200:raise rejection(status,value)
+            if (value.get('phase') not in {'idle','succeeded','failed_rolled_back','cancelled'}
                     or value.get('cleanup_pending') or value.get('runtime_reporting') is not True):
                 raise ValueError('device is not ready for a collection transaction')
             old=value.get('candidate_manifest') if value['phase']=='succeeded' else value.get('old_manifest','0'*64)
@@ -126,10 +157,10 @@ class Installer(common.Installer):
                 status,value=self.mutate('POST','update/begin',bytes(header)+manifest_blob,binary=True)
                 if status==404:self.pause()
                 continue
-            if status==409 and (value.get('error_code')=='write_drain_pending' or value.get('error')=='maintenance_busy'):
+            if status==409 and (value.get('error_code')=='write_drain_pending'):
                 self.pause();status,value=self.query();continue
             if status not in (200,202):
-                raise ValueError('update rejected: '+str(value.get('error_code',status)))
+                raise rejection(status,value)
             phase=value.get('phase')
             if phase in TERMINAL:
                 if phase!='succeeded' or verify_running(value,wanted,self.record['original_boot']):
@@ -160,11 +191,11 @@ class Installer(common.Installer):
         while status in (200,202):
             if value.get('phase') in TERMINAL:return value
             status,value=self.mutate('POST','update/cancel')
-            if status==409 and value.get('error_code')=='write_drain_pending':
+            if status==409 and (value.get('error_code')=='write_drain_pending'):
                 self.pause();status,value=self.query();continue
             if status in (200,202) and value.get('phase') not in TERMINAL:
                 self.pause();status,value=self.query()
-        raise ValueError('cancel rejected: '+str(value.get('error_code',status)))
+        raise rejection(status,value)
 
 
 def main():
@@ -181,7 +212,8 @@ def main():
     try:
         mac=a.mac.upper();transport=Transport(a.host,a.code_file.read_text().strip(),mac)
         if a.action=='status':
-            status,value=transport('GET','status');print(json.dumps(value));return 0 if status==200 else 1
+            status,value=transport('GET','status');check_response(status,value,mac)
+            print(json.dumps(value));return 0 if status==200 else 1
         installer=Installer(transport,mac,a.host,a.receipt,a.budget)
         if a.action=='result':installer.load_receipt();status,value=installer.query()
         elif a.action=='cancel':value=installer.cancel();status=200

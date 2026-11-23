@@ -1,5 +1,6 @@
 #include "app_set_cleanup_v3.h"
 #include <string.h>
+#include <initializer_list>
 using R=Ap01SetCleanupResultV3;using P=Ap01SetPhaseV3;
 namespace {
 void path(char *out,const char *prefix,const uint8_t *digest,unsigned bytes,const char *suffix){
@@ -32,8 +33,10 @@ R ap01CleanupSetV3(Ap01SetJournalV3 &journal,const Ap01VfsOps &io,const Ap01Mani
     if(obsolete)for(unsigned i=0;i<obsolete->count;++i){bool referenced=false;
         if(keep)for(unsigned j=0;j<keep->count;++j)if(!memcmp(obsolete->entries[i].digest,keep->entries[j].digest,32)){referenced=true;break;}
         if(referenced)continue;
-        path(name,"/resource/app-store/packages/",obsolete->entries[i].digest,32,".apx2");
-        auto result=remove(name);if(result!=R::Ok)return result;
+        for(const char *suffix:{".apx",".apx2"}){
+            path(name,"/resource/app-store/packages/",obsolete->entries[i].digest,32,suffix);
+            auto result=remove(name);if(result!=R::Ok)return result;
+        }
     }
     for(unsigned i=0;i<8;++i){char suffix[]="-0.part";suffix[1]=char('0'+i);
         path(name,"/resource/app-store/incoming/",record.transaction,16,suffix);

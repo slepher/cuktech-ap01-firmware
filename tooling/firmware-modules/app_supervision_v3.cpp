@@ -9,16 +9,20 @@ bool stale(uint32_t now,uint32_t beat,uint32_t limit){
 }
 void Ap01AppSupervisionV3::publish(uint32_t now,const int32_t *values,uint32_t count){
     if(count>AP01_MANIFEST_APPS_V3||(!values&&count))return;
-    uint32_t word=count<<16;
-    for(unsigned i=0;i<count;++i)word|=(values[i]<0?2u:values[i]==AP01_APP_V3_OK?0u:1u)<<(2*i);
     revision.fetch_add(1,std::memory_order_seq_cst);
-    sampleWord.store(word,std::memory_order_seq_cst);sampleTime.store(now,std::memory_order_seq_cst);
+    for(unsigned i=0;i<count;++i)sampleHealth[i].store(values[i],std::memory_order_seq_cst);
+    sampleCount.store(count,std::memory_order_seq_cst);sampleTime.store(now,std::memory_order_seq_cst);
     revision.fetch_add(1,std::memory_order_seq_cst);
 }
-bool Ap01AppSupervisionV3::sample(uint32_t &word,uint32_t &time)const{
+bool Ap01AppSupervisionV3::sample(uint32_t &count,uint32_t &time,int32_t *health)const{
     for(unsigned i=0;i<3;++i){uint32_t before=revision.load(std::memory_order_seq_cst);if(!before||(before&1))continue;
-        word=sampleWord.load(std::memory_order_seq_cst);time=sampleTime.load(std::memory_order_seq_cst);
-        if(before==revision.load(std::memory_order_seq_cst))return true;}
+        uint32_t n=sampleCount.load(std::memory_order_seq_cst),at=sampleTime.load(std::memory_order_seq_cst);
+        int32_t values[AP01_MANIFEST_APPS_V3]{};
+        for(unsigned j=0;j<n;++j)values[j]=sampleHealth[j].load(std::memory_order_seq_cst);
+        if(before==revision.load(std::memory_order_seq_cst)){
+            count=n;time=at;for(unsigned j=0;j<n;++j)health[j]=values[j];return true;
+        }
+    }
     return false;
 }
 void Ap01AppSupervisionV3::fail(Ap01SupervisorFaultV3 fault,uint32_t index){
@@ -44,8 +48,8 @@ void Ap01AppSupervisionV3::tick(uint32_t now,int boot,bool listening,uint32_t ma
     uint32_t old=status.load(std::memory_order_acquire),next=uint32_t(Ap01SupervisorStateV3::Starting);
     if(!windowPresent){pending=false;next=uint32_t(Ap01SupervisorStateV3::WindowAbsent);}
     else {
-        uint32_t word=0,time=0;
-        if(!sample(word,time)){
+        uint32_t count=0,time=0;int32_t health[AP01_MANIFEST_APPS_V3]{};
+        if(!sample(count,time,health)){
             // A preempted seqlock publisher is not proof of a stalled UI.
             // Retain the last coherent sample's deadline; retries never renew it.
             if(stale(now,haveUiSample?lastUiSampleAt:startedAt,5000))fail(Ap01SupervisorFaultV3::UiStale);
@@ -57,9 +61,9 @@ void Ap01AppSupervisionV3::tick(uint32_t now,int boot,bool listening,uint32_t ma
             return;
         }
         uint32_t first=UINT32_MAX;
-        for(unsigned i=0;i<(word>>16);++i){unsigned health=(word>>(2*i))&3;
-            if(health==2){fail(Ap01SupervisorFaultV3::AppFailed,i);return;}
-            if(health&&first==UINT32_MAX)first=i;}
+        for(unsigned i=0;i<count;++i){
+            if(health[i]<0){faultHealth.store(health[i],std::memory_order_release);fail(Ap01SupervisorFaultV3::AppFailed,i);return;}
+            if(health[i]>0&&first==UINT32_MAX)first=i;}
         if(first!=UINT32_MAX){
             if(!pending){pending=true;pendingAt=now;}
             if(uint32_t(now-pendingAt)>=30000){fail(Ap01SupervisorFaultV3::AppTimeout,first);return;}
@@ -71,11 +75,11 @@ void Ap01AppSupervisionV3::tick(uint32_t now,int boot,bool listening,uint32_t ma
         status.compare_exchange_strong(old,next,std::memory_order_acq_rel);
 }
 Ap01SupervisorSnapshotV3 Ap01AppSupervisionV3::snapshot()const{
-    uint32_t value=status.load(std::memory_order_acquire),word=0,time=0;
+    uint32_t value=status.load(std::memory_order_acquire);
     Ap01SupervisorSnapshotV3 out{};out.state=Ap01SupervisorStateV3(value&255);
     out.fault=Ap01SupervisorFaultV3((value>>8)&255);out.app_index=out.fault==Ap01SupervisorFaultV3::None?UINT32_MAX:value>>16;
     if(out.app_index==0xffff)out.app_index=UINT32_MAX;
-    if(sample(word,time)){out.count=word>>16;out.sampled_at=time;
-        for(unsigned i=0;i<out.count;++i){unsigned h=(word>>(2*i))&3;out.health[i]=h==2?AP01_APP_V3_FAILED:h==1?AP01_APP_V3_PENDING:AP01_APP_V3_OK;}}
+    if(out.fault==Ap01SupervisorFaultV3::AppFailed)out.fault_health=faultHealth.load(std::memory_order_acquire);
+    sample(out.count,out.sampled_at,out.health);
     return out;
 }

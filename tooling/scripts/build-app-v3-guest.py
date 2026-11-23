@@ -40,9 +40,12 @@ if a.snapshot:
     offset=104 if rollback and not empty_rollback else 136
     digest=current[offset:offset+32].hex();manifest=files['/resource/app-store/manifests/'+digest+'.amf3'];parsed=inspect_manifest(manifest)
     assert parsed['digest']==digest and len(parsed['apps'])==2 and parsed['version']==struct.unpack_from('<Q',current,24 if rollback and not empty_rollback else 32)[0]
-    packages=[files['/resource/app-store/packages/'+app['digest']+'.apx2'] for app in parsed['apps']]
+    packages=[]
+    for app in parsed['apps']:
+        path='/resource/app-store/packages/'+app['digest']+'.apx'
+        packages.append(files[path] if path in files else files[path+'2'])
     assert len(inspect_packages(parsed,packages))==2
-    a.package=out/'app.apx2';a.manifest=out/'set.amf3';a.peer=out/'peer.apx2'
+    a.package=out/'app.apx';a.manifest=out/'set.amf3';a.peer=out/'peer.apx'
     for path,data in [(a.package,packages[0]),(a.peer,packages[1]),(a.manifest,manifest)]:path.write_bytes(data)
     (out/'journals.bin').write_bytes(struct.pack('<II',*(len(slot) for slot in slots))+b''.join(slot.ljust(320,b'\0') for slot in slots))
 elif not a.package:p.error('--package or --snapshot is required')
@@ -96,8 +99,8 @@ subprocess.run([tool('g++'),*native.FLAGS,'-Wl,--no-relax,--gc-sections','-T',st
 assert not subprocess.check_output([tool('nm'),'-u',str(elf)],text=True).strip()
 subprocess.run([tool('objcopy'),'-O','binary',str(elf),str(out/'guest.bin')],check=True)
 assert (out/'guest.bin').stat().st_size<0x40000
-if a.package.resolve()!=out/'app.apx2':shutil.copyfile(a.package,out/'app.apx2')
-report={'built':True,'executed':False,'guest_base':0xa8100000,'package_address':0xa8180000,'stop':0x62fc8000,'sp':0xa8180000,'bases':[0xa8000000,0xa8040000],'guest_sha256':native.sha(out/'guest.bin'),'package_sha256':native.sha(out/'app.apx2'),'sources':{n:native.sha(native.MODULES/n) for n in names},'substitutes':['ROM maintenance listener','ROM VFS/network/LVGL','cooperative model threads','test-only bounded 2 MiB arena via existing allocator','ROM integer formatter and UTC clock']}
+if a.package.resolve()!=out/'app.apx':shutil.copyfile(a.package,out/'app.apx')
+report={'built':True,'executed':False,'guest_base':0xa8100000,'package_address':0xa8180000,'stop':0x62fc8000,'sp':0xa8180000,'bases':[0xa8000000,0xa8040000],'guest_sha256':native.sha(out/'guest.bin'),'package_sha256':native.sha(out/'app.apx'),'sources':{n:native.sha(native.MODULES/n) for n in names},'substitutes':['ROM maintenance listener','ROM VFS/network/LVGL','cooperative model threads','test-only bounded 2 MiB arena via existing allocator','ROM integer formatter and UTC clock']}
 report.update(rom_target=a.target,stock_screen_count=11,
               model_only=True,full_rom_boot_verified=False,target_defines=target_defines)
 if a.boot_id is not None:report['boot_id']=a.boot_id
@@ -110,7 +113,7 @@ if a.manifest:
     report['execution_backend']='native_exec_memory_v3'
     report['cpu']='rv32,xtheadcmo=true'
     report['substitutes'].append('fixed-address executable allocation instead of ROM heap; production reserve/publish unchanged')
-    for source,name,address,bound in [(a.manifest,'set.amf3',0xa81c0000,0x1000),(a.peer,'peer.apx2',0xa81c1000,0x3e000 if a.snapshot else 0x3f000)]:
+    for source,name,address,bound in [(a.manifest,'set.amf3',0xa81c0000,0x1000),(a.peer,'peer.apx',0xa81c1000,0x3e000 if a.snapshot else 0x3f000)]:
         assert source.stat().st_size<=bound
         if source.resolve()!=out/name:shutil.copyfile(source,out/name)
         report['extra_inputs'].append({'name':name,'address':address,'sha256':native.sha(out/name)})

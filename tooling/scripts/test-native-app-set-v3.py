@@ -18,7 +18,7 @@ binary=a.out.resolve()/'test-native-app-set-v3'
 subprocess.run(['clang++','-std=c++17','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
  *map(str,sources),str(host),'-o',str(binary)],check=True)
 result=subprocess.check_output([str(binary),str(a.out.resolve()/'two-apps.amf3'),str(a.package.resolve()),
- str(a.out.resolve()/'manifest-peer.apx2')],text=True,timeout=30)
+ str(a.out.resolve()/'manifest-peer.apx')],text=True,timeout=30)
 for source in sources[:3]:
  subprocess.run([a.tool_prefix+'g++',*native.FLAGS,'-Wall','-Wextra','-Werror','-c',str(source),
   '-o',str(a.out/(source.stem+'.rv32.o'))],check=True)
