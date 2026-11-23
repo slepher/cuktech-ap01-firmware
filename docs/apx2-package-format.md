@@ -1,6 +1,8 @@
 # APX2 容器版本 2／App ABI 3
 
-当前写入器和生产加载器仅支持 App ABI 3，默认也是 3；ABI 2 包会拒绝。容器仍为版本 2、256 字节头，已有 ABI 3 包的编码不变。平台函数表 3.1 与包头 ABI 3/0 是不同层次，见 [平台接口](app-platform-api-v3.md)。
+当前加载平台基于原厂 **1.0.2_0055**，修改版为 **0.1.2**。固件 Release 与业务 App 包分别构建、分别发布，流程见 [README](../README.md)；本格式版本不随固件 tag 改变。
+
+写入器和生产加载器使用 App ABI 3。容器版本为 2，头部为 256 字节。平台函数表 3.1 与包头 ABI 3/0 是不同层次，见 [平台接口](app-platform-api-v3.md)。
 
 三个入口是 start、event、health。App 代码和已发布回调保留至重启，不提供 prepare_stop/stop 或在线卸载。接口定义见 `tooling/firmware-modules/app_abi_v3.h`；生产实现为 `apx2.h/.cpp`，离线写入器为 `tooling/scripts/apx2.py`。
 
@@ -34,7 +36,7 @@ text、rodata、data 顺序排列、不重叠；中间对齐填充必须为零�
 
 每条修正为 `[destination, target]`，均相对映像基址。destination 严格递增、4 字节对齐，完整字必须在 rodata 或 data，源字必须等于 target。
 target 必须落在实际 text、rodata、data 或 bss 内，不能指向填充和末尾之后。加载后该字变为 `base + target`。
-不接受 ELF 重定位类型、任意符号或原厂地址修正。外部服务须通过未来的版本化服务表传入。
+不接受 ELF 重定位类型、任意符号或原厂地址修正。外部服务须通过 ABI 3 的版本化服务表传入。
 
 `apx2Validate` 不分配内存、不执行代码，读失败或拒绝时输出视图清零。每次读请求不超过 256 字节。
 `apx2Load` 先完整校验，再检查调用者提供的容量、16 字节基址对齐和 RV32 地址溢出，复制、清 bss、应用修正。
@@ -49,4 +51,4 @@ mkdir -p build/apx2-check
 python3 -B tooling/scripts/test-apx2.py --out build/apx2-check
 ```
 
-覆盖 ABI 3 合法包、非支持 ABI 拒绝、保留入口非零、两基址修正、BSS、截断、读失败、摘要和资源预算。格式检查不等于硬件运行验收。旧 ABI 2 实现及专属测试已移除，历史过程可从 Git 历史追溯。
+覆盖 ABI 3 合法包、非支持 ABI 拒绝、保留入口非零、两基址修正、BSS、截断、读失败、摘要和资源预算。格式检查不等于硬件运行验收。

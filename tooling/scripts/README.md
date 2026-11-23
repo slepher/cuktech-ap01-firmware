@@ -1,6 +1,6 @@
 # AP01 固件构建与诊断工具
 
-当前平台只构建 0055，App 只支持 ABI 3。文件名不带 ROM 版本；`--target` 当前只接受 `0055`。默认原件由 `rom_target.py` 读取 `../rom-targets/current.json`，严格核对大小、SHA256 和补丁原字节。
+当前基础平台为原厂 1.0.2_0055，只构建 0055，App 只支持 ABI 3。文件名不带 ROM 版本；`--target` 当前只接受 `0055`。默认原件由 `rom_target.py` 读取 `../rom-targets/current.json`，严格核对大小、SHA256 和补丁原字节。
 
 | 入口 | 用途 |
 | --- | --- |
@@ -16,8 +16,12 @@
 | `test-platform-independence.py` | 无兄弟仓库的独立完整构建 |
 | `build-app-v3-guest.py` / `test-app-abi-qemu.py` | 仅 ABI 3 的 QEMU 模型构建／执行 |
 
-构建示例见仓库 [README](../../README.md)。RV32 工具链通过 `--tool-prefix` 显式指定；推荐兼容的 xPack GCC 12.5。真实 App 打包还使用 pyelftools。测试通常要求预建输出目录；ROM 候选必须使用新输出路径。
+构建示例见仓库 [README](../../README.md)。RV32 工具链通过 `--tool-prefix` 显式指定；Release CI 固定使用 xPack GCC 12.5.0-1。真实 App 打包还使用 pyelftools。
 
-`--app-source-dir` 只打包具有当前目标与源码审计的产物，不能复用旧目标对象。外部 App 的配置和 include 路径需要同步使用新的共享文件名；仓库不提供旧文件名兼容转发。
+[Release CI](../../.github/workflows/release.yml) 在任意 tag 推送到 GitHub 后构建无 App 基版和 ABI 3 加载平台。两者分别使用独立构建目录，并运行 `test-rom-target.py` 和 `test-firmware.py`；全部通过后上传完整 ROM、payload、ELF、map、manifest、审计与链接报告及 `SHA256SUMS`。业务 App 包不属于此发布流程，tag 不自动修改设备上报的源码版本。发布命令见 [README](../../README.md#tag-自动发布)。
 
-0041 专属补丁、旧 ABI 2 单包更新客户端与测试已删除。0031 历史工具仍保留，依赖与使用范围见对应文件说明；它们不是当前平台构建前置步骤。协议中已有的历史标识不等于支持旧 ROM 构建。
+测试通常要求预建输出目录；ROM 候选必须使用新输出路径。
+
+`--app-source-dir` 只打包具有当前目标与源码审计的产物。构建目录必须与目标、源码和工具链一致。
+
+修改版版本为 `0.1.2`，由 `native_version.h` 定义。独立 App 的版本取自 App 配置，与固件版本分别管理。当前接口与包格式见 [平台接口](../../docs/app-platform-api-v3.md) 和 [APX2 格式](../../docs/apx2-package-format.md)。
